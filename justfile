@@ -32,8 +32,8 @@ build:
 
 # copy codebase files to remote shared folder
 remote:
-    cp -r '{{cet_input_dir}}'/. join(code_shared_dir, "mods", "Addicted")
-    cp '{{red_input_dir}}'/'Addicted.reds' join(code_shared_dir, "scripts", "Addicted", "Addicted.reds")
+    cp -r '{{cet_input_dir}}'/. {{ join(code_shared_dir, "mods", "Addicted") }}
+    cp '{{red_input_dir}}'/'Addicted.reds' {{ join(code_shared_dir, "scripts", "Addicted", "Addicted.reds") }}
 
 
 # deploy mods in game files (with specified order)
