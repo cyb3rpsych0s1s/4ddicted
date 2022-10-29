@@ -12,6 +12,8 @@ red_output_dir := join(game_dir, "r6", "scripts")
 # REDscript CLI
 cli := join(game_dir, "tools", "redmod", "bin", "redMod.exe")
 
+code_shared_dir := join("C:", "Development", "Addicted")
+
 # create mod folders (if not exists) in game files
 setup:
     mkdir -p '{{cet_output_dir}}'
@@ -26,6 +28,13 @@ clean:
 build:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp '{{red_input_dir}}'/'Addicted.reds' '{{red_output_dir}}'/'Addicted.reds'
+
+
+# copy codebase files to remote shared folder
+remote:
+    cp -r '{{cet_input_dir}}'/. join(code_shared_dir, "mods", "Addicted")
+    cp '{{red_input_dir}}'/'Addicted.reds' join(code_shared_dir, "scripts", "Addicted", "Addicted.reds")
+
 
 # deploy mods in game files (with specified order)
 deploy:
