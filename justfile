@@ -1,5 +1,8 @@
 # installation dir for Cyberpunk 2077, e.g. Steam
-game_dir := join("C:", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+
+# shared folder on remote machine (outside of game files)
+code_shared_dir := join("C:\\", "Development", "Addicted")
 
 # codebase (outside of game files)
 cet_input_dir := join("mods", "Addicted")
@@ -11,8 +14,6 @@ red_output_dir := join(game_dir, "r6", "scripts")
 
 # REDscript CLI
 cli := join(game_dir, "tools", "redmod", "bin", "redMod.exe")
-
-code_shared_dir := join("C:", "Development", "Addicted")
 
 # create mod folders (if not exists) in game files
 setup:
