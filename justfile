@@ -22,6 +22,10 @@ clean:
     rm -rf '{{cet_output_dir}}'
     rm -rf '{{red_output_dir}}'
 
+# clear current cache
+clear:
+    rm -rf '{{ join(game_dir, "r6", "cache") }}'
+
 # copy codebase files to game files
 build:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
