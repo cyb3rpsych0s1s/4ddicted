@@ -37,4 +37,4 @@ deploy:
     '{{cli}}' deploy -root="{{game_dir}}" -mod=nativeSettings,Toxicity,'WE3D - Drugs of Night City',Addicted
 
 logs:
-    cat '{{ join(game_dir, "r6", "cache", "redscript.log") }}'
+    cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}'
