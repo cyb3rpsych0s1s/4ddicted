@@ -1,9 +1,6 @@
 # installation dir for Cyberpunk 2077, e.g. Steam
 game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 
-# shared folder on remote machine (outside of game files)
-code_shared_dir := join("C:\\", "Development", "Addicted")
-
 # codebase (outside of game files)
 cet_input_dir := join("mods", "Addicted")
 red_input_dir := join("scripts", "Addicted")
@@ -30,12 +27,10 @@ build:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp '{{red_input_dir}}'/'Addicted.reds' '{{red_output_dir}}'/'Addicted.reds'
 
-
 # copy codebase files to remote shared folder
-remote:
-    cp -r '{{cet_input_dir}}'/. {{ join(code_shared_dir, "mods", "Addicted") }}
-    cp '{{red_input_dir}}'/'Addicted.reds' {{ join(code_shared_dir, "scripts", "Addicted", "Addicted.reds") }}
-
+# FIXME: remote user domain ip:
+# FIXME: curl -T "{$(echo * | tr ' ' ',')}" -u '{{domain}}\{{user}}' smb://{{ip}}/Addicted/mods/Addicted
+# FIXME: curl -T '{{red_input_dir}}'/'Addicted.reds' -u '{{domain}}\{{user}}' smb://{{ip}}/Addicted/scripts/Addicted/Addicted.reds
 
 # deploy mods in game files (with specified order)
 deploy:
