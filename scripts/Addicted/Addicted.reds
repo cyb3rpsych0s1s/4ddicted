@@ -3,13 +3,13 @@ module Addicted
 @if(ModuleExists("Toxicity"))
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
-    LogChannel(n"DEBUG", "Toxicity ON");
+    LogChannel(n"Addicted", "Toxicity ON");
     wrappedMethod();
 }
 
 @if(!ModuleExists("Toxicity"))
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
-    LogChannel(n"DEBUG", "Toxicity OFF");
+    LogChannelWarning(n"Addicted", "Toxicity OFF");
     wrappedMethod();
 }

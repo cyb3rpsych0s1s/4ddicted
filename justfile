@@ -42,3 +42,6 @@ deploy:
 
 logs:
     cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}'
+
+cli *args="":
+    '{{cli}}' {{args}}
