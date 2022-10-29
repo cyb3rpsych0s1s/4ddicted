@@ -35,3 +35,6 @@ build:
 # deploy mods in game files (with specified order)
 deploy:
     '{{cli}}' deploy -root="{{game_dir}}" -mod=nativeSettings,Toxicity,'WE3D - Drugs of Night City',Addicted
+
+logs:
+    cat {{ join(game_dir, "r6", "cache", "redscript.log") }}
