@@ -1,5 +1,26 @@
 # wiki
 
+## lua VS reds
+
+Cyber Engine Tweaks (CET) and REDscript both offer access to the game API.
+
+```lua
+---@param self PlayerPuppet
+Observe('PlayerPuppet', 'OnGameAttached', function(self)
+  -- execute some logic when player starts game
+end)
+```
+
+is the equivalent of:
+
+```reds
+@wrapMethod(PlayerPuppet)
+protected cb func OnGameAttached() -> Bool {
+    // execute some logic when player starts game
+    wrappedMethod();
+}
+```
+
 ## create state/settings for mod
 
 ```lua
