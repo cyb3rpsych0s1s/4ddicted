@@ -1,5 +1,6 @@
 # installation dir for Cyberpunk 2077, e.g. Steam
 game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
 
 # codebase (outside of game files)
 cet_input_dir := join("mods", "Addicted")
@@ -10,7 +11,7 @@ cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks",
 red_output_dir := join(game_dir, "r6", "scripts")
 
 # REDscript CLI
-cli := join(game_dir, "tools", "redmod", "bin", "redMod.exe")
+cli := join("tools", "redmod", "bin", "redMod.exe")
 
 # create mod folders (if not exists) in game files
 setup:
@@ -18,13 +19,13 @@ setup:
     mkdir -p '{{red_output_dir}}'
 
 # clear current mod files in game files
-clean:
+uninstall:
     rm -rf '{{cet_output_dir}}'
     rm -rf '{{red_output_dir}}'
 
 # clear current cache
 clear:
-    rm -rf '{{ join(game_dir, "r6", "cache") }}'
+    rm -rf '{{ join(game_dir, "r6", "cache", "modded") }}'
 
 # copy codebase files to game files
 build:
@@ -38,10 +39,33 @@ build:
 
 # deploy mods in game files (with specified order)
 deploy:
-    '{{cli}}' deploy -root="{{game_dir}}" -mod=nativeSettings,Toxicity,'WE3D - Drugs of Night City',Addicted
+    (cd "{{game_dir}}" && '{{cli}}' deploy -root=. -mod=nativeSettings,Toxicity,'WE3D - Drugs of Night City',Addicted)
 
+# show logs from CET and RED
 logs:
-    cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}'
+    echo "\n=== CET ===\n" && \
+    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' && \
+    echo "\n=== REDscript ===\n" && \
+    cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}' && \
+    echo "\n=== WE3D - Drugs of Night City ===\n" && \
+    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}'
+    echo "\n=== Toxicity ===\n" && \
+    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}'
+    echo "\n=== Addicted ===\n" && \
+    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
 
+# store (or overwrite) logs in latest.log
+store:
+    (just logs)  > 'latest.log'
+
+# clear out logs
+erase: clear
+    rm -f '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
+    '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
+    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}' \
+    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}' \
+    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
+
+# shortcut for red cli
 cli *args="":
     '{{cli}}' {{args}}

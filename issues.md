@@ -16,3 +16,195 @@ No mods found, no deployment is needed!
 
 Commandlet deploy has succeeded.
 ```
+
+
+
+//GameObjectEffectHelper.StartEffectEvent(this, n"status_drugged_heavy");
+//GameObject.SetAudioParameter(this, n"vfx_fullscreen_drugged_level", 3.00);
+
+[2022-10-30 21:46:55 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:46:55 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:46:55 UTC+07:00] [info] [] {
+	name: gamedataStatusEffect_Record,
+	functions: {
+		MaxStacks() => (whandle:gamedataStatModifierGroup_Record),
+		MaxStacksHandle() => (handle:gamedataStatModifierGroup_Record),
+		RemoveAllStacksWhenDurationEndsStatModifiers() => (whandle:gamedataStatModifierGroup_Record),
+		RemoveAllStacksWhenDurationEndsStatModifiersHandle() => (handle:gamedataStatModifierGroup_Record),
+		StatusEffectType() => (whandle:gamedataStatusEffectType_Record),
+		StatusEffectTypeHandle() => (handle:gamedataStatusEffectType_Record),
+		UiData() => (whandle:gamedataStatusEffectUIData_Record),
+		UiDataHandle() => (handle:gamedataStatusEffectUIData_Record),
+		Duration() => (whandle:gamedataStatModifierGroup_Record),
+		DurationHandle() => (handle:gamedataStatModifierGroup_Record),
+		AIData() => (whandle:gamedataStatusEffectAIData_Record),
+		AIDataHandle() => (handle:gamedataStatusEffectAIData_Record),
+		PlayerData() => (whandle:gamedataStatusEffectPlayerData_Record),
+		PlayerDataHandle() => (handle:gamedataStatusEffectPlayerData_Record),
+		DebugTags() => (array:CName),
+		GetDebugTagsCount() => (Int32),
+		GetDebugTagsItem(index: Int32) => (CName),
+		DebugTagsContains(item: CName) => (Bool),
+		GameplayTags() => (array:CName),
+		GetGameplayTagsCount() => (Int32),
+		GetGameplayTagsItem(index: Int32) => (CName),
+		GameplayTagsContains(item: CName) => (Bool),
+		SFX() => (outList: array:whandle:gamedataStatusEffectFX_Record),
+		GetSFXCount() => (Int32),
+		GetSFXItem(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		GetSFXItemHandle(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		SFXContains(item: whandle:gamedataStatusEffectFX_Record) => (Bool),
+		VFX() => (outList: array:whandle:gamedataStatusEffectFX_Record),
+		GetVFXCount() => (Int32),
+		GetVFXItem(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		GetVFXItemHandle(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		VFXContains(item: whandle:gamedataStatusEffectFX_Record) => (Bool),
+		ImmunityStats() => (outList: array:whandle:gamedataStat_Record),
+		GetImmunityStatsCount() => (Int32),
+		GetImmunityStatsItem(index: Int32) => (whandle:gamedataStat_Record),
+		GetImmunityStatsItemHandle(index: Int32) => (whandle:gamedataStat_Record),
+		ImmunityStatsContains(item: whandle:gamedataStat_Record) => (Bool),
+		Packages() => (outList: array:whandle:gamedataGameplayLogicPackage_Record),
+		GetPackagesCount() => (Int32),
+		GetPackagesItem(index: Int32) => (whandle:gamedataGameplayLogicPackage_Record),
+		GetPackagesItemHandle(index: Int32) => (whandle:gamedataGameplayLogicPackage_Record),
+		PackagesContains(item: whandle:gamedataGameplayLogicPackage_Record) => (Bool),
+		AdditionalParam() => (CName),
+		StopActiveSfxOnDeactivate() => (Bool),
+		IsAffectedByTimeDilationPlayer() => (Bool),
+		RemoveOnStoryTier() => (Bool),
+		Savable() => (Bool),
+		RemoveAllStacksWhenDurationEnds() => (Bool),
+		IsAffectedByTimeDilationNPC() => (Bool),
+		Replicated() => (Bool),
+		DynamicDuration() => (Bool),
+		GetID() => (TweakDBID),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+	}
+}
+[2022-10-30 21:46:55 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:46:55 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:46:55 UTC+07:00] [info] [] {
+	name: gamedataStatusEffect_Record,
+	functions: {
+		MaxStacks() => (whandle:gamedataStatModifierGroup_Record),
+		MaxStacksHandle() => (handle:gamedataStatModifierGroup_Record),
+		RemoveAllStacksWhenDurationEndsStatModifiers() => (whandle:gamedataStatModifierGroup_Record),
+		RemoveAllStacksWhenDurationEndsStatModifiersHandle() => (handle:gamedataStatModifierGroup_Record),
+		StatusEffectType() => (whandle:gamedataStatusEffectType_Record),
+		StatusEffectTypeHandle() => (handle:gamedataStatusEffectType_Record),
+		UiData() => (whandle:gamedataStatusEffectUIData_Record),
+		UiDataHandle() => (handle:gamedataStatusEffectUIData_Record),
+		Duration() => (whandle:gamedataStatModifierGroup_Record),
+		DurationHandle() => (handle:gamedataStatModifierGroup_Record),
+		AIData() => (whandle:gamedataStatusEffectAIData_Record),
+		AIDataHandle() => (handle:gamedataStatusEffectAIData_Record),
+		PlayerData() => (whandle:gamedataStatusEffectPlayerData_Record),
+		PlayerDataHandle() => (handle:gamedataStatusEffectPlayerData_Record),
+		DebugTags() => (array:CName),
+		GetDebugTagsCount() => (Int32),
+		GetDebugTagsItem(index: Int32) => (CName),
+		DebugTagsContains(item: CName) => (Bool),
+		GameplayTags() => (array:CName),
+		GetGameplayTagsCount() => (Int32),
+		GetGameplayTagsItem(index: Int32) => (CName),
+		GameplayTagsContains(item: CName) => (Bool),
+		SFX() => (outList: array:whandle:gamedataStatusEffectFX_Record),
+		GetSFXCount() => (Int32),
+		GetSFXItem(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		GetSFXItemHandle(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		SFXContains(item: whandle:gamedataStatusEffectFX_Record) => (Bool),
+		VFX() => (outList: array:whandle:gamedataStatusEffectFX_Record),
+		GetVFXCount() => (Int32),
+		GetVFXItem(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		GetVFXItemHandle(index: Int32) => (whandle:gamedataStatusEffectFX_Record),
+		VFXContains(item: whandle:gamedataStatusEffectFX_Record) => (Bool),
+		ImmunityStats() => (outList: array:whandle:gamedataStat_Record),
+		GetImmunityStatsCount() => (Int32),
+		GetImmunityStatsItem(index: Int32) => (whandle:gamedataStat_Record),
+		GetImmunityStatsItemHandle(index: Int32) => (whandle:gamedataStat_Record),
+		ImmunityStatsContains(item: whandle:gamedataStat_Record) => (Bool),
+		Packages() => (outList: array:whandle:gamedataGameplayLogicPackage_Record),
+		GetPackagesCount() => (Int32),
+		GetPackagesItem(index: Int32) => (whandle:gamedataGameplayLogicPackage_Record),
+		GetPackagesItemHandle(index: Int32) => (whandle:gamedataGameplayLogicPackage_Record),
+		PackagesContains(item: whandle:gamedataGameplayLogicPackage_Record) => (Bool),
+		AdditionalParam() => (CName),
+		StopActiveSfxOnDeactivate() => (Bool),
+		IsAffectedByTimeDilationPlayer() => (Bool),
+		RemoveOnStoryTier() => (Bool),
+		Savable() => (Bool),
+		RemoveAllStacksWhenDurationEnds() => (Bool),
+		IsAffectedByTimeDilationNPC() => (Bool),
+		Replicated() => (Bool),
+		DynamicDuration() => (Bool),
+		GetID() => (TweakDBID),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+	}
+}
+
+
+[2022-10-30 21:53:00 UTC+07:00] [info] [] Cyber Engine Tweaks startup complete.
+[2022-10-30 21:53:00 UTC+07:00] [info] [] Mod Addicted loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\Addicted')
+[2022-10-30 21:53:00 UTC+07:00] [info] [] Mod nativeSettings loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\nativeSettings')
+[2022-10-30 21:53:00 UTC+07:00] [info] [] Mod RedHotTools loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\RedHotTools')
+[2022-10-30 21:53:00 UTC+07:00] [info] [] Mod Toxicity loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\Toxicity')
+[2022-10-30 21:53:00 UTC+07:00] [info] [] Mod WE3D - Drugs of Night City loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\WE3D - Drugs of Night City')
+[2022-10-30 21:53:31 UTC+07:00] [info] [] RED:Addicted:OnGameAttached
+[2022-10-30 21:53:31 UTC+07:00] [info] [] CET:Addicted:onInit
+[2022-10-30 21:53:31 UTC+07:00] [info] [] WE3D Language file loaded
+[2022-10-30 21:53:31 UTC+07:00] [info] [] WE3D integrated with Native Settings UI
+[2022-10-30 21:53:31 UTC+07:00] [info] [] WE3D Language file 2 loaded
+[2022-10-30 21:53:32 UTC+07:00] [info] [] WE3D main loaded
+[2022-10-30 21:53:32 UTC+07:00] [info] [] WE3D functions loaded
+[2022-10-30 21:53:32 UTC+07:00] [info] [] WE3D fully loaded!
+[2022-10-30 21:53:32 UTC+07:00] [info] [] [NativeSettings] NativeSettings lib initialized!
+[2022-10-30 21:53:32 UTC+07:00] [info] [] LuaVM: initialization finished!
+[2022-10-30 21:53:54 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:53:54 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:53:54 UTC+07:00] [info] [] The status effect is <TDBID:EAB61494:1D>
+[2022-10-30 21:54:04 UTC+07:00] [info] [] RED:Addicted:OnGameAttached
+[2022-10-30 21:54:04 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:04 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:04 UTC+07:00] [info] [] The status effect is <TDBID:73A1CB09:29>
+[2022-10-30 21:54:04 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:04 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:04 UTC+07:00] [info] [] The status effect is <TDBID:643FF81E:23>
+[2022-10-30 21:54:04 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:04 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:04 UTC+07:00] [info] [] The status effect is <TDBID:31CE848E:23>
+[2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] The status effect is <TDBID:235ECDC4:26>
+[2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] The status effect is <TDBID:235ECDC4:26>
+[2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] The status effect is <TDBID:EAB61494:1D>
+[2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] The status effect is <TDBID:EAB61494:1D>
+[2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] The status effect is <TDBID:EAB61494:1D>
+[2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
+[2022-10-30 21:54:17 UTC+07:00] [info] [] RED:
+
+You don't see BaseStatusEffect.FirstAidWhiffV{0/1/2}?
