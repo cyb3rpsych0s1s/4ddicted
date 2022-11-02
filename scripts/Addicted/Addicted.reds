@@ -1,26 +1,17 @@
 module Addicted
 
-func IsAddictive(evt: ref<StatusEffectEvent>) -> Bool {
-    return ArrayContains(
-        [
-        t"BaseStatusEffect.FirstAidWhiffV0",
-        t"BaseStatusEffect.BonesMcCoy70V0"
-        // TODO: add missing
-    ],
-        evt.staticData.GetID());
-}
-
 @addField(PlayerPuppet)
 let consumed: Int32;
 
-@addMethod(ApplyStatusEffectEvent)
+@addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
-    return IsAddictive(this as StatusEffectEvent);
-}
-
-@addMethod(RemoveStatusEffect)
-public func IsAddictive() -> Bool {
-    return IsAddictive(this as StatusEffectEvent);
+    return ArrayContains(
+        [
+            t"BaseStatusEffect.FirstAidWhiffV0",
+            t"BaseStatusEffect.BonesMcCoy70V0"
+            // TODO: add missing
+        ],
+        this.staticData.GetID());
 }
 
 @wrapMethod(PlayerPuppet)
@@ -31,7 +22,7 @@ protected cb func OnGameAttached() -> Bool {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
+    // LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     if evt.isNewApplication && evt.IsAddictive() {
         this.consumed += 1;
         LogChannel(n"DEBUG","RED:Addicted once again: " + this.consumed);
@@ -41,9 +32,9 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
-    LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectRemoved \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
+    // LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectRemoved \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     if evt.IsAddictive() {
-        LogChannel(n"DEBUG","RED:Addicted:OnStatusEffectRemoved that's it");
+        LogChannel(n"DEBUG","RED:Addicted:OnStatusEffectRemoved (IsAddictive)");
     }
   return wrappedMethod(evt);
 }
@@ -56,4 +47,5 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
 
 // LogChannel(n"DEBUG", "RED:Addicted:OnStatusEffectApplied");
 // let someID: TweakDBID = t"BaseStatusEffect.Drugged";
+// let moreCommonID: TweakDBID = t"BaseStatusEffect.FirstAidWhiffV0";
 // LogChannel(n"DEBUG", s"Its UIData is \(GetLocalizedText(evt.staticData.UiData().DisplayName()))");
