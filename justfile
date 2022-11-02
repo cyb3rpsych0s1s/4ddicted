@@ -47,12 +47,12 @@ logs:
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' && \
     echo "\n=== REDscript ===\n" && \
     cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}' && \
-    echo "\n=== WE3D - Drugs of Night City ===\n" && \
-    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}'
     echo "\n=== Toxicity ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}'
     echo "\n=== Addicted ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
+# echo "\n=== WE3D - Drugs of Night City ===\n" && \
+# cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}'
 
 # store (or overwrite) logs in latest.log
 store:
@@ -62,9 +62,9 @@ store:
 erase: clear
     rm -f '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
     '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
-    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
+# '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}' \
 
 # shortcut for red cli
 cli *args="":
