@@ -16,8 +16,6 @@ registerForEvent("onInit", function()
     end)
 end)
 
-
-
 -- print("evt.isNewApplication: " .. tostring(evt.isNewApplication))
 -- print("evt.IsAddictive(): " .. tostring(evt.IsAddictive()))
 -- -- print("IsAddictive(evt): " .. tostring(IsAddictive(evt)))
