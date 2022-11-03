@@ -262,9 +262,16 @@ public func JustAlternateReally(effect: TweakDBID) -> Void {
 // GameObjectEffectHelper.StartEffectEvent(scriptInterface.executionOwner, n"transition_glitch_loop", false, blackboard);
 
 // BaseStatusEffect.AlcoholDebuff
-
 // BaseStatusEffect.SecondHeart
+// BaseStatusEffect.Blind
+// BaseStatusEffect.Grappled
 
 // GameObject.PlayVoiceOver(ScriptExecutionContext.GetOwner(context), n"hit_reaction_heavy", n"Scripts:KnockdownReactionTask");
 
 // StatusEffectHelper.ApplyStatusEffect(this.GetOwner(), t"BaseStatusEffect.CrippledLegLeft");
+
+// maintenancePanel.swift
+// let workspotSystem: ref<WorkspotGameSystem> = GameInstance.GetWorkspotSystem(activator.GetGame());
+// workspotSystem.PlayInDeviceSimple(this, activator, freeCamera, componentName, n"deviceWorkspot");
+// base\gameplay\devices\disassemblable\maintenance_panel.workspot
+// base\workspots\quest\main_quests\part1\q101\01_covered_in_trash\player__lie__2h_down__crawling__16.workspot
