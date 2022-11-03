@@ -275,3 +275,6 @@ public func JustAlternateReally(effect: TweakDBID) -> Void {
 // workspotSystem.PlayInDeviceSimple(this, activator, freeCamera, componentName, n"deviceWorkspot");
 // base\gameplay\devices\disassemblable\maintenance_panel.workspot
 // base\workspots\quest\main_quests\part1\q101\01_covered_in_trash\player__lie__2h_down__crawling__16.workspot
+
+// log these: see workspots.swift
+// FTLog("[WorkspotFunctionalTestsDebugListener:OnWorkspotSetup] EntityID: " + EntityID.ToDebugString(this.m_entityId) + " path: " + path);
