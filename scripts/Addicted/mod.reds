@@ -13,18 +13,22 @@ public func IsAddictive() -> Bool {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    // LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
+    LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     if evt.isNewApplication && evt.IsAddictive() {
         let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());
         let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
         system.OnAddictiveSubstanceConsumed(evt.staticData.GetID());
+        if system.m_maxdocThreshold >= 3 {
+            StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.MaxDOCWithdrawalSymptom", 0.0);
+        }
         LogChannel(n"DEBUG",
-            "RED:Addicted once again: "
+            "RED:Addicted once again: MAXdoc ("
             + system.m_maxdocThreshold
-            + ", "
+            + "), BounceBack ("
             + system.m_bouncebackThreshold
-            + ", "
-            + system.m_fr3shThreshold);
+            + "), FR3SH ("
+            + system.m_fr3shThreshold
+            + ")");
     }
     return wrappedMethod(evt);
 }

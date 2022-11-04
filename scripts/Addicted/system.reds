@@ -24,5 +24,14 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         LogChannel(n"DEBUG", "RED:PlayerAddictionSystem::OnAddictiveSubstanceConsumed");
+        if substanceID == t"BaseStatusEffect.FirstAidWhiffV0" {
+            this.m_maxdocThreshold += 1;
+        }
+        if substanceID == t"BaseStatusEffect.BonesMcCoy70V0" {
+            this.m_bouncebackThreshold += 1;
+        }
+        if substanceID == t"BaseStatusEffect.FR3SH" {
+            this.m_fr3shThreshold += 1;
+        }
     }
 }
