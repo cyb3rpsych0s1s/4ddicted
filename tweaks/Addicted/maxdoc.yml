@@ -1,4 +1,5 @@
 # withdrawal symptom stat effects
+# TODO: create specific effects
 BaseStatusEffect.MaxDOCWithdrawalSymptomGameplayLogicPackage:
   $base: BaseStatusEffect.Sated_inline0
   stats: [BaseStatusEffect.MaxDOCWithdrawalSymptomConstantStatModifierStamina]
@@ -7,3 +8,11 @@ BaseStatusEffect.MaxDOCWithdrawalSymptomConstantStatModifierStamina:
   $base: BaseStatusEffect.Sated_inline1
   modifierType: Multiplier
   value: 0.5
+
+# create MAXdoc withdrawal symptom status effect
+BaseStatusEffect.MaxDOCWithdrawalSymptom:
+  $base: BaseStatusEffect.Drugged
+  uiData: BaseStatusEffect.WithdrawalSymptomStatusEffectUIData
+  maxStacks: BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupMaxStacks
+  gameplayTags: ["Debuff"]
+  packages: ["BaseStatusEffect.MaxDOCWithdrawalSymptomGameplayLogicPackage"] # this is where maxdoc would go

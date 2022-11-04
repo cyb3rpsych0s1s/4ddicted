@@ -4,14 +4,6 @@ UIIcon.withdrawal_symptom_icon:
   $base: UIIcon.drugged_icon
   atlasPartName: withdrawal_symptom_icon
 
-# create withdrawal symptom status effect
-BaseStatusEffect.WithdrawalSymptom:
-  $base: BaseStatusEffect.Drugged
-  uiData: BaseStatusEffect.WithdrawalSymptomStatusEffectUIData
-  maxStacks: BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupMaxStacks
-  gameplayTags: ["Debuff"]
-  packages: [] # this is where maxdoc would go
-
 # set withdrawal symptom status effect duration
 BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupDuration:
   $base: BaseStatusEffect.Drugged_inline3
