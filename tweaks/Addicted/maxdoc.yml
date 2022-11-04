@@ -1,0 +1,9 @@
+# withdrawal symptom stat effects
+BaseStatusEffect.MaxDOCWithdrawalSymptomGameplayLogicPackage:
+  $base: BaseStatusEffect.Sated_inline0
+  stats: [BaseStatusEffect.MaxDOCWithdrawalSymptomConstantStatModifierStamina]
+
+BaseStatusEffect.MaxDOCWithdrawalSymptomConstantStatModifierStamina:
+  $base: BaseStatusEffect.Sated_inline1
+  modifierType: Multiplier
+  value: 0.5

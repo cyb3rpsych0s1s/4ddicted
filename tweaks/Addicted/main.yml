@@ -1,0 +1,37 @@
+# create withdrawal symptom status effect icon
+# TODO: create a custom icon?
+UIIcon.withdrawal_symptom_icon:
+  $base: UIIcon.drugged_icon
+  atlasPartName: withdrawal_symptom_icon
+
+# create withdrawal symptom status effect
+BaseStatusEffect.WithdrawalSymptom:
+  $base: BaseStatusEffect.Drugged
+  uiData: BaseStatusEffect.WithdrawalSymptomStatusEffectUIData
+  maxStacks: BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupMaxStacks
+  gameplayTags: ["Debuff"]
+  packages: [] # this is where maxdoc would go
+
+# set withdrawal symptom status effect duration
+BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupDuration:
+  $base: BaseStatusEffect.Drugged_inline3
+  statModifiers: ["BaseStatusEffect.WithdrawalSymptomConstantStatModifierDuration"]
+BaseStatusEffect.WithdrawalSymptomConstantStatModifierDuration:
+  $base: BaseStatusEffect.Drugged_inline4
+  value: 30
+
+# update withdrawal symptom status icon
+BaseStatusEffect.WithdrawalSymptomStatusEffectUIData:
+  $base: BaseStatusEffect.Drugged_inline5
+  iconPath: withdrawal_symptom_icon
+  displayName: LocKey("Withdrawal-Symptom-Status-Effect-Name")
+  description: LocKey("Withdrawal-Symptom-Status-Effect-Description")
+  intValues: [50,10]
+
+# set withdrawal symptom status effect max stacks
+BaseStatusEffect.WithdrawalSymptomConstantStatModifierMaxStacks:
+  $base: BaseStatusEffect.Drugged_inline1
+  value: 3
+BaseStatusEffect.WithdrawalSymptomGameStatModifierMaxStacks:
+  $base: BaseStatusEffect.Drugged_inline0
+  statModifiers: ["BaseStatusEffect.WithdrawalSymptomConstantStatModifierMaxStacks"]

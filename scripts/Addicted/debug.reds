@@ -3,40 +3,10 @@ module Addicted
 @addField(PlayerPuppet)
 let consumed: Int32;
 
-@addMethod(StatusEffectEvent)
-public func IsAddictive() -> Bool {
-    return ArrayContains(
-        [
-            t"BaseStatusEffect.FirstAidWhiffV0",
-            t"BaseStatusEffect.BonesMcCoy70V0"
-            // TODO: add missing
-        ],
-        this.staticData.GetID());
-}
-
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
     LogChannel(n"DEBUG", "RED:Addicted:OnGameAttached");
     return wrappedMethod();
-}
-
-@wrapMethod(PlayerPuppet)
-protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    // LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
-    if evt.isNewApplication && evt.IsAddictive() {
-        this.consumed += 1;
-        LogChannel(n"DEBUG","RED:Addicted once again: " + this.consumed);
-    }
-    return wrappedMethod(evt);
-}
-
-@wrapMethod(PlayerPuppet)
-protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
-    // LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectRemoved \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
-    if evt.IsAddictive() {
-        LogChannel(n"DEBUG","RED:Addicted:OnStatusEffectRemoved (IsAddictive)");
-    }
-  return wrappedMethod(evt);
 }
 
 // works
