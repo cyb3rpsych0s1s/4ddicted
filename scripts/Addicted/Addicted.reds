@@ -186,7 +186,7 @@ public func JustJohnny() -> Void {
 @addField(PlayerPuppet)
 let deaf: Bool;
 
-// 
+// does not seem to do anything on V
 // Game.GetPlayer():JustDeaf()
 @addMethod(PlayerPuppet)
 public func JustDeaf() -> Void {
@@ -198,7 +198,7 @@ public func JustDeaf() -> Void {
     } else {
       if Equals(this.deaf, true) && statusEffectSystem.HasStatusEffect(this.GetEntityID(), statusEffectID) {
         statusEffectSystem.RemoveStatusEffect(this.GetEntityID(), statusEffectID);
-        this.deaf = true;
+        this.deaf = false;
       };
     };
 }
@@ -217,6 +217,70 @@ public func JustAnythingReally(effect: TweakDBID) -> Void {
 @addMethod(PlayerPuppet)
 public func JustAlternateReally(effect: TweakDBID) -> Void {
     StatusEffectHelper.ApplyStatusEffect(this, effect);
+}
+
+// wasn't called on interaction with Fast Travel
+// wasn't called on interaction with vending machine
+// wasn't called on interaction giving homeless some eddies
+// wasn't called on disassemble pant
+// @wrapMethod(PlayerPuppet)
+// protected cb func OnWorkspotStartedEvent(evt: ref<WorkspotStartedEvent>) -> Bool {
+//     LogChannel(n"DEBUG", "RED:Addicted:OnWorkspotStartedEvent");
+//     // LogChannel(n"DEBUG", "tags: " + concatenate(evt.tags));
+//     return wrappedMethod(evt);
+// }
+
+// @wrapMethod(PlayerPuppet)
+// protected cb func OnWorkspotFinishedEvent(evt: ref<WorkspotFinishedEvent>) -> Bool {
+//     LogChannel(n"DEBUG", "RED:Addicted:OnWorkspotFinishedEvent");
+//     // LogChannel(n"DEBUG", "tags: " + concatenate(evt.tags));
+//     return wrappedMethod(evt);
+// }
+
+// does not seem to work with the given examples
+// works with the usuals (e.g. 'status_drugged_heavy')
+// Game.GetPlayer():JustStartEffect(CName.new('smoke_puff'))
+// e.g. for name: ch_sniffing_drugs_01 ch_sniffing_drugs_02 smoke_puff
+@addMethod(PlayerPuppet)
+public func JustStartEffect(name: CName) -> Void {
+    let blackboard: ref<worldEffectBlackboard> = new worldEffectBlackboard();
+    GameObjectEffectHelper.StartEffectEvent(this, name, false, blackboard);
+}
+
+// see above
+// Game.GetPlayer():JustStopEffect(CName.new('smoke_puff'))
+@addMethod(PlayerPuppet)
+public func JustStopEffect(name: CName) -> Void {
+    GameObjectEffectHelper.StopEffectEvent(this, name);
+}
+
+// @wrapMethod(NameplateVisualsLogicController)
+// public final func SetVisualData(puppet: ref<GameObject>, incomingData: NPCNextToTheCrosshair, opt isNewNpc: Bool) -> Void {
+//     wrappedMethod(puppet, incomingData, isNewNpc);
+//     LogChannel(n"DEBUG", "RED:Addicted:SetVisualData");
+//     if !IsDefined(puppet) {
+//         LogChannel(n"DEBUG", "RED:Addicted:SetVisualData (but no puppet)");
+//         return;
+//     }
+//     GameObjectEffectHelper.StartEffectEvent(puppet, n"ch_sniffing_drugs_01", true);
+// }
+
+private func concatenate(elems: array<CName>) -> String {
+    let i = 0;
+    let buf = "";
+    let elem: CName;
+
+    while i < ArraySize(elems) {
+        elem = elems[i];
+        if (i != 0) {
+            buf += ", " + ToString(elem);
+        } else {
+            buf = ToString(elem);
+        }
+        i += 1;
+    }
+
+    return buf;
 }
 
 // gamedataStatusEffect_Record :
