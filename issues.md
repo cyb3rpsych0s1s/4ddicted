@@ -208,3 +208,29 @@ Commandlet deploy has succeeded.
 [2022-10-30 21:54:17 UTC+07:00] [info] [] RED:
 
 You don't see BaseStatusEffect.FirstAidWhiffV{0/1/2}?
+
+---
+
+shenanigans with game systems:
+
+\n=== Toxicity ===\n
+[2022-11-04 18:18:31 UTC+07:00] [error] [] ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:310: attempt to index local 'player' (a nil value)    
+stack traceback:
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:310: in function 'refreshCurrentState'
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:993: in function 'initialize'
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:1002: in function 'Observe'
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:1035: in function 'Listen'
+        ...n\x64\plugins\cyber_engine_tweaks\mods\Toxicity\init.lua:163: in function 'SetupLanguageListener'
+        ...n\x64\plugins\cyber_engine_tweaks\mods\Toxicity\init.lua:16: in function <...n\x64\plugins\cyber_engine_tweaks\mods\Toxicity\init.lua:13>
+[2022-11-04 18:22:51 UTC+07:00] [error] [] ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:310: attempt to index local 'player' (a nil value)    
+stack traceback:
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:310: in function 'refreshCurrentState'
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:993: in function 'initialize'
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:1002: in function 'Observe'
+        ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:1035: in function 'Listen'
+        ...n\x64\plugins\cyber_engine_tweaks\mods\Toxicity\init.lua:163: in function 'SetupLanguageListener'
+        ...n\x64\plugins\cyber_engine_tweaks\mods\Toxicity\init.lua:16: in function <...n\x64\plugins\cyber_engine_tweaks\mods\Toxicity\init.lua:13>
+
+```lua
+if player == nil then return end -- hotfix
+```

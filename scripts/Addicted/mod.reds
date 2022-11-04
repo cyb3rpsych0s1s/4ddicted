@@ -14,23 +14,26 @@ public func IsAddictive() -> Bool {
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
     LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
+    let output = wrappedMethod(evt);
     if evt.isNewApplication && evt.IsAddictive() {
         let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());
         let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
         system.OnAddictiveSubstanceConsumed(evt.staticData.GetID());
-        if system.m_maxdocThreshold >= 3 {
-            StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.MaxDOCWithdrawalSymptom", 0.0);
+        if system.GetMaxdocConsumed() >= 3 {
+             StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.MaxDOCWithdrawalSymptom", 0.0);
+             GameObjectEffectHelper.StartEffectEvent(this, n"status_drugged_heavy");
+             GameObject.SetAudioParameter(this, n"vfx_fullscreen_drugged_level", 3.00);
         }
         LogChannel(n"DEBUG",
             "RED:Addicted once again: MAXdoc ("
-            + system.m_maxdocThreshold
+            + system.GetMaxdocConsumed()
             + "), BounceBack ("
-            + system.m_bouncebackThreshold
+            + system.GetBouncebackConsumed()
             + "), FR3SH ("
-            + system.m_fr3shThreshold
+            + system.GetFr3shConsumed()
             + ")");
     }
-    return wrappedMethod(evt);
+    return output;
 }
 
 @wrapMethod(PlayerPuppet)

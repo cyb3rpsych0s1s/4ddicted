@@ -17,3 +17,21 @@ BaseStatusEffect.MaxDOCWithdrawalSymptom:
   maxStacks: BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupMaxStacks
   gameplayTags: ["Debuff"]
   packages: [BaseStatusEffect.MaxDOCWithdrawalSymptomGameplayLogicPackage]
+
+Items.HealingWithrawalSymptomObjectActionEffect:
+  $base: Items.FirstAidWhiffV0_inline2
+  statusEffect:
+    $base: BaseStatusEffect.MaxDOCWithdrawalSymptom
+
+Items.FirstAidWhiffV0_inline0.completionEffects:
+  - !append-once Items.HealingWithrawalSymptomObjectActionEffect
+Items.FirstAidWhiffV1_inline4.completionEffects:
+  - !append-once Items.HealingWithrawalSymptomObjectActionEffect
+Items.FirstAidWhiffV2_inline4.completionEffects:
+  - !append-once Items.HealingWithrawalSymptomObjectActionEffect
+Items.BonesMcCoy70V0_inline0.completionEffects:
+  - !append-once Items.HealingWithrawalSymptomObjectActionEffect
+Items.BonesMcCoy70V1_inline0.completionEffects:
+  - !append-once Items.HealingWithrawalSymptomObjectActionEffect
+Items.BonesMcCoy70V2_inline4.completionEffects:
+  - !append-once Items.HealingWithrawalSymptomObjectActionEffect

@@ -21,9 +21,15 @@ setup:
     mkdir -p '{{red_output_dir}}'
 
 # clear current mod files in game files
-uninstall:
+uninstall: uninstall-cet uninstall-red uninstall-tweak
+
+uninstall-cet:
     rm -rf '{{cet_output_dir}}'
+
+uninstall-red:
     rm -rf '{{red_output_dir}}'
+
+uninstall-tweak:
     rm -rf '{{tweak_output_dir}}'
 
 # clear current cache
