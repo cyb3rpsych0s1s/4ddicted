@@ -1,27 +1,5 @@
 module Addicted
 
-public class Consumption {
-    let name: CName;
-    let id: TweakDBID;
-
-    public static func New() -> ref<Consumption> {
-        let consumption = new Consumption();
-        return consumption;
-    }
-}
-
-public class Consumptions {
-  let elements: array<Consumption>;
-  
-  public static func New() -> ref<Consumptions> {
-    let consumptions = new Consumptions();
-    return consumptions;
-  }
-}
-
-@addField(PlayerPuppet)
-let consumptions: ref<Consumptions>;
-
 @addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
     return ArrayContains(
@@ -37,8 +15,16 @@ public func IsAddictive() -> Bool {
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
     // LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     if evt.isNewApplication && evt.IsAddictive() {
-        // this.consumed += 1;
-        // LogChannel(n"DEBUG","RED:Addicted once again: " + this.consumed);
+        let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());
+        let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
+        system.OnAddictiveSubstanceConsumed(evt.staticData.GetID());
+        LogChannel(n"DEBUG",
+            "RED:Addicted once again: "
+            + system.m_maxdocThreshold
+            + ", "
+            + system.m_bouncebackThreshold
+            + ", "
+            + system.m_fr3shThreshold);
     }
     return wrappedMethod(evt);
 }

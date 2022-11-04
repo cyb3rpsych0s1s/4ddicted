@@ -1,8 +1,5 @@
 module Addicted
 
-@addField(PlayerPuppet)
-let consumed: Int32;
-
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
     LogChannel(n"DEBUG", "RED:Addicted:OnGameAttached");
