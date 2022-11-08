@@ -29,4 +29,39 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             this.m_fr3shConsumed += 1;
         }
     }
+
+    private func GetConsumption(substanceID: TweakDBID) -> Int32 {
+        switch(substanceID) {
+            case t"BaseStatusEffect.FirstAidWhiffV0":
+                return this.m_maxdocConsumed;
+            case t"BaseStatusEffect.BonesMcCoy70V0":
+                return this.m_bouncebackConsumed;
+            case t"BaseStatusEffect.FR3SH":
+                return this.m_fr3shConsumed;
+            default:
+                return -1;
+        }
+    }
+
+    private func GetThreshold(substanceID: TweakDBID) -> Int32 {
+        switch(substanceID) {
+            case t"BaseStatusEffect.FirstAidWhiffV0":
+                return 3;
+            case t"BaseStatusEffect.BonesMcCoy70V0":
+                return 3;
+            case t"BaseStatusEffect.FR3SH":
+                return 6;
+            default:
+                return -1;
+        }
+    }
+
+    public func IsSlippin(substanceID: TweakDBID) -> Bool {
+        let threshold = this.GetThreshold(substanceID);
+        let current = this.GetConsumption(substanceID);
+        if current == -1 || threshold == -1 {
+            return false;
+        }
+        return current < threshold;
+    }
 }
