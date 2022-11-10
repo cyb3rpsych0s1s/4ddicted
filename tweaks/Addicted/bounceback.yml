@@ -1,31 +1,31 @@
-BaseStatusEffect.MaxDOCWithdrawalSymptomConstantStatModifierStamina:
+BaseStatusEffect.BounceBackWithdrawalSymptomConstantStatModifierStamina:
   $base: BaseStatusEffect.Sated_inline1
   modifierType: Multiplier
-  value: 0.9
+  value: 0.8
 
 # withdrawal symptom stat effects
 # TODO: create specific effects
-BaseStatusEffect.MaxDOCWithdrawalSymptomGameplayLogicPackage:
+BaseStatusEffect.BounceBackWithdrawalSymptomGameplayLogicPackage:
   $base: BaseStatusEffect.Sated_inline0
-  stats: [BaseStatusEffect.MaxDOCWithdrawalSymptomConstantStatModifierStamina]
+  stats: [BaseStatusEffect.BounceBackWithdrawalSymptomConstantStatModifierStamina]
 
-# create MAXdoc withdrawal symptom status effect
-BaseStatusEffect.MaxDOCWithdrawalSymptom:
+# create BounceBack withdrawal symptom status effect
+BaseStatusEffect.BounceBackWithdrawalSymptom:
   $base: BaseStatusEffect.Drugged
   uiData: BaseStatusEffect.WithdrawalSymptomStatusEffectUIData
   duration: BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupDuration
   maxStacks: BaseStatusEffect.WithdrawalSymptomGameStatModifierGroupMaxStacks
   gameplayTags: ["Debuff"]
-  packages: [BaseStatusEffect.MaxDOCWithdrawalSymptomGameplayLogicPackage]
+  packages: [BaseStatusEffect.BounceBackWithdrawalSymptomGameplayLogicPackage]
 
 Items.HealingWithrawalSymptomObjectActionEffect:
   $base: Items.FirstAidWhiffV0_inline2
   statusEffect:
-    $base: BaseStatusEffect.MaxDOCWithdrawalSymptom
+    $base: BaseStatusEffect.BounceBackWithdrawalSymptom
 
-Items.FirstAidWhiffV0_inline0.completionEffects:
+Items.BonesMcCoy70V0_inline0.completionEffects:
   - !append-once Items.HealingWithrawalSymptomObjectActionEffect
-Items.FirstAidWhiffV1_inline4.completionEffects:
+Items.BonesMcCoy70V1_inline0.completionEffects:
   - !append-once Items.HealingWithrawalSymptomObjectActionEffect
-Items.FirstAidWhiffV2_inline4.completionEffects:
+Items.BonesMcCoy70V2_inline4.completionEffects:
   - !append-once Items.HealingWithrawalSymptomObjectActionEffect

@@ -50,7 +50,12 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         }
     }
 
+    public func Check() -> Void {
+        
+    }
+
     public func OnRested(timestamp: Float) -> Void {
+        LogChannel(n"DEBUG", s"RED:OnRested: current timestamp: \(ToString(timestamp)) last rest timestamp: \(ToString(this.m_lastRestTimestamp))");
         let day = (24.0 * 3600.0);
         let cycle = (8.0 * 3600.0);
         let initial = (timestamp == 0.0);
