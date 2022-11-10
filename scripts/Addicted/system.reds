@@ -6,9 +6,24 @@ public class Addiction {
     public let threshold: Int32;
 }
 
+public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
+
 public class PlayerAddictionSystem extends ScriptableSystem {
     private persistent let m_addictions: array<ref<Addiction>>;
     private persistent let m_lastRestTimestamp: Float;
+    public let m_delayCallbackID: DelayID;
+
+    private func OnAttach() -> Void {
+        super.OnAttach();
+        LogChannel(n"DEBUG", s"RED:OnAttach");
+        let request = new CheckAddictionStateRequest();
+        this.m_delayCallbackID = GameInstance.GetDelaySystem(this.GetGameInstance()).DelayScriptableSystemRequest(this.GetClassName(), request, 0.03, false);
+    }
+
+    protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
+        this.m_delayCallbackID = GetInvalidDelayID();
+        LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
+    }
 
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         for addiction in this.m_addictions {

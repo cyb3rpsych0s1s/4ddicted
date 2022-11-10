@@ -1,11 +1,13 @@
 registerForEvent("onInit", function()
     print("CET:Addicted:onInit")
-    
---     -- derive effect icon
---   TweakDB:CloneRecord("UIIcon.acid_doused", "UIIcon.regeneration_icon")
---   TweakDB:SetFlat("UIIcon.acid_doused.atlasPartName", "acid_doused")
---   -- derive status effect
---   TweakDB:CloneRecord("BaseStatusEffect.Addicted", "BaseStatusEffect.Drugged")
+    Observe('PlayerPuppet', 'OnStatusEffectApplied', function(self, evt)
+        print("CET:OnStatusEffectApplied")
+        print(GameDump(evt))
+    end)
+    Observe('PlayerPuppet', 'OnStatusEffectRemoved', function (self, evt)
+        print("CET:OnStatusEffectRemoved")
+        print(GameDump(evt))
+    end)
 end)
 
 function StrLocKey(key)
