@@ -2,5 +2,5 @@
 authors = ["Roms1383"]
 language = "en"
 multilingual = false
-src = "mdbook"
+src = "pages"
 title = "Addicted"
