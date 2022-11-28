@@ -1,6 +1,6 @@
 # Initial concept
 
-## Bonjour papa
+## Gameplay
 
 Whenever:
 
