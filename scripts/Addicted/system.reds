@@ -28,7 +28,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         for addiction in this.m_addictions {
             if addiction.id == substanceID {
-                addiction.consumption += 1;
+                addiction.consumption += (this.AddictionPotency(substanceID) * this.AddictionMultiplier(substanceID));
                 LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
                 let next = this.GetNextThreshold(addiction.id);
                 if next != -1 && addiction.threshold < 3 && addiction.consumption >= next {
@@ -160,6 +160,28 @@ public class PlayerAddictionSystem extends ScriptableSystem {
                 return 0;
             default:
                 return -1;
+        }
+    }
+
+    public func AddictionMultiplier(substanceID: TweakDBID) -> Int32 {
+        let threshold = this.GetThreshold(substanceID);
+        if threshold > 1 {
+            return 2;
+        }
+        return 1;
+    }
+
+    private func AddictionPotency(substanceID: TweakDBID) -> Int32 {
+        switch(substanceID) {
+            case t"BaseStatusEffect.FirstAidWhiffV0":
+                return 1;
+            case t"BaseStatusEffect.BonesMcCoy70V0":
+                return 2;
+            case t"BaseStatusEffect.FR3SH":
+                return 2;
+            // TODO: add missing
+            default:
+                return 1;
         }
     }
 }

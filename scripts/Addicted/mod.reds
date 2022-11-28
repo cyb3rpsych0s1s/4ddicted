@@ -7,6 +7,19 @@ protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: r
     wrappedMethod(stateContext, scriptInterface);
 }
 
+@addMethod(PlayerPuppet)
+public func GetAddictionSystem() -> ref<PlayerAddictionSystem> {
+    let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());
+    return container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
+}
+
+@addMethod(PlayerPuppet)
+public func IsAddicted(substanceID: TweakDBID) -> Bool {
+    let system = this.GetAddictionSystem();
+    let threshold = system.GetThreshold(substanceID);
+    return threshold != -1;
+}
+
 @addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
     return ArrayContains(
@@ -23,8 +36,7 @@ public func IsAddictive() -> Bool {
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
     LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID())) \(ToString(evt.staticData.StatusEffectType().Type()))");
     let output = wrappedMethod(evt);
-    let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());
-    let addictionSystem = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
+    let addictionSystem = this.GetAddictionSystem();
     if evt.isNewApplication && evt.IsAddictive() {
         addictionSystem.OnAddictiveSubstanceConsumed(evt.staticData.GetID());
     }
