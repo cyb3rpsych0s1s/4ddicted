@@ -41,7 +41,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(substanceID)) first consumption");
         let addiction = new Addiction();
         addiction.id = substanceID;
-        addiction.consumption = 1;
+        addiction.consumption = this.AddictionPotency(substanceID);
         addiction.threshold = 0;
         ArrayPush(this.m_addictions, addiction);
     }
