@@ -1,9 +1,9 @@
 module Addicted
 
 public class Addiction {
-    public let id: TweakDBID;
-    public let consumption: Int32;
-    public let threshold: Int32;
+    public persistent let id: TweakDBID;
+    public persistent let consumption: Int32;
+    public persistent let threshold: Int32;
 }
 
 public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
