@@ -1,3 +1,4 @@
 community/
 **/*.log
 **/.DS_Store
+book/

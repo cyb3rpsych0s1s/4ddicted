@@ -1,3 +1,5 @@
+# Issues
+
 ```sh
 $ just deploy
 'C:Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\tools\redmod\bin\redMod.exe' deploy -root="C:Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077" -mod='nativeSettings','Toxicity','WE3D - Drugs of Night City','MyMod'
@@ -17,11 +19,10 @@ No mods found, no deployment is needed!
 Commandlet deploy has succeeded.
 ```
 
-
-
 //GameObjectEffectHelper.StartEffectEvent(this, n"status_drugged_heavy");
 //GameObject.SetAudioParameter(this, n"vfx_fullscreen_drugged_level", 3.00);
 
+```sh
 [2022-10-30 21:46:55 UTC+07:00] [info] [] RED:Addicted:OnStatusEffectApplied
 [2022-10-30 21:46:55 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
 [2022-10-30 21:46:55 UTC+07:00] [info] [] {
@@ -158,8 +159,9 @@ Commandlet deploy has succeeded.
 	properties: {
 	}
 }
+```
 
-
+```sh
 [2022-10-30 21:53:00 UTC+07:00] [info] [] Cyber Engine Tweaks startup complete.
 [2022-10-30 21:53:00 UTC+07:00] [info] [] Mod Addicted loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\Addicted')
 [2022-10-30 21:53:00 UTC+07:00] [info] [] Mod nativeSettings loaded! ('C:\Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\bin\x64\plugins\cyber_engine_tweaks\mods\nativeSettings')
@@ -206,6 +208,7 @@ Commandlet deploy has succeeded.
 [2022-10-30 21:54:17 UTC+07:00] [info] [] The status effect is <TDBID:EAB61494:1D>
 [2022-10-30 21:54:17 UTC+07:00] [info] [] CET:Addicted:OnStatusEffectApplied
 [2022-10-30 21:54:17 UTC+07:00] [info] [] RED:
+```
 
 You don't see BaseStatusEffect.FirstAidWhiffV{0/1/2}?
 
@@ -213,6 +216,7 @@ You don't see BaseStatusEffect.FirstAidWhiffV{0/1/2}?
 
 shenanigans with game systems:
 
+```sh
 \n=== Toxicity ===\n
 [2022-11-04 18:18:31 UTC+07:00] [error] [] ...x64\plugins\cyber_engine_tweaks\mods\Toxicity\GameUI.lua:310: attempt to index local 'player' (a nil value)    
 stack traceback:

@@ -78,3 +78,6 @@ cli *args="":
 
 quick:
     cat '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}'
+
+assemble:
+    mdbook build

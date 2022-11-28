@@ -8,23 +8,23 @@ list of addictive consumables:
 
 #### bounce back
 
-#![bounce-back](screenshots/bounce-back.png)
+<img src="screenshots/bounce-back.png" alt="bounce-back" width="300"/>
 
 #### black lace
 
-#![black-lace](screenshots/black-lace.png)
+<img src="screenshots/black-lace.png" alt="black-lace" width="300"/>
 
 #### health booster
 
-#![health-booster](screenshots/health-booster.png)
+<img src="screenshots/health-booster.png" alt="health-booster" width="300"/>
 
 #### capacity booster
 
-#![capacity-booster](screenshots/capacity-booster.png)
+<img src="screenshots/capacity-booster.png" alt="capacity-booster" width="300"/>
 
 #### stamina booster
 
-#![stamina-booster](screenshots/stamina-booster.png)
+<img src="screenshots/stamina-booster.png" alt="stamina-booster" width="300"/>
 
 ### alcool
 
