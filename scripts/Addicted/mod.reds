@@ -24,10 +24,28 @@ public func IsAddicted(substanceID: TweakDBID) -> Bool {
 public func IsAddictive() -> Bool {
     return ArrayContains(
         [
+            t"BaseStatusEffect.AlcoholDebuff",
+            // t"BaseStatusEffect.CombatStim", // double-check
             t"BaseStatusEffect.FirstAidWhiffV0",
+            t"BaseStatusEffect.FirstAidWhiffV1",
+            t"BaseStatusEffect.FirstAidWhiffV2",
             t"BaseStatusEffect.BonesMcCoy70V0",
-            t"BaseStatusEffect.FR3SH"
-            // TODO: add missing
+            t"BaseStatusEffect.BonesMcCoy70V1",
+            t"BaseStatusEffect.BonesMcCoy70V2",
+            t"BaseStatusEffect.BlackLaceV0",
+            t"BaseStatusEffect.HealthBooster",
+            t"BaseStatusEffect.CarryCapacityBooster",
+            t"BaseStatusEffect.StaminaBooster",
+            t"BaseStatusEffect.MemoryBooster",
+            t"BaseStatusEffect.OxyBooster",
+            // TODO: add missing (mod based)
+            t"BaseStatusEffect.FR3SH",
+            t"BaseStatusEffect.Glitter",
+            t"BaseStatusEffect.SecondWind",
+            t"BaseStatusEffect.Evade",
+            t"BaseStatusEffect.BeRiteBack",
+            t"BaseStatusEffect.Locus",
+            t"BaseStatusEffect.RainbowPoppers"
         ],
         this.staticData.GetID());
 }
