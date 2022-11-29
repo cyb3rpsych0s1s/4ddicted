@@ -85,3 +85,11 @@ All the status effects can be found [there](https://cyberpunk.fandom.com/wiki/Cy
 
 Animations can be handled with [WolvenKit](https://wiki.redmodding.org/cyberpunk-2077-modding/modding/redmod/quick-guide#animation-modding).
 [Change and potentially replace animations](https://wiki.redmodding.org/cyberpunk-2077-modding/developers/guides/quest/how-to-remove-an-animation-and-potentially-replace-it).
+
+## glossary
+
+- `PS` stands for "persistent state".
+- `wref` stands for `weak reference` (cc `Rc`). it has nothing to do with (im)mutability.
+- `IsDefined` is an intrinsic. It is preferable to testing for nullability directly.
+  `IsDefined(wref)` is `wref != null && wref.refCnt > 0`
+  `IsDefined(ref)` is `ref != null`
