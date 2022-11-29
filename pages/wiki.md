@@ -62,7 +62,7 @@ Requires latest CET from Discord, at the moment.
 Beware of start-up only scripts in your tests: needs to load or start a new game of course.
 Red Hot Tools can also watch for changes: beware of autosave.
 
-## create state/settings for mod
+## create status/settings for mod
 
 ```lua
   -- reuse existing entry to create one's status effect
@@ -76,6 +76,8 @@ Red Hot Tools can also watch for changes: beware of autosave.
   TweakDB:CloneRecord("UIIcon.acid_doused", "UIIcon.regeneration_icon")
   TweakDB:SetFlat("UIIcon.acid_doused.atlasPartName", "acid_doused")
 ```
+
+but actually the truth is that it's far more convenient and maintainable with [YAML Tweaks](https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks).
 
 ## native status effects
 
