@@ -11,6 +11,7 @@ public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
 public class PlayerAddictionSystem extends ScriptableSystem {
     private persistent let m_addictions: array<ref<Addiction>>;
     private persistent let m_lastRestTimestamp: Float;
+    public persistent let m_startRestingAtTimestamp: Float;
     public let m_delayCallbackID: DelayID;
 
     private func OnAttach() -> Void {
@@ -78,6 +79,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     public func OnRested(timestamp: Float) -> Void {
         LogChannel(n"DEBUG", s"RED:OnRested: current timestamp: \(ToString(timestamp)) last rest timestamp: \(ToString(this.m_lastRestTimestamp))");
+        LogChannel(n"DEBUG", s"RED:OnRested: start resting at timestamp: \(ToString(this.m_startRestingAtTimestamp))");
         let day = (24.0 * 3600.0);
         let cycle = (8.0 * 3600.0);
         let initial = (timestamp == 0.0);
