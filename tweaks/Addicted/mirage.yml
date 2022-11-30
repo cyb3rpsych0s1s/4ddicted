@@ -1,0 +1,17 @@
+UIIcon.mirage_icon:
+  $base: UIIcon.poisoned
+  atlasPartName: mirage_icon
+
+# duration
+BaseStatusEffect.MirageConstantStatModifierDuration:
+  $base: BaseStatusEffect.Drugged_inline4
+  value: 30
+BaseStatusEffect.MirageGameStatModifierGroupDuration:
+  $base: BaseStatusEffect.Drugged_inline3
+  statModifiers: ["BaseStatusEffect.MirageConstantStatModifierDuration"]
+
+# update icon
+BaseStatusEffect.MirageStatusEffectUIData:
+  $base: BaseStatusEffect.Drugged_inline5
+  iconPath: mirage_icon
+  intValues: [50,10]

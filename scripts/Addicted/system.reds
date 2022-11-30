@@ -16,13 +16,24 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     private func OnAttach() -> Void {
         super.OnAttach();
         LogChannel(n"DEBUG", s"RED:OnAttach");
+        this.Reschedule();
+    }
+
+    // testing, but base for a correct rescheduling
+    private func Reschedule() -> Void {
+        let system = GameInstance.GetDelaySystem(this.GetGameInstance());
+        if this.m_delayCallbackID != GetInvalidDelayID() {
+            system.CancelDelay(this.m_delayCallbackID);
+            this.m_delayCallbackID = GetInvalidDelayID();
+        }
         let request = new CheckAddictionStateRequest();
-        this.m_delayCallbackID = GameInstance.GetDelaySystem(this.GetGameInstance()).DelayScriptableSystemRequest(this.GetClassName(), request, 0.03, false);
+        this.m_delayCallbackID = GameInstance.GetDelaySystem(this.GetGameInstance()).DelayScriptableSystemRequest(this.GetClassName(), request, 15, false);
     }
 
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
-        this.m_delayCallbackID = GetInvalidDelayID();
         LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
+        GetPlayer(this.GetGameInstance()).FeelsDizzy();
+        this.Reschedule();
     }
 
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
@@ -63,10 +74,6 @@ public class PlayerAddictionSystem extends ScriptableSystem {
                 }
             }
         }
-    }
-
-    public func Check() -> Void {
-        
     }
 
     public func OnRested(timestamp: Float) -> Void {

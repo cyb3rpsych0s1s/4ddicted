@@ -1,0 +1,11 @@
+BaseStatusEffect.MaxDOCMirageGameplayLogicPackage:
+  $base: BaseStatusEffect.DruggedSevere_inline4
+
+# status effect
+BaseStatusEffect.MaxDOCMirage:
+  $base: BaseStatusEffect.DruggedSevere
+  uiData: BaseStatusEffect.MirageStatusEffectUIData
+  duration: BaseStatusEffect.MirageGameStatModifierGroupDuration
+  gameplayTags: []
+  packages: [BaseStatusEffect.MaxDOCMirageGameplayLogicPackage]
+  VFX: [BaseStatusEffect.JohnnySicknessHeavy_inline0]

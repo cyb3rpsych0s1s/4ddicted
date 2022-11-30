@@ -14,6 +14,12 @@ public func GetAddictionSystem() -> ref<PlayerAddictionSystem> {
 }
 
 @addMethod(PlayerPuppet)
+public func FeelsDizzy() -> Void {
+    GameObject.SetAudioParameter(this, n"vfx_fullscreen_drunk_level", 3.00);
+    StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.MaxDOCMirage");
+}
+
+@addMethod(PlayerPuppet)
 public func IsAddicted(substanceID: TweakDBID) -> Bool {
     let system = this.GetAddictionSystem();
     let threshold = system.GetThreshold(substanceID);

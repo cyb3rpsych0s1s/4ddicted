@@ -23,6 +23,7 @@ Items.HealingWithrawalSymptomObjectActionEffect:
   statusEffect:
     $base: BaseStatusEffect.BounceBackWithdrawalSymptom
 
+# this is how the item triggers the status effect
 Items.BonesMcCoy70V0_inline0.completionEffects:
   - !append-once Items.HealingWithrawalSymptomObjectActionEffect
 Items.BonesMcCoy70V1_inline0.completionEffects:
