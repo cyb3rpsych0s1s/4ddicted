@@ -43,7 +43,9 @@ you have to define a listener function and register it providing target object a
 I think this is the type based on native callbacks, they store `Callback<T>` instances (wrapping target object with the method name) and invoke them
 for example, blackboards `RegisterListenerBool(id : gamebbScriptID_Bool, object : handle:IScriptable, func : CName, fireIfValueExist : Bool)`
 
-## workflow
+## in-game time vs IRL
+
+1 min in-game is 10 real seconds.
 
 ## quickly seed inventory with items
 
