@@ -33,8 +33,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
         LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
-        GetPlayer(this.GetGameInstance()).FeelsDizzy();
-        this.Reschedule();
+        // ok, this works
+        // GetPlayer(this.GetGameInstance()).FeelsDizzy();
+        // this.Reschedule();
     }
 
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
@@ -78,8 +79,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     }
 
     public func OnRested(timestamp: Float) -> Void {
-        LogChannel(n"DEBUG", s"RED:OnRested: current timestamp: \(ToString(timestamp)) last rest timestamp: \(ToString(this.m_lastRestTimestamp))");
-        LogChannel(n"DEBUG", s"RED:OnRested: start resting at timestamp: \(ToString(this.m_startRestingAtTimestamp))");
+        let diff = timestamp - this.m_startRestingAtTimestamp;
+        let diffInHours = RoundF(diff / 3600.0);
+        LogChannel(n"DEBUG", s"RED:OnRested: rested since: \(ToString(this.m_startRestingAtTimestamp)), rested until: \(ToString(timestamp)), diff in hours (rounded): \(ToString(diffInHours)), last rest: \(ToString(this.m_lastRestTimestamp))");
         let day = (24.0 * 3600.0);
         let cycle = (8.0 * 3600.0);
         let initial = (timestamp == 0.0);

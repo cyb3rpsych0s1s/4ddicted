@@ -1,10 +1,14 @@
+module Addicted
+
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
   if this.m_hoursToSkip > 0 {
-    let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());
+    LogChannel(n"DEBUG", s"RED:TimeskipGameController:Apply: \(this.m_hoursToSkip) hour(s) to skip");
+    let container = GameInstance.GetScriptableSystemsContainer(this.m_gameInstance);
     let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
-    let timeSystem = GameInstance.GetTimeSystem(this.GetGame());
-    system.m_startRestingAtTimestamp = timeSystem.GetGameTimeStamp();
+    system.m_startRestingAtTimestamp = this.m_timeSystem.GetGameTimeStamp();
+  } else {
+    LogChannel(n"DEBUG", s"RED:TimeskipGameController:Apply: less than one hour to skip");
   }
   wrappedMethod();
 }
