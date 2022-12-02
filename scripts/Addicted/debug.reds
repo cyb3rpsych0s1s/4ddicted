@@ -43,3 +43,20 @@ public func JustSomeEffect(effect: TweakDBID) -> Void {
 public func ClearEffect(effect: TweakDBID) -> Void {
     StatusEffectHelper.RemoveStatusEffect(this, effect);
 }
+
+// Game.GetPlayer():JustADopeFiend()
+@addMethod(PlayerPuppet)
+public func JustADopeFiend() -> Void {
+    // doesn't work for some reason (but works if manually planned, see addiction system)
+    // StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.BreathingHeavy");
+    // let breath = new ApplyNewStatusEffectEvent();
+    // breath.effectID = t"BaseStatusEffect.BreathingNormal";
+    // let stun = new ApplyNewStatusEffectEvent();
+    // stun.effectID = t"BaseStatusEffect.BorgStun";
+    // let shake = new ApplyNewStatusEffectEvent();
+    // shake.effectID = t"BaseStatusEffect.DrillingShakeMedium";
+    // let system = GameInstance.GetDelaySystem(this.GetGame());
+    // system.DelayEvent(this, stun, 3.0, true);
+    // system.DelayEvent(this, stun, 6.0, true);
+    // system.DelayEvent(this, breath, 12.0, true);
+}

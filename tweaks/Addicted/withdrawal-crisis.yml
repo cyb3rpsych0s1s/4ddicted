@@ -8,12 +8,12 @@ BaseStatusEffect.WithdrawalCrisis:
   AIData: BaseStatusEffect.Stun_inline8 # this is probably required for NPCs
   duration: BaseStatusEffect.Stun_inline2
   dynamicDuration: false
-  gameplayTags: [CameraAnimation, CameraShake, Debuff]
+  gameplayTags: [CameraAnimation, CameraShake, Breathing, Debuff]
   immunityStats: []
   isAffectedByTimeDilationNPC: true
   isAffectedByTimeDilationPlayer: true
   maxStacks: BaseStatusEffect.CameraAnimationAbstract_inline0
-  packages: [BaseStatusEffect.DrillingShakeMedium_inline0]
+  packages: [BaseStatusEffect.DrillingShakeMedium_inline0, BaseStatusEffect.BreathingHeavy_inline0]
   playerData: BaseStatusEffect.Stun_inline1
   removeAllStacksWhenDurationEnds: false
   removeAllStacksWhenDurationEndsStatModifiers: None

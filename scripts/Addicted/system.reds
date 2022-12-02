@@ -7,12 +7,16 @@ public class Addiction {
 }
 
 public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
+public class PlayAddictionEffectRequest extends ScriptableSystemRequest {
+    public let effects: array<TweakDBID>;
+}
 
 public class PlayerAddictionSystem extends ScriptableSystem {
     private persistent let m_addictions: array<ref<Addiction>>;
     private persistent let m_lastRestTimestamp: Float;
     public persistent let m_startRestingAtTimestamp: Float;
     public let m_delayCallbackID: DelayID;
+    public let m_effectsDelayID: DelayID;
 
     private func OnAttach() -> Void {
         super.OnAttach();
@@ -28,7 +32,27 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             this.m_delayCallbackID = GetInvalidDelayID();
         }
         let request = new CheckAddictionStateRequest();
-        this.m_delayCallbackID = GameInstance.GetDelaySystem(this.GetGameInstance()).DelayScriptableSystemRequest(this.GetClassName(), request, 15, false);
+        this.m_delayCallbackID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 15, false);
+    }
+
+    public func Plan(effects: array<TweakDBID>) -> Void {
+        if this.m_effectsDelayID != GetInvalidDelayID() {
+            return;
+        }
+        let system = GameInstance.GetDelaySystem(this.GetGameInstance());
+        let request = new PlayAddictionEffectRequest();
+        request.effects = effects;
+        this.m_effectsDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 0.5, true);
+    }
+
+    protected final func OnPlayAddictionEffectRequest(request: ref<PlayAddictionEffectRequest>) -> Void {
+        let system = GameInstance.GetDelaySystem(this.GetGameInstance());
+        system.CancelDelay(this.m_effectsDelayID);
+        if ArraySize(request.effects) > 0 {
+            let next = ArrayPop(request.effects);
+            StatusEffectHelper.ApplyStatusEffect(GetPlayer(this.GetGameInstance()), next);
+            this.m_effectsDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 3, true);
+        }
     }
 
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
