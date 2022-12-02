@@ -1,4 +1,5 @@
 community/
+samples/
 **/*.log
 **/.DS_Store
 book/

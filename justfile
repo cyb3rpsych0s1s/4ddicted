@@ -49,6 +49,8 @@ build:
 
 # show logs from CET and RED
 logs:
+    echo "\n=== TweakXL ===\n" && \
+    cat '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' && \
     echo "\n=== CET ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' && \
     echo "\n=== REDscript ===\n" && \
@@ -66,7 +68,8 @@ store:
 
 # clear out logs
 erase: clear
-    rm -f '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
+    rm -f '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
+    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
     '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
