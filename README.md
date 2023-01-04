@@ -10,4 +10,3 @@ To ease development, a `justfile` is available with the following commands:
 - `just setup`: run once on install, to create folders if missing
 - `just clean`: delete this mod's files in game directory
 - `just build`: copy files from your dev environment to the game directory
-- `just deploy`: run redscript cli to redeploy mod
