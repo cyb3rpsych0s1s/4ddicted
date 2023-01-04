@@ -15,7 +15,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     private persistent let m_addictions: array<ref<Addiction>>;
     private persistent let m_lastRestTimestamp: Float;
     public persistent let m_startRestingAtTimestamp: Float;
-    public let m_delayCallbackID: DelayID;
+    public let m_checkDelayID: DelayID;
     public let m_effectsDelayID: DelayID;
 
     private func OnAttach() -> Void {
@@ -27,12 +27,12 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     // testing, but base for a correct rescheduling
     private func Reschedule() -> Void {
         let system = GameInstance.GetDelaySystem(this.GetGameInstance());
-        if this.m_delayCallbackID != GetInvalidDelayID() {
-            system.CancelDelay(this.m_delayCallbackID);
-            this.m_delayCallbackID = GetInvalidDelayID();
+        if this.m_checkDelayID != GetInvalidDelayID() {
+            system.CancelDelay(this.m_checkDelayID);
+            this.m_checkDelayID = GetInvalidDelayID();
         }
         let request = new CheckAddictionStateRequest();
-        this.m_delayCallbackID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 15, false);
+        this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 15, false);
     }
 
     public func Plan(effects: array<TweakDBID>) -> Void {
