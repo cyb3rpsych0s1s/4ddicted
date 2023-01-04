@@ -72,7 +72,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         for addiction in this.m_addictions {
             if addiction.id == substanceID {
-                addiction.consumption += (this.AddictionPotency(substanceID) * this.AddictionMultiplier(substanceID));
+                addiction.consumption = Min(addiction.consumption + (this.AddictionPotency(substanceID) * this.AddictionMultiplier(substanceID)), 2 * EnumInt(Threshold.Severely));
                 LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
                 return;
             }
