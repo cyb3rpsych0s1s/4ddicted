@@ -18,7 +18,7 @@ public class Addiction {
 /// periodically check for addiction state
 public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
 /// play multiple successive status effects
-public class PlayAddictionEffectRequest extends ScriptableSystemRequest {
+public class PlayMultipleAddictionEffectsRequest extends ScriptableSystemRequest {
     public let effects: array<TweakDBID>;
 }
 
@@ -51,12 +51,12 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             return;
         }
         let system = GameInstance.GetDelaySystem(this.GetGameInstance());
-        let request = new PlayAddictionEffectRequest();
+        let request = new PlayMultipleAddictionEffectsRequest();
         request.effects = effects;
         this.m_playDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 0.5, true);
     }
 
-    protected final func OnPlayAddictionEffectRequest(request: ref<PlayAddictionEffectRequest>) -> Void {
+    protected final func OnPlayMultipleAddictionEffectsRequest(request: ref<PlayMultipleAddictionEffectsRequest>) -> Void {
         let system = GameInstance.GetDelaySystem(this.GetGameInstance());
         system.CancelDelay(this.m_playDelayID);
         if ArraySize(request.effects) > 0 {
