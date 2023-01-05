@@ -4,6 +4,10 @@ BaseStatusEffect.SlowStun:
   playerData: BaseStatusEffect.SlowStun_inline1
   VFX: [BaseStatusEffect.InhalerBuff_inline0]
 
+BaseStatusEffect.SlowStun_inline0:
+  name: status_craving
+  shouldReapply: false
+
 BaseStatusEffect.SlowStun_inline1:
   $base: BaseStatusEffect.Stun_inline1
   cameraShakeStrength: 2
