@@ -2,14 +2,9 @@ BaseStatusEffect.SlowStun:
   $base: BaseStatusEffect.Stun
   duration: BaseStatusEffect.SlowStun_inline2
   playerData: BaseStatusEffect.SlowStun_inline1
+  packages: [BaseStatusEffect.DruggedSevere_inline4]
   VFX: [BaseStatusEffect.Bleeding_inline0]
-
-# BaseStatusEffect.Blind_inline0
-# BaseStatusEffect.InhalerBuff_inline0
-# BaseStatusEffect.SandstormAbstract_inline0
-# BaseStatusEffect.BlackLaceV0_inline0
-# BaseStatusEffect.PlayerExhausted_inline0
-# BaseStatusEffect.Bleeding_inline0
+  SFX: [BaseStatusEffect.DruggedSevere_inline3]
 
 BaseStatusEffect.SlowStun_inline1:
   $base: BaseStatusEffect.Stun_inline1
