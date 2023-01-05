@@ -1,5 +1,6 @@
 module Addicted
 
+/// addictions threshold
 enum Threshold {
     Clean = 0,
     Barely = 10,
@@ -8,12 +9,15 @@ enum Threshold {
     Severely = 60,
 }
 
+/// keep track of consumption for a given consumable
 public class Addiction {
     public persistent let id: TweakDBID;
     public persistent let consumption: Int32;
 }
 
+/// periodically check for addiction state
 public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
+/// play multiple successive status effects
 public class PlayAddictionEffectRequest extends ScriptableSystemRequest {
     public let effects: array<TweakDBID>;
 }
@@ -27,11 +31,10 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     private func OnAttach() -> Void {
         super.OnAttach();
-        LogChannel(n"DEBUG", s"RED:OnAttach");
         this.Reschedule();
     }
 
-    // testing, but base for a correct rescheduling
+    // cancel previous scheduled check if exist, then reschedule check request
     private func Reschedule() -> Void {
         let system = GameInstance.GetDelaySystem(this.GetGameInstance());
         if this.m_checkDelayID != GetInvalidDelayID() {
@@ -42,6 +45,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 10, false);
     }
 
+    // skip if already planned, otherwise plan to play a status effect request
     public func Plan(effects: array<TweakDBID>) -> Void {
         if this.m_playDelayID != GetInvalidDelayID() {
             return;
@@ -69,37 +73,34 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         this.Reschedule();
     }
 
+    /// when substance consumed, add or increase substance consumption
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         for addiction in this.m_addictions {
             if addiction.id == substanceID {
                 addiction.consumption = Min(addiction.consumption + (this.AddictionPotency(substanceID) * this.AddictionMultiplier(substanceID)), 2 * EnumInt(Threshold.Severely));
-                LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
-                return;
+                return; // if found
             }
         }
-        LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(substanceID)) first consumption");
+        // if not found
         let addiction = new Addiction();
         addiction.id = substanceID;
         addiction.consumption = this.AddictionPotency(substanceID);
         ArrayPush(this.m_addictions, addiction);
     }
 
+    /// when substance wean off, remove or decrease substance consumption
     public func OnAddictiveSubstanceWeanOff() -> Void {
         for addiction in this.m_addictions {
             if addiction.consumption > 0 {
                 addiction.consumption -= 1;
-                LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
             } else {
-                LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) completely weaned off!");
                 ArrayRemove(this.m_addictions, addiction);
             }
         }
     }
 
+    /// if rests long enough, addictions slightly wean off
     public func OnRested(timestamp: Float) -> Void {
-        let diff = timestamp - this.m_startRestingAtTimestamp;
-        let diffInHours = RoundF(diff / 3600.0);
-        LogChannel(n"DEBUG", s"RED:OnRested: rested since: \(ToString(this.m_startRestingAtTimestamp)), rested until: \(ToString(timestamp)), diff in hours (rounded): \(ToString(diffInHours)), last rest: \(ToString(this.m_lastRestTimestamp))");
         let day = (24.0 * 3600.0);
         let cycle = (8.0 * 3600.0);
         let initial = (timestamp == 0.0);
@@ -110,6 +111,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         }
     }
 
+    /// get current substance consumption
     private func GetConsumption(substanceID: TweakDBID) -> Int32 {
         for addiction in this.m_addictions {
             if addiction.id == substanceID {
@@ -119,6 +121,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         return -1;
     }
 
+    /// get current substance addiction threshold reached
     private func GetThreshold(substanceID: TweakDBID) -> Threshold {
         for addiction in this.m_addictions {
             if addiction.id == substanceID {
@@ -143,6 +146,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         return Threshold.Clean;
     }
 
+    /// addiction becomes stronger when reaching higher threshold
     public func AddictionMultiplier(substanceID: TweakDBID) -> Int32 {
         let threshold = this.GetThreshold(substanceID);
         switch (threshold) {
