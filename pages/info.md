@@ -32,6 +32,8 @@ found in varieties in-game.
 
 ## WE3D - Drugs of Night City
 
+(\w*)_(\w*)
+
 ```lua
 BlackLace_Description = "Sometimes you just wanna feel like a badass motherfucker."
 RainbowPoppers_Description = "Offensive luck enhancer."
