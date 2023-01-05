@@ -45,7 +45,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 10, false);
     }
 
-    // skip if already planned, otherwise plan to play a status effect request
+    // skip if already planned, otherwise plan to play multiple status effects consecutively
     public func Plan(effects: array<TweakDBID>) -> Void {
         if this.m_playDelayID != GetInvalidDelayID() {
             return;
