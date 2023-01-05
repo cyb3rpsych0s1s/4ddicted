@@ -82,6 +82,12 @@ private final func Apply() -> Void {
   wrappedMethod();
 }
 
+@wrapMethod(PlayerAddictionSystem)
+protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
+    LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
+    wrappedMethod();
+}
+
 // Game.GetPlayer():JustSomeSound(CName.new('vfx_fullscreen_memory_boost_activate'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_sonic_shock'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_request_backup'))

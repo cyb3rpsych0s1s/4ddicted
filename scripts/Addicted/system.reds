@@ -67,7 +67,6 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     }
 
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
-        LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
         // ok, this works
         GetPlayer(this.GetGameInstance()).SlowStun();
         this.Reschedule();
