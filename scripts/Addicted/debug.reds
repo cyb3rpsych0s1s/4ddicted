@@ -1,5 +1,32 @@
 module Addicted
 
+@wrapMethod(ConsumeAction)
+protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "ProcessStatusEffects " + ToString(actionEffects));
+    wrappedMethod(actionEffects, gameInstance);
+}
+
+@wrapMethod(RestedEvents)
+protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+    let system = GameInstance.GetTimeSystem(scriptInterface.GetGame());
+    LogChannel(n"DEBUG", "OnEnter " + ToString(system.GetGameTimeStamp()));
+    wrappedMethod(stateContext, scriptInterface);
+}
+
+@wrapMethod(PlayerPuppet)
+protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
+    LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID())) \(ToString(evt.staticData.StatusEffectType().Type()))");
+    return wrappedMethod(evt);
+}
+
+@wrapMethod(PlayerPuppet)
+protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
+    if evt.IsAddictive() {
+        LogChannel(n"DEBUG","RED:Addicted:OnStatusEffectRemoved (IsAddictive)");
+    }
+    return wrappedMethod(evt);
+}
+
 // Game.GetPlayer():JustSomeSound(CName.new('vfx_fullscreen_memory_boost_activate'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_sonic_shock'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_request_backup'))
