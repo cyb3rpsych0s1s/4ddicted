@@ -39,7 +39,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             this.m_checkDelayID = GetInvalidDelayID();
         }
         let request = new CheckAddictionStateRequest();
-        this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 15, false);
+        this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 10, false);
     }
 
     public func Plan(effects: array<TweakDBID>) -> Void {
@@ -65,8 +65,8 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
         LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
         // ok, this works
-        // GetPlayer(this.GetGameInstance()).FeelsDizzy();
-        // this.Reschedule();
+        GetPlayer(this.GetGameInstance()).SlowStun();
+        this.Reschedule();
     }
 
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {

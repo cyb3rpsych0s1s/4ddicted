@@ -1,0 +1,18 @@
+BaseStatusEffect.SlowStun:
+  $base: BaseStatusEffect.Stun
+  duration: BaseStatusEffect.SlowStun_inline2
+  playerData: BaseStatusEffect.SlowStun_inline1
+  VFX: [BaseStatusEffect.InhalerBuff_inline0]
+
+BaseStatusEffect.SlowStun_inline1:
+  $base: BaseStatusEffect.Stun_inline1
+  cameraShakeStrength: 2
+  impulseDistance: 10
+
+BaseStatusEffect.SlowStun_inline2:
+  $base: BaseStatusEffect.Stun_inline2
+  statModifiers: ["BaseStatusEffect.SlowStun_inline3"]
+
+BaseStatusEffect.SlowStun_inline3:
+  $base: BaseStatusEffect.Stun_inline3
+  value: 5

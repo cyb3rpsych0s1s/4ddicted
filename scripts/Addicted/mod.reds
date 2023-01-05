@@ -1,5 +1,11 @@
 module Addicted
 
+@wrapMethod(ConsumeAction)
+protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "ProcessStatusEffects " + ToString(actionEffects));
+    wrappedMethod(actionEffects, gameInstance);
+}
+
 @wrapMethod(RestedEvents)
 protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
     let system = GameInstance.GetTimeSystem(scriptInterface.GetGame());
@@ -20,10 +26,15 @@ public func FeelsDizzy() -> Void {
 }
 
 @addMethod(PlayerPuppet)
+public func SlowStun() -> Void {
+    StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.SlowStun");
+}
+
+@addMethod(PlayerPuppet)
 public func IsAddicted(substanceID: TweakDBID) -> Bool {
     let system = this.GetAddictionSystem();
     let threshold = system.GetThreshold(substanceID);
-    return threshold != -1;
+    return EnumInt(threshold) >= EnumInt(Threshold.Mildly);
 }
 
 @addMethod(StatusEffectEvent)

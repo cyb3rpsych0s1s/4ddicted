@@ -45,6 +45,7 @@ public func ClearEffect(effect: TweakDBID) -> Void {
 }
 
 // Game.GetPlayer():JustADopeFiend()
+// Game.GetPlayer():SlowStun()
 @addMethod(PlayerPuppet)
 public func JustADopeFiend() -> Void {
     // doesn't work for some reason (but works if manually planned, see addiction system)
