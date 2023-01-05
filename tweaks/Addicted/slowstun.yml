@@ -2,7 +2,8 @@ BaseStatusEffect.SlowStun:
   $base: BaseStatusEffect.Stun
   duration: BaseStatusEffect.SlowStun_inline2
   playerData: BaseStatusEffect.SlowStun_inline1
-  packages: [BaseStatusEffect.DruggedSevere_inline4]
+  uiData: BaseStatusEffect.WithdrawalCrisisUIData
+  packages: [BaseStatusEffect.JohnnySicknessHeavy_inline1, BaseStatusEffect.DruggedSevere_inline4]
   VFX: [BaseStatusEffect.Bleeding_inline0]
   SFX: [BaseStatusEffect.DruggedSevere_inline3]
 

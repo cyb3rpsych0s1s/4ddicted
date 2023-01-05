@@ -42,3 +42,8 @@ e.g.
 - `BaseStatusEffect.BaseContagionPoison_inline0`
 - `BaseStatusEffect.Poisoned_inline31`
 - `BaseStatusEffect.DruggedSevere_inline3`
+
+## Breathing
+
+Character breathing effect, must be applied in `packages`.
+> see `BaseStatusEffect.JohnnySicknessHeavy`
