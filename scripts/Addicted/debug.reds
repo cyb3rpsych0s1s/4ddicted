@@ -72,6 +72,16 @@ public func OnRested(timestamp: Float) -> Void {
     wrappedMethod(timestamp);
 }
 
+@wrapMethod(TimeskipGameController)
+private final func Apply() -> Void {
+  if this.m_hoursToSkip > 0 {
+    LogChannel(n"DEBUG", s"RED:TimeskipGameController:Apply: \(this.m_hoursToSkip) hour(s) to skip");
+  } else {
+    LogChannel(n"DEBUG", s"RED:TimeskipGameController:Apply: less than one hour to skip");
+  }
+  wrappedMethod();
+}
+
 // Game.GetPlayer():JustSomeSound(CName.new('vfx_fullscreen_memory_boost_activate'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_sonic_shock'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_request_backup'))
