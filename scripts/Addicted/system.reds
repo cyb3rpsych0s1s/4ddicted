@@ -9,6 +9,13 @@ enum Threshold {
     Severely = 60,
 }
 
+/// audios onomatopea
+enum Onomatopea {
+    Cough = 0,
+    Pain = 1,
+    Fear = 2,
+}
+
 /// keep track of consumption for a given consumable
 public class Addiction {
     public persistent let id: TweakDBID;
@@ -21,9 +28,10 @@ public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
 public class PlayMultipleAddictionEffectsRequest extends ScriptableSystemRequest {
     public let effects: array<TweakDBID>;
 }
-/// play coughing audios for some duration
-public class PlayCoughingFitRequest extends ScriptableSystemRequest {
-    public let ends: Float;
+/// play onomatopea audios for some duration
+public class PlayAudioForDurationRequest extends ScriptableSystemRequest {
+    /// game timestamp
+    public let until: Float;
 }
 
 public class PlayerAddictionSystem extends ScriptableSystem {
@@ -80,23 +88,24 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
             let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
             let time = GameInstance.GetTimeSystem(this.GetGameInstance());
-            let request = new PlayCoughingFitRequest();
-            request.ends = time.GetGameTimeStamp() + this.GetRandomOnoDuration();
+            let request = new PlayAudioForDurationRequest();
+            request.until = time.GetGameTimeStamp() + this.GetRandomOnoDuration();
             this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, this.GetRandomOnoDelay(), true);
         }
         this.Reschedule(this.GetRandomSymptomDelay());
     }
 
-    protected final func OnPlayCoughingFitRequest(request: ref<PlayCoughingFitRequest>) -> Void {
+    protected final func OnPlayAudioForDurationRequest(request: ref<PlayAudioForDurationRequest>) -> Void {
         let player = GetPlayer(this.GetGameInstance());
         player.Cough();
+        
         let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
         let time = GameInstance.GetTimeSystem(this.GetGameInstance());
         delay.CancelDelay(this.m_audioDelayID);
         let wait = this.GetRandomOnoDelay();
         let now = time.GetGameTimeStamp();
-        LogChannel(n"DEBUG", "RED:OnPlayCoughingFitRequest" + " ends: " + request.ends + " now: " + now + " next: " + ToString(now + wait));
-        if request.ends > (now + wait) {
+        LogChannel(n"DEBUG", "RED:OnPlayAudioForDurationRequest" + " until: " + request.until + " now: " + now + " next: " + ToString(now + wait));
+        if request.until > (now + wait) {
             this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, wait, true);
         } else {
             this.m_audioDelayID = GetInvalidDelayID();
@@ -174,6 +183,20 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             }
         }
         return Threshold.Clean;
+    }
+
+    /// get current substance addiction highest threshold reached, no matter the substance
+    public func GetHighestThreshold() -> Threshold {
+        let highest = Threshold.Clean;
+        let current: Threshold;
+        for addiction in this.m_addictions {
+            current = this.GetThreshold(addiction.id);
+            if EnumInt(current) > EnumInt(highest) {
+                highest = current;
+            }
+
+        }
+        return highest;
     }
 
     /// addiction becomes stronger when reaching higher threshold
