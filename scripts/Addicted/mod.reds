@@ -1,5 +1,32 @@
 module Addicted
 
+public func CoughAudios(gender: CName) -> array<CName> {
+    LogChannel(n"DEBUG", "RED:CoughAudios" + " " + ToString(gender));
+    if Equals(gender, n"Female") {
+        return [
+            n"q203_sc_01_v_female_cough",
+            n"q114_sc_02_v_vo_cough",
+            n"q115_sc_00b_vo_v_cough"
+        ];
+    }
+    return [
+        n"g_sc_v_sickness_cough_light",
+        n"g_sc_v_sickness_cough_hard",
+        n"g_sc_v_sickness_cough_blood"
+    ];
+}
+
+@addMethod(PlayerPuppet)
+public func Cough() -> Void {
+    let audios = CoughAudios(this.GetGender());
+    let count = ArraySize(audios);
+    let idx = RandRange(0, count - 1);
+    let name = audios[idx];
+    let evt = new SoundPlayEvent();
+    evt.soundName = name;
+    this.QueueEvent(evt);
+}
+
 @addMethod(PlayerPuppet)
 public func GetAddictionSystem() -> ref<PlayerAddictionSystem> {
     let container = GameInstance.GetScriptableSystemsContainer(this.GetGame());

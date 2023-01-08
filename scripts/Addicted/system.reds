@@ -70,7 +70,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
         if this.ShouldApplyAddictionStatusEffect() {
             // ok, this works
-            GetPlayer(this.GetGameInstance()).SlowStun();
+            let player = GetPlayer(this.GetGameInstance());
+            player.SlowStun();
+            player.Cough();
         }
         this.Reschedule(this.GetRandomSymptomDelay());
     }
@@ -187,7 +189,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         return RandRangeF(500, 900);
     }
 
-    // private func GetRandomOnoDelay() -> Float {
-    //     return RandRangeF(10, 20);
-    // }
+    private func GetRandomOnoDelay() -> Float {
+        return RandRangeF(10, 20);
+    }
 }
