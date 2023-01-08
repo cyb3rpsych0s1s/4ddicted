@@ -60,6 +60,7 @@ more info on discord in #redscript-snippet (thanks @Lyralei)
 Game.AddToInventory("Items.FR3SH", 1)
 Game.AddToInventory("Items.BonesMcCoy70V0", 10)
 Game.AddToInventory("Items.FirstAidWhiffV0", 10)
+Game.AddToInventory("Items.BlackLaceV0", 10)
 ```
 
 ### autocompletion

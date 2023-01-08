@@ -77,11 +77,12 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             // ok, this works
             let player = GetPlayer(this.GetGameInstance());
             player.SlowStun();
+
             let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
             let time = GameInstance.GetTimeSystem(this.GetGameInstance());
             let request = new PlayCoughingFitRequest();
-            request.ends = time.GetGameTimeStamp() + 120.;
-            this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, 2, true);
+            request.ends = time.GetGameTimeStamp() + this.GetRandomOnoDuration();
+            this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, this.GetRandomOnoDelay(), true);
         }
         this.Reschedule(this.GetRandomSymptomDelay());
     }
@@ -215,6 +216,10 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     }
 
     private func GetRandomOnoDelay() -> Float {
-        return RandRangeF(3, 9);
+        return RandRangeF(4, 9);
+    }
+
+    private func GetRandomOnoDuration() -> Float {
+        return RandRangeF(120, 400);
     }
 }

@@ -92,6 +92,7 @@ private final func Apply() -> Void {
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_sonic_shock'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_request_backup'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_synapse_burnout'))
+// Game.GetPlayer():JustSomeSound(CName.new('ono_freak_f_pain_long_set_04'))
 @addMethod(PlayerPuppet)
 public func JustSomeSound(sound: CName) -> Void {
     // e.g. n"vfx_fullscreen_memory_boost_activate"
@@ -121,6 +122,7 @@ public func JustSomeVisual(visual: CName) -> Void {
 // Game.GetPlayer():JustSomeEffect(TweakDBID.new('BaseStatusEffect.AutoLocomotion'))
 // Game.GetPlayer():JustSomeEffect(TweakDBID.new('BaseStatusEffect.DrillingShakeMedium'))
 // Game.GetPlayer():JustSomeEffect(TweakDBID.new('BaseStatusEffect.WithdrawalCrisis'))
+// Game.GetPlayer():JustSomeEffect(TweakDBID.new('BaseStatusEffect.MaxDOCMirage'))
 @addMethod(PlayerPuppet)
 public func JustSomeEffect(effect: TweakDBID) -> Void {
     StatusEffectHelper.ApplyStatusEffect(this, effect);
@@ -156,3 +158,9 @@ public func JustADopeFiend() -> Void {
 
 //     wrappedMethod(owner);
 // }
+
+@wrapMethod(AISubActionGameplayLogicPackage_Record_Implementation)
+public final static func ApplyGameplayLogicPackage(context: ScriptExecutionContext, record: wref<AISubActionGameplayLogicPackage_Record>) -> Void {
+    LogChannel(n"DEBUG", "RED:ApplyGameplayLogicPackage" + " " + ToString(record));
+    wrappedMethod(context, record);
+}
