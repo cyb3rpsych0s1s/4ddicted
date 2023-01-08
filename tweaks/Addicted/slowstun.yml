@@ -6,6 +6,19 @@ BaseStatusEffect.Hindrance_inline0:
   $base: BaseStatusEffect.HealthBooster_inline0
   stats: [BaseStatusEffect.Hindrance_inline1]
 
+BaseStatusEffect.SlowStun_inline3:
+  $base: BaseStatusEffect.Stun_inline3
+  value: 3
+
+BaseStatusEffect.SlowStun_inline2:
+  $base: BaseStatusEffect.Stun_inline2
+  statModifiers: [BaseStatusEffect.SlowStun_inline3]
+
+BaseStatusEffect.SlowStun_inline1:
+  $base: BaseStatusEffect.Stun_inline1
+  cameraShakeStrength: 2
+  impulseDistance: 2
+
 BaseStatusEffect.SlowStun:
   $base: BaseStatusEffect.Stun
   duration: BaseStatusEffect.SlowStun_inline2
@@ -14,16 +27,3 @@ BaseStatusEffect.SlowStun:
   packages: [BaseStatusEffect.JohnnySicknessHeavy_inline1, BaseStatusEffect.DruggedSevere_inline4, BaseStatusEffect.Hindrance_inline0]
   VFX: [BaseStatusEffect.Bleeding_inline0]
   SFX: [BaseStatusEffect.DruggedSevere_inline3]
-
-BaseStatusEffect.SlowStun_inline1:
-  $base: BaseStatusEffect.Stun_inline1
-  cameraShakeStrength: 2
-  impulseDistance: 2
-
-BaseStatusEffect.SlowStun_inline2:
-  $base: BaseStatusEffect.Stun_inline2
-  statModifiers: [BaseStatusEffect.SlowStun_inline3]
-
-BaseStatusEffect.SlowStun_inline3:
-  $base: BaseStatusEffect.Stun_inline3
-  value: 3

@@ -31,18 +31,19 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     private func OnAttach() -> Void {
         super.OnAttach();
-        this.Reschedule();
+        this.Reschedule(6);
     }
 
     // cancel previous scheduled check if exist, then reschedule check request
-    private func Reschedule() -> Void {
+    // delay in seconds
+    private func Reschedule(delay: Float) -> Void {
         let system = GameInstance.GetDelaySystem(this.GetGameInstance());
         if this.m_checkDelayID != GetInvalidDelayID() {
             system.CancelDelay(this.m_checkDelayID);
             this.m_checkDelayID = GetInvalidDelayID();
         }
         let request = new CheckAddictionStateRequest();
-        this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, 10, false);
+        this.m_checkDelayID = system.DelayScriptableSystemRequest(this.GetClassName(), request, delay, false);
     }
 
     // skip if already planned, otherwise plan to play multiple status effects consecutively
@@ -71,7 +72,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             // ok, this works
             GetPlayer(this.GetGameInstance()).SlowStun();
         }
-        this.Reschedule();
+        this.Reschedule(this.GetRandomSymptomDelay());
     }
 
     /// when substance consumed, add or increase substance consumption
@@ -176,8 +177,17 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     private func ShouldApplyAddictionStatusEffect() -> Bool {
         let player = GetPlayer(this.GetGameInstance());
-        let tier = PlayerPuppet.GetSceneTier(player); // FullGameplay only
-        let addicted = player.HasAnyAddiction();
-        return addicted && tier == 1;
+        let tier = PlayerPuppet.GetSceneTier(player); // FullGameplay / StagedGameplay only
+        LogChannel(n"DEBUG","RED:ShouldApplyAddictionStatusEffect" + " " + ToString(tier));
+        let addicted = true; // player.HasAnyAddiction();
+        return addicted && (tier == 1 || tier == 2);
     }
+
+    private func GetRandomSymptomDelay() -> Float {
+        return RandRangeF(500, 900);
+    }
+
+    // private func GetRandomOnoDelay() -> Float {
+    //     return RandRangeF(10, 20);
+    // }
 }
