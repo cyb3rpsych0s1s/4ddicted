@@ -67,8 +67,10 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     }
 
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
-        // ok, this works
-        GetPlayer(this.GetGameInstance()).SlowStun();
+        if this.ShouldApplyAddictionStatusEffect() {
+            // ok, this works
+            GetPlayer(this.GetGameInstance()).SlowStun();
+        }
         this.Reschedule();
     }
 
@@ -170,5 +172,12 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             default:
                 return 1;
         }
+    }
+
+    private func ShouldApplyAddictionStatusEffect() -> Bool {
+        let player = GetPlayer(this.GetGameInstance());
+        let tier = PlayerPuppet.GetSceneTier(player); // FullGameplay only
+        let addicted = player.HasAnyAddiction();
+        return addicted && tier == 1;
     }
 }

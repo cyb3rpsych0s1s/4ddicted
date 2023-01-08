@@ -27,50 +27,50 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     return wrappedMethod(evt);
 }
 
-@wrapMethod(PlayerAddictionSystem)
+@wrapMethod(ScriptableSystem)
 private func OnAttach() -> Void {
     LogChannel(n"DEBUG", s"RED:OnAttach");
     wrappedMethod();
 }
 
-@wrapMethod(PlayerAddictionSystem)
-public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
-    let found = false;
-    for addiction in this.m_addictions {
-        if addiction.id == substanceID {
-            LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
-            found = true;
-            break;
-        }
-    }
-    if !found {
-        LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(substanceID)) first consumption");
-    }
-    wrappedMethod(substanceID);
-}
+// @wrapMethod(PlayerAddictionSystem)
+// public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
+//     let found = false;
+//     for addiction in this.m_addictions {
+//         if addiction.id == substanceID {
+//             LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
+//             found = true;
+//             break;
+//         }
+//     }
+//     if !found {
+//         LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(substanceID)) first consumption");
+//     }
+//     wrappedMethod(substanceID);
+// }
 
-@wrapMethod(PlayerAddictionSystem)
-public func OnAddictiveSubstanceWeanOff() -> Void {
-    for addiction in this.m_addictions {
-        if addiction.consumption == 0 {
-            LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) completely weaned off!");
-        }
-    }
-    wrappedMethod();
-    for addiction in this.m_addictions {
-        if addiction.consumption > 0 {
-            LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
-        }
-    }
-}
+// @wrapMethod(PlayerAddictionSystem)
+// public func OnAddictiveSubstanceWeanOff() -> Void {
+//     for addiction in this.m_addictions {
+//         if addiction.consumption == 0 {
+//             LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) completely weaned off!");
+//         }
+//     }
+//     wrappedMethod();
+//     for addiction in this.m_addictions {
+//         if addiction.consumption > 0 {
+//             LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
+//         }
+//     }
+// }
 
-@wrapMethod(PlayerAddictionSystem)
-public func OnRested(timestamp: Float) -> Void {
-    let diff = timestamp - this.m_startRestingAtTimestamp;
-    let diffInHours = RoundF(diff / 3600.0);
-    LogChannel(n"DEBUG", s"RED:OnRested: rested since: \(ToString(this.m_startRestingAtTimestamp)), rested until: \(ToString(timestamp)), diff in hours (rounded): \(ToString(diffInHours)), last rest: \(ToString(this.m_lastRestTimestamp))");
-    wrappedMethod(timestamp);
-}
+// @wrapMethod(PlayerAddictionSystem)
+// public func OnRested(timestamp: Float) -> Void {
+//     let diff = timestamp - this.m_startRestingAtTimestamp;
+//     let diffInHours = RoundF(diff / 3600.0);
+//     LogChannel(n"DEBUG", s"RED:OnRested: rested since: \(ToString(this.m_startRestingAtTimestamp)), rested until: \(ToString(timestamp)), diff in hours (rounded): \(ToString(diffInHours)), last rest: \(ToString(this.m_lastRestTimestamp))");
+//     wrappedMethod(timestamp);
+// }
 
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
@@ -82,11 +82,11 @@ private final func Apply() -> Void {
   wrappedMethod();
 }
 
-@wrapMethod(PlayerAddictionSystem)
-protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
-    LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
-    wrappedMethod();
-}
+// @wrapMethod(PlayerAddictionSystem)
+// protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
+//     LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
+//     wrappedMethod();
+// }
 
 // Game.GetPlayer():JustSomeSound(CName.new('vfx_fullscreen_memory_boost_activate'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_sonic_shock'))
@@ -149,3 +149,10 @@ public func JustADopeFiend() -> Void {
     // system.DelayEvent(this, stun, 6.0, true);
     // system.DelayEvent(this, breath, 12.0, true);
 }
+
+// @wrapMethod(ApplyStatusEffectEffector)
+// private final func ProcessAction(owner: ref<GameObject>) -> Void {
+//     LogChannel(n"DEBUG", "RED:ProcessAction" + ToString(owner));
+
+//     wrappedMethod(owner);
+// }

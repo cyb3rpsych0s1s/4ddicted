@@ -24,10 +24,17 @@ public func IsAddicted(substanceID: TweakDBID) -> Bool {
     return EnumInt(threshold) >= EnumInt(Threshold.Mildly);
 }
 
-@addMethod(StatusEffectEvent)
-public func IsAddictive() -> Bool {
-    return ArrayContains(
-        [
+@addMethod(PlayerPuppet)
+public func HasAnyAddiction() -> Bool {
+    let consumables = AddictiveConsumables();
+    for consumable in consumables {
+        if this.IsAddicted(consumable) { return true; }
+    }
+    return false;
+}
+
+public func AddictiveConsumables() -> array<TweakDBID> {
+    return [
             t"BaseStatusEffect.AlcoholDebuff",
             // t"BaseStatusEffect.CombatStim", // double-check
             t"BaseStatusEffect.FirstAidWhiffV0",
@@ -66,8 +73,14 @@ public func IsAddictive() -> Bool {
             t"BaseStatusEffect.Deimos",
             t"BaseStatusEffect.Aspis",
             t"BaseStatusEffect.Brisky",
-            t"BaseStatusEffect.Karanos",
-        ],
+            t"BaseStatusEffect.Karanos"
+        ];
+}
+
+@addMethod(StatusEffectEvent)
+public func IsAddictive() -> Bool {
+    return ArrayContains(
+        AddictiveConsumables(),
         this.staticData.GetID());
 }
 
