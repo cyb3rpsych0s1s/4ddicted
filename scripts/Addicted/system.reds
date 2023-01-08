@@ -21,6 +21,10 @@ public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
 public class PlayMultipleAddictionEffectsRequest extends ScriptableSystemRequest {
     public let effects: array<TweakDBID>;
 }
+/// play coughing audios for some duration
+public class PlayCoughingFitRequest extends ScriptableSystemRequest {
+    public let ends: Float;
+}
 
 public class PlayerAddictionSystem extends ScriptableSystem {
     private persistent let m_addictions: array<ref<Addiction>>;
@@ -28,6 +32,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public persistent let m_startRestingAtTimestamp: Float;
     public let m_checkDelayID: DelayID;
     public let m_playDelayID: DelayID;
+    public let m_audioDelayID: DelayID;
 
     private func OnAttach() -> Void {
         super.OnAttach();
@@ -72,9 +77,29 @@ public class PlayerAddictionSystem extends ScriptableSystem {
             // ok, this works
             let player = GetPlayer(this.GetGameInstance());
             player.SlowStun();
-            player.Cough();
+            let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
+            let time = GameInstance.GetTimeSystem(this.GetGameInstance());
+            let request = new PlayCoughingFitRequest();
+            request.ends = time.GetGameTimeStamp() + 120.;
+            this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, 2, true);
         }
         this.Reschedule(this.GetRandomSymptomDelay());
+    }
+
+    protected final func OnPlayCoughingFitRequest(request: ref<PlayCoughingFitRequest>) -> Void {
+        let player = GetPlayer(this.GetGameInstance());
+        player.Cough();
+        let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
+        let time = GameInstance.GetTimeSystem(this.GetGameInstance());
+        delay.CancelDelay(this.m_audioDelayID);
+        let wait = this.GetRandomOnoDelay();
+        let now = time.GetGameTimeStamp();
+        LogChannel(n"DEBUG", "RED:OnPlayCoughingFitRequest" + " ends: " + request.ends + " now: " + now + " next: " + ToString(now + wait));
+        if request.ends > (now + wait) {
+            this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, wait, true);
+        } else {
+            this.m_audioDelayID = GetInvalidDelayID();
+        }
     }
 
     /// when substance consumed, add or increase substance consumption
@@ -190,6 +215,6 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     }
 
     private func GetRandomOnoDelay() -> Float {
-        return RandRangeF(10, 20);
+        return RandRangeF(3, 9);
     }
 }
