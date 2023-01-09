@@ -38,15 +38,15 @@ public class Addiction {
         if this.consumption > EnumInt(Threshold.Mildly) {
             return Threshold.Mildly;
         }
-        if this.consumption == Threshold.Clean {
+        if this.consumption == EnumInt(Threshold.Clean) {
             return Threshold.Clean;
         }
         return Threshold.Barely;
     }
 
     /// addiction potency
-    public func Potency() -> Potency {
-        return GetPotency(this.id);
+    public func Potency() -> Int32 {
+        return EnumInt(GetPotency(this.id));
     }
 
     /// addiction multiplier:
@@ -70,7 +70,7 @@ public class Addictions {
 
   /// get given substance consumption
   public func GetConsumption(id: TweakDBID) -> Int32 {
-      for addiction in this.m_addictions {
+      for addiction in this.addictions {
           if addiction.id == id {
               return addiction.consumption;
           }
@@ -111,18 +111,18 @@ public class Addictions {
       }
       // if not found
       let addiction = new Addiction();
-      addiction.id = substanceID;
-      addiction.consumption = this.AddictionPotency(substanceID);
-      ArrayPush(this.m_addictions, addiction);
+      addiction.id = id;
+      addiction.consumption = EnumInt(GetPotency(id));
+      ArrayPush(this.addictions, addiction);
   }
 
   /// keep track whenever addictive substance(s) addiction weans off
   public func WeanOff() -> Void {
-      for addiction in this.m_addictions {
+      for addiction in this.addictions {
           if addiction.consumption > 0 {
               addiction.consumption -= 1;
           } else {
-              ArrayRemove(this.m_addictions, addiction);
+              ArrayRemove(this.addictions, addiction);
           }
       }
   }

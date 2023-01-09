@@ -1,3 +1,5 @@
+module Addicted
+
 /// all the status effect whose consumption is addictive
 public func AddictiveStatusEffects() -> array<TweakDBID> {
     return [
