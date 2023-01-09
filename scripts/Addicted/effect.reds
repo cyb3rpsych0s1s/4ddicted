@@ -140,3 +140,13 @@ public func GetPotency(id: TweakDBID) -> Potency {
       }
       return Potency.Mild;
 }
+
+public func GetResilience(id: TweakDBID) -> Resilience {
+    let potency = GetPotency(id);
+    switch(potency) {
+        case Potency.Hard:
+            return Resilience.Hard;
+        case Potency.Mild:
+            return Resilience.Mild;
+    }
+}

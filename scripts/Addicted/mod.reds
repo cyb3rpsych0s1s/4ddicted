@@ -10,9 +10,17 @@ enum Threshold {
 }
 
 /// consumable addictive potency
+/// dictates how fast addiction will increase
 enum Potency {
   Mild = 1,
   Hard = 2,
+}
+
+/// consumable addictive resilience
+/// dictates how fast addiction will wean off
+enum Resilience {
+    Hard = 1,
+    Mild = 2,
 }
 
 /// audios onomatopea
@@ -47,6 +55,11 @@ public class Addiction {
     /// addiction potency
     public func Potency() -> Int32 {
         return EnumInt(GetPotency(this.id));
+    }
+
+    /// addiction resilience
+    public func Resilience() -> Int32 {
+        return EnumInt(GetResilience(this.id));
     }
 
     /// addiction multiplier:
@@ -119,8 +132,8 @@ public class Addictions {
   /// keep track whenever addictive substance(s) addiction weans off
   public func WeanOff() -> Void {
       for addiction in this.addictions {
-          if addiction.consumption > 0 {
-              addiction.consumption -= 1;
+          if addiction.consumption > EnumInt(Threshold.Clean) {
+              addiction.consumption -= addiction.Resilience();
           } else {
               ArrayRemove(this.addictions, addiction);
           }
