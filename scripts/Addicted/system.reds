@@ -13,7 +13,7 @@ public class PlayAudioForDurationRequest extends ScriptableSystemRequest {
 }
 
 public class PlayerAddictionSystem extends ScriptableSystem {
-    private persistent let m_addictions: array<ref<Addiction>>;
+    private persistent let m_addictions: Addictions;
     private persistent let m_lastRestTimestamp: Float;
     public persistent let m_startRestingAtTimestamp: Float;
     public let m_checkDelayID: DelayID;
@@ -92,28 +92,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     /// when substance consumed, add or increase substance consumption
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
-        for addiction in this.m_addictions {
-            if addiction.id == substanceID {
-                addiction.consumption = Min(addiction.consumption + (this.AddictionPotency(substanceID) * this.AddictionMultiplier(substanceID)), 2 * EnumInt(Threshold.Severely));
-                return; // if found
-            }
-        }
-        // if not found
-        let addiction = new Addiction();
-        addiction.id = substanceID;
-        addiction.consumption = this.AddictionPotency(substanceID);
-        ArrayPush(this.m_addictions, addiction);
-    }
-
-    /// when substance wean off, remove or decrease substance consumption
-    public func OnAddictiveSubstanceWeanOff() -> Void {
-        for addiction in this.m_addictions {
-            if addiction.consumption > 0 {
-                addiction.consumption -= 1;
-            } else {
-                ArrayRemove(this.m_addictions, addiction);
-            }
-        }
+        this.m_addictions.Consume(substanceID);
     }
 
     /// if rests long enough, addictions slightly wean off
@@ -123,85 +102,21 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         let initial = (timestamp == 0.0);
         let scarce = (timestamp >= (this.m_lastRestTimestamp + day + cycle));
         if initial || scarce {
-            this.OnAddictiveSubstanceWeanOff();
+            this.m_addictions.WeanOff();
             this.m_lastRestTimestamp = timestamp;
         }
     }
 
-    /// get current substance consumption
     private func GetConsumption(substanceID: TweakDBID) -> Int32 {
-        for addiction in this.m_addictions {
-            if addiction.id == substanceID {
-                return addiction.consumption;
-            }
-        }
-        return -1;
+        return this.m_addictions.GetConsumption(substanceID);
     }
 
-    /// get current substance addiction threshold reached
     private func GetThreshold(substanceID: TweakDBID) -> Threshold {
-        for addiction in this.m_addictions {
-            if addiction.id == substanceID {
-                if addiction.consumption > EnumInt(Threshold.Severely) {
-                    return Threshold.Severely;
-                }
-                if addiction.consumption > EnumInt(Threshold.Notably) && addiction.consumption <= EnumInt(Threshold.Severely) {
-                    return Threshold.Notably;
-                }
-                if addiction.consumption > EnumInt(Threshold.Mildly) && addiction.consumption <= EnumInt(Threshold.Notably) {
-                    return Threshold.Notably;
-                }
-                if addiction.consumption > EnumInt(Threshold.Barely) && addiction.consumption <= EnumInt(Threshold.Mildly) {
-                    return Threshold.Mildly;
-                }
-                if addiction.consumption > EnumInt(Threshold.Clean) {
-                    return Threshold.Barely;
-                }
-                return Threshold.Clean;
-            }
-        }
-        return Threshold.Clean;
+        return this.m_addictions.GetThreshold(substanceID);
     }
 
-    /// get current substance addiction highest threshold reached, no matter the substance
     public func GetHighestThreshold() -> Threshold {
-        let highest = Threshold.Clean;
-        let current: Threshold;
-        for addiction in this.m_addictions {
-            current = this.GetThreshold(addiction.id);
-            if EnumInt(current) > EnumInt(highest) {
-                highest = current;
-            }
-
-        }
-        return highest;
-    }
-
-    /// addiction becomes stronger when reaching higher threshold
-    public func AddictionMultiplier(substanceID: TweakDBID) -> Int32 {
-        let threshold = this.GetThreshold(substanceID);
-        switch (threshold) {
-            case Threshold.Severely:
-            case Threshold.Notably:
-                return 2;
-            default:
-                return 1;
-        }
-        return 1;
-    }
-
-    private func AddictionPotency(substanceID: TweakDBID) -> Int32 {
-        switch(substanceID) {
-            case t"BaseStatusEffect.FirstAidWhiffV0":
-                return 1;
-            case t"BaseStatusEffect.BonesMcCoy70V0":
-                return 2;
-            case t"BaseStatusEffect.FR3SH":
-                return 2;
-            // TODO: add missing
-            default:
-                return 1;
-        }
+        return this.m_addictions.GetHighestThreshold();
     }
 
     private func ShouldApplyAddictionStatusEffect() -> Bool {

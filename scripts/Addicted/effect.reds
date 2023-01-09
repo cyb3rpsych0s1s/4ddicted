@@ -126,3 +126,15 @@ public func IsPill() -> Bool {
     }
     return false;
 }
+
+public func GetPotency(id: TweakDBID) -> Potency {
+    switch(id) {
+          case t"BaseStatusEffect.BonesMcCoy70V0":
+          case t"BaseStatusEffect.FR3SH":
+              return Potency.Hard;
+          // TODO: add missing
+          default:
+              break;
+      }
+      return Potency.Mild;
+}
