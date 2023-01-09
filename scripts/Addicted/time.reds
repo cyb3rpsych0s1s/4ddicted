@@ -1,5 +1,6 @@
 module Addicted
 
+/// track time whenever player rests for hour(s)
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
   if this.m_hoursToSkip > 0 {
