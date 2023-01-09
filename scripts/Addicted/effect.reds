@@ -105,8 +105,21 @@ public func IsBooster() -> Bool {
         case t"BaseStatusEffect.StaminaBooster":
         case t"BaseStatusEffect.HealthBooster":
         case t"BaseStatusEffect.MemoryBooster":
-        case t"BaseStatusEffect.StaminaBooster":
         case t"BaseStatusEffect.HeatUsingBoosterDummyEffect":
+            return true;
+        default:
+            break;
+    }
+    return false;
+}
+
+/// is the status effect from a pill ?
+@addMethod(StatusEffectEvent)
+public func IsPill() -> Bool {
+  switch(this.staticData.GetID()) {
+        case t"BaseStatusEffect.CarryCapacityBooster":
+        case t"BaseStatusEffect.StaminaBooster":
+        case t"BaseStatusEffect.MemoryBooster":
             return true;
         default:
             break;
