@@ -10,14 +10,18 @@ enum Threshold {
 }
 
 /// consumable addictive potency
-/// dictates how fast addiction will increase
+///
+/// dictates how fast addiction will increase:
+/// this is the opposite of resilience, on purpose
 enum Potency {
   Mild = 1,
   Hard = 2,
 }
 
 /// consumable addictive resilience
-/// dictates how fast addiction will wean off
+///
+/// dictates how fast addiction will wean off:
+/// this is the opposite of potency, on purpose
 enum Resilience {
     Hard = 1,
     Mild = 2,
