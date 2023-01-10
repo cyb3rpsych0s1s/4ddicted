@@ -13,7 +13,7 @@ public class PlayAudioForDurationRequest extends ScriptableSystemRequest {
 }
 
 public class PlayerAddictionSystem extends ScriptableSystem {
-    private persistent let m_addictions: Addictions;
+    private persistent let m_addi: ref<Addictions>;
     private persistent let m_lastRestTimestamp: Float;
     public persistent let m_startRestingAtTimestamp: Float;
     public let m_checkDelayID: DelayID;
@@ -22,6 +22,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     private func OnAttach() -> Void {
         super.OnAttach();
+        if !IsDefined(this.m_addi) {
+            this.m_addi = new Addictions();
+        }
         this.Reschedule(6);
     }
 
@@ -92,7 +95,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     /// when substance consumed, add or increase substance consumption
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
-        this.m_addictions.Consume(substanceID);
+        this.m_addi.Consume(substanceID);
     }
 
     /// if rests long enough, addictions slightly wean off
@@ -102,21 +105,21 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         let initial = (timestamp == 0.0);
         let scarce = (timestamp >= (this.m_lastRestTimestamp + day + cycle));
         if initial || scarce {
-            this.m_addictions.WeanOff();
+            this.m_addi.WeanOff();
             this.m_lastRestTimestamp = timestamp;
         }
     }
 
     private func GetConsumption(substanceID: TweakDBID) -> Int32 {
-        return this.m_addictions.GetConsumption(substanceID);
+        return this.m_addi.GetConsumption(substanceID);
     }
 
     private func GetThreshold(substanceID: TweakDBID) -> Threshold {
-        return this.m_addictions.GetThreshold(substanceID);
+        return this.m_addi.GetThreshold(substanceID);
     }
 
     public func GetHighestThreshold() -> Threshold {
-        return this.m_addictions.GetHighestThreshold();
+        return this.m_addi.GetHighestThreshold();
     }
 
     private func ShouldApplyAddictionStatusEffect() -> Bool {
