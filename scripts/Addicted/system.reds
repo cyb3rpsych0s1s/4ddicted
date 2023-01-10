@@ -14,7 +14,6 @@ public class PlayAudioForDurationRequest extends ScriptableSystemRequest {
 
 public class PlayerAddictionSystem extends ScriptableSystem {
     private persistent let m_addictions: Addictions;
-    private persistent let m_doses: Addictions;
     private persistent let m_lastRestTimestamp: Float;
     public persistent let m_startRestingAtTimestamp: Float;
     public let m_checkDelayID: DelayID;

@@ -12,7 +12,7 @@ private final func Apply() -> Void {
 }
 
 public class Doses {
-  private let doses: array<Float>;
+  public persistent let doses: array<Float>;
 
   /// record timestamp on each consumption
   public func Consume() -> Void {
