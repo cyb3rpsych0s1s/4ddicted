@@ -25,10 +25,10 @@ enum Onomatopea {
 public class Addiction {
     public persistent let id: TweakDBID;
     public persistent let consumption: Int32;
-    public persistent let doses: Doses;
+    public persistent let doses: ref<Doses>;
 
     public func Consume() -> Void {
-        this.consumption = Min(addiction.consumption + (addiction.Potency() * addiction.Multiplier()), 2 * EnumInt(Threshold.Severely));
+        this.consumption = Min(this.consumption + (this.Potency() * this.Multiplier()), 2 * EnumInt(Threshold.Severely));
         this.doses.Consume();
     }
     
@@ -69,7 +69,7 @@ public class Addiction {
             default:
                 break;
         }
-        if this.doses.ConsumeFrequently(system) {
+        if this.doses.ConsumeFrequently() {
             return 2;
         } 
         return 1;
