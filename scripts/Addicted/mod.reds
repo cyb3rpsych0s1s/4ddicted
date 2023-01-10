@@ -14,8 +14,8 @@ enum Threshold {
 /// dictates how fast addiction will increase:
 /// this is the opposite of resilience, on purpose
 enum Potency {
-  Mild = 1,
-  Hard = 2,
+    Mild = 1,
+    Hard = 2,
 }
 
 /// consumable addictive resilience
@@ -38,6 +38,7 @@ enum Onomatopea {
 public class Addiction {
     public persistent let id: TweakDBID;
     public persistent let consumption: Int32;
+    public persistent let doses: Doses;
     
     /// get threshold from consumption
     public func GetThreshold() -> Threshold {
@@ -77,6 +78,9 @@ public class Addiction {
             default:
                 break;
         }
+        if this.doses.ConsumeFrequently(system) {
+            return 2;
+        } 
         return 1;
     }
 }
