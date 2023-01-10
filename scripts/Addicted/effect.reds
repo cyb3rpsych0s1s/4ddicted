@@ -48,7 +48,8 @@ public func AddictiveStatusEffects() -> array<TweakDBID> {
 /// is this a status effect which can trigger addiction ?
 @addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
-    return ArrayContains(AddictiveStatusEffects(), this.staticData.GetID());
+    let list = AddictiveStatusEffects();
+    return ArrayContains(list, this.staticData.GetID());
 }
 
 /// is this a healing status effect ?

@@ -16,12 +16,14 @@ public class Doses {
 
   /// record timestamp on each consumption
   public func Consume() -> Void {
-      let system = GameInstance.GetTimeSystem(GetGameInstance());
-      ArrayPush(this.doses, system.GetGameTimeStamp());
+    let system = GameInstance.GetTimeSystem(GetGameInstance());
+    LogChannel(n"DEBUG", "RED:Doses:Consume at " + system.GetGameTimeStamp());
+    ArrayPush(this.doses, system.GetGameTimeStamp());
   }
 
   /// get rid of everything older than 1 week
   public func WeanOff() -> Void {
+    LogChannel(n"DEBUG", "RED:Doses:WeanOff");
     let system = GameInstance.GetTimeSystem(GetGameInstance());
     let now = system.GetGameTime();
     let one_week_ago = GameTime.MakeGameTime(Min(GameTime.Days(now) - 7, 0), 0);
