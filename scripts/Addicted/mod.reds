@@ -25,11 +25,12 @@ enum Onomatopea {
 public class Addiction {
     public persistent let id: TweakDBID;
     public persistent let consumption: Int32;
-    // public persistent let doses: ref<Doses>;
+    public persistent let doses: ref<Doses>;
 
     public func Consume() -> Void {
         this.consumption = Min(this.consumption + (this.Potency() * this.Multiplier()), 2 * EnumInt(Threshold.Severely));
-        // this.doses.Consume();
+        this.doses.Consume();
+        LogChannel(n"DEBUG", "RED:Addiction:Consume" + " consumption " + ToString(this.id) + " " + ToString(this.consumption));
     }
     
     /// get threshold from consumption
@@ -69,9 +70,9 @@ public class Addiction {
             default:
                 break;
         }
-        // if this.doses.ConsumeFrequently() {
-        //     return 2;
-        // }
+        if this.doses.ConsumeFrequently() {
+            return 2;
+        }
         return 1;
     }
 }
@@ -115,18 +116,20 @@ public class Addictions {
 
   /// keep track whenever an addictive substance is consumed
   public func Consume(id: TweakDBID) -> Void {
-      for addiction in this.addictions {
-          if addiction.id == id {
-              addiction.Consume();
-              return; // if found
-          }
-      }
-      // if not found
-      let addiction = new Addiction();
-      addiction.id = id;
-      addiction.consumption = GetPotency(id);
-    //   addiction.doses = new Doses();
-      ArrayPush(this.addictions, addiction);
+    LogChannel(n"DEBUG", "RED:Addictions:Consume");
+    for addiction in this.addictions {
+        if addiction.id == id {
+            addiction.Consume();
+            return; // if found
+        }
+    }
+    // if not found
+    LogChannel(n"DEBUG", "RED:Addictions:Consume" + " first consumption " + ToString(id));
+    let addiction = new Addiction();
+    addiction.id = id;
+    addiction.consumption = GetPotency(id);
+    addiction.doses = new Doses();
+    ArrayPush(this.addictions, addiction);
   }
 
   /// keep track whenever addictive substance(s) addiction weans off
