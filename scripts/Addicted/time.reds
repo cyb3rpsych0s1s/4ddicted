@@ -15,12 +15,16 @@ public class Doses {
   private let doses: array<Float>;
 
   /// record timestamp on each consumption
-  public func Consume(when: Float) -> Void {
-      ArrayPush(this.doses, when);
+  public func Consume() -> Void {
+      let game = Game.GetPlayer().GetGame();
+      let system = GameInstance.GetTimeSystem(game);
+      ArrayPush(this.doses, system.GetGameTimeStamp());
   }
 
   /// get rid of everything older than 1 week
-  public func WeanOff(system: ref<TimeSystem>) -> Void {
+  public func WeanOff() -> Void {
+      let game = Game.GetPlayer().GetGame();
+      let system = GameInstance.GetTimeSystem(game);
       let now = system.GetGameTime();
       let one_week_ago = GameTime.MakeGameTime(Min(now.Days() - 7, 0), 0);
       let count = ArrayCount(this.doses);
@@ -45,23 +49,27 @@ public class Doses {
   }
 
   /// if hasn't consumed for a day or more
-  public func IsWithdrawing(system: ref<TimeSystem>) -> Bool {
-    let count = ArrayCount(this.doses);
-    if count == 0 {
-        return false;
-    }
-    let now = system.GetGameTime();
-    let today = now.Days();
-    let first = this.doses[0];
-    let last = system.RealTimeSecondsToGameTime(first);
-    if today > last {
-        return true;
-    }
-    return false;
+  public func IsWithdrawing() -> Bool {
+      let game = Game.GetPlayer().GetGame();
+      let system = GameInstance.GetTimeSystem(game);
+      let count = ArrayCount(this.doses);
+      if count == 0 {
+          return false;
+      }
+      let now = system.GetGameTime();
+      let today = now.Days();
+      let first = this.doses[0];
+      let last = system.RealTimeSecondsToGameTime(first);
+      if today > last {
+          return true;
+      }
+      return false;
   }
 
   /// if consumed for at least 3 days in a row lately
-  public func ConsumeFrequently(system: ref<TimeSystem>) -> Bool {
+  public func ConsumeFrequently() -> Bool {
+      let game = Game.GetPlayer().GetGame();
+      let system = GameInstance.GetTimeSystem(game);
       let consecutive = 0;
       let last: GameTime;
       let current: GameTime;

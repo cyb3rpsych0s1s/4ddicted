@@ -9,22 +9,9 @@ enum Threshold {
     Severely = 60,
 }
 
-/// consumable addictive potency
-///
-/// dictates how fast addiction will increase:
-/// this is the opposite of resilience, on purpose
-enum Potency {
+enum Category {
     Mild = 1,
     Hard = 2,
-}
-
-/// consumable addictive resilience
-///
-/// dictates how fast addiction will wean off:
-/// this is the opposite of potency, on purpose
-enum Resilience {
-    Hard = 1,
-    Mild = 2,
 }
 
 /// audios onomatopea
@@ -39,6 +26,11 @@ public class Addiction {
     public persistent let id: TweakDBID;
     public persistent let consumption: Int32;
     public persistent let doses: Doses;
+
+    public func Consume() -> Void {
+        this.consumption = Min(addiction.consumption + (addiction.Potency() * addiction.Multiplier()), 2 * EnumInt(Threshold.Severely));
+        this.doses.Consume();
+    }
     
     /// get threshold from consumption
     public func GetThreshold() -> Threshold {
@@ -57,18 +49,17 @@ public class Addiction {
         return Threshold.Barely;
     }
 
-    /// addiction potency
     public func Potency() -> Int32 {
-        return EnumInt(GetPotency(this.id));
+        return GetPotency(this.id);
     }
 
-    /// addiction resilience
     public func Resilience() -> Int32 {
-        return EnumInt(GetResilience(this.id));
+        return GetResilience(this.id);
     }
 
     /// addiction multiplier:
     /// becomes stronger when reaching higher threshold
+    /// or when consumed frequently
     public func Multiplier() -> Int32 {
         let threshold = this.GetThreshold();
         switch (threshold) {
@@ -126,14 +117,15 @@ public class Addictions {
   public func Consume(id: TweakDBID) -> Void {
       for addiction in this.addictions {
           if addiction.id == id {
-              addiction.consumption = Min(addiction.consumption + (addiction.Potency() * addiction.Multiplier()), 2 * EnumInt(Threshold.Severely));
+              addiction.Consume();
               return; // if found
           }
       }
       // if not found
       let addiction = new Addiction();
       addiction.id = id;
-      addiction.consumption = EnumInt(GetPotency(id));
+      addiction.consumption = addiction.Potency();
+      addiction.doses = new Doses();
       ArrayPush(this.addictions, addiction);
   }
 

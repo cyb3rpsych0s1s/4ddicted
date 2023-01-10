@@ -129,24 +129,38 @@ public func IsPill() -> Bool {
     return false;
 }
 
-public func GetPotency(id: TweakDBID) -> Potency {
-    switch(id) {
-          case t"BaseStatusEffect.BonesMcCoy70V0":
-          case t"BaseStatusEffect.FR3SH":
-              return Potency.Hard;
-          // TODO: add missing
-          default:
-              break;
-      }
-      return Potency.Mild;
+/// how addictive is the status effect when consuming ?
+/// this is the opposite of resilience, on purpose
+public func GetPotency(id: TweakDBID) -> Int32 {
+    let category = GetCategory(id);
+    switch(category) {
+        case Category.Hard:
+            return 2;
+        case Category.Mild:
+            return 1;
+    }
 }
 
-public func GetResilience(id: TweakDBID) -> Resilience {
-    let potency = GetPotency(id);
-    switch(potency) {
-        case Potency.Hard:
-            return Resilience.Hard;
-        case Potency.Mild:
-            return Resilience.Mild;
+/// how resilient is the status effect when weaning off ?
+/// this is the opposite of potency, on purpose
+public func GetResilience(id: TweakDBID) -> Int32 {
+    let category = GetCategory(id);
+    switch(category) {
+        case Category.Hard:
+            return 1;
+        case Category.Mild:
+            return 2;
     }
+}
+
+public func GetCategory(id: TweakDBID) -> Category {
+    switch(id) {
+        case t"BaseStatusEffect.BlackLaceV0":
+        case t"BaseStatusEffect.FR3SH":
+            return Category.Hard;
+        // TODO: add missing
+        default:
+            break;
+    }
+    return Category.Mild;
 }
