@@ -26,7 +26,7 @@ public class Doses {
     LogChannel(n"DEBUG", "RED:Doses:WeanOff");
     let system = GameInstance.GetTimeSystem(GetGameInstance());
     let now = system.GetGameTime();
-    let one_week_ago = GameTime.MakeGameTime(Min(GameTime.Days(now) - 7, 0), 0);
+    let one_week_ago = GameTime.MakeGameTime(Max(GameTime.Days(now) - 7, 0), 0);
     let count = ArraySize(this.doses);
     if count == 0 {
         return;
