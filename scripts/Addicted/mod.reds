@@ -27,9 +27,9 @@ public class Addiction {
     public persistent let consumption: Int32;
     public persistent let doses: ref<Doses>;
 
-    public func Consume() -> Void {
+    public func Consume(when: Float) -> Void {
         this.consumption = Min(this.consumption + (this.Potency() * this.Multiplier()), 2 * EnumInt(Threshold.Severely));
-        this.doses.Consume();
+        this.doses.Consume(when);
         LogChannel(n"DEBUG", "RED:Addiction:Consume" + " consumption " + ToString(this.id) + " " + ToString(this.consumption));
     }
     
@@ -70,9 +70,9 @@ public class Addiction {
             default:
                 break;
         }
-        if this.doses.ConsumeFrequently() {
-            return 2;
-        }
+        // if this.doses.ConsumeFrequently() {
+        //     return 2;
+        // }
         return 1;
     }
 }
@@ -115,11 +115,11 @@ public class Addictions {
   }
 
   /// keep track whenever an addictive substance is consumed
-  public func Consume(id: TweakDBID) -> Void {
+  public func Consume(id: TweakDBID, when: Float) -> Void {
     LogChannel(n"DEBUG", "RED:Addictions:Consume");
     for addiction in this.addictions {
         if addiction.id == id {
-            addiction.Consume();
+            addiction.Consume(when);
             return; // if found
         }
     }
@@ -128,7 +128,9 @@ public class Addictions {
     let addiction = new Addiction();
     addiction.id = id;
     addiction.consumption = GetPotency(id);
-    addiction.doses = new Doses();
+    let doses = new Doses();
+    doses.doses = [when];
+    addiction.doses = doses;
     ArrayPush(this.addictions, addiction);
   }
 
@@ -141,5 +143,51 @@ public class Addictions {
               ArrayRemove(this.addictions, addiction);
           }
       }
+  }
+
+  public func GetDoses(id: TweakDBID) -> array<Float> {
+    for addiction in this.addictions {
+        if addiction.id == id {
+            return addiction.doses.doses;
+        }
+    }
+    return [];
+  }
+
+  public func ClearDoses(id: TweakDBID) -> Bool {
+    for addiction in this.addictions {
+        if addiction.id == id {
+            addiction.doses.Clear();
+            return true;
+        }
+    }
+    return false;
+  }
+
+  public func ResizeDoses(id: TweakDBID, idx: Int32) -> Bool {
+    for addiction in this.addictions {
+        if addiction.id == id {
+            addiction.doses.Resize(idx);
+            return true;
+        }
+    }
+    return false;
+  }
+}
+
+public class Doses {
+  public persistent let doses: array<Float>;
+
+  /// record timestamp on each consumption
+  public func Consume(when: Float) -> Void {
+    ArrayPush(this.doses, when);
+  }
+
+  public func Clear() -> Void {
+    ArrayClear(this.doses);
+  }
+
+  public func Resize(idx: Int32) -> Void {
+    ArrayResize(this.doses, idx);
   }
 }

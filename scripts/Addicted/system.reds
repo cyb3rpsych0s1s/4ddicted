@@ -21,7 +21,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public let m_audioDelayID: DelayID;
 
     private func OnAttach() -> Void {
-        super.OnAttach();
+        // super.OnAttach();
         if !IsDefined(this.m_addictions) {
             LogChannel(n"DEBUG", "RED:OnAttach" + " creating addictions for the first time");
             this.m_addictions = new Addictions();
@@ -97,7 +97,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     /// when substance consumed, add or increase substance consumption
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         LogChannel(n"DEBUG", "RED:OnAddictiveSubstanceConsumed");
-        this.m_addictions.Consume(substanceID);
+        let system = GameInstance.GetTimeSystem(this.GetGameInstance());
+        let now = system.GetGameTimeStamp();
+        this.m_addictions.Consume(substanceID, now);
     }
 
     /// if rests long enough, addictions slightly wean off
@@ -108,6 +110,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         let scarce = (timestamp >= (this.m_lastRestTimestamp + day + cycle));
         if initial || scarce {
             this.m_addictions.WeanOff();
+            this.ReevaluateAllDoses();
             this.m_lastRestTimestamp = timestamp;
         }
     }
@@ -122,6 +125,10 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     public func GetHighestThreshold() -> Threshold {
         return this.m_addictions.GetHighestThreshold();
+    }
+
+    private func GetDoses(id: TweakDBID) -> array<Float> {
+        return this.m_addictions.GetDoses(id);
     }
 
     private func ShouldApplyAddictionStatusEffect() -> Bool {
@@ -142,5 +149,94 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     private func GetRandomOnoDuration() -> Float {
         return RandRangeF(120, 400);
+    }
+
+    private func ReevaluateAllDoses() -> Void {
+        for addiction in this.m_addictions.addictions {
+            this.ReevaluateDoses(addiction.id);
+        }
+    }
+
+    /// get rid of everything older than 1 week
+    private func ReevaluateDoses(id: TweakDBID) -> Void {
+        LogChannel(n"DEBUG", "RED:ReevaluateDoses");
+        let doses = this.GetDoses(id);
+        let count = ArraySize(doses);
+        if count == 0 {
+            return;
+        }
+        let system = GameInstance.GetTimeSystem(this.GetGameInstance());
+        let now = system.GetGameTime();
+        let one_week_ago = GameTime.MakeGameTime(Max(GameTime.Days(now) - 7, 0), 0);
+        let current: GameTime;
+        let i = 0;
+        while i < count {
+            current = system.RealTimeSecondsToGameTime(doses[i]);
+            if GameTime.IsAfter(current, one_week_ago) {
+                break;
+            }
+            i += 1;
+        }
+        if i == 0 {
+            this.m_addictions.ClearDoses(id);
+        }
+        if i < (count - 1) {
+            this.m_addictions.ResizeDoses(id, i);
+        }
+    }
+
+    /// if hasn't consumed for a day or more
+    public func IsWithdrawing(id: TweakDBID) -> Bool {
+        let doses = this.GetDoses(id);
+        let size = ArraySize(doses);
+        if size == 0 {
+            return false;
+        }
+        let system = GameInstance.GetTimeSystem(this.GetGameInstance());
+        let now = system.GetGameTime();
+        let today = GameTime.Days(now);
+        let first = doses[0];
+        let last = system.RealTimeSecondsToGameTime(first);
+        let before = GameTime.Days(last);
+        let yesterday = today - 1;
+        let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(last))) >= 24);
+        let moreThan1Day = today >= (before + 2);
+        if moreThan1Day || moreThan24Hours {
+            return true;
+        }
+        return false;
+    }
+
+    /// if consumed for at least 3 days in a row lately
+    public func ConsumeFrequently(id: TweakDBID) -> Bool {
+        let doses = this.GetDoses(id);
+        let size = ArraySize(doses);
+        if size <= 3 {
+            return false;
+        }
+        let system = GameInstance.GetTimeSystem(GetGameInstance());
+        let consecutive = 0;
+        let last: GameTime;
+        let current: GameTime;
+        let i = 0;
+        for dose in doses {
+        if i > 0 {
+            last = current;
+        }
+        current = system.RealTimeSecondsToGameTime(dose);
+        if i > 0 {
+            if GameTime.Days(current) == (GameTime.Days(last) + 1) {
+                consecutive += 1;
+            } else {
+                if GameTime.Days(current) > (GameTime.Days(last) + 1) {
+                    consecutive = 0;
+                }
+            }
+            if consecutive >= 3 {
+                return true;
+            }
+        }
+        }
+        return false;
     }
 }
