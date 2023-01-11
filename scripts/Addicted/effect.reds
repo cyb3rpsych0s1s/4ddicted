@@ -45,6 +45,34 @@ public func AddictiveStatusEffects() -> array<TweakDBID> {
     ];
 }
 
+/// is this a status effect a maxdoc ?
+@addMethod(StatusEffectEvent)
+public func IsMaxDOC() -> Bool {
+    switch(this.staticData.GetID()) {
+        case t"BaseStatusEffect.FirstAidWhiffV0":
+        case t"BaseStatusEffect.FirstAidWhiffV1":
+        case t"BaseStatusEffect.FirstAidWhiffV2":
+            return true;
+        default:
+            break;
+    }
+    return false;
+}
+
+/// is this a status effect a bounce back ?
+@addMethod(StatusEffectEvent)
+public func IsBounceBack() -> Bool {
+    switch(this.staticData.GetID()) {
+        case t"BaseStatusEffect.BonesMcCoy70V0":
+        case t"BaseStatusEffect.BonesMcCoy70V1":
+        case t"BaseStatusEffect.BonesMcCoy70V2":
+            return true;
+        default:
+            break;
+    }
+    return false;
+}
+
 /// is this a status effect which can trigger addiction ?
 @addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
@@ -166,4 +194,36 @@ public func GetCategory(id: TweakDBID) -> Category {
             break;
     }
     return Category.Mild;
+}
+
+@addMethod(ApplyStatusEffectEvent)
+public func Reevaluate() -> Void {
+    if this.IsHealer() && this.isNewApplication {
+        if this.IsMaxDOC() {
+            let package = this.staticData.GetPackagesItemHandle(0);
+            let effector = package.GetEffectorsItemHandle(0);
+            let updates = effector.GetStatPoolUpdatesItemHandle(0);
+            // updates.statPoolValue = 20; // unreachable
+            // update.StatPoolValue(); // only getter
+            // TODO: update stats for maxdoc
+        }
+        if this.IsBounceBack() {
+            // TODO: update stats for bounceback
+        }
+    }
+}
+
+@wrapMethod(ConsumeAction)
+protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects: \(ToString(actionEffects)) \(ToString(gameInstance))");
+    let idx = 0;
+    for effect in actionEffects {
+        if Equals(effect.GetID(), t"Items.FirstAidWhiffV0_inline2") {
+            LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects:... this is MaxDOC");
+            let replaced = TweakDBInterface.GetObjectActionEffectRecord(t"Items.FirstAidWhiffVMinus1_inline2");
+            actionEffects[idx] = replaced;
+        }
+        idx += 1;
+    }
+    wrappedMethod(actionEffects, gameInstance);
 }

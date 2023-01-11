@@ -1,10 +1,10 @@
 module Addicted
 
-@wrapMethod(ConsumeAction)
-protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "ProcessStatusEffects " + ToString(actionEffects));
-    wrappedMethod(actionEffects, gameInstance);
-}
+// @wrapMethod(ConsumeAction)
+// protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
+//     LogChannel(n"DEBUG", "ProcessStatusEffects " + ToString(actionEffects));
+//     wrappedMethod(actionEffects, gameInstance);
+// }
 
 @wrapMethod(RestedEvents)
 protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {

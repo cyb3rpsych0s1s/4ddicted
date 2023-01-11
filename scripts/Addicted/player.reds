@@ -44,7 +44,7 @@ public func HasAnyAddiction() -> Bool {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    LogChannel(n"DEBUG", "RED:OnStatusEffectApplied");
+    LogChannel(n"DEBUG", s"RED:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     let output = wrappedMethod(evt);
     let addictionSystem = this.GetAddictionSystem();
     // increase score on consumption

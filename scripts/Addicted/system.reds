@@ -240,3 +240,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         return false;
     }
 }
+
+@wrapMethod(StatusEffectHelper)
+public final static func ApplyStatusEffect(target: wref<GameObject>, statusEffectID: TweakDBID, opt delay: Float) -> Bool {
+    LogChannel(n"DEBUG", s"RED:StatusEffectHelper:ApplyStatusEffect: \(ToString(target)) \(TDBID.ToStringDEBUG(statusEffectID)) (\(ToString(delay)))");
+    return wrappedMethod(target, statusEffectID, delay);
+}
