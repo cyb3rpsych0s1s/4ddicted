@@ -184,6 +184,7 @@ public func GetResilience(id: TweakDBID) -> Int32 {
     }
 }
 
+/// which category of drug belongs the status effect ? (mild or hard)
 public func GetCategory(id: TweakDBID) -> Category {
     switch(id) {
         case t"BaseStatusEffect.BlackLaceV0":
@@ -196,26 +197,13 @@ public func GetCategory(id: TweakDBID) -> Category {
     return Category.Mild;
 }
 
-@addMethod(ApplyStatusEffectEvent)
-public func Reevaluate() -> Void {
-    if this.IsHealer() && this.isNewApplication {
-        if this.IsMaxDOC() {
-            let package = this.staticData.GetPackagesItemHandle(0);
-            let effector = package.GetEffectorsItemHandle(0);
-            let updates = effector.GetStatPoolUpdatesItemHandle(0);
-            // updates.statPoolValue = 20; // unreachable
-            // update.StatPoolValue(); // only getter
-            // TODO: update stats for maxdoc
-        }
-        if this.IsBounceBack() {
-            // TODO: update stats for bounceback
-        }
-    }
-}
-
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
     LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects: \(ToString(actionEffects)) \(ToString(gameInstance))");
+    let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
+    let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
+    system.m_no_onomatopea = true;
+    LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects [cannot temporarily play onomatopea]");
     let idx = 0;
     for effect in actionEffects {
         if Equals(effect.GetID(), t"Items.FirstAidWhiffV0_inline2") {
@@ -226,4 +214,13 @@ protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect
         idx += 1;
     }
     wrappedMethod(actionEffects, gameInstance);
+}
+
+@wrapMethod(ConsumeAction)
+public func CompleteAction(gameInstance: GameInstance) -> Void {
+    wrappedMethod(gameInstance);
+    let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
+    let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
+    system.m_no_onomatopea = false;
+    LogChannel(n"DEBUG", s"RED:ConsumeAction:CompleteAction [can play onomatopea again]");
 }

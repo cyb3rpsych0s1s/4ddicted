@@ -19,6 +19,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public let m_checkDelayID: DelayID;
     public let m_playDelayID: DelayID;
     public let m_audioDelayID: DelayID;
+    public let m_no_onomatopea: Bool = false;
 
     private func OnAttach() -> Void {
         // super.OnAttach();
@@ -79,7 +80,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     protected final func OnPlayAudioForDurationRequest(request: ref<PlayAudioForDurationRequest>) -> Void {
         let player = GetPlayer(this.GetGameInstance());
-        player.Cough();
+        if !this.m_no_onomatopea { player.Cough(); }
         
         let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
         let time = GameInstance.GetTimeSystem(this.GetGameInstance());
