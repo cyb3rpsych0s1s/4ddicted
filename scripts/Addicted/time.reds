@@ -58,8 +58,12 @@ public class Doses {
     let now = system.GetGameTime();
     let today = GameTime.Days(now);
     let first = this.doses[0];
-    let last = GameTime.Days(system.RealTimeSecondsToGameTime(first));
-    if today > last {
+    let last = system.RealTimeSecondsToGameTime(first);
+    let before = GameTime.Days(last);
+    let yesterday = today - 1;
+    let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(today) + (24 - GameTime.Hours(before))) >= 24);
+    let moreThan1Day = today >= (before + 2);
+    if moreThan1Day || moreThan24Hours {
         return true;
     }
     return false;
