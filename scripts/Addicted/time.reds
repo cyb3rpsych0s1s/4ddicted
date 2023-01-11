@@ -81,22 +81,22 @@ public class Doses {
     let current: GameTime;
     let i = 0;
     for dose in this.doses {
-    if i > 0 {
-        last = current;
-    }
-    current = system.RealTimeSecondsToGameTime(dose);
-    if i > 0 {
-        if GameTime.Days(current) == (GameTime.Days(last) + 1) {
-            consecutive += 1;
-        } else {
-            if GameTime.Days(current) > (GameTime.Days(last) + 1) {
-                consecutive = 0;
-            }
-        }
-        if consecutive >= 3 {
-            return true;
-        }
-    }
+      if i > 0 {
+          last = current;
+      }
+      current = system.RealTimeSecondsToGameTime(dose);
+      if i > 0 {
+          if GameTime.Days(current) == (GameTime.Days(last) + 1) {
+              consecutive += 1;
+          } else {
+              if GameTime.Days(current) > (GameTime.Days(last) + 1) {
+                  consecutive = 0;
+              }
+          }
+          if consecutive >= 3 {
+              return true;
+          }
+      }
     }
     return false;
   }
