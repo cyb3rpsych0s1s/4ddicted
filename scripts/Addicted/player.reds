@@ -8,6 +8,9 @@ public func GetAddictionSystem() -> ref<PlayerAddictionSystem> {
 
 @addMethod(PlayerPuppet)
 public func Cough() -> Void {
+    if !PlayerPuppet.CanApplyOnomatopeaEffect(this) {
+        return;
+    }
     let system = this.GetAddictionSystem();
     let highest = system.GetHighestThreshold();
     let evt = new SoundPlayEvent();
@@ -57,4 +60,28 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
         addictionSystem.OnRested(timeSystem.GetGameTimeStamp());
     }
     return output;
+}
+
+@addMethod(PlayerPuppet)
+public final static func CanApplyOnomatopeaEffect(player: wref<PlayerPuppet>) -> Bool {
+    let blackboard: ref<IBlackboard>;
+    if !IsDefined(player) {
+      return false;
+    };
+    if GameplaySettingsSystem.GetAdditiveCameraMovementsSetting(player) <= 0.00 {
+      return false;
+    };
+    if !ScriptedPuppet.IsActive(player) {
+      return false;
+    };
+    blackboard = player.GetPlayerStateMachineBlackboard();
+    if !IsDefined(blackboard) {
+      return false;
+    };
+    if blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming) == EnumInt(gamePSMSwimming.Diving) {
+      return false;
+    };
+    let container = GameInstance.GetScriptableSystemsContainer(player.GetGame());
+    let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
+    return !system.m_no_onomatopea;
 }

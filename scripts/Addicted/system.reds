@@ -80,7 +80,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     protected final func OnPlayAudioForDurationRequest(request: ref<PlayAudioForDurationRequest>) -> Void {
         let player = GetPlayer(this.GetGameInstance());
-        if !this.m_no_onomatopea { player.Cough(); }
+        player.Cough();
         
         let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
         let time = GameInstance.GetTimeSystem(this.GetGameInstance());
