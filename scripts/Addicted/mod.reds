@@ -116,15 +116,15 @@ public class Addictions {
 
   /// keep track whenever an addictive substance is consumed
   public func Consume(id: TweakDBID, when: Float) -> Void {
-    LogChannel(n"DEBUG", "RED:Addictions:Consume");
     for addiction in this.addictions {
         if addiction.id == id {
+            LogChannel(n"DEBUG", "RED:Addictions:Consume " + ToString(id) + " again (" + ToString(when) + ")");
             addiction.Consume(when);
             return; // if found
         }
     }
     // if not found
-    LogChannel(n"DEBUG", "RED:Addictions:Consume" + " first consumption " + ToString(id));
+    LogChannel(n"DEBUG", "RED:Addictions:Consume " + ToString(id) + " for the first time (" + ToString(when) + ")");
     let addiction = new Addiction();
     addiction.id = id;
     addiction.consumption = GetPotency(id);

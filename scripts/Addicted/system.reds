@@ -96,9 +96,9 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     /// when substance consumed, add or increase substance consumption
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
-        LogChannel(n"DEBUG", "RED:OnAddictiveSubstanceConsumed");
         let system = GameInstance.GetTimeSystem(this.GetGameInstance());
         let now = system.GetGameTimeStamp();
+        LogChannel(n"DEBUG", "RED:OnAddictiveSubstanceConsumed " + ToString(substanceID) + " (" + ToString(now) + ")");
         this.m_addictions.Consume(substanceID, now);
     }
 
