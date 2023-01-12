@@ -10,7 +10,7 @@ public func FeelsDizzy() -> Void {
 @wrapMethod(RestedEvents)
 protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
     let system = GameInstance.GetTimeSystem(scriptInterface.GetGame());
-    E("RestedEvents:OnEnter \(ToString(system.GetGameTimeStamp()))");
+    E(s"RestedEvents:OnEnter \(ToString(system.GetGameTimeStamp()))");
     wrappedMethod(stateContext, scriptInterface);
 }
 

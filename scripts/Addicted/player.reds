@@ -1,4 +1,5 @@
 module Addicted
+import Addicted.Utils.E
 
 @addMethod(PlayerPuppet)
 public func GetAddictionSystem() -> ref<PlayerAddictionSystem> {
