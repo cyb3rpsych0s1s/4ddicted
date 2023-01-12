@@ -1,4 +1,5 @@
 module Addicted
+import Addicted.Utils.E
 
 /// all the status effect whose consumption is addictive
 public func AddictiveStatusEffects() -> array<TweakDBID> {
@@ -78,7 +79,7 @@ public func IsBounceBack() -> Bool {
 public func IsAddictive() -> Bool {
     let list = AddictiveStatusEffects();
     let id = this.staticData.GetID();
-    LogChannel(n"DEBUG", "RED:IsAddictive " + ToString(id) + " (" + ArrayContains(list, id) + ")");
+    E(s"StatusEffectEvent:IsAddictive \(ToString(id)) (\(ArrayContains(list, id)))");
     return ArrayContains(list, id);
 }
 
@@ -199,15 +200,15 @@ public func GetCategory(id: TweakDBID) -> Category {
 
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects: \(ToString(actionEffects)) \(ToString(gameInstance))");
+    E(s"RED:ConsumeAction:ProcessStatusEffects: \(ToString(actionEffects)) \(ToString(gameInstance))");
     let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
     let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
     system.m_no_onomatopea = true;
-    LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects [cannot temporarily play onomatopea]");
+    E(s"RED:ConsumeAction:ProcessStatusEffects [cannot temporarily play onomatopea]");
     let idx = 0;
     for effect in actionEffects {
         if Equals(effect.GetID(), t"Items.FirstAidWhiffV0_inline2") {
-            LogChannel(n"DEBUG", s"RED:ConsumeAction:ProcessStatusEffects:... this is MaxDOC");
+            E(s"RED:ConsumeAction:ProcessStatusEffects:... this is MaxDOC");
             let replaced = TweakDBInterface.GetObjectActionEffectRecord(t"Items.FirstAidWhiffVMinus1_inline2");
             actionEffects[idx] = replaced;
         }
@@ -222,5 +223,5 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
     let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
     let system = container.Get(n"Addicted.PlayerAddictionSystem") as PlayerAddictionSystem;
     system.m_no_onomatopea = false;
-    LogChannel(n"DEBUG", s"RED:ConsumeAction:CompleteAction [can play onomatopea again]");
+    E(s"RED:ConsumeAction:CompleteAction [can play onomatopea again]");
 }

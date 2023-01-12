@@ -1,4 +1,5 @@
 module Addicted
+import Addicted.Utils.E
 
 /// periodically check for addiction state
 public class CheckAddictionStateRequest extends ScriptableSystemRequest {}
@@ -24,7 +25,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     private func OnAttach() -> Void {
         // super.OnAttach();
         if !IsDefined(this.m_addictions) {
-            LogChannel(n"DEBUG", "RED:OnAttach" + " creating addictions for the first time");
+            E(s"PlayerAddictionSystem:OnAttach creating m_addictions for the first time");
             this.m_addictions = new Addictions();
         }
         this.Reschedule(6);
@@ -87,7 +88,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
         delay.CancelDelay(this.m_audioDelayID);
         let wait = this.GetRandomOnoDelay();
         let now = time.GetGameTimeStamp();
-        LogChannel(n"DEBUG", "RED:OnPlayAudioForDurationRequest" + " until: " + request.until + " now: " + now + " next: " + ToString(now + wait));
+        E(s"PlayerAddictionSystem:OnPlayAudioForDurationRequest until: \(request.until) now: \(now) next: \(ToString(now + wait))");
         if request.until > (now + wait) {
             this.m_audioDelayID = delay.DelayScriptableSystemRequest(this.GetClassName(), request, wait, true);
         } else {
@@ -99,7 +100,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
         let system = GameInstance.GetTimeSystem(this.GetGameInstance());
         let now = system.GetGameTimeStamp();
-        LogChannel(n"DEBUG", "RED:OnAddictiveSubstanceConsumed " + ToString(substanceID) + " (" + ToString(now) + ")");
+        E(s"PlayerAddictionSystem:OnAddictiveSubstanceConsumed \(ToString(substanceID)) (\(ToString(now)))");
         this.m_addictions.Consume(substanceID, now);
     }
 
@@ -135,7 +136,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     private func ShouldApplyAddictionStatusEffect() -> Bool {
         let player = GetPlayer(this.GetGameInstance());
         let tier = PlayerPuppet.GetSceneTier(player); // FullGameplay / StagedGameplay only
-        LogChannel(n"DEBUG","RED:ShouldApplyAddictionStatusEffect" + " " + ToString(tier));
+        E(s"PlayerAddictionSystem:ShouldApplyAddictionStatusEffect \(ToString(tier))");
         let addicted = true; // player.HasAnyAddiction();
         return addicted && (tier == 1 || tier == 2);
     }
@@ -160,7 +161,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     /// get rid of everything older than 1 week
     private func ReevaluateDoses(id: TweakDBID) -> Void {
-        LogChannel(n"DEBUG", "RED:ReevaluateDoses");
+        E("PlayerAddictionSystem:ReevaluateDoses");
         let doses = this.GetDoses(id);
         let count = ArraySize(doses);
         if count == 0 {
@@ -244,6 +245,6 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
 @wrapMethod(StatusEffectHelper)
 public final static func ApplyStatusEffect(target: wref<GameObject>, statusEffectID: TweakDBID, opt delay: Float) -> Bool {
-    LogChannel(n"DEBUG", s"RED:StatusEffectHelper:ApplyStatusEffect: \(ToString(target)) \(TDBID.ToStringDEBUG(statusEffectID)) (\(ToString(delay)))");
+    E(s"StatusEffectHelper:ApplyStatusEffect \(ToString(target)) \(TDBID.ToStringDEBUG(statusEffectID)) (\(ToString(delay)))");
     return wrappedMethod(target, statusEffectID, delay);
 }

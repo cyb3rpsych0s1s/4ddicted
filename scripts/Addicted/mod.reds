@@ -1,4 +1,5 @@
 module Addicted
+import Addicted.Utils.E
 
 /// addictions threshold
 enum Threshold {
@@ -28,9 +29,10 @@ public class Addiction {
     public persistent let doses: ref<Doses>;
 
     public func Consume(when: Float) -> Void {
+        E(s"Addiction:Consume before consumption \(ToString(this.id)) \(ToString(this.consumption))");
         this.consumption = Min(this.consumption + (this.Potency() * this.Multiplier()), 2 * EnumInt(Threshold.Severely));
         this.doses.Consume(when);
-        LogChannel(n"DEBUG", "RED:Addiction:Consume" + " consumption " + ToString(this.id) + " " + ToString(this.consumption));
+        E(s"Addiction:Consume after consumption \(ToString(this.id)) \(ToString(this.consumption))");
     }
     
     /// get threshold from consumption
@@ -118,13 +120,13 @@ public class Addictions {
   public func Consume(id: TweakDBID, when: Float) -> Void {
     for addiction in this.addictions {
         if addiction.id == id {
-            LogChannel(n"DEBUG", "RED:Addictions:Consume " + ToString(id) + " again (" + ToString(when) + ")");
+            E(s"Addictions:Consume \(ToString(id)) again (\(ToString(when)))");
             addiction.Consume(when);
             return; // if found
         }
     }
     // if not found
-    LogChannel(n"DEBUG", "RED:Addictions:Consume " + ToString(id) + " for the first time (" + ToString(when) + ")");
+    E(s"Addictions:Consume \(ToString(id)) for the first time (\(ToString(when)))");
     let addiction = new Addiction();
     addiction.id = id;
     addiction.consumption = GetPotency(id);

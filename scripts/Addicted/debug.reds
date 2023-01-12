@@ -1,92 +1,48 @@
 module Addicted
+import Addicted.Utils.E
 
-// @wrapMethod(ConsumeAction)
-// protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
-//     LogChannel(n"DEBUG", "ProcessStatusEffects " + ToString(actionEffects));
-//     wrappedMethod(actionEffects, gameInstance);
-// }
+@addMethod(PlayerPuppet)
+public func FeelsDizzy() -> Void {
+    GameObject.SetAudioParameter(this, n"vfx_fullscreen_drunk_level", 3.00);
+    StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.MaxDOCMirage");
+}
 
 @wrapMethod(RestedEvents)
 protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
     let system = GameInstance.GetTimeSystem(scriptInterface.GetGame());
-    LogChannel(n"DEBUG", "OnEnter " + ToString(system.GetGameTimeStamp()));
+    E("RestedEvents:OnEnter \(ToString(system.GetGameTimeStamp()))");
     wrappedMethod(stateContext, scriptInterface);
 }
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    LogChannel(n"DEBUG", s"RED:Addicted:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID())) \(ToString(evt.staticData.StatusEffectType().Type()))");
+    E(s"PlayerPuppet:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID())) \(ToString(evt.staticData.StatusEffectType().Type()))");
     return wrappedMethod(evt);
 }
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     if evt.IsAddictive() {
-        LogChannel(n"DEBUG","RED:Addicted:OnStatusEffectRemoved (IsAddictive)");
+        E("PlayerPuppet:OnStatusEffectRemoved (IsAddictive)");
     }
     return wrappedMethod(evt);
 }
 
 @wrapMethod(ScriptableSystem)
 private func OnAttach() -> Void {
-    LogChannel(n"DEBUG", s"RED:OnAttach");
+    E(s"ScriptableSystem:OnAttach");
     wrappedMethod();
 }
-
-// @wrapMethod(PlayerAddictionSystem)
-// public func OnAddictiveSubstanceConsumed(substanceID: TweakDBID) -> Void {
-//     let found = false;
-//     for addiction in this.m_addictions {
-//         if addiction.id == substanceID {
-//             LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
-//             found = true;
-//             break;
-//         }
-//     }
-//     if !found {
-//         LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceConsumed: \(TDBID.ToStringDEBUG(substanceID)) first consumption");
-//     }
-//     wrappedMethod(substanceID);
-// }
-
-// @wrapMethod(PlayerAddictionSystem)
-// public func OnAddictiveSubstanceWeanOff() -> Void {
-//     for addiction in this.m_addictions {
-//         if addiction.consumption == 0 {
-//             LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) completely weaned off!");
-//         }
-//     }
-//     wrappedMethod();
-//     for addiction in this.m_addictions {
-//         if addiction.consumption > 0 {
-//             LogChannel(n"DEBUG", s"RED:OnAddictiveSubstanceWeanOff: \(TDBID.ToStringDEBUG(addiction.id)) current consumption: \(ToString(addiction.consumption))");
-//         }
-//     }
-// }
-
-// @wrapMethod(PlayerAddictionSystem)
-// public func OnRested(timestamp: Float) -> Void {
-//     let diff = timestamp - this.m_startRestingAtTimestamp;
-//     let diffInHours = RoundF(diff / 3600.0);
-//     LogChannel(n"DEBUG", s"RED:OnRested: rested since: \(ToString(this.m_startRestingAtTimestamp)), rested until: \(ToString(timestamp)), diff in hours (rounded): \(ToString(diffInHours)), last rest: \(ToString(this.m_lastRestTimestamp))");
-//     wrappedMethod(timestamp);
-// }
 
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
   if this.m_hoursToSkip > 0 {
-    LogChannel(n"DEBUG", s"RED:TimeskipGameController:Apply: \(this.m_hoursToSkip) hour(s) to skip");
+    E(s"TimeskipGameController:Apply: \(this.m_hoursToSkip) hour(s) to skip");
   } else {
-    LogChannel(n"DEBUG", s"RED:TimeskipGameController:Apply: less than one hour to skip");
+    E(s"TimeskipGameController:Apply: less than one hour to skip");
   }
   wrappedMethod();
 }
-
-// @wrapMethod(PlayerAddictionSystem)
-// protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
-//     LogChannel(n"DEBUG", "RED:OnCheckAdditionStateRequest");
-//     wrappedMethod();
-// }
 
 // Game.GetPlayer():JustSomeSound(CName.new('vfx_fullscreen_memory_boost_activate'))
 // Game.GetPlayer():JustSomeSound(CName.new('quickhack_sonic_shock'))
@@ -152,15 +108,8 @@ public func JustADopeFiend() -> Void {
     // system.DelayEvent(this, breath, 12.0, true);
 }
 
-// @wrapMethod(ApplyStatusEffectEffector)
-// private final func ProcessAction(owner: ref<GameObject>) -> Void {
-//     LogChannel(n"DEBUG", "RED:ProcessAction" + ToString(owner));
-
-//     wrappedMethod(owner);
-// }
-
 @wrapMethod(AISubActionGameplayLogicPackage_Record_Implementation)
 public final static func ApplyGameplayLogicPackage(context: ScriptExecutionContext, record: wref<AISubActionGameplayLogicPackage_Record>) -> Void {
-    LogChannel(n"DEBUG", "RED:ApplyGameplayLogicPackage" + " " + ToString(record));
+    E(s"AISubActionGameplayLogicPackage_Record_Implementation:ApplyGameplayLogicPackage \(ToString(record))");
     wrappedMethod(context, record);
 }

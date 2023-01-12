@@ -19,12 +19,6 @@ public func Cough() -> Void {
 }
 
 @addMethod(PlayerPuppet)
-public func FeelsDizzy() -> Void {
-    GameObject.SetAudioParameter(this, n"vfx_fullscreen_drunk_level", 3.00);
-    StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.MaxDOCMirage");
-}
-
-@addMethod(PlayerPuppet)
 public func SlowStun() -> Void {
     StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.SlowStun");
 }
@@ -47,7 +41,7 @@ public func HasAnyAddiction() -> Bool {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    LogChannel(n"DEBUG", s"RED:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
+    E(s"PlayerPuppet:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     let output = wrappedMethod(evt);
     let addictionSystem = this.GetAddictionSystem();
     // increase score on consumption
