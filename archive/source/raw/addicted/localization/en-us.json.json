@@ -1,0 +1,50 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.8.0",
+    "WKitJsonVersion": "0.0.3",
+    "GameVersion": 1610,
+    "DataType": "CR2W"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "JsonResource",
+      "cookingPlatform": "PLATFORM_PC",
+      "root": {
+        "HandleId": "0",
+        "Data": {
+          "$type": "localizationPersistenceOnScreenEntries",
+          "entries": [
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "secondaryKey": "Mod-Addicted-Thresholds",
+              "femaleVariant": "Thresholds"
+            },
+			      {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "secondaryKey": "Mod-Addicted-Threshold-Barely",
+              "femaleVariant": "Barely"
+            },
+			      {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc",
+              "femaleVariant": "V start getting barely addicted past this threshold"
+            },
+			      {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly",
+              "femaleVariant": "Mildly"
+            },
+			      {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly-Desc",
+              "femaleVariant": "V start getting mildly addicted past this threshold"
+            }
+          ]
+        }
+      }
+    },
+    "EmbeddedFiles": []
+  }
+}

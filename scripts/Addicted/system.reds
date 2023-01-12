@@ -22,14 +22,33 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     public let m_audioDelayID: DelayID;
     public let m_no_onomatopea: Bool = false;
 
+    private let config: ref<AddictedConfig>;
+
     private func OnAttach() -> Void {
         // super.OnAttach();
+        ModSettings.RegisterListenerToModifications(this);
         if !IsDefined(this.m_addictions) {
             E(s"PlayerAddictionSystem:OnAttach creating m_addictions for the first time");
             this.m_addictions = new Addictions();
         }
         this.Reschedule(6);
     }
+
+    private func OnDetach() -> Void {
+        ModSettings.UnregisterListenerToModifications(this);
+    }
+
+    public func OnModSettingsChange() -> Void {
+        this.RefreshConfig();
+        this.InvalidateCurrentState();
+    }
+
+    public func RefreshConfig() -> Void {
+        this.config = new AddictedConfig();
+        E(s"Addicted config threshold barely: \(this.config.baseThresholdBarely) mildly: \(this.config.baseThresholdMildly)");
+    }
+
+    public func InvalidateCurrentState() -> Void {}
 
     // cancel previous scheduled check if exist, then reschedule check request
     // delay in seconds

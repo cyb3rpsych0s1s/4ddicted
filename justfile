@@ -6,11 +6,13 @@ alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2
 cet_input_dir := join("mods", "Addicted")
 red_input_dir := join("scripts", "Addicted")
 tweak_input_dir := join("tweaks", "Addicted")
+archive_input_dir := join("archive", "packed")
 
 # game files
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
+archive_output_dir := game_dir
 
 # REDscript CLI
 cli := join("tools", "redmod", "bin", "redMod.exe")
@@ -41,6 +43,7 @@ build:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
+    cp -r '{{archive_input_dir}}'/. '{{archive_output_dir}}'
 
 # copy codebase files to remote shared folder
 # FIXME: remote user domain ip:
