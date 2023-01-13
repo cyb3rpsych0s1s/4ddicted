@@ -66,6 +66,27 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Totter-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Mode",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Mode"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Normal: consumables can't kill you",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Mode-Normal"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Hard: beware, consumables can kill you ...",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Mode-Hard"
             }
           ]
         }

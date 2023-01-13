@@ -45,7 +45,7 @@ public class PlayerAddictionSystem extends ScriptableSystem {
 
     public func RefreshConfig() -> Void {
         this.config = new AddictedConfig();
-        E(s"Addicted config threshold barely: \(this.config.baseThresholdBarely) mildly: \(this.config.baseThresholdMildly)");
+        E(s"Addicted config threshold barely: \(this.config.mode)");
     }
 
     public func InvalidateCurrentState() -> Void {}
