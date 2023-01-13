@@ -1,0 +1,26 @@
+BaseStatusEffect.Totter:
+  $type: StatusEffect_Record
+  duration: Items.ThirtySecondsDuration
+  gameplayTags: [ Debuff, Addiction ]
+  packages:
+    - $type: GameplayLogicPackage_Record
+      effectors:
+        - $type: Effector_Record
+          effectorClassName: PlayBreathingAnimationEffector
+          prereqRecord: Prereqs.AlwaysTruePrereq
+          amplitudeWeight: 0.9
+          animFeatureName: CameraBreathingHeavy
+          removeAfterActionCall: false
+          blendInDuration: 0.5
+          blendOutDuration: 0.9
+  statusEffectType: BaseStatusEffectTypes.Misc
+  uiData:
+    $type: StatusEffectUIData_Record
+    description: LocKey#Mod-Addicted-Totter-Desc
+    displayName: LocKey#Mod-Addicted-Totter
+    icon_Path: stagger
+  SFX:
+    - $type: StatusEffectFX_Record
+      name: ono_v_effort
+    - $type: StatusEffectFX_Record
+      name: ono_v_effort_short

@@ -20,6 +20,11 @@ public func Cough() -> Void {
 }
 
 @addMethod(PlayerPuppet)
+public func Totter() -> Void {
+    StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.Totter");
+}
+
+@addMethod(PlayerPuppet)
 public func SlowStun() -> Void {
     StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.SlowStun");
 }
@@ -42,7 +47,6 @@ public func HasAnyAddiction() -> Bool {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    E(s"PlayerPuppet:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID()))");
     let output = wrappedMethod(evt);
     let addictionSystem = this.GetAddictionSystem();
     // increase score on consumption

@@ -86,8 +86,8 @@ public class PlayerAddictionSystem extends ScriptableSystem {
     protected final func OnCheckAdditionStateRequest(request: ref<CheckAddictionStateRequest>) -> Void {
         if this.ShouldApplyAddictionStatusEffect() {
             // ok, this works
-            let player = GetPlayer(this.GetGameInstance());
-            player.SlowStun();
+            // let player = GetPlayer(this.GetGameInstance());
+            // player.SlowStun();
 
             let delay = GameInstance.GetDelaySystem(this.GetGameInstance());
             let time = GameInstance.GetTimeSystem(this.GetGameInstance());

@@ -3,7 +3,9 @@
     "WolvenKitVersion": "8.8.0",
     "WKitJsonVersion": "0.0.3",
     "GameVersion": 1610,
-    "DataType": "CR2W"
+    "ExportedDateTime": "2023-01-13T01:40:14.9559553Z",
+    "DataType": "CR2W",
+    "ArchiveFileName": "C:\\Development\\modding-cyberpunk\\4ddicted\\archive\\source\\archive\\addicted\\localization\\en-us.json"
   },
   "Data": {
     "Version": 195,
@@ -18,28 +20,52 @@
           "entries": [
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "secondaryKey": "Mod-Addicted-Thresholds",
-              "femaleVariant": "Thresholds"
+              "femaleVariant": "Thresholds",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Thresholds"
             },
-			      {
+            {
               "$type": "localizationPersistenceOnScreenEntry",
-              "secondaryKey": "Mod-Addicted-Threshold-Barely",
-              "femaleVariant": "Barely"
+              "femaleVariant": "Barely",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Barely"
             },
-			      {
+            {
               "$type": "localizationPersistenceOnScreenEntry",
-              "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc",
-              "femaleVariant": "V start getting barely addicted past this threshold"
+              "femaleVariant": "V start getting barely addicted past this threshold",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc"
             },
-			      {
+            {
               "$type": "localizationPersistenceOnScreenEntry",
-              "secondaryKey": "Mod-Addicted-Threshold-Mildly",
-              "femaleVariant": "Mildly"
+              "femaleVariant": "Mildly",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly"
             },
-			      {
+            {
               "$type": "localizationPersistenceOnScreenEntry",
-              "secondaryKey": "Mod-Addicted-Threshold-Mildly-Desc",
-              "femaleVariant": "V start getting mildly addicted past this threshold"
+              "femaleVariant": "V start getting mildly addicted past this threshold",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Totter",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Totter"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Tottering",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Totter-Desc"
             }
           ]
         }

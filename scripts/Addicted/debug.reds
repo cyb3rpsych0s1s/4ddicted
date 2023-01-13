@@ -16,7 +16,7 @@ protected final func OnEnter(stateContext: ref<StateContext>, scriptInterface: r
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    E(s"PlayerPuppet:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID())) \(ToString(evt.staticData.StatusEffectType().Type()))");
+    E(s"PlayerPuppet:OnStatusEffectApplied \(TDBID.ToStringDEBUG(evt.staticData.GetID())) \(ToString(evt.staticData.StatusEffectType().Type())) (remains: \(evt.staticData.Duration()))");
     return wrappedMethod(evt);
 }
 
@@ -112,4 +112,24 @@ public func JustADopeFiend() -> Void {
 public final static func ApplyGameplayLogicPackage(context: ScriptExecutionContext, record: wref<AISubActionGameplayLogicPackage_Record>) -> Void {
     E(s"AISubActionGameplayLogicPackage_Record_Implementation:ApplyGameplayLogicPackage \(ToString(record))");
     wrappedMethod(context, record);
+}
+
+// Game.GetPlayer():DebugAllStatusEffects()
+@addMethod(PlayerPuppet)
+public func DebugAllStatusEffects() -> Void {
+    let count = 1;
+    let effects = StatusEffectHelper.GetAppliedEffects(this);
+    for effect in effects {
+        E(s"\(count) => \(effect.GetRecord().StatusEffectType().Type()) \(EntityID.ToDebugString(effect.GetInstigatorEntityID())) \(TDBID.ToStringDEBUG(effect.GetInstigatorStaticDataID())) (\(effect.GetRemainingDuration()))");
+        count += 1;
+    }
+}
+
+// Game.GetPlayer():DebugClearAllStatusEffects()
+@addMethod(PlayerPuppet)
+public func DebugClearAllStatusEffects() -> Void {
+    let effects = StatusEffectHelper.GetAppliedEffects(this);
+    for effect in effects {
+        StatusEffectHelper.RemoveStatusEffect(this, effect);
+    }
 }
