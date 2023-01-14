@@ -9,6 +9,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let delaySystem: ref<DelaySystem>;
   private let timeSystem: ref<TimeSystem>;
 
+  private let config: ref<AddictedConfig>;
+
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
