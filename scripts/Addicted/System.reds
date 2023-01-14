@@ -30,7 +30,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     if !IsDefined(this.consumptions) { this.consumptions = new inkHashMap(); }
-    if !IsDefined(this.ids) { this.ids = []; }
     
     ModSettings.RegisterListenerToModifications(this);
   }
@@ -81,7 +80,7 @@ public class AddictedSystem extends ScriptableSystem {
       switch(threshold) {
         case Threshold.Severely:
         case Threshold.Notably:
-          let request: ref<PlayUntilRequest>;
+          let request: ref<HintRequest>;
           if Helper.IsInhaler(id) {
             request = new CoughingRequest();
           }
