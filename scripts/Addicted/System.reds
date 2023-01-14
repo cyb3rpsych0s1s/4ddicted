@@ -2,6 +2,11 @@ module Addicted.System
 
 import Addicted.Utils.E
 import Addicted.Utils.F
+import Addicted.Helper
+import Addicted.Category
+import Addicted.Addiction
+import Addicted.Consumable
+import Addicted.Threshold
 
 public class AddictedSystem extends ScriptableSystem {
   
