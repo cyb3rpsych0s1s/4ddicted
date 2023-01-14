@@ -106,6 +106,25 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  public func OnProcessHealerEffect(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
+    E(s"process status effects");
+    let idx = 0;
+    let action: TweakDBID;
+    let threshold: Threshold;
+    let id: TweakDBID;
+    for effect in actionEffects {
+      id = effect.GetID();
+      // threshold = this.Threshold(id);
+      // action = Helper.ActionEffect(id, threshold);
+      // if action != TDBID.None() {
+      //     let replaced = TweakDBInterface.GetObjectActionEffectRecord(action);
+      //     actionEffects[idx] = replaced;
+      // }
+      idx += 1;
+    }
+    return actionEffects;
+  }
+
   public func AverageConsumption(consumable: Consumable) -> Int32 {
     let ids = Helper.Effects(consumable);
     let total = 0;
@@ -122,5 +141,20 @@ public class AddictedSystem extends ScriptableSystem {
       return 0;
     }
     return total / found;
+  }
+
+  public func AverageAddiction(addiction: Addiction) -> Int32 {
+    let consumables = Helper.Consumables(addiction);
+    let size = ArraySize(consumables);
+    let total = 0;
+    for consumable in consumables {
+      total += this.AverageConsumption(consumable);
+    }
+    return total / size;
+  }
+
+  public func Threshold(addiction: Addiction) -> Threshold {
+    let average = this.AverageAddiction(addiction);
+    return Helper.Threshold(average);
   }
 }

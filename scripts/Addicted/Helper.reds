@@ -1,6 +1,7 @@
 module Addicted
 
 import Addicted.*
+import Addicted.Utils.E
 
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
@@ -57,6 +58,16 @@ public class Helper {
       case t"BaseStatusEffect.BounceBackV1":
       case t"BaseStatusEffect.BounceBackV2":
       case t"BaseStatusEffect.HealthBooster":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  public static func IsHealerAction(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"Items.FirstAidWhiffV0_inline2":
         return true;
       default:
         break;
@@ -181,6 +192,24 @@ public class Helper {
     return [];
   }
 
+  public static func ActionEffect(id: TweakDBID, threshold: Threshold) -> TweakDBID {
+    E(s"action effect for \(TDBID.ToStringDEBUG(id))");
+    let serious = Helper.IsSerious(threshold);
+    if !serious {
+      return id;
+    }
+    switch(id) {
+      case t"Items.FirstAidWhiffV0_inline2":
+        if serious {
+          return t"Items.FirstAidWhiffV0_inline2_greatly_weakened";
+        }
+        return t"Items.FirstAidWhiffV0_inline2_weakened";
+      default:
+        break;
+    }
+    return TDBID.None();
+  }
+
   public static func IsAddictive(id: TweakDBID) -> Bool {
     switch(id) {
       case t"":
@@ -203,5 +232,9 @@ public class Helper {
         break;
     }
     return false;
+  }
+
+  public static func IsSerious(threshold: Threshold) -> Bool {
+    return EnumInt(threshold) == EnumInt(Threshold.Notably) || EnumInt(threshold) == EnumInt(Threshold.Notably);
   }
 }
