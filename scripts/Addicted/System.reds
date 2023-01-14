@@ -1,5 +1,7 @@
 module Addicted.System
 
+import Addicted.Utils.E
+
 public class AddictedSystem extends ScriptableSystem {
   
   private let player: wref<PlayerPuppet>;
@@ -7,25 +9,29 @@ public class AddictedSystem extends ScriptableSystem {
   private let timeSystem: ref<TimeSystem>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
-    let player: ref<PlayerPuppet> = GameInstance.GetPlayerSystem(request.owner.GetGame()).GetLocalPlayerMainGameObject() as PlayerPuppet;
+    let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
+      E(s"initialize system on player attach");
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
 
       this.RefreshConfig();
-    }
+    } else { E(s"no player found!"); }
   }
 
   private func OnAttach() -> Void {
+    E(s"on attach system");
     ModSettings.RegisterListenerToModifications(this);
   }
 
   private func OnDetach() -> Void {
+    E(s"on detach system");
     ModSettings.UnregisterListenerToModifications(this);
   }
 
   public func RefreshConfig() -> Void {
+    E(s"refresh config");
     this.config = new AddictedConfig();
   }
 
