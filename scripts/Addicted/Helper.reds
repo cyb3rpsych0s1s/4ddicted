@@ -27,4 +27,17 @@ public final class Helper {
         return 1;
     }
   }
+
+  static public final func Threshold(score: Int32) -> Threshold {
+    if score > EnumInt(Threshold.Severely) {
+      return Threshold.Severely;
+    }
+    if score > EnumInt(Threshold.Notably) {
+      return Threshold.Notably;
+    }
+    if score > EnumInt(Threshold.Mildly) {
+      return Threshold.Mildly;
+    }
+    return Threshold.Barely;
+  }
 }

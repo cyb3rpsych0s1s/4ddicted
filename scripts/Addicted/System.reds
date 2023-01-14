@@ -10,7 +10,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   protected let config: ref<AddictedConfig>;
 
-  private persistent let addictions: ref<inkHashMap>;
+  private persistent let consumptions: ref<inkHashMap>;
   private persistent let ids: array<TweakDBID>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
@@ -50,19 +50,33 @@ public class AddictedSystem extends ScriptableSystem {
   public func OnConsumed(id: TweakDBID) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     if ArrayContains(this.ids, id) {
-      let consumption: wref<Consumption> = this.addictions.Get(TDBID.ToNumber(id)) as Consumption;
+      let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
       consumption.current = Min(consumption.current + Helper.Potency(id), 100);
       ArrayPush(consumption.doses, now);
     } else {
       let consumption = new Consumption();
-      consumption.current = 1;
+      consumption.current = Helper.Potency(id);
       consumption.doses = [now];
-      this.addictions.Insert(TDBID.ToNumber(id), consumption);
+      this.consumptions.Insert(TDBID.ToNumber(id), consumption);
       ArrayPush(this.ids, id);
+      this.PublishThreshold(id, Helper.Threshold(consumption.current));
     }
   }
 
-  // public func OnDissipated(id: TweakDBID) -> Void;
+  public func OnDissipated(id: TweakDBID) -> Void {
+    let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+    if IsDefined(consumption) {
+      let threshold = Helper.Threshold(consumption.current);
+      switch(threshold) {
+        case Threshold.Severely:
+          break;
+        case Threshold.Notably:
+          break;
+        default:
+          break;
+      }
+    }
+  }
 
   public func OnRested() -> Void {
     let id: TweakDBID;
@@ -73,14 +87,42 @@ public class AddictedSystem extends ScriptableSystem {
     let i = size - 1;
     while i >= 0 {
       id = this.ids[i];
-      let consumption: wref<Consumption> = this.addictions.Get(TDBID.ToNumber(id)) as Consumption;
+      let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
       if consumption.current == 0 {
         consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
       } else {
-        this.addictions.Remove(TDBID.ToNumber(id));
+        this.consumptions.Remove(TDBID.ToNumber(id));
         ArrayRemove(this.ids, id);
       }
       i -= 1;
     }
   }
+
+  public func Threshold(id: TweakDBID) -> Threshold {
+    let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+    if IsDefined(consumption) {
+      return Helper.Threshold(consumption.current);
+    }
+    return Threshold.Clean;
+  }
+
+  public func AverageThreshold(ids: array<TweakDBID>) -> Threshold {
+    let total: Int32 = 0;
+    let found: Int32 = 0;
+    let consumption: wref<Consumption>;
+    for id in ids {
+      if ArrayContains(this.ids, id) {
+        consumption = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+        total += consumption.current;
+        found += 1;
+      }
+    }
+    if found == 0 {
+      return Threshold.Clean;
+    }
+    let average: Int32 = RoundF(Cast<Float>(total) / Cast<Float>(found));
+    return Helper.Threshold(average);
+  }
+
+  private func PublishThreshold(id: TweakDBID, threshold: Threshold) -> Void {}
 }
