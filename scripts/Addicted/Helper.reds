@@ -1,10 +1,6 @@
 module Addicted
 
-import Addicted.Category
-import Addicted.Consumable
-import Addicted.Addiction
-import Addicted.Kind
-import Addicted.Threshold
+import Addicted.*
 
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
@@ -12,8 +8,9 @@ public class Helper {
       case t"BaseStatusEffect.BlackLaceV0":
         return Category.Hard;
       default:
-        return Category.Mild;
+        break;
     }
+    return Category.Mild;
   }
 
   public static func Potency(id: TweakDBID) -> Int32 {
@@ -182,5 +179,29 @@ public class Helper {
         break;
     }
     return [];
+  }
+
+  public static func IsAddictive(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"":
+      case t"BaseStatusEffect.AlcoholDebuff":
+      // t"BaseStatusEffect.CombatStim" double-check
+      case t"BaseStatusEffect.FirstAidWhiffV0":
+      case t"BaseStatusEffect.FirstAidWhiffV1":
+      case t"BaseStatusEffect.FirstAidWhiffV2":
+      case t"BaseStatusEffect.BonesMcCoy70V0":
+      case t"BaseStatusEffect.BonesMcCoy70V1":
+      case t"BaseStatusEffect.BonesMcCoy70V2":
+      case t"BaseStatusEffect.BlackLaceV0":
+      case t"BaseStatusEffect.HealthBooster":
+      case t"BaseStatusEffect.CarryCapacityBooster":
+      case t"BaseStatusEffect.StaminaBooster":
+      case t"BaseStatusEffect.MemoryBooster":
+      case t"BaseStatusEffect.OxyBooster":
+        return true;
+      default:
+        break;
+    }
+    return false;
   }
 }

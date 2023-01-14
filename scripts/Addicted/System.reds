@@ -1,12 +1,7 @@
 module Addicted.System
 
-import Addicted.Utils.E
-import Addicted.Utils.F
-import Addicted.Helper
-import Addicted.Category
-import Addicted.Addiction
-import Addicted.Consumable
-import Addicted.Threshold
+import Addicted.Utils.*
+import Addicted.*
 
 public class AddictedSystem extends ScriptableSystem {
   
@@ -15,6 +10,9 @@ public class AddictedSystem extends ScriptableSystem {
   private let timeSystem: ref<TimeSystem>;
 
   private let config: ref<AddictedConfig>;
+
+  private persistent let consumptions: ref<inkHashMap>;
+  private persistent let ids: array<TweakDBID>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -30,6 +28,10 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
+    if !IsDefined(this.consumptions) {
+      E(s"no hashmap yet");
+      this.consumptions = new inkHashMap();
+    }
     ModSettings.RegisterListenerToModifications(this);
   }
 
@@ -47,8 +49,24 @@ public class AddictedSystem extends ScriptableSystem {
     this.RefreshConfig();
   }
   
-  static public func GetInstance(gameInstance: GameInstance) -> ref<AddictedSystem> {
+  public final static func GetInstance(gameInstance: GameInstance) -> ref<AddictedSystem> {
     let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
+  }
+
+  public func OnConsumed(id: TweakDBID) -> Void {
+    let now = this.timeSystem.GetGameTimeStamp();
+    let key = TDBID.ToNumber(id);
+    if ArrayContains(this.ids, id) {
+      let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
+      let old = consumption.current;
+      consumption.current = Min(consumption.current + Helper.Potency(id), 100);
+      ArrayPush(consumption.doses, now);
+      E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
+    } else {
+      E(s"first time consumption for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
+      this.consumptions.Insert(key, Consumption.Create(id, now));
+      ArrayPush(this.ids, id);
+    }
   }
 }

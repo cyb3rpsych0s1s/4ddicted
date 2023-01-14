@@ -1,5 +1,19 @@
 module Addicted
 
+import Addicted.Helper
+
+public class Consumption {
+  public persistent let current: Int32;
+  public persistent let doses: array<Float>;
+
+  public static func Create(id: TweakDBID, when: Float) -> ref<Consumption> {
+    let consumption = new Consumption();
+    consumption.current = Helper.Potency(id);
+    consumption.doses = [when];
+    return consumption;
+  }
+}
+
 enum Category {
   Mild = 0,
   Hard = 1,
