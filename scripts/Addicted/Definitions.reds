@@ -14,7 +14,6 @@ enum Threshold {
 }
 
 enum Consumable {
-  Invalid = -1,
   Alcohol = 0,
   MaxDOC = 1, // BonesMcCoy
   BounceBack = 2, // FirstAidWhiff
@@ -32,6 +31,5 @@ enum Kind {
 }
 
 enum Addiction {
-  Invalid = -1,
   Healers = 0,
 }
