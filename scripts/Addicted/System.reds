@@ -1,6 +1,7 @@
 module Addicted.System
 
 import Addicted.Utils.E
+import Addicted.Utils.F
 
 public class AddictedSystem extends ScriptableSystem {
   
@@ -17,7 +18,7 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
 
       this.RefreshConfig();
-    } else { E(s"no player found!"); }
+    } else { F(s"no player found!"); }
   }
 
   private func OnAttach() -> Void {
