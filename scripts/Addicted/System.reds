@@ -126,11 +126,16 @@ public class AddictedSystem extends ScriptableSystem {
       GameObject.PlaySoundEvent(this.player, request.Sound());
     }
     request.times += 1;
-    if request.times < 3 {
+    let now = this.timeSystem.GetGameTimeStamp();
+    if request.times < 3 && now < request.until {
       this.delaySystem.CancelDelay(this.hintDelayID);
       this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, 1, true);
     }
   }
+
+  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void { this.OnHintRequest(request); }
+  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void { this.OnHintRequest(request); }
+  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void { this.OnHintRequest(request); }
 
   public func Consumption(id: TweakDBID) -> Int32 {
     let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
@@ -174,6 +179,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func CanPlaySound() -> Bool {
+    // TODO:
     return true;
   }
 
