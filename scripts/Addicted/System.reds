@@ -61,7 +61,7 @@ public class AddictedSystem extends ScriptableSystem {
       consumption.doses = [now];
       this.consumptions.Insert(TDBID.ToNumber(id), consumption);
       ArrayPush(this.ids, id);
-      this.PublishThreshold(id, Helper.Threshold(consumption.current));
+      this.PublishThreshold();
     }
   }
 
@@ -141,8 +141,8 @@ public class AddictedSystem extends ScriptableSystem {
     return 0;
   }
 
-  public func AverageConsumption(addiction: Addiction) -> Int32 {
-    let ids = Helper.Effects(addiction);
+  public func AverageConsumption(consumable: Consumable) -> Int32 {
+    let ids = Helper.Effects(consumable);
     let total = 0;
     let found = 0;
     let consumption: wref<Consumption>;
@@ -159,10 +159,23 @@ public class AddictedSystem extends ScriptableSystem {
     return total / found;
   }
 
+  public func AverageAddiction(addiction: Addiction) -> Int32 {
+    let consumables = Helper.Consumables(addiction);
+    let size = ArraySize(consumables);
+    let total = 0;
+    for consumable in consumables {
+      total += this.AverageConsumption(consumable);
+    }
+    return total / size;
+  }
+
   public func Threshold(addiction: Addiction) -> Threshold {
-    let average = this.AverageConsumption(addiction);
+    let average = this.AverageAddiction(addiction);
     return Helper.Threshold(average);
   }
 
-  private func PublishThreshold(id: TweakDBID, threshold: Threshold) -> Void {}
+  private func PublishThreshold() -> Void {
+    let healers = this.Threshold(Addiction.Healers);
+    // TODO: blackboard
+  }
 }

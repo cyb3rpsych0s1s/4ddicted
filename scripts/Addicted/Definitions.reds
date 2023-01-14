@@ -30,7 +30,7 @@ enum Threshold {
   Severely = 60,
 }
 
-enum Addiction {
+enum Consumable {
   Invalid = -1,
   Alcohol = 0,
   MaxDOC = 1, // BonesMcCoy
@@ -40,4 +40,9 @@ enum Addiction {
   OxyBooster = 5,
   StaminaBooster = 6,
   BlackLace = 7,
+}
+
+enum Addiction {
+  Invalid = -1,
+  Healers = 0,
 }

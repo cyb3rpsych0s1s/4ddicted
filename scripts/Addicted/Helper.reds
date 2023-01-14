@@ -104,59 +104,66 @@ public final class Helper {
     return false;
   }
 
-  static public final func Addiction(id: TweakDBID) -> Addiction {
+  static public final func Consumable(id: TweakDBID) -> Consumable {
     switch(id) {
       case t"BaseStatusEffect.AlcoholDebuff":
-        return Addiction.Alcohol;
+        return Consumable.Alcohol;
       case t"BaseStatusEffect.FirstAidWhiffV0":
       case t"BaseStatusEffect.FirstAidWhiffV1":
       case t"BaseStatusEffect.FirstAidWhiffV2":
-        return Addiction.BounceBack;
+        return Consumable.BounceBack;
       case t"BaseStatusEffect.BounceBackV0":
       case t"BaseStatusEffect.BounceBackV1":
       case t"BaseStatusEffect.BounceBackV2":
-        return Addiction.MaxDOC;
+        return Consumable.MaxDOC;
       case t"BaseStatusEffect.HealthBooster":
-        return Addiction.HealthBooster;
+        return Consumable.HealthBooster;
       case t"BaseStatusEffect.MemoryBooster":
-        return Addiction.MemoryBooster;
+        return Consumable.MemoryBooster;
       case t"BaseStatusEffect.OxyBooster":
-        return Addiction.OxyBooster;
+        return Consumable.OxyBooster;
       case t"BaseStatusEffect.StaminaBooster":
-        return Addiction.StaminaBooster;
+        return Consumable.StaminaBooster;
       case t"BaseStatusEffect.BlackLaceV0":
-        return Addiction.BlackLace;
+        return Consumable.BlackLace;
       default:
         break;
     }
-    return Addiction.Invalid;
+    return Consumable.Invalid;
   }
 
-  static public final func Effects(addiction: Addiction) -> array<TweakDBID> {
-    switch (addiction) {
-      case Addiction.Alcohol:
+  static public final func Consumables(addiction: Addiction) -> array<Consumable> {
+    switch(addiction) {
+      case Addiction.Healers:
+        return [Consumable.BounceBack, Consumable.MaxDOC, Consumable.HealthBooster];
+    }
+  }
+
+  static public final func Effects(consumable: Consumable) -> array<TweakDBID> {
+    switch (consumable) {
+      case Consumable.Alcohol:
         return [t"BaseStatusEffect.AlcoholDebuff"];
-      case Addiction.BounceBack:
+      case Consumable.BounceBack:
         return [
           t"BaseStatusEffect.FirstAidWhiffV0",
           t"BaseStatusEffect.FirstAidWhiffV1",
           t"BaseStatusEffect.FirstAidWhiffV2"
         ];
-      case Addiction.MaxDOC:
+      case Consumable.MaxDOC:
         return [
           t"BaseStatusEffect.BounceBackV0",
           t"BaseStatusEffect.BounceBackV1",
           t"BaseStatusEffect.BounceBackV2"
         ];
-      case Addiction.HealthBooster:
+      case Consumable.HealthBooster:
         return [t"BaseStatusEffect.HealthBooster"];
-      case Addiction.MemoryBooster:
+      case Consumable.MemoryBooster:
         return [t"BaseStatusEffect.MemoryBooster"];
-      case Addiction.OxyBooster:
+      case Consumable.OxyBooster:
         return [t"BaseStatusEffect.OxyBooster"];
-      case Addiction.StaminaBooster:
+      case Consumable.StaminaBooster:
         return [t"BaseStatusEffect.StaminaBooster"];
-      case Addiction.BlackLace:
+      case Consumable.BlackLace:
         return [t"BaseStatusEffect.BlackLaceV0"];
       default:
         break;
