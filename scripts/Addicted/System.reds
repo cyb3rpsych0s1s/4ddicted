@@ -133,29 +133,34 @@ public class AddictedSystem extends ScriptableSystem {
     this.Reschedule(request);
   }
 
-  public func Threshold(id: TweakDBID) -> Threshold {
+  public func Consumption(id: TweakDBID) -> Int32 {
     let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
     if IsDefined(consumption) {
-      return Helper.Threshold(consumption.current);
+      return consumption.current;
     }
-    return Threshold.Clean;
+    return 0;
   }
 
-  public func AverageThreshold(ids: array<TweakDBID>) -> Threshold {
-    let total: Int32 = 0;
-    let found: Int32 = 0;
+  public func AverageConsumption(addiction: Addiction) -> Int32 {
+    let ids = Helper.Effects(addiction);
+    let total = 0;
+    let found = 0;
     let consumption: wref<Consumption>;
     for id in ids {
-      if ArrayContains(this.ids, id) {
-        consumption = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+      consumption = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+      if IsDefined(consumption) {
         total += consumption.current;
         found += 1;
       }
     }
     if found == 0 {
-      return Threshold.Clean;
+      return 0;
     }
-    let average: Int32 = RoundF(Cast<Float>(total) / Cast<Float>(found));
+    return total / found;
+  }
+
+  public func Threshold(addiction: Addiction) -> Threshold {
+    let average = this.AverageConsumption(addiction);
     return Helper.Threshold(average);
   }
 

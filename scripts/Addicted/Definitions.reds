@@ -29,3 +29,15 @@ enum Threshold {
   Notably = 40,
   Severely = 60,
 }
+
+enum Addiction {
+  Invalid = -1,
+  Alcohol = 0,
+  MaxDOC = 1, // BonesMcCoy
+  BounceBack = 2, // FirstAidWhiff
+  HealthBooster = 3,
+  MemoryBooster = 4,
+  OxyBooster = 5,
+  StaminaBooster = 6,
+  BlackLace = 7,
+}
