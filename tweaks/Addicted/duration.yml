@@ -1,7 +1,0 @@
-Items.ThirtySecondsDuration:
-  $type: StatModifierGroup_Record
-  statModifiers:
-  - $type: ConstantStatModifier_Record
-    modifierType: Additive
-    statType: BaseStats.MaxDuration
-    value: 30
