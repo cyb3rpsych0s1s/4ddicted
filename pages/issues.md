@@ -1,5 +1,11 @@
 # Issues
 
+## Press [None] to continue
+
+DJ_Korvrik : reinstall your Input Loader or delete Cyberpunk 2077\engine\config\platform\pc\input_loader.ini
+
+## others
+
 ```sh
 $ just deploy
 'C:Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077\tools\redmod\bin\redMod.exe' deploy -root="C:Program Files (x86)\Steam\steamapps\common\Cyberpunk 2077" -mod='nativeSettings','Toxicity','WE3D - Drugs of Night City','MyMod'
