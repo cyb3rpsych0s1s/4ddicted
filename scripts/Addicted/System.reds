@@ -11,6 +11,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let config: ref<AddictedConfig>;
 
+  private let hintDelayID: DelayID;
+
   private persistent let consumptions: ref<inkHashMap>;
   private persistent let ids: array<TweakDBID>;
 
@@ -68,5 +70,57 @@ public class AddictedSystem extends ScriptableSystem {
       this.consumptions.Insert(key, Consumption.Create(id, now));
       ArrayPush(this.ids, id);
     }
+  }
+
+  public func OnDissipated(id: TweakDBID) -> Void {
+    let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+    E(s"on dissipation \(TDBID.ToStringDEBUG(id))");
+    if IsDefined(consumption) {
+      let consumable = Helper.Consumable(id);
+      let current = this.AverageConsumption(consumable);
+      let threshold = Helper.Threshold(current);
+      E(s"current: \(current), threshold: \(threshold)");
+      switch(threshold) {
+        case Threshold.Severely:
+        case Threshold.Notably:
+          let request: ref<HintRequest>;
+          if Helper.IsInhaler(id) {
+            request = new CoughingRequest();
+          }
+          if Helper.IsPill(id) {
+            request = new VomitingRequest();
+          }
+          if Helper.IsInjector(id) {
+            request = new AchingRequest();
+          }
+          let now = this.timeSystem.GetGameTimeStamp();
+          request.until = now + RandRangeF(3, 5);
+          request.threshold = threshold;
+          let delay = RandRangeF(1, 3);
+          this.delaySystem.CancelDelay(this.hintDelayID);
+          this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  public func AverageConsumption(consumable: Consumable) -> Int32 {
+    let ids = Helper.Effects(consumable);
+    let total = 0;
+    let found = 0;
+    let consumption: wref<Consumption>;
+    for id in ids {
+      consumption = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+      if IsDefined(consumption) {
+        total += consumption.current;
+        found += 1;
+      }
+    }
+    if found == 0 {
+      return 0;
+    }
+    return total / found;
   }
 }
