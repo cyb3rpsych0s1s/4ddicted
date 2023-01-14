@@ -40,4 +40,67 @@ public final class Helper {
     }
     return Threshold.Barely;
   }
+
+  static public final func IsHealer(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.FirstAidWhiffV0":
+      case t"BaseStatusEffect.FirstAidWhiffV1":
+      case t"BaseStatusEffect.FirstAidWhiffV2":
+      case t"BaseStatusEffect.BounceBackV0":
+      case t"BaseStatusEffect.BounceBackV1":
+      case t"BaseStatusEffect.BounceBackV2":
+      case t"BaseStatusEffect.HealthBooster":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  static public final func IsBooster(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.StaminaBooster":
+      case t"BaseStatusEffect.CarryCapacityBooster":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  static public final func IsInhaler(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.FirstAidWhiffV0":
+      case t"BaseStatusEffect.FirstAidWhiffV1":
+      case t"BaseStatusEffect.FirstAidWhiffV2":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  static public final func IsInjector(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.BlackLaceV0":
+      case t"BaseStatusEffect.BounceBackV0":
+      case t"BaseStatusEffect.BounceBackV1":
+      case t"BaseStatusEffect.BounceBackV2":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  static public final func IsPill(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.StaminaBooster":
+      case t"BaseStatusEffect.CarryCapacityBooster":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
 }

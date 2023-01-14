@@ -8,6 +8,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let delaySystem: ref<DelaySystem>;
   private let timeSystem: ref<TimeSystem>;
 
+  private let hintDelayID: DelayID;
+
   protected let config: ref<AddictedConfig>;
 
   private persistent let consumptions: ref<inkHashMap>;
@@ -69,8 +71,23 @@ public class AddictedSystem extends ScriptableSystem {
       let threshold = Helper.Threshold(consumption.current);
       switch(threshold) {
         case Threshold.Severely:
-          break;
         case Threshold.Notably:
+          let request: ref<PlayUntilRequest>;
+          if Helper.IsInhaler(id) {
+            request = new CoughingRequest();
+          }
+          if Helper.IsPill(id) {
+            request = new VomitingRequest();
+          }
+          if Helper.IsInjector(id) {
+            request = new AchingRequest();
+          }
+          let now = this.timeSystem.GetGameTimeStamp();
+          request.until = now + RandRangeF(3, 5);
+          request.threshold = threshold;
+          let delay = RandRangeF(1, 3);
+          this.delaySystem.CancelDelay(this.hintDelayID);
+          this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
           break;
         default:
           break;
@@ -96,6 +113,24 @@ public class AddictedSystem extends ScriptableSystem {
       }
       i -= 1;
     }
+  }
+
+  private final func Reschedule(request: ref<PlayUntilRequest>) -> Void {
+    request.times += 1;
+    if request.times < 3 {
+      this.delaySystem.CancelDelay(this.hintDelayID);
+      this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, 1, true);
+    }
+  }
+
+  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
+    this.Reschedule(request);
+  }
+  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
+    this.Reschedule(request);
+  }
+  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
+    this.Reschedule(request);
   }
 
   public func Threshold(id: TweakDBID) -> Threshold {
