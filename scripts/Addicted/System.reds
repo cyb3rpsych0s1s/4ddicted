@@ -105,7 +105,7 @@ public class AddictedSystem extends ScriptableSystem {
     while i >= 0 {
       id = this.ids[i];
       let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
-      if consumption.current == 0 {
+      if consumption.current > 0 {
         consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
       } else {
         this.consumptions.Remove(TDBID.ToNumber(id));
