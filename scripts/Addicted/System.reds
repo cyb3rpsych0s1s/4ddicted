@@ -68,7 +68,9 @@ public class AddictedSystem extends ScriptableSystem {
   public func OnDissipated(id: TweakDBID) -> Void {
     let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
     if IsDefined(consumption) {
-      let threshold = Helper.Threshold(consumption.current);
+      let consumable = Helper.Consumable(id);
+      let current = this.AverageConsumption(consumable);
+      let threshold = Helper.Threshold(current);
       switch(threshold) {
         case Threshold.Severely:
         case Threshold.Notably:
