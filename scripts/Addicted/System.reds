@@ -22,7 +22,7 @@ public class AddictedSystem extends ScriptableSystem {
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
 
-      // this.RefreshConfig();
+      this.RefreshConfig();
       // this.InvalidateCurrentState();
       // TODO: ...
     }
@@ -36,8 +36,12 @@ public class AddictedSystem extends ScriptableSystem {
     ModSettings.UnregisterListenerToModifications(this);
   }
 
+  public func RefreshConfig() -> Void {
+    this.config = new AddictedConfig();
+  }
+
   public func OnModSettingsChange() -> Void {
-    // this.RefreshConfig();
+    this.RefreshConfig();
     // this.InvalidateCurrentState();
   }
   
@@ -117,22 +121,15 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
-  private final func Reschedule(request: ref<PlayUntilRequest>) -> Void {
+  protected final func OnHintRequest(request: ref<HintRequest>) -> Void {
+    if this.CanPlaySound() {
+      GameObject.PlaySoundEvent(this.player, request.Sound());
+    }
     request.times += 1;
     if request.times < 3 {
       this.delaySystem.CancelDelay(this.hintDelayID);
       this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, 1, true);
     }
-  }
-
-  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
-    this.Reschedule(request);
-  }
-  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
-    this.Reschedule(request);
-  }
-  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
-    this.Reschedule(request);
   }
 
   public func Consumption(id: TweakDBID) -> Int32 {
@@ -174,6 +171,10 @@ public class AddictedSystem extends ScriptableSystem {
   public func Threshold(addiction: Addiction) -> Threshold {
     let average = this.AverageAddiction(addiction);
     return Helper.Threshold(average);
+  }
+
+  private func CanPlaySound() -> Bool {
+    return true;
   }
 
   private func PublishThreshold() -> Void {
