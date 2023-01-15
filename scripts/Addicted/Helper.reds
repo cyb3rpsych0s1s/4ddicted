@@ -270,4 +270,16 @@ public class Helper {
   public static func IsSerious(threshold: Threshold) -> Bool {
     return EnumInt(threshold) == EnumInt(Threshold.Notably) || EnumInt(threshold) == EnumInt(Threshold.Notably);
   }
+
+  public static func IsHousing(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"HousingStatusEffect.Rested":
+      case t"HousingStatusEffect.Refreshed":
+      case t"HousingStatusEffect.Energized":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
 }
