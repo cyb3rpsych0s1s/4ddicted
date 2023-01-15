@@ -67,12 +67,15 @@ public class AddictedSystem extends ScriptableSystem {
       E(s"first time consumption for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
       this.isildur.Insert(id, Consumption.Create(id, now));
     }
+    if Helper.IsInstant(id) {
+      this.OnHint(id);
+    }
   }
 
   public func OnRested() -> Void {
     let size = this.isildur.Size();
-    let ids = this.isildur.Keys();
     if size == 0 { return; }
+    let ids = this.isildur.Keys();
     let key: Uint64;
     let consumption: ref<Consumption>;
     for id in ids {
@@ -87,9 +90,8 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
-  public func OnDissipated(id: TweakDBID) -> Void {
+  public func OnHint(id: TweakDBID) -> Bool {
     let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
-    EI(id, s"on dissipation");
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
       let specific = this.isildur.Get(id);
@@ -121,10 +123,17 @@ public class AddictedSystem extends ScriptableSystem {
           let delay = RandRangeF(1, 3);
           this.delaySystem.CancelDelay(this.hintDelayID);
           this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+          return true;
       }
     } else {
       FI(id, s"no consumption recorded while just dissipated");
+      return false;
     }
+  }
+
+  public func OnDissipated(id: TweakDBID) -> Void {
+    EI(id, s"on dissipation");
+    this.OnHint(id);
   }
 
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {

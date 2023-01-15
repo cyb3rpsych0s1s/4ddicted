@@ -118,6 +118,21 @@ public class Helper {
     return false;
   }
 
+  public static func IsInstant(id: TweakDBID) -> Bool {
+    let effect = TweakDBInterface.GetRecord(id) as StatusEffect_Record;
+    let duration: StatModifierGroup_Record = effect.Duration();
+    let records: array<StatModifier_Record>;
+    duration.StatModifiers(records);
+    for record in records {
+      if Equals(record.StatType(), t"BaseStats.MaxDuration") && record.IsA(n"ConstantStatModifier_Record") {
+        let modifier = record as ConstantStatModifier_Record;
+        let value = modifier.Value();
+        return value.Value() == -1;
+      }
+    }
+    return false;
+  }
+
   public static func Consumable(id: TweakDBID) -> Consumable {
     switch(id) {
       case t"BaseStatusEffect.AlcoholDebuff":
