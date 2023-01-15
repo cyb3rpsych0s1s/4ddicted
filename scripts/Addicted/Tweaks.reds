@@ -12,13 +12,13 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     EI(id, s"status effect applied");
     // increase score on consumption
     if evt.isNewApplication && evt.IsAddictive() {
-        EI(id, s"consumed addictive substance");
-        system.OnConsumed(id);
+      EI(id, s"consumed addictive substance");
+      system.OnConsumed(id);
     }
     // decrease score on rest
     if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
-        EI(id, s"housing");
-        system.OnRested();
+      EI(id, s"housing");
+      system.OnRested();
     }
 }
 

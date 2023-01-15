@@ -142,6 +142,8 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
+    // avoids meaningless notifications
+    if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
     let toast: SimpleScreenMessage;
     toast.isShown = true;
     toast.isInstant = false;
@@ -259,6 +261,27 @@ public class AddictedSystem extends ScriptableSystem {
   public func Threshold(addiction: Addiction) -> Threshold {
     let average = this.AverageAddiction(addiction);
     return Helper.Threshold(average);
+  }
+
+  /// if hasn't consumed for a day or more
+  public func IsWithdrawing(id: TweakDBID) -> Bool {
+    let consumption = this.isildur.Get(id) as Consumption;
+    if !IsDefined(consumption) { return false; }
+    let doses = consumption.doses;
+    let size = ArraySize(doses);
+    if size == 0 { return false; }
+    let now = this.timeSystem.GetGameTime();
+    let today = GameTime.Days(now);
+    let first = doses[0];
+    let last = this.timeSystem.RealTimeSecondsToGameTime(first);
+    let before = GameTime.Days(last);
+    let yesterday = today - 1;
+    let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(last))) >= 24);
+    let moreThan1Day = today >= (before + 2);
+    if moreThan1Day || moreThan24Hours {
+      return true;
+    }
+    return false;
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
