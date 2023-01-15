@@ -13,8 +13,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let hintDelayID: DelayID;
 
-  private persistent let consumptions: ref<inkHashMap>;
-  private persistent let ids: array<TweakDBID>;
+  private persistent let isildur: ref<Consumptions>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -30,9 +29,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
-    if !IsDefined(this.consumptions) {
-      E(s"no hashmap yet");
-      this.consumptions = new inkHashMap();
+    if !IsDefined(this.isildur) {
+      this.isildur = new Consumptions();
     }
     ModSettings.RegisterListenerToModifications(this);
   }
@@ -59,49 +57,38 @@ public class AddictedSystem extends ScriptableSystem {
   public func OnConsumed(id: TweakDBID) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     let key = TDBID.ToNumber(id);
-    if ArrayContains(this.ids, id) {
-      let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
+    if this.isildur.KeyExist(id) {
+      let consumption: ref<Consumption> = this.isildur.Get(id);
       let old = consumption.current;
-      let next = new Consumption();
-      let doses: array<Float> = [];
-      for dose in consumption.doses {
-        ArrayPush(doses, dose);
-      }
-      ArrayPush(doses, now);
-      next.current = Min(old + Helper.Potency(id), 100);
-      next.doses = doses;
-      this.consumptions.Set(key, next);
-      E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(next.current))");
+      consumption.current = Min(old + Helper.Potency(id), 100);
+      ArrayPush(consumption.doses, now);
+      E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
     } else {
       E(s"first time consumption for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
-      this.consumptions.Insert(key, Consumption.Create(id, now));
-      ArrayPush(this.ids, id);
+      this.isildur.Insert(id, Consumption.Create(id, now));
     }
   }
 
   public func OnRested() -> Void {
-    let size = ArraySize(this.ids);
+    let size = this.isildur.Size();
+    let ids = this.isildur.Keys();
     if size == 0 { return; }
     let key: Uint64;
     let consumption: ref<Consumption>;
-    for id in this.ids {
+    for id in ids {
       key = TDBID.ToNumber(id);
-      consumption = this.consumptions.Get(key) as Consumption;
+      consumption = this.isildur.Get(id) as Consumption;
       if consumption.current > 0 {
-        let next = new Consumption();
-        next.current = Max(consumption.current - Helper.Resilience(id), 0);
-        next.doses = consumption.doses;
-        this.consumptions.Set(key, consumption);
+        consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
+        consumption.doses = consumption.doses;
       } else {
-        this.consumptions.Remove(key);
-        ArrayRemove(this.ids, id);
+        this.isildur.Remove(id);
       }
     }
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
-    let key = TDBID.ToNumber(id);
-    let consumption: wref<Consumption> = this.consumptions.Get(key) as Consumption;
+    let consumption: wref<Consumption> = this.isildur.Get(id) as Consumption;
     EI(id, s"on dissipation");
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
@@ -203,7 +190,7 @@ public class AddictedSystem extends ScriptableSystem {
     let key: Uint64;
     for id in ids {
       key = TDBID.ToNumber(id);
-      consumption = this.consumptions.Get(key) as Consumption;
+      consumption = this.isildur.Get(id) as Consumption;
       if IsDefined(consumption) {
         total += consumption.current;
         found += 1;
@@ -232,64 +219,54 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
-    let key = TDBID.ToNumber(id);
-    if ArrayContains(this.ids, id) {
-      let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
+    if this.isildur.KeyExist(id) {
+      let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
       let old = consumption.current;
-      let next = new Consumption();
-      let doses: array<Float> = [];
-      for dose in consumption.doses {
-        ArrayPush(doses, dose);
-      }
-      ArrayPush(doses, now);
-      next.current = Min(old + Helper.Potency(id), 100);
-      next.doses = doses;
-      this.consumptions.Set(key, next);
-      EI(id, s"update threshold: \(ToString(old)) -> \(ToString(consumption.current)) (\(ToString(key)))");
+      consumption.current = EnumInt(threshold) + 1;
+      ArrayPush(consumption.doses, now);
+      EI(id, s"update consumption: \(ToString(old)) -> \(ToString(consumption.current))");
     } else {
-      EI(id, s"add threshold (\(ToString(key)))");
+      EI(id, s"insert consumption");
       let consumption = new Consumption();
       consumption.current = EnumInt(threshold) + 1;
       consumption.doses = [now];
-      this.consumptions.Insert(key, consumption);
-      ArrayPush(this.ids, id);
+      this.isildur.Insert(id, consumption);
     }
   }
 
   public func DebugThresholds() -> Void {
     E(s"debug thresholds:");
-    let size = ArraySize(this.ids);
+    let size = this.isildur.Size();
+    let ids = this.isildur.Keys();
     if size == 0 {
       E(s"no consumption found!");
       return;
     }
-    for id in this.ids {
-      let key = TDBID.ToNumber(id);
-      let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
+    for id in ids {
+      let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
       if IsDefined(consumption) {
         let size = ArraySize(consumption.doses);
         EI(id, s"current: \(ToString(consumption.current)) doses: \(ToString(size))");
       } else {
-        FI(id, s"consumption found empty (\(ToString(key)))");
+        FI(id, s"consumption found empty");
       }
     }
   }
 
   public func DebugClear() -> Void {
-    E(s"clear all consumptions...");
-    let size = ArraySize(this.ids);
+    E(s"clear all isildur...");
+    let size = this.isildur.Size();
+    let ids = this.isildur.Keys();
     if size == 0 {
       E(s"no consumption found!");
       return;
     } else {
       let key: Uint64;
-      for id in this.ids {
+      for id in ids {
         key = TDBID.ToNumber(id);
-        this.consumptions.Remove(key);
+        this.isildur.Remove(id);
       }
-      this.consumptions.Clear();
-      this.consumptions = new inkHashMap();
-      this.ids = [];
+      this.isildur.Clear();
       E(s"consumption cleaned!");
     }
   }

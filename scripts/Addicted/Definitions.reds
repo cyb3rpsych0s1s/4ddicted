@@ -38,6 +38,67 @@ public class AchingRequest extends HintRequest {
   }
 }
 
+public class Consumptions {
+  private persistent let keys: array<TweakDBID>;
+  private persistent let values: array<ref<Consumption>>;
+
+  public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
+    if this.KeyExist(key) { return; }
+    ArrayPush(this.values, value);
+    ArrayPush(this.keys, key);
+  }
+  private func Index(key: TweakDBID) -> Int32 {
+    let idx = 0;
+    let found = false;
+    for existing in this.keys {
+      if existing == key {
+        found = true;
+        break;
+      }
+      idx += 1;
+    }
+    if found {
+      return idx;
+    }
+    return -1;
+  }
+  public func Get(key: TweakDBID) -> ref<Consumption> {
+    let idx = this.Index(key);
+    if idx == -1 { return null; }
+    return this.values[idx];
+  }
+  public func Set(key: TweakDBID, value: ref<Consumption>) -> Void {
+    let idx = this.Index(key);
+    if idx == -1 { return; }
+    this.values[idx] = value;
+  }
+  public func KeyExist(key: TweakDBID) -> Bool {
+    for existing in this.keys {
+      if existing == key {
+        return true;
+      }
+    }
+    return false;
+  }
+  public func Remove(key: TweakDBID) -> Void {
+    let idx = this.Index(key);
+    if idx == -1 { return; }
+    ArrayErase(this.keys, idx);
+    ArrayErase(this.values, idx);
+  }
+  public func Clear() -> Void {
+    ArrayClear(this.keys);
+    ArrayClear(this.values);
+  }
+  public func Size() -> Int32 {
+    let size = ArraySize(this.keys);
+    return size;
+  }
+  public func Keys() -> array<TweakDBID> {
+    return this.keys;
+  }
+}
+
 public class Consumption {
   public persistent let current: Int32;
   public persistent let doses: array<Float>;
