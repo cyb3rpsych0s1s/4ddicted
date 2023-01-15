@@ -37,6 +37,15 @@ public class AchingRequest extends HintRequest {
     return n"ono_v_pain_short";
   }
 }
+// hint for anabolics
+public class BreatherRequest extends HintRequest {
+  public func Sound() -> CName {
+    if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
+      return n"ono_v_effort_long";
+    }
+    return n"ono_v_effort_short";
+  }
+}
 
 public class Consumptions {
   private persistent let keys: array<TweakDBID>;

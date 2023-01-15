@@ -194,6 +194,11 @@ public class AddictedSystem extends ScriptableSystem {
     this.ProcessHintRequest(request);
   }
 
+  protected final func OnBreatherRequest(request: ref<BreatherRequest>) -> Void {
+    E(s"on breather request");
+    this.ProcessHintRequest(request);
+  }
+
   public func OnProcessHealerEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
     E(s"on process healer effects");
     let idx = 0;
