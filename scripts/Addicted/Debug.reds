@@ -26,3 +26,9 @@ public func DebugClear() -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame());
   system.DebugClear();
 }
+
+// use like: Game.GetPlayer():DebugClearEffects();
+@addMethod(PlayerPuppet)
+public func DebugClearEffects() -> Void {
+  StatusEffectHelper.RemoveAllStatusEffects(this);
+}

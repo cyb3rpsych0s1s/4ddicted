@@ -114,8 +114,9 @@ public class AddictedSystem extends ScriptableSystem {
             request = new AchingRequest();
           }
           let now = this.timeSystem.GetGameTimeStamp();
-          request.until = now + RandRangeF(3, 5);
+          request.until = now + 30.;
           request.threshold = threshold;
+          EI(id, s"now: \(ToString(now)) until: \(ToString(request.until)) threshold: \(ToString(request.threshold))");
           let delay = RandRangeF(1, 3);
           this.delaySystem.CancelDelay(this.hintDelayID);
           this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
@@ -128,16 +129,33 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
+    GameObject.PlaySoundEvent(this.player, request.Sound());
+    let now = this.timeSystem.GetGameTimeStamp();
+    E(s"request times: \(ToString(request.times))");
+    request.times += 1;
+    E(s"request times: \(ToString(request.times))");
+    E(s"now \(ToString(now)) <= \(ToString(request.until))");
+    if now <= request.until && request.times < 3 {
+      let delay = RandRangeF(1, 3);
+      this.delaySystem.CancelDelay(this.hintDelayID);
+      this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+    }
+  }
+
   protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
-    E(s"TODO cough");
+    E(s"on coughing request");
+    this.ProcessHintRequest(request);
   }
 
   protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
-    E(s"TODO puke");
+    E(s"on vomiting request");
+    this.ProcessHintRequest(request);
   }
 
   protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
-    E(s"TODO pain");
+    E(s"on aching request");
+    this.ProcessHintRequest(request);
   }
 
   public func OnProcessHealerEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
