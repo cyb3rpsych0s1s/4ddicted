@@ -132,16 +132,22 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
-    let message: SimpleScreenMessage;
-    message.isShown = true;
-    message.isInstant = false;
-    message.duration = 10.;
-    if EnumInt(before) > EnumInt(after) {
-      message.message = s"Biomonitor: detected that you are \(ToString(after)) addicted to \(TDBID.ToStringDEBUG(id)).";
+    let toast: SimpleScreenMessage;
+    toast.isShown = true;
+    toast.isInstant = false;
+    toast.duration = 5.;
+    let consumable = Helper.Consumable(id);
+    if EnumInt(before) < EnumInt(after) {
+      toast.message = s"symptoms of addiction detected\nsubstance: \(ToString(consumable))\nthreshold: \(ToString(after))";
     } else {
-      message.message = s"Biomonitor: \(ToString(after)) addiction to \(TDBID.ToStringDEBUG(id)) is getting better, keep this way !";
+      E(s"threshold after: \(ToString(after))");
+      if EnumInt(after) == 0 {
+        toast.message = s"symptoms of addiction gone\nsubstance: \(ToString(consumable))\nthreshold: \(ToString(after))";
+      } else {
+        toast.message = s"symptoms of addiction in recession\nsubstance: \(ToString(consumable))\nthreshold: \(ToString(after))\nit's getting better, keep this way !";
+      }
     }
-    GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(message), true);
+    GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(toast), true);
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {

@@ -37,6 +37,7 @@ public class Helper {
   }
 
   public static func Threshold(score: Int32) -> Threshold {
+    if score == 0 { return Threshold.Clean; }
     if score > EnumInt(Threshold.Severely) {
       return Threshold.Severely;
     }
