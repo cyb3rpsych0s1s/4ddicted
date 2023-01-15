@@ -37,8 +37,8 @@ protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect
   E(s"process status effects");
   let healing = false;
   for record in actionEffects {
-    E(s"processing \(TDBID.ToStringDEBUG(record.GetID()))...");
-    if Helper.IsHealerAction(record.GetID()) {
+    E(s"checking if healer action effect for \(TDBID.ToStringDEBUG(record.GetID()))...");
+    if Helper.IsHealer(record.GetID()) {
       healing = true;
       break;
     }
@@ -46,7 +46,7 @@ protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect
   let effects = actionEffects;
   if healing {
     let system = AddictedSystem.GetInstance(gameInstance);
-    effects = system.OnProcessHealerEffect(actionEffects);
+    effects = system.OnProcessHealerEffects(actionEffects);
   }
   wrappedMethod(effects, gameInstance);
 }

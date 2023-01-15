@@ -54,22 +54,16 @@ public class Helper {
       case t"BaseStatusEffect.FirstAidWhiffV0":
       case t"BaseStatusEffect.FirstAidWhiffV1":
       case t"BaseStatusEffect.FirstAidWhiffV2":
-      case t"BaseStatusEffect.BounceBackV0":
-      case t"BaseStatusEffect.BounceBackV1":
-      case t"BaseStatusEffect.BounceBackV2":
-      case t"BaseStatusEffect.HealthBooster":
-        return true;
-      default:
-        break;
-    }
-    return false;
-  }
-
-  public static func IsHealerAction(id: TweakDBID) -> Bool {
-    switch(id) {
       case t"Items.FirstAidWhiffV0_inline2":
       case t"Items.FirstAidWhiffV1_inline6":
       case t"Items.FirstAidWhiffV2_inline6":
+      case t"BaseStatusEffect.BonesMcCoy70V0":
+      case t"BaseStatusEffect.BonesMcCoy70V1":
+      case t"BaseStatusEffect.BonesMcCoy70V2":
+      case t"Items.BonesMcCoy70V0_inline2":
+      case t"Items.BonesMcCoy70V1_inline2":
+      case t"Items.BonesMcCoy70V2_inline6":
+      case t"BaseStatusEffect.HealthBooster":
         return true;
       default:
         break;
@@ -103,9 +97,9 @@ public class Helper {
   public static func IsInjector(id: TweakDBID) -> Bool {
     switch(id) {
       case t"BaseStatusEffect.BlackLaceV0":
-      case t"BaseStatusEffect.BounceBackV0":
-      case t"BaseStatusEffect.BounceBackV1":
-      case t"BaseStatusEffect.BounceBackV2":
+      case t"BaseStatusEffect.BonesMcCoy70V0":
+      case t"BaseStatusEffect.BonesMcCoy70V1":
+      case t"BaseStatusEffect.BonesMcCoy70V2":
         return true;
       default:
         break;
@@ -134,11 +128,14 @@ public class Helper {
       case t"Items.FirstAidWhiffV0_inline2":
       case t"Items.FirstAidWhiffV1_inline6":
       case t"Items.FirstAidWhiffV2_inline6":
-        return Consumable.BounceBack;
-      case t"BaseStatusEffect.BounceBackV0":
-      case t"BaseStatusEffect.BounceBackV1":
-      case t"BaseStatusEffect.BounceBackV2":
         return Consumable.MaxDOC;
+      case t"BaseStatusEffect.BonesMcCoy70V0":
+      case t"BaseStatusEffect.BonesMcCoy70V1":
+      case t"BaseStatusEffect.BonesMcCoy70V2":
+      case t"Items.BonesMcCoy70V0_inline2":
+      case t"Items.BonesMcCoy70V1_inline2":
+      case t"Items.BonesMcCoy70V2_inline6":
+        return Consumable.BounceBack;
       case t"BaseStatusEffect.HealthBooster":
         return Consumable.HealthBooster;
       case t"BaseStatusEffect.MemoryBooster":
@@ -171,15 +168,15 @@ public class Helper {
         return [t"BaseStatusEffect.AlcoholDebuff"];
       case Consumable.BounceBack:
         return [
-          t"BaseStatusEffect.FirstAidWhiffV0",
-          t"BaseStatusEffect.FirstAidWhiffV1",
-          t"BaseStatusEffect.FirstAidWhiffV2"
+          t"BaseStatusEffect.BonesMcCoy70V0",
+          t"BaseStatusEffect.BonesMcCoy70V1",
+          t"BaseStatusEffect.BonesMcCoy70V2"
         ];
       case Consumable.MaxDOC:
         return [
-          t"BaseStatusEffect.BounceBackV0",
-          t"BaseStatusEffect.BounceBackV1",
-          t"BaseStatusEffect.BounceBackV2"
+          t"BaseStatusEffect.FirstAidWhiffV0",
+          t"BaseStatusEffect.FirstAidWhiffV1",
+          t"BaseStatusEffect.FirstAidWhiffV2"
         ];
       case Consumable.HealthBooster:
         return [t"BaseStatusEffect.HealthBooster"];
@@ -230,7 +227,7 @@ public class Helper {
       //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V1";
       //   }
       //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V1";
-      // case t"Items.BonesMcCoy70V2_inline4":
+      // case t"Items.BonesMcCoy70V2_inline6":
       //   if severe {
       //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V2";
       //   }

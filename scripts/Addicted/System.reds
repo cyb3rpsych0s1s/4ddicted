@@ -106,7 +106,7 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
-  public func OnProcessHealerEffect(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
+  public func OnProcessHealerEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
     E(s"on process healer effects");
     let idx = 0;
     let action: TweakDBID;
