@@ -247,7 +247,7 @@ public class Helper {
   }
 
   public static func IsSerious(threshold: Threshold) -> Bool {
-    return EnumInt(threshold) == EnumInt(Threshold.Notably) || EnumInt(threshold) == EnumInt(Threshold.Notably);
+    return EnumInt(threshold) == EnumInt(Threshold.Notably) || EnumInt(threshold) == EnumInt(Threshold.Severely);
   }
 
   public static func IsHousing(id: TweakDBID) -> Bool {
