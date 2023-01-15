@@ -114,7 +114,7 @@ public class AddictedSystem extends ScriptableSystem {
             request = new AchingRequest();
           }
           let now = this.timeSystem.GetGameTimeStamp();
-          request.until = now + 30.;
+          request.until = now + 60.;
           request.threshold = threshold;
           EI(id, s"now: \(ToString(now)) until: \(ToString(request.until)) threshold: \(ToString(request.threshold))");
           let delay = RandRangeF(1, 3);
