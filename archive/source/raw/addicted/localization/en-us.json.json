@@ -76,14 +76,14 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Normal: consumables can't kill you",
+              "femaleVariant": "easy pizzy",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Mode-Normal"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Hard: beware, consumables can kill you ...",
+              "femaleVariant": "more... lethal",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Mode-Hard"
