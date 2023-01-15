@@ -18,6 +18,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     // decrease score on rest
     if id == t"HousingStatusEffect.Rested" {
         E(s"rested \(TDBID.ToStringDEBUG(id))");
+        system.OnRested();
     }
 }
 

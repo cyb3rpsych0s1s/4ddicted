@@ -73,6 +73,24 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  public func OnRested() -> Void {
+    let size = ArraySize(this.ids);
+    if size == 0 { return; }
+    let key: Uint64;
+    let consumption: ref<Consumption>;
+    for id in this.ids {
+      key = TDBID.ToNumber(id);
+      consumption = this.consumptions.Get(key) as Consumption;
+      if consumption.current > 0 {
+        consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
+        this.consumptions.Set(key, consumption);
+      } else {
+        this.consumptions.Remove(key);
+        ArrayRemove(this.ids, id);
+      }
+    }
+  }
+
   public func OnDissipated(id: TweakDBID) -> Void {
     let key = TDBID.ToNumber(id);
     let consumption: wref<Consumption> = this.consumptions.Get(key) as Consumption;
