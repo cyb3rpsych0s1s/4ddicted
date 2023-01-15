@@ -106,7 +106,7 @@ public class Helper {
       for record in records {
         stat = record.StatType();
         rtype = record.ModifierType();
-        if Equals(stat.GetID(), t"BaseStats.MaxDuration") && Equals(rtype, n"Additive") && record.IsA(n"ConstantStatModifier_Record") {
+        if Equals(stat.GetID(), t"BaseStats.MaxDuration") && Equals(rtype, n"Additive") && record.IsA(n"gamedataConstantStatModifier_Record") {
           modifier = record as ConstantStatModifier_Record;
           value = modifier.Value();
           return value < 1.;
