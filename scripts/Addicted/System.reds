@@ -62,10 +62,16 @@ public class AddictedSystem extends ScriptableSystem {
     if ArrayContains(this.ids, id) {
       let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
       let old = consumption.current;
-      consumption.current = Min(consumption.current + Helper.Potency(id), 100);
-      ArrayPush(consumption.doses, now);
-      this.consumptions.Set(key, consumption);
-      E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
+      let next = new Consumption();
+      let doses: array<Float> = [];
+      for dose in consumption.doses {
+        ArrayPush(doses, dose);
+      }
+      ArrayPush(doses, now);
+      next.current = Min(old + Helper.Potency(id), 100);
+      next.doses = doses;
+      this.consumptions.Set(key, next);
+      E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(next.current))");
     } else {
       E(s"first time consumption for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
       this.consumptions.Insert(key, Consumption.Create(id, now));
@@ -82,7 +88,9 @@ public class AddictedSystem extends ScriptableSystem {
       key = TDBID.ToNumber(id);
       consumption = this.consumptions.Get(key) as Consumption;
       if consumption.current > 0 {
-        consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
+        let next = new Consumption();
+        next.current = Max(consumption.current - Helper.Resilience(id), 0);
+        next.doses = consumption.doses;
         this.consumptions.Set(key, consumption);
       } else {
         this.consumptions.Remove(key);
@@ -228,9 +236,15 @@ public class AddictedSystem extends ScriptableSystem {
     if ArrayContains(this.ids, id) {
       let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
       let old = consumption.current;
-      consumption.current = EnumInt(threshold) + 1;
-      ArrayPush(consumption.doses, now);
-      this.consumptions.Set(key, consumption);
+      let next = new Consumption();
+      let doses: array<Float> = [];
+      for dose in consumption.doses {
+        ArrayPush(doses, dose);
+      }
+      ArrayPush(doses, now);
+      next.current = Min(old + Helper.Potency(id), 100);
+      next.doses = doses;
+      this.consumptions.Set(key, next);
       EI(id, s"update threshold: \(ToString(old)) -> \(ToString(consumption.current)) (\(ToString(key)))");
     } else {
       EI(id, s"add threshold (\(ToString(key)))");
