@@ -128,8 +128,8 @@ enum Threshold {
 enum Consumable {
   Invalid = -1,
   Alcohol = 0,
-  MaxDOC = 1, // BonesMcCoy
-  BounceBack = 2, // FirstAidWhiff
+  MaxDOC = 1, // FirstAidWhiff
+  BounceBack = 2, // BonesMcCoy
   HealthBooster = 3,
   MemoryBooster = 4,
   OxyBooster = 5,
