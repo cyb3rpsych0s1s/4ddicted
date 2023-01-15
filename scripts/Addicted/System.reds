@@ -114,11 +114,16 @@ public class AddictedSystem extends ScriptableSystem {
     let consumable: Consumable;
     let average: Int32;
     let id: TweakDBID;
+    let groupAverage = this.AverageAddiction(Addiction.Healers);
+    let groupThreshold = Helper.Threshold(groupAverage);
     for effect in actionEffects {
       id = effect.GetID();
       consumable = Helper.Consumable(id);
       average = this.AverageConsumption(consumable);
       threshold = Helper.Threshold(average);
+      if EnumInt(threshold) < EnumInt(groupThreshold) {
+        threshold = groupThreshold;
+      }
       action = Helper.ActionEffect(id, threshold);
       if !Equals(action, id) {
         E(s"replace \(TDBID.ToStringDEBUG(id)) with \(TDBID.ToStringDEBUG(action))");
@@ -179,6 +184,24 @@ public class AddictedSystem extends ScriptableSystem {
       consumption.doses = [now];
       this.consumptions.Insert(key, consumption);
       ArrayPush(this.ids, id);
+    }
+  }
+
+  public func DebugThresholds() -> Void {
+    E(s"debug thresholds:");
+    let size = ArraySize(this.ids);
+    if size == 0 {
+      E(s"no consumption found!");
+      return;
+    }
+    for id in this.ids {
+      let key = TDBID.ToNumber(id);
+      let consumption = this.consumptions.Get(key) as Consumption;
+      if IsDefined(consumption) {
+        E(s"\(TDBID.ToStringDEBUG(id)) consumption: \(ToString(consumption.current)) doses: \(ToString(ArraySize(consumption.doses)))");
+      } else {
+        F(s"consumption found empty for \(TDBID.ToStringDEBUG(id))");
+      }
     }
   }
 }

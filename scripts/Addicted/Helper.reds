@@ -217,26 +217,26 @@ public class Helper {
           return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV2";
         }
         return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV2";
-      // case t"Items.BonesMcCoy70V0_inline0":
-      //   if severe {
-      //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V0";
-      //   }
-      //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V0";
-      // case t"Items.BonesMcCoy70V1_inline0":
-      //   if severe {
-      //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V1";
-      //   }
-      //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V1";
-      // case t"Items.BonesMcCoy70V2_inline6":
-      //   if severe {
-      //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V2";
-      //   }
-      //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V2";
-      // case t"Items.HealthBooster_inline1":
-      //   if severe {
-      //     return t"Items.SeverelyWeakenedActionEffectHealthBooster";
-      //   }
-      //   return t"Items.NotablyWeakenedActionEffectHealthBooster";
+      case t"Items.BonesMcCoy70V0_inline0":
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V0";
+        }
+        return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V0";
+      case t"Items.BonesMcCoy70V1_inline0":
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V1";
+        }
+        return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V1";
+      case t"Items.BonesMcCoy70V2_inline6":
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V2";
+        }
+        return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V2";
+      case t"Items.HealthBooster_inline1":
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectHealthBooster";
+        }
+        return t"Items.NotablyWeakenedActionEffectHealthBooster";
       default:
         break;
     }

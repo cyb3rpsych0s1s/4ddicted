@@ -9,5 +9,5 @@ public static func E(str: String) -> Void {
 }
 
 public static func F(str: String) -> Void {
-  LogError(s"Addicted: \(str)");
+  LogError(s"[ERROR] Addicted: \(str)");
 }

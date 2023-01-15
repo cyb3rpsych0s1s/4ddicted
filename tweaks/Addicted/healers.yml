@@ -1,4 +1,4 @@
-# first aid whiff
+# first aid whiff (a.k.a maxdoc)
 
 ## v0
 
@@ -83,3 +83,139 @@ Items.SeverelyWeakenedActionEffectFirstAidWhiffV2:
               - $type: StatPoolUpdate_Record
                 statPoolType: BaseStats.Health
                 statPoolValue: 40
+
+# bounce back (a.k.a bones mccoy)
+
+## v0
+
+Items.NotablyWeakenedActionEffectBonesMcCoy70V0:
+  $base: Items.BonesMcCoy70V0_inline2
+  statusEffect:
+    $base: BaseStatusEffect.BonesMcCoy70V0
+    packages:
+      - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+        effectors:
+          - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+            poolModifier:
+              - $base: BaseStatusEffect.BonesMcCoy70V0_inline2
+                valuePerSec: 2
+          - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 10
+
+Items.SeverelyWeakenedActionEffectBonesMcCoy70V0:
+  $base: Items.BonesMcCoy70V0_inline2
+  statusEffect:
+    $base: BaseStatusEffect.BonesMcCoy70V0
+    packages:
+      - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+        effectors:
+          - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+            poolModifier:
+              - $base: BaseStatusEffect.BonesMcCoy70V0_inline2
+                valuePerSec: 1
+          - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 5
+
+## v1
+
+Items.NotablyWeakenedActionEffectBonesMcCoy70V1:
+  $base: Items.BonesMcCoy70V1_inline2
+  statusEffect:
+    $base: BaseStatusEffect.BonesMcCoy70V1
+    packages:
+      - $base: BaseStatusEffect.BonesMcCoy70V1_inline0
+        effectors:
+          - $base: BaseStatusEffect.BonesMcCoy70V1_inline1
+            poolModifier:
+              - $base: BaseStatusEffect.BonesMcCoy70V1_inline2
+                valuePerSec: 3
+          - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 15
+
+Items.SeverelyWeakenedActionEffectBonesMcCoy70V1:
+  $base: Items.BonesMcCoy70V1_inline2
+  statusEffect:
+    $base: BaseStatusEffect.BonesMcCoy70V1
+    packages:
+      - $base: BaseStatusEffect.BonesMcCoy70V1_inline0
+        effectors:
+          - $base: BaseStatusEffect.BonesMcCoy70V1_inline1
+            poolModifier:
+              - $base: BaseStatusEffect.BonesMcCoy70V1_inline2
+                valuePerSec: 2
+          - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 10
+
+## v2
+
+Items.NotablyWeakenedActionEffectBonesMcCoy70V2:
+  $base: Items.BonesMcCoy70V2_inline6
+  statusEffect:
+    $base: BaseStatusEffect.BonesMcCoy70V1
+    packages:
+      - $base: BaseStatusEffect.BonesMcCoy70V2_inline0
+        effectors:
+          - $base: BaseStatusEffect.BonesMcCoy70V2_inline1
+            poolModifier:
+              - $base: BaseStatusEffect.BonesMcCoy70V2_inline2
+                valuePerSec: 4
+          - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 20
+
+Items.SeverelyWeakenedActionEffectBonesMcCoy70V2:
+  $base: Items.BonesMcCoy70V2_inline6
+  statusEffect:
+    $base: BaseStatusEffect.BonesMcCoy70V1
+    packages:
+      - $base: BaseStatusEffect.BonesMcCoy70V2_inline0
+        effectors:
+          - $base: BaseStatusEffect.BonesMcCoy70V2_inline1
+            poolModifier:
+              - $base: BaseStatusEffect.BonesMcCoy70V2_inline2
+                valuePerSec: 3
+          - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 15
+
+# health booster
+
+Items.NotablyWeakenedActionEffectHealthBooster:
+  $base: Items.HealthBooster_inline1
+  statusEffect:
+    $base: BaseStatusEffect.HealthBooster
+    packages:
+      - $base: BaseStatusEffect.HealthBooster_inline0
+        stats:
+          - $type: Stat_Record
+            modifierType: Multiplier
+            statType: BaseStats.Health
+            value: 1.15
+
+Items.SeverelyWeakenedActionEffectHealthBooster:
+  $base: Items.HealthBooster_inline1
+  statusEffect:
+    $base: BaseStatusEffect.HealthBooster
+    packages:
+      - $base: BaseStatusEffect.HealthBooster_inline0
+        stats:
+          - $type: Stat_Record
+            modifierType: Multiplier
+            statType: BaseStats.Health
+            value: 1.1
