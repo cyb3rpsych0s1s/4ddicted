@@ -5,7 +5,7 @@ import Addicted.System.AddictedSystem
 @addMethod(PlayerPuppet)
 public func DebugSwitchThreshold(id: TweakDBID, threshold: Int32) -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame()) as AddictedSystem;
-  system.DebugSetThreshold(id, IntEnum(threshold));
+  system.DebugSwitchThreshold(id, IntEnum(threshold));
 }
 
 // use like: Game.GetPlayer():DebugThresholds();
@@ -13,4 +13,11 @@ public func DebugSwitchThreshold(id: TweakDBID, threshold: Int32) -> Void {
 public func DebugThresholds() -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame()) as AddictedSystem;
   system.DebugThresholds();
+}
+
+// use like: Game.GetPlayer():DebugClear();
+@addMethod(PlayerPuppet)
+public func DebugClear() -> Void {
+  let system = AddictedSystem.GetInstance(this.GetGame()) as AddictedSystem;
+  system.DebugClear();
 }

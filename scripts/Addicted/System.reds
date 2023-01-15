@@ -168,7 +168,7 @@ public class AddictedSystem extends ScriptableSystem {
     return Helper.Threshold(average);
   }
 
-  public func DebugSetThreshold(id: TweakDBID, threshold: Threshold) -> Void {
+  public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     let key = TDBID.ToNumber(id);
     if ArrayContains(this.ids, id) {
@@ -198,7 +198,8 @@ public class AddictedSystem extends ScriptableSystem {
       let key = TDBID.ToNumber(id);
       let consumption = this.consumptions.Get(key) as Consumption;
       if IsDefined(consumption) {
-        E(s"\(TDBID.ToStringDEBUG(id)) consumption: \(ToString(consumption.current)) doses: \(ToString(ArraySize(consumption.doses)))");
+        let size = ArraySize(consumption.doses);
+        E(s"\(TDBID.ToStringDEBUG(id)) consumption: \(ToString(consumption.current)) doses: \(ToString(size))");
       } else {
         F(s"consumption found empty for \(TDBID.ToStringDEBUG(id))");
       }
@@ -211,7 +212,9 @@ public class AddictedSystem extends ScriptableSystem {
     if size == 0 {
       E(s"no consumption found!");
       return;
+    } else {
+      this.consumptions.Clear();
+      E(s"consumption cleaned!");
     }
-    this.consumptions.Clear();
   }
 }
