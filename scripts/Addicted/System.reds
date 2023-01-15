@@ -59,11 +59,16 @@ public class AddictedSystem extends ScriptableSystem {
     if this.isildur.KeyExist(id) {
       let consumption: ref<Consumption> = this.isildur.Get(id);
       let old = consumption.current;
+      let before = Helper.Threshold(old);
       consumption.current = Min(old + Helper.Potency(id), 100);
+      let after = Helper.Threshold(consumption.current);
       ArrayPush(consumption.doses, now);
       E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
       if Helper.IsInstant(id) {
         this.Hint(id);
+      }
+      if !Equals(EnumInt(before), EnumInt(after)) {
+        this.Warn(id, before, after);
       }
     } else {
       E(s"first time consumption for \(TDBID.ToStringDEBUG(id))");
@@ -124,6 +129,19 @@ public class AddictedSystem extends ScriptableSystem {
     } else {
       FI(id, s"no consumption recorded while just dissipated");
     }
+  }
+
+  public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
+    let message: SimpleScreenMessage;
+    message.isShown = true;
+    message.isInstant = false;
+    message.duration = 10.;
+    if EnumInt(before) > EnumInt(after) {
+      message.message = s"Biomonitor: detected that you are \(ToString(after)) addicted to \(TDBID.ToStringDEBUG(id)).";
+    } else {
+      message.message = s"Biomonitor: \(ToString(after)) addiction to \(TDBID.ToStringDEBUG(id)) is getting better, keep this way !";
+    }
+    GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(message), true);
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
@@ -227,8 +245,13 @@ public class AddictedSystem extends ScriptableSystem {
     if this.isildur.KeyExist(id) {
       let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
       let old = consumption.current;
+      let before = Helper.Threshold(old);
       consumption.current = EnumInt(threshold) + 1;
+      let after = Helper.Threshold(consumption.current);
       ArrayPush(consumption.doses, now);
+      if !Equals(EnumInt(before), EnumInt(after)) {
+        this.Warn(id, before, after);
+      }
       EI(id, s"update consumption: \(ToString(old)) -> \(ToString(consumption.current))");
     } else {
       EI(id, s"insert consumption");
