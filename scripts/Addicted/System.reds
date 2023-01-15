@@ -204,4 +204,14 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
   }
+
+  public func DebugClear() -> Void {
+    E(s"clear all consumptions...");
+    let size = ArraySize(this.ids);
+    if size == 0 {
+      E(s"no consumption found!");
+      return;
+    }
+    this.consumptions.Clear();
+  }
 }
