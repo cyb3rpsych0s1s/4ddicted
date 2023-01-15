@@ -1,0 +1,85 @@
+# first aid whiff
+
+## v0
+
+Items.NotablyWeakenedActionEffectFirstAidWhiffV0:
+  $base: Items.FirstAidWhiffV0_inline2
+  statusEffect:
+    $base: BaseStatusEffect.FirstAidWhiffV0
+    packages:
+      - $base: BaseStatusEffect.FirstAidWhiffV0_inline0
+        effectors:
+          - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 30
+
+Items.SeverelyWeakenedActionEffectFirstAidWhiffV0:
+  $base: Items.FirstAidWhiffV0_inline2
+  statusEffect:
+    $base: BaseStatusEffect.FirstAidWhiffV0
+    packages:
+      - $base: BaseStatusEffect.FirstAidWhiffV0_inline0
+        effectors:
+          - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 20
+
+## v1
+
+Items.NotablyWeakenedActionEffectFirstAidWhiffV1:
+  $base: Items.FirstAidWhiffV1_inline6
+  statusEffect:
+    $base: BaseStatusEffect.FirstAidWhiffV1
+    packages:
+      - $base: BaseStatusEffect.FirstAidWhiffV1_inline0
+        effectors:
+          - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 45
+
+Items.SeverelyWeakenedActionEffectFirstAidWhiffV1:
+  $base: Items.FirstAidWhiffV1_inline6
+  statusEffect:
+    $base: BaseStatusEffect.FirstAidWhiffV1
+    packages:
+      - $base: BaseStatusEffect.FirstAidWhiffV1_inline0
+        effectors:
+          - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 30
+
+## v2
+
+Items.NotablyWeakenedActionEffectFirstAidWhiffV2:
+  $base: Items.FirstAidWhiffV2_inline6
+  statusEffect:
+    $base: BaseStatusEffect.FirstAidWhiffV2
+    packages:
+      - $base: BaseStatusEffect.FirstAidWhiffV2_inline0
+        effectors:
+          - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 60
+
+Items.SeverelyWeakenedActionEffectFirstAidWhiffV2:
+  $base: Items.FirstAidWhiffV2_inline6
+  statusEffect:
+    $base: BaseStatusEffect.FirstAidWhiffV2
+    packages:
+      - $base: BaseStatusEffect.FirstAidWhiffV2_inline0
+        effectors:
+          - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
+            statPoolUpdates:
+              - $type: StatPoolUpdate_Record
+                statPoolType: BaseStats.Health
+                statPoolValue: 40

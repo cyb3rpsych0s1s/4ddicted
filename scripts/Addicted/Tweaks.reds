@@ -40,6 +40,7 @@ protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect
     E(s"processing \(TDBID.ToStringDEBUG(record.GetID()))...");
     if Helper.IsHealerAction(record.GetID()) {
       healing = true;
+      break;
     }
   }
   let effects = actionEffects;

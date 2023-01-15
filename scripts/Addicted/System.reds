@@ -107,19 +107,24 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnProcessHealerEffect(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
-    E(s"process status effects");
+    E(s"on process healer effects");
     let idx = 0;
     let action: TweakDBID;
     let threshold: Threshold;
+    let consumable: Consumable;
+    let average: Int32;
     let id: TweakDBID;
     for effect in actionEffects {
       id = effect.GetID();
-      // threshold = this.Threshold(id);
-      // action = Helper.ActionEffect(id, threshold);
-      // if action != TDBID.None() {
-      //     let replaced = TweakDBInterface.GetObjectActionEffectRecord(action);
-      //     actionEffects[idx] = replaced;
-      // }
+      consumable = Helper.Consumable(id);
+      average = this.AverageConsumption(consumable);
+      threshold = Helper.Threshold(average);
+      action = Helper.ActionEffect(id, threshold);
+      if !Equals(action, id) {
+        E(s"replace \(TDBID.ToStringDEBUG(id)) with \(TDBID.ToStringDEBUG(action))");
+        let replaced = TweakDBInterface.GetObjectActionEffectRecord(action);
+        actionEffects[idx] = replaced;
+      }
       idx += 1;
     }
     return actionEffects;
@@ -156,5 +161,24 @@ public class AddictedSystem extends ScriptableSystem {
   public func Threshold(addiction: Addiction) -> Threshold {
     let average = this.AverageAddiction(addiction);
     return Helper.Threshold(average);
+  }
+
+  public func DebugSetThreshold(id: TweakDBID, threshold: Threshold) -> Void {
+    let now = this.timeSystem.GetGameTimeStamp();
+    let key = TDBID.ToNumber(id);
+    if ArrayContains(this.ids, id) {
+      let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
+      let old = consumption.current;
+      consumption.current = EnumInt(threshold) + 1;
+      ArrayPush(consumption.doses, now);
+      E(s"debug cross threshold for \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
+    } else {
+      E(s"debug cross threshold for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
+      let consumption = new Consumption();
+      consumption.current = EnumInt(threshold) + 1;
+      consumption.doses = [now];
+      this.consumptions.Insert(key, consumption);
+      ArrayPush(this.ids, id);
+    }
   }
 }

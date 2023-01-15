@@ -68,6 +68,8 @@ public class Helper {
   public static func IsHealerAction(id: TweakDBID) -> Bool {
     switch(id) {
       case t"Items.FirstAidWhiffV0_inline2":
+      case t"Items.FirstAidWhiffV1_inline6":
+      case t"Items.FirstAidWhiffV2_inline6":
         return true;
       default:
         break;
@@ -129,6 +131,9 @@ public class Helper {
       case t"BaseStatusEffect.FirstAidWhiffV0":
       case t"BaseStatusEffect.FirstAidWhiffV1":
       case t"BaseStatusEffect.FirstAidWhiffV2":
+      case t"Items.FirstAidWhiffV0_inline2":
+      case t"Items.FirstAidWhiffV1_inline6":
+      case t"Items.FirstAidWhiffV2_inline6":
         return Consumable.BounceBack;
       case t"BaseStatusEffect.BounceBackV0":
       case t"BaseStatusEffect.BounceBackV1":
@@ -198,16 +203,47 @@ public class Helper {
     if !serious {
       return id;
     }
+    let severe = EnumInt(threshold) == EnumInt(Threshold.Severely);
     switch(id) {
       case t"Items.FirstAidWhiffV0_inline2":
-        if serious {
-          return t"Items.FirstAidWhiffV0_inline2_greatly_weakened";
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV0";
         }
-        return t"Items.FirstAidWhiffV0_inline2_weakened";
+        return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV0";
+      case t"Items.FirstAidWhiffV1_inline6":
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV1";
+        }
+        return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV1";
+      case t"Items.FirstAidWhiffV2_inline6":
+        if severe {
+          return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV2";
+        }
+        return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV2";
+      // case t"Items.BonesMcCoy70V0_inline0":
+      //   if severe {
+      //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V0";
+      //   }
+      //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V0";
+      // case t"Items.BonesMcCoy70V1_inline0":
+      //   if severe {
+      //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V1";
+      //   }
+      //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V1";
+      // case t"Items.BonesMcCoy70V2_inline4":
+      //   if severe {
+      //     return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V2";
+      //   }
+      //   return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V2";
+      // case t"Items.HealthBooster_inline1":
+      //   if severe {
+      //     return t"Items.SeverelyWeakenedActionEffectHealthBooster";
+      //   }
+      //   return t"Items.NotablyWeakenedActionEffectHealthBooster";
       default:
         break;
     }
-    return TDBID.None();
+    return id;
   }
 
   public static func IsAddictive(id: TweakDBID) -> Bool {
