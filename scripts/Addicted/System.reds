@@ -55,12 +55,22 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnConsumed(id: TweakDBID) -> Void {
+    if this.isildur.KeyExist(id) {
+      let consumption: ref<Consumption> = this.isildur.Get(id);
+      let amount = Min(consumption.current + Helper.Potency(id), 100);
+      this.Consume(id, amount);
+    } else {
+      this.Consume(id, Helper.Potency(id));
+    }
+  }
+
+  private func Consume(id: TweakDBID, amount: Int32) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     if this.isildur.KeyExist(id) {
       let consumption: ref<Consumption> = this.isildur.Get(id);
       let old = consumption.current;
       let before = Helper.Threshold(old);
-      consumption.current = Min(old + Helper.Potency(id), 100);
+      consumption.current = amount;
       let after = Helper.Threshold(consumption.current);
       ArrayPush(consumption.doses, now);
       E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
@@ -247,24 +257,11 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
-    let now = this.timeSystem.GetGameTimeStamp();
-    if this.isildur.KeyExist(id) {
-      let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
-      let old = consumption.current;
-      let before = Helper.Threshold(old);
-      consumption.current = EnumInt(threshold) + 1;
-      let after = Helper.Threshold(consumption.current);
-      ArrayPush(consumption.doses, now);
-      if !Equals(EnumInt(before), EnumInt(after)) {
-        this.Warn(id, before, after);
-      }
-      EI(id, s"update consumption: \(ToString(old)) -> \(ToString(consumption.current))");
+    let score = EnumInt(threshold);
+    if score == 0 {
+      this.Consume(id, 0); // always get back clean
     } else {
-      EI(id, s"insert consumption");
-      let consumption = new Consumption();
-      consumption.current = EnumInt(threshold) + 1;
-      consumption.doses = [now];
-      this.isildur.Insert(id, consumption);
+      this.Consume(id, score + 1); // always cross the threshold
     }
   }
 

@@ -16,7 +16,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
         system.OnConsumed(id);
     }
     // decrease score on rest
-    if Helper.IsHousing(id) {
+    if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
         EI(id, s"housing");
         system.OnRested();
     }

@@ -109,6 +109,13 @@ public class Consumption {
     consumption.doses = [when];
     return consumption;
   }
+
+  public static func Cheat(id: TweakDBID, amount: Int32, when: Float) -> ref<Consumption> {
+    let consumption = new Consumption();
+    consumption.current = amount;
+    consumption.doses = [when];
+    return consumption;
+  }
 }
 
 enum Category {
