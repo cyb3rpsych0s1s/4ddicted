@@ -50,25 +50,7 @@ public class Helper {
   }
 
   public static func IsHealer(id: TweakDBID) -> Bool {
-    switch(id) {
-      case t"BaseStatusEffect.FirstAidWhiffV0":
-      case t"BaseStatusEffect.FirstAidWhiffV1":
-      case t"BaseStatusEffect.FirstAidWhiffV2":
-      case t"Items.FirstAidWhiffV0_inline2":
-      case t"Items.FirstAidWhiffV1_inline6":
-      case t"Items.FirstAidWhiffV2_inline6":
-      case t"BaseStatusEffect.BonesMcCoy70V0":
-      case t"BaseStatusEffect.BonesMcCoy70V1":
-      case t"BaseStatusEffect.BonesMcCoy70V2":
-      case t"Items.BonesMcCoy70V0_inline2":
-      case t"Items.BonesMcCoy70V1_inline2":
-      case t"Items.BonesMcCoy70V2_inline6":
-      case t"BaseStatusEffect.HealthBooster":
-        return true;
-      default:
-        break;
-    }
-    return false;
+    return Helper.IsMaxDOC(id) || Helper.IsBounceBack(id) || Helper.IsHealthBooster(id);
   }
 
   public static func IsBooster(id: TweakDBID) -> Bool {
@@ -83,15 +65,7 @@ public class Helper {
   }
 
   public static func IsInhaler(id: TweakDBID) -> Bool {
-    switch(id) {
-      case t"BaseStatusEffect.FirstAidWhiffV0":
-      case t"BaseStatusEffect.FirstAidWhiffV1":
-      case t"BaseStatusEffect.FirstAidWhiffV2":
-        return true;
-      default:
-        break;
-    }
-    return false;
+    return Helper.IsMaxDOC(id);
   }
 
   public static func IsInjector(id: TweakDBID) -> Bool {
@@ -120,39 +94,33 @@ public class Helper {
 
   public static func IsInstant(id: TweakDBID) -> Bool {
     let effect = TweakDBInterface.GetRecord(id) as StatusEffect_Record;
-    let duration: StatModifierGroup_Record = effect.Duration();
-    let records: array<StatModifier_Record>;
+    E(s"\(ToString(effect))");
+    let duration: wref<StatModifierGroup_Record> = effect.Duration();
+    let records: array<wref<StatModifier_Record>>;
+    let stat: wref<Stat_Record>;
+    let rtype: CName;
+    let modifier: wref<ConstantStatModifier_Record>;
+    let value: Float;
     duration.StatModifiers(records);
     for record in records {
-      if Equals(record.StatType(), t"BaseStats.MaxDuration") && record.IsA(n"ConstantStatModifier_Record") {
-        let modifier = record as ConstantStatModifier_Record;
-        let value = modifier.Value();
-        return value.Value() == -1;
+      stat = record.StatType();
+      rtype = record.ModifierType();
+      if Equals(stat.GetID(), t"BaseStats.MaxDuration") && Equals(rtype, n"Additive") && record.IsA(n"ConstantStatModifier_Record") {
+        modifier = record as ConstantStatModifier_Record;
+        value = modifier.Value();
+        return value < 1.;
       }
     }
     return false;
   }
 
   public static func Consumable(id: TweakDBID) -> Consumable {
+    if Helper.IsMaxDOC(id) { return Consumable.MaxDOC; }
+    if Helper.IsBounceBack(id) { return Consumable.BounceBack; }
+    if Helper.IsHealthBooster(id) { return Consumable.HealthBooster; }
     switch(id) {
       case t"BaseStatusEffect.AlcoholDebuff":
         return Consumable.Alcohol;
-      case t"BaseStatusEffect.FirstAidWhiffV0":
-      case t"BaseStatusEffect.FirstAidWhiffV1":
-      case t"BaseStatusEffect.FirstAidWhiffV2":
-      case t"Items.FirstAidWhiffV0_inline2":
-      case t"Items.FirstAidWhiffV1_inline6":
-      case t"Items.FirstAidWhiffV2_inline6":
-        return Consumable.MaxDOC;
-      case t"BaseStatusEffect.BonesMcCoy70V0":
-      case t"BaseStatusEffect.BonesMcCoy70V1":
-      case t"BaseStatusEffect.BonesMcCoy70V2":
-      case t"Items.BonesMcCoy70V0_inline2":
-      case t"Items.BonesMcCoy70V1_inline2":
-      case t"Items.BonesMcCoy70V2_inline6":
-        return Consumable.BounceBack;
-      case t"BaseStatusEffect.HealthBooster":
-        return Consumable.HealthBooster;
       case t"BaseStatusEffect.MemoryBooster":
         return Consumable.MemoryBooster;
       case t"BaseStatusEffect.OxyBooster":
@@ -263,14 +231,7 @@ public class Helper {
       case t"":
       case t"BaseStatusEffect.AlcoholDebuff":
       // t"BaseStatusEffect.CombatStim" double-check
-      case t"BaseStatusEffect.FirstAidWhiffV0":
-      case t"BaseStatusEffect.FirstAidWhiffV1":
-      case t"BaseStatusEffect.FirstAidWhiffV2":
-      case t"BaseStatusEffect.BonesMcCoy70V0":
-      case t"BaseStatusEffect.BonesMcCoy70V1":
-      case t"BaseStatusEffect.BonesMcCoy70V2":
       case t"BaseStatusEffect.BlackLaceV0":
-      case t"BaseStatusEffect.HealthBooster":
       case t"BaseStatusEffect.CarryCapacityBooster":
       case t"BaseStatusEffect.StaminaBooster":
       case t"BaseStatusEffect.MemoryBooster":
@@ -279,7 +240,7 @@ public class Helper {
       default:
         break;
     }
-    return false;
+    return Helper.IsMaxDOC(id) || Helper.IsBounceBack(id) || Helper.IsHealthBooster(id);
   }
 
   public static func IsSerious(threshold: Threshold) -> Bool {
@@ -291,6 +252,78 @@ public class Helper {
       case t"HousingStatusEffect.Rested":
       case t"HousingStatusEffect.Refreshed":
       case t"HousingStatusEffect.Energized":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  public static func IsMaxDOC(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.FirstAidWhiffV0":
+      case t"BaseStatusEffect.FirstAidWhiffV1":
+      case t"BaseStatusEffect.FirstAidWhiffV2":
+      case t"BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0":
+      case t"BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1":
+      case t"BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2":
+      case t"BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0":
+      case t"BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1":
+      case t"BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2":
+        return true;
+      default:
+        break;
+    }
+    return Helper.IsMaxDOCAction(id);
+  }
+
+  public static func IsBounceBack(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.BonesMcCoy70V0":
+      case t"BaseStatusEffect.BonesMcCoy70V1":
+      case t"BaseStatusEffect.BonesMcCoy70V2":
+      case t"BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0":
+      case t"BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1":
+      case t"BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2":
+      case t"BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0":
+      case t"BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1":
+      case t"BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2":
+        return true;
+      default:
+        break;
+    }
+    return Helper.IsBounceBackAction(id);
+  }
+
+  public static func IsHealthBooster(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"BaseStatusEffect.HealthBooster":
+      case t"BaseStatusEffect.NotablyWeakenedHealthBooster":
+      case t"BaseStatusEffect.SeverelyWeakenedHealthBooster":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  private static func IsMaxDOCAction(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"Items.FirstAidWhiffV0_inline2":
+      case t"Items.FirstAidWhiffV1_inline6":
+      case t"Items.FirstAidWhiffV2_inline6":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  private static func IsBounceBackAction(id: TweakDBID) -> Bool {
+    switch(id) {
+      case t"Items.BonesMcCoy70V0_inline2":
+      case t"Items.BonesMcCoy70V1_inline2":
+      case t"Items.BonesMcCoy70V2_inline6":
         return true;
       default:
         break;

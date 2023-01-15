@@ -68,7 +68,7 @@ public class AddictedSystem extends ScriptableSystem {
       this.isildur.Insert(id, Consumption.Create(id, now));
     }
     if Helper.IsInstant(id) {
-      this.OnHint(id);
+      this.Hint(id);
     }
   }
 
@@ -90,7 +90,7 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
-  public func OnHint(id: TweakDBID) -> Bool {
+  public func Hint(id: TweakDBID) -> Void {
     let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
@@ -104,7 +104,7 @@ public class AddictedSystem extends ScriptableSystem {
       } else {
         threshold = averageThreshold;
       }
-      EI(id, s"consumable: \(ToString(consumable)) current: \(ToString(specific)), specific threshold: \(ToString(specificThreshold)), consumable threshold: \(ToString(averageThreshold))");
+      EI(id, s"consumable: \(ToString(consumable)) current: \(ToString(specific)), variant threshold: \(ToString(specificThreshold)), consumable threshold: \(ToString(averageThreshold))");
       if Helper.IsSerious(threshold) {
           let request: ref<HintRequest>;
           if Helper.IsInhaler(id) {
@@ -123,17 +123,15 @@ public class AddictedSystem extends ScriptableSystem {
           let delay = RandRangeF(1, 3);
           this.delaySystem.CancelDelay(this.hintDelayID);
           this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
-          return true;
       }
     } else {
       FI(id, s"no consumption recorded while just dissipated");
-      return false;
     }
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
     EI(id, s"on dissipation");
-    this.OnHint(id);
+    this.Hint(id);
   }
 
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
