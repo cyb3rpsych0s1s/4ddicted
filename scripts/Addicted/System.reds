@@ -73,7 +73,8 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
-    let consumption: wref<Consumption> = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+    let key = TDBID.ToNumber(id);
+    let consumption: wref<Consumption> = this.consumptions.Get(key) as Consumption;
     E(s"on dissipation \(TDBID.ToStringDEBUG(id))");
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
@@ -103,7 +104,21 @@ public class AddictedSystem extends ScriptableSystem {
         default:
           break;
       }
+    } else {
+      F(s"no consumption recorded for dissipation \(TDBID.ToStringDEBUG(id))");
     }
+  }
+
+  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
+    E(s"TODO cough");
+  }
+
+  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
+    E(s"TODO puke");
+  }
+
+  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
+    E(s"TODO pain");
   }
 
   public func OnProcessHealerEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
@@ -176,9 +191,9 @@ public class AddictedSystem extends ScriptableSystem {
       let old = consumption.current;
       consumption.current = EnumInt(threshold) + 1;
       ArrayPush(consumption.doses, now);
-      E(s"debug cross threshold for \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
+      EI(id, s"update threshold: \(ToString(old)) -> \(ToString(consumption.current)) (\(ToString(key)))");
     } else {
-      E(s"debug cross threshold for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
+      EI(id, s"add threshold (\(ToString(key)))");
       let consumption = new Consumption();
       consumption.current = EnumInt(threshold) + 1;
       consumption.doses = [now];
@@ -196,12 +211,12 @@ public class AddictedSystem extends ScriptableSystem {
     }
     for id in this.ids {
       let key = TDBID.ToNumber(id);
-      let consumption = this.consumptions.Get(key) as Consumption;
+      let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
       if IsDefined(consumption) {
         let size = ArraySize(consumption.doses);
         E(s"\(TDBID.ToStringDEBUG(id)) consumption: \(ToString(consumption.current)) doses: \(ToString(size))");
       } else {
-        F(s"consumption found empty for \(TDBID.ToStringDEBUG(id))");
+        FI(id, s"consumption found empty (\(ToString(key)))");
       }
     }
   }
@@ -214,6 +229,7 @@ public class AddictedSystem extends ScriptableSystem {
       return;
     } else {
       this.consumptions.Clear();
+      this.consumptions = new inkHashMap();
       E(s"consumption cleaned!");
     }
   }
