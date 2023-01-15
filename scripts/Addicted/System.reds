@@ -105,7 +105,7 @@ public class AddictedSystem extends ScriptableSystem {
           break;
       }
     } else {
-      F(s"no consumption recorded for dissipation \(TDBID.ToStringDEBUG(id))");
+      FI(id, s"no consumption recorded while just dissipated");
     }
   }
 
@@ -141,7 +141,7 @@ public class AddictedSystem extends ScriptableSystem {
       }
       action = Helper.ActionEffect(id, threshold);
       if !Equals(action, id) {
-        E(s"replace \(TDBID.ToStringDEBUG(id)) with \(TDBID.ToStringDEBUG(action))");
+        EI(id, s"replace with \(TDBID.ToStringDEBUG(action))");
         let replaced = TweakDBInterface.GetObjectActionEffectRecord(action);
         actionEffects[idx] = replaced;
       }
@@ -214,7 +214,7 @@ public class AddictedSystem extends ScriptableSystem {
       let consumption: ref<Consumption> = this.consumptions.Get(key) as Consumption;
       if IsDefined(consumption) {
         let size = ArraySize(consumption.doses);
-        E(s"\(TDBID.ToStringDEBUG(id)) consumption: \(ToString(consumption.current)) doses: \(ToString(size))");
+        EI(id, s"current: \(ToString(consumption.current)) doses: \(ToString(size))");
       } else {
         FI(id, s"consumption found empty (\(ToString(key)))");
       }
@@ -228,8 +228,14 @@ public class AddictedSystem extends ScriptableSystem {
       E(s"no consumption found!");
       return;
     } else {
+      let key: Uint64;
+      for id in this.ids {
+        key = TDBID.ToNumber(id);
+        this.consumptions.Remove(key);
+      }
       this.consumptions.Clear();
       this.consumptions = new inkHashMap();
+      this.ids = [];
       E(s"consumption cleaned!");
     }
   }
