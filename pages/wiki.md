@@ -97,3 +97,14 @@ All the status effects can be found [there](https://cyberpunk.fandom.com/wiki/Cy
 
 Animations can be handled with [WolvenKit](https://wiki.redmodding.org/cyberpunk-2077-modding/modding/redmod/quick-guide#animation-modding).
 [Change and potentially replace animations](https://wiki.redmodding.org/cyberpunk-2077-modding/developers/guides/quest/how-to-remove-an-animation-and-potentially-replace-it).
+
+## default method return values
+
+credits to psiberx on discord.
+
+```swift
+public static func NoRetInt() -> Int32 {} // returns 0
+public static func NoRetCName() -> CName {} // returns n"None"
+public static func NoRetStruct() -> SimpleScreenMessage {} // returns empty instance
+public static func NoRetArray() -> array<String> {} // returns empty array
+```
