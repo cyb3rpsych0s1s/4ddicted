@@ -3,7 +3,9 @@ module Addicted
 import Addicted.Threshold
 import Addicted.System.AddictedSystem
 
-// use like: Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("BaseStatusEffect.FirstAidWhiffV0"), 40);
+// use like:
+// Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("BaseStatusEffect.FirstAidWhiffV0"), 40);
+// Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("BaseStatusEffect.BonesMcCoy70V0"), 40);
 // where '40' matches Threshold variant
 @addMethod(PlayerPuppet)
 public func DebugSwitchThreshold(id: TweakDBID, threshold: Int32) -> Void {

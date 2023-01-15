@@ -64,6 +64,7 @@ public class AddictedSystem extends ScriptableSystem {
       let old = consumption.current;
       consumption.current = Min(consumption.current + Helper.Potency(id), 100);
       ArrayPush(consumption.doses, now);
+      this.consumptions.Set(key, consumption);
       E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
     } else {
       E(s"first time consumption for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
@@ -75,12 +76,12 @@ public class AddictedSystem extends ScriptableSystem {
   public func OnDissipated(id: TweakDBID) -> Void {
     let key = TDBID.ToNumber(id);
     let consumption: wref<Consumption> = this.consumptions.Get(key) as Consumption;
-    E(s"on dissipation \(TDBID.ToStringDEBUG(id))");
+    EI(id, s"on dissipation");
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
       let current = this.AverageConsumption(consumable);
       let threshold = Helper.Threshold(current);
-      E(s"current: \(current), threshold: \(threshold)");
+      EI(id, s"consumable: \(ToString(consumable)) current: \(ToString(current)), threshold: \(ToString(threshold))");
       switch(threshold) {
         case Threshold.Severely:
         case Threshold.Notably:
@@ -142,8 +143,8 @@ public class AddictedSystem extends ScriptableSystem {
       action = Helper.ActionEffect(id, threshold);
       if !Equals(action, id) {
         EI(id, s"replace with \(TDBID.ToStringDEBUG(action))");
-        let replaced = TweakDBInterface.GetObjectActionEffectRecord(action);
-        actionEffects[idx] = replaced;
+        let weakened = TweakDBInterface.GetObjectActionEffectRecord(action);
+        actionEffects[idx] = weakened;
       }
       idx += 1;
     }
@@ -155,8 +156,10 @@ public class AddictedSystem extends ScriptableSystem {
     let total = 0;
     let found = 0;
     let consumption: wref<Consumption>;
+    let key: Uint64;
     for id in ids {
-      consumption = this.consumptions.Get(TDBID.ToNumber(id)) as Consumption;
+      key = TDBID.ToNumber(id);
+      consumption = this.consumptions.Get(key) as Consumption;
       if IsDefined(consumption) {
         total += consumption.current;
         found += 1;
@@ -191,6 +194,7 @@ public class AddictedSystem extends ScriptableSystem {
       let old = consumption.current;
       consumption.current = EnumInt(threshold) + 1;
       ArrayPush(consumption.doses, now);
+      this.consumptions.Set(key, consumption);
       EI(id, s"update threshold: \(ToString(old)) -> \(ToString(consumption.current)) (\(ToString(key)))");
     } else {
       EI(id, s"add threshold (\(ToString(key)))");
