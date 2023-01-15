@@ -88,16 +88,22 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
-    let consumption: wref<Consumption> = this.isildur.Get(id) as Consumption;
+    let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
     EI(id, s"on dissipation");
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
-      let current = this.AverageConsumption(consumable);
-      let threshold = Helper.Threshold(current);
-      EI(id, s"consumable: \(ToString(consumable)) current: \(ToString(current)), threshold: \(ToString(threshold))");
-      switch(threshold) {
-        case Threshold.Severely:
-        case Threshold.Notably:
+      let specific = this.isildur.Get(id);
+      let average = this.AverageConsumption(consumable);
+      let specificThreshold = Helper.Threshold(specific.current);
+      let averageThreshold = Helper.Threshold(average);
+      let threshold: Threshold;
+      if EnumInt(specificThreshold) >= EnumInt(averageThreshold) {
+        threshold = specificThreshold;
+      } else {
+        threshold = averageThreshold;
+      }
+      EI(id, s"consumable: \(ToString(consumable)) current: \(ToString(specific)), specific threshold: \(ToString(specificThreshold)), consumable threshold: \(ToString(averageThreshold))");
+      if Helper.IsSerious(threshold) {
           let request: ref<HintRequest>;
           if Helper.IsInhaler(id) {
             request = new CoughingRequest();
@@ -115,9 +121,6 @@ public class AddictedSystem extends ScriptableSystem {
           let delay = RandRangeF(1, 3);
           this.delaySystem.CancelDelay(this.hintDelayID);
           this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
-          break;
-        default:
-          break;
       }
     } else {
       FI(id, s"no consumption recorded while just dissipated");
