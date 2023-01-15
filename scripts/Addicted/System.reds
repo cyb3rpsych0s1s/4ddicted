@@ -56,19 +56,18 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnConsumed(id: TweakDBID) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
-    let key = TDBID.ToNumber(id);
     if this.isildur.KeyExist(id) {
       let consumption: ref<Consumption> = this.isildur.Get(id);
       let old = consumption.current;
       consumption.current = Min(old + Helper.Potency(id), 100);
       ArrayPush(consumption.doses, now);
       E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
+      if Helper.IsInstant(id) {
+        this.Hint(id);
+      }
     } else {
-      E(s"first time consumption for \(TDBID.ToStringDEBUG(id)) \(ToString(key))");
+      E(s"first time consumption for \(TDBID.ToStringDEBUG(id))");
       this.isildur.Insert(id, Consumption.Create(id, now));
-    }
-    if Helper.IsInstant(id) {
-      this.Hint(id);
     }
   }
 
@@ -76,10 +75,8 @@ public class AddictedSystem extends ScriptableSystem {
     let size = this.isildur.Size();
     if size == 0 { return; }
     let ids = this.isildur.Keys();
-    let key: Uint64;
     let consumption: ref<Consumption>;
     for id in ids {
-      key = TDBID.ToNumber(id);
       consumption = this.isildur.Get(id) as Consumption;
       if consumption.current > 0 {
         consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
@@ -197,9 +194,7 @@ public class AddictedSystem extends ScriptableSystem {
     let total = 0;
     let found = 0;
     let consumption: wref<Consumption>;
-    let key: Uint64;
     for id in ids {
-      key = TDBID.ToNumber(id);
       consumption = this.isildur.Get(id) as Consumption;
       if IsDefined(consumption) {
         total += consumption.current;
@@ -271,9 +266,7 @@ public class AddictedSystem extends ScriptableSystem {
       E(s"no consumption found!");
       return;
     } else {
-      let key: Uint64;
       for id in ids {
-        key = TDBID.ToNumber(id);
         this.isildur.Remove(id);
       }
       this.isildur.Clear();

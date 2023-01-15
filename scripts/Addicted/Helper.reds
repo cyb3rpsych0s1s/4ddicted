@@ -1,7 +1,7 @@
 module Addicted
 
 import Addicted.*
-import Addicted.Utils.E
+import Addicted.Utils.{E,EI}
 
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
@@ -93,22 +93,24 @@ public class Helper {
   }
 
   public static func IsInstant(id: TweakDBID) -> Bool {
-    let effect = TweakDBInterface.GetRecord(id) as StatusEffect_Record;
-    E(s"\(ToString(effect))");
-    let duration: wref<StatModifierGroup_Record> = effect.Duration();
-    let records: array<wref<StatModifier_Record>>;
-    let stat: wref<Stat_Record>;
-    let rtype: CName;
-    let modifier: wref<ConstantStatModifier_Record>;
-    let value: Float;
-    duration.StatModifiers(records);
-    for record in records {
-      stat = record.StatType();
-      rtype = record.ModifierType();
-      if Equals(stat.GetID(), t"BaseStats.MaxDuration") && Equals(rtype, n"Additive") && record.IsA(n"ConstantStatModifier_Record") {
-        modifier = record as ConstantStatModifier_Record;
-        value = modifier.Value();
-        return value < 1.;
+    let effect = TweakDBInterface.GetRecord(id);
+    if effect.IsA(n"gamedataStatusEffect_Record") {
+      let status = effect as StatusEffect_Record;
+      let duration: wref<StatModifierGroup_Record> = status.Duration();
+      let records: array<wref<StatModifier_Record>>;
+      let stat: wref<Stat_Record>;
+      let rtype: CName;
+      let modifier: wref<ConstantStatModifier_Record>;
+      let value: Float;
+      duration.StatModifiers(records);
+      for record in records {
+        stat = record.StatType();
+        rtype = record.ModifierType();
+        if Equals(stat.GetID(), t"BaseStats.MaxDuration") && Equals(rtype, n"Additive") && record.IsA(n"ConstantStatModifier_Record") {
+          modifier = record as ConstantStatModifier_Record;
+          value = modifier.Value();
+          return value < 1.;
+        }
       }
     }
     return false;
