@@ -197,7 +197,7 @@ public class AddictedSystem extends ScriptableSystem {
       this.CancelHintRequest();
     }
     let now = this.timeSystem.GetGameTimeStamp();
-    let delay = RandRangeF(2, 4);
+    let delay = RandRangeF(3, 5);
     request.until = now + delay + request.TotalTime();
     this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
   }
