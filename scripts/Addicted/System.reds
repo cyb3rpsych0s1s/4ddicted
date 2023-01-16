@@ -167,6 +167,7 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  /// warn a player with a biomonitor
   public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
     // avoids meaningless notifications
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
@@ -203,6 +204,8 @@ public class AddictedSystem extends ScriptableSystem {
     this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
   }
 
+  /// play an onomatopea as a hint to the player when reaching notably or severely addicted
+  /// also randomly reschedule if in timeframe
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
     let can = this.CanPlayOnomatopea();
     if can {
@@ -218,9 +221,7 @@ public class AddictedSystem extends ScriptableSystem {
     }
     let now = this.timeSystem.GetGameTimeStamp();
     E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
-    if (now <= request.until) && (request.times < Cast<Int32>(request.AtMost())) {
-      // this.RescheduleHintRequest(request);
-    } else {
+    if (now > request.until) || (request.times >= Cast<Int32>(request.AtMost())) {
       this.CancelHintRequest();
       if IsDefined(this.hintSoundEvent) {
         if request.IsLoop() {
@@ -264,6 +265,8 @@ public class AddictedSystem extends ScriptableSystem {
     this.ProcessHintRequest(request);
   }
 
+  /// weaken healers efficiency by subtituting them with debuffed ones
+  /// this is because actionEffects are immutable
   public func OnProcessHealerEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
     E(s"on process healer effects");
     let idx = 0;
@@ -293,6 +296,8 @@ public class AddictedSystem extends ScriptableSystem {
     return actionEffects;
   }
 
+  /// average consumption for a given consumable
+  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
   public func AverageConsumption(consumable: Consumable) -> Int32 {
     let ids = Helper.Effects(consumable);
     let total = 0;
@@ -311,6 +316,8 @@ public class AddictedSystem extends ScriptableSystem {
     return total / found;
   }
 
+  /// average consumption for an addiction
+  /// a single addiction can be shared by multiple consumables
   public func AverageAddiction(addiction: Addiction) -> Int32 {
     let consumables = Helper.Consumables(addiction);
     let size = ArraySize(consumables);
