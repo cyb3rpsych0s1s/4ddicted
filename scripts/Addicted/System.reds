@@ -15,6 +15,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private persistent let isildur: ref<Consumptions>;
 
+  private let board: ref<IBlackboard>;
   public let quiet: Bool = false;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
@@ -24,6 +25,7 @@ public class AddictedSystem extends ScriptableSystem {
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
+      this.board = this.player.GetPlayerStateMachineBlackboard();
 
       this.RefreshConfig();
     } else { F(s"no player found!"); }
@@ -172,7 +174,8 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    if this.CanPlayOnomatopea() {
+    let yes = this.CanPlayOnomatopea();
+    if yes {
       GameObject.PlaySoundEvent(this.player, request.Sound());
       request.times += 1;
     } else {
@@ -180,10 +183,11 @@ public class AddictedSystem extends ScriptableSystem {
       request.until += 5.;
     }
     let now = this.timeSystem.GetGameTimeStamp();
-    E(s"now \(ToString(now)) <= \(ToString(request.until))");
+    E(s"process hint request: now \(ToString(now)) <= \(ToString(request.until))");
     if now <= request.until && request.times < 3 {
       let delay = RandRangeF(1, 3);
       this.delaySystem.CancelDelay(this.hintDelayID);
+      this.hintDelayID = GetInvalidDelayID();
       this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
     }
   }
@@ -292,11 +296,23 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func CanPlayOnomatopea() -> Bool {
-    if this.quiet { return false; }
+    if this.quiet {
+      E(s"cannot play onomatopea: quiet (from consuming)");
+      return false;
+    }
     let scene = GameInstance.GetSceneSystem(this.player.GetGame());
     let interface = scene.GetScriptInterface();
     let chatting = interface.IsEntityInDialogue(this.player.GetEntityID());
-    E(s"is chatting ? \(ToString(chatting))");
+    if chatting {
+      E(s"cannot play onomatopea: currently chatting");
+      return false;
+    }
+    let swimming: Int32 = this.board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
+    if Equals(swimming, EnumInt(gamePSMSwimming.Diving)) {
+      E(s"cannot play onomatopea: currently diving");
+      return false;
+    }
+    E(s"can play onomatopea");
     return true;
   }
 
