@@ -14,6 +14,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let hintDelayID: DelayID;
   private let soundDelayID: DelayID;
 
+  private let hintSoundEvent: ref<PlaySoundEvent>;
+
   private persistent let consumptions: ref<Consumptions>;
 
   private let board: wref<IBlackboard>;
@@ -139,9 +141,7 @@ public class AddictedSystem extends ScriptableSystem {
           request.until = now + 60.;
           request.threshold = threshold;
           EI(id, s"now: \(ToString(now)) until: \(ToString(request.until)) threshold: \(ToString(request.threshold))");
-          let delay = RandRangeF(1, 3);
-          this.delaySystem.CancelDelay(this.hintDelayID);
-          this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+          this.RescheduleHintRequest(request, 1, 3);
       }
     } else {
       FI(id, s"no consumption recorded while just dissipated");
@@ -174,33 +174,51 @@ public class AddictedSystem extends ScriptableSystem {
     this.Hint(id);
   }
 
+  private func RescheduleHintRequest(request: ref<HintRequest>, atLeast: Float, atMost: Float) -> Void {
+    let now = this.timeSystem.GetGameTimeStamp();
+    E(s"between request {{{{{  \(ToString(now))  }}}}}}");
+    if !Equals(this.hintDelayID, GetInvalidDelayID()) {
+      this.CancelHintRequest();
+    }
+    let delay = RandRangeF(atLeast, atMost);
+    this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+  }
+
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
     let can = this.CanPlayOnomatopea();
     if can {
-      if !Equals(this.soundDelayID, GetInvalidDelayID()) {
-        let evt = new SoundPlayEvent();
-        evt.soundName = request.Sound();
-        let entity = this.player;
-        this.soundDelayID = this.delaySystem.DelayEvent(entity, evt, 1., true);
-        request.times += 1;
+      this.ControlCurrentOnomatopea(ESoundStatusEffects.NONE);
+      if !IsDefined(this.hintSoundEvent) {
+        this.hintSoundEvent = new PlaySoundEvent();
       }
+      this.hintSoundEvent.soundEvent = request.Sound();
+      GameObject.PlaySoundEvent(this.player, request.Sound());
+      request.times += 1;
     } else {
-      if !Equals(this.soundDelayID, GetInvalidDelayID()) {
-        this.delaySystem.CancelCallback(this.soundDelayID);
-        this.delaySystem.CancelDelay(this.soundDelayID);
-        this.soundDelayID = GetInvalidDelayID();
-      }
+      this.ControlCurrentOnomatopea(ESoundStatusEffects.DEAFENED);
       request.until += 5.;
     }
     let now = this.timeSystem.GetGameTimeStamp();
     E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
     if now <= request.until && request.times < 3 {
-      let delay = RandRangeF(2, 4);
-      this.delaySystem.CancelCallback(this.hintDelayID);
-      this.delaySystem.CancelDelay(this.hintDelayID);
-      this.hintDelayID = GetInvalidDelayID();
-      this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+      this.RescheduleHintRequest(request, 2, 4);
+    } else {
+      this.CancelHintRequest();
     }
+  }
+
+  private func ControlCurrentOnomatopea(setting: ESoundStatusEffects) -> Void {
+    if IsDefined(this.hintSoundEvent) {
+      this.hintSoundEvent.SetStatusEffect(setting);
+    }
+  }
+
+  private func CancelHintRequest() -> Void {
+    // let audio: ref<AudioSystem>;
+    // audio.Stop(this.soundEventID.name, this.soundEventID, emitterName);
+    this.delaySystem.CancelDelay(this.hintDelayID);
+    this.delaySystem.CancelCallback(this.hintDelayID);
+    this.hintDelayID = GetInvalidDelayID();
   }
 
   protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
@@ -308,7 +326,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func Quiet() -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
-    this.quietUntil = now + 10.;
+    this.quietUntil = now + 100.;
   }
 
   public func Noisy() -> Void {
