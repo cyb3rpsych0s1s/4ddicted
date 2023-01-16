@@ -172,7 +172,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    if !this.quiet {
+    if this.CanPlayOnomatopea() {
       GameObject.PlaySoundEvent(this.player, request.Sound());
       request.times += 1;
     } else {
@@ -289,6 +289,15 @@ public class AddictedSystem extends ScriptableSystem {
       return true;
     }
     return false;
+  }
+
+  private func CanPlayOnomatopea() -> Bool {
+    if this.quiet { return false; }
+    let scene = GameInstance.GetSceneSystem(this.player.GetGame());
+    let interface = scene.GetScriptInterface();
+    let chatting = interface.IsEntityInDialogue(this.player.GetEntityID());
+    E(s"is chatting ? \(ToString(chatting))");
+    return true;
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
