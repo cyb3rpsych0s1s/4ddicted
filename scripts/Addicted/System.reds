@@ -110,6 +110,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Hint(id: TweakDBID) -> Void {
+    if !Equals(this.hintDelayID, GetInvalidDelayID()) { return; }
     let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
@@ -217,8 +218,8 @@ public class AddictedSystem extends ScriptableSystem {
     }
     let now = this.timeSystem.GetGameTimeStamp();
     E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
-    if (now <= request.until) && (request.times < 3) {
-      this.RescheduleHintRequest(request);
+    if (now <= request.until) && (request.times < Cast<Int32>(request.AtMost())) {
+      // this.RescheduleHintRequest(request);
     } else {
       this.CancelHintRequest();
       if IsDefined(this.hintSoundEvent) {
@@ -227,8 +228,6 @@ public class AddictedSystem extends ScriptableSystem {
         }
       }
       if IsDefined(this.hintSoundEvent) {
-        if Equals(this.hintSoundEvent.soundEvent, n"q101_sc_03_heart_loop") {
-        }
         GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       }
     }

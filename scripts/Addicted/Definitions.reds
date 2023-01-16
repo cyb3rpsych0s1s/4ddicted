@@ -38,7 +38,6 @@ public class CoughingRequest extends HintRequest {
     }
     return n"g_sc_v_sickness_cough_light";
   }
-  public func IsLoop() -> Bool { return EnumInt(this.threshold) == EnumInt(Threshold.Severely); }
 }
 // hint for pills
 public class VomitingRequest extends HintRequest {
@@ -79,6 +78,7 @@ public class HeadAchingRequest extends HintRequest {
     }
     return n"q004_sc_04a_heartbeat_rev";
   }
+  public func IsLoop() -> Bool { return EnumInt(this.threshold) == EnumInt(Threshold.Severely); }
 }
 
 public class Consumptions {
