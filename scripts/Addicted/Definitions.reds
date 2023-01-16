@@ -7,20 +7,27 @@ public abstract class HintRequest extends ScriptableSystemRequest {
   protected let until: Float;
   protected let times: Int32 = 0;
   protected let threshold: Threshold;
+  protected let onomatopea: Onomatopea;
   public func Sound() -> CName;
+  public func Onomatopea() -> Onomatopea;
+  public func IsLoop() -> Bool { return false; }
+  public func Duration() -> Float { return 5.; }
 }
 
 // hint for inhalers
 public class CoughingRequest extends HintRequest {
+  public func Onomatopea() -> Onomatopea { return Onomatopea.Cough; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"g_sc_v_sickness_cough_hard";
     }
     return n"g_sc_v_sickness_cough_light";
   }
+  public func IsLoop() -> Bool { return EnumInt(this.threshold) == EnumInt(Threshold.Severely); }
 }
 // hint for pills
 public class VomitingRequest extends HintRequest {
+  public func Onomatopea() -> Onomatopea { return Onomatopea.Vomit; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"g_sc_v_sickness_cough_blood";
@@ -30,6 +37,7 @@ public class VomitingRequest extends HintRequest {
 }
 // hint for injectors
 public class AchingRequest extends HintRequest {
+  public func Onomatopea() -> Onomatopea { return Onomatopea.Ache; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"ono_v_pain_long";
@@ -39,6 +47,7 @@ public class AchingRequest extends HintRequest {
 }
 // hint for anabolics
 public class BreatheringRequest extends HintRequest {
+  public func Onomatopea() -> Onomatopea { return Onomatopea.Breather; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"ono_v_effort_long";
@@ -48,6 +57,7 @@ public class BreatheringRequest extends HintRequest {
 }
 // hint for memory booster
 public class HeadAchingRequest extends HintRequest {
+  public func Onomatopea() -> Onomatopea { return Onomatopea.Headache; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"q101_sc_03_heart_loop";
@@ -134,6 +144,14 @@ public class Consumption {
     consumption.doses = [when];
     return consumption;
   }
+}
+
+enum Onomatopea {
+  Cough = 0,
+  Headache = 1,
+  Breather = 2,
+  Ache = 3,
+  Vomit = 4,
 }
 
 enum Category {

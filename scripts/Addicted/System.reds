@@ -157,10 +157,10 @@ public class AddictedSystem extends ScriptableSystem {
             request = new AchingRequest();
           }
           let now = this.timeSystem.GetGameTimeStamp();
-          request.until = now + 60.;
+          request.until = now + (3. * request.Duration()) + 100.;
           request.threshold = threshold;
           EI(id, s"now: \(ToString(now)) until: \(ToString(request.until)) threshold: \(ToString(request.threshold))");
-          this.RescheduleHintRequest(request, 1, 3);
+          this.RescheduleHintRequest(request);
       }
     } else {
       FI(id, s"no consumption recorded while just dissipated");
@@ -193,13 +193,15 @@ public class AddictedSystem extends ScriptableSystem {
     this.Hint(id);
   }
 
-  private func RescheduleHintRequest(request: ref<HintRequest>, atLeast: Float, atMost: Float) -> Void {
+  private func RescheduleHintRequest(request: ref<HintRequest>) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     E(s"between request {{{{{  \(ToString(now))  }}}}}}");
     if !Equals(this.hintDelayID, GetInvalidDelayID()) {
       this.CancelHintRequest();
     }
-    let delay = RandRangeF(atLeast, atMost);
+    let least = request.Duration() * 2.;
+    let most = request.Duration() * 3.;
+    let delay = RandRangeF(least, most);
     this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
   }
 
@@ -214,17 +216,21 @@ public class AddictedSystem extends ScriptableSystem {
       GameObject.PlaySoundEvent(this.player, sound);
       request.times += 1;
     } else {
-      request.until += 5.;
+      request.until += request.Duration() * 1.5;
     }
     let now = this.timeSystem.GetGameTimeStamp();
     E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
     if now <= request.until && request.times < 3 {
-      this.RescheduleHintRequest(request, 2, 4);
+      this.RescheduleHintRequest(request);
     } else {
       this.CancelHintRequest();
       if IsDefined(this.hintSoundEvent) {
+        if request.IsLoop() {
+          GameObject.BreakReplicatedEffectLoopEvent(this.player, request.Sound());
+        }
+      }
+      if IsDefined(this.hintSoundEvent) {
         if Equals(this.hintSoundEvent.soundEvent, n"q101_sc_03_heart_loop") {
-          GameObject.BreakReplicatedEffectLoopEvent(this.player, n"q101_sc_03_heart_loop");
         }
         GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       }
