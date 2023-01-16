@@ -14,6 +14,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     if evt.isNewApplication && evt.IsAddictive() {
       EI(id, s"consumed addictive substance");
       system.OnConsumed(id);
+      system.Quiet();
     }
     // decrease score on rest
     if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
@@ -25,9 +26,11 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     let system = AddictedSystem.GetInstance(this.GetGame());
+
     let id = evt.staticData.GetID();
     if evt.IsAddictive() {
         EI(id, s"addictive substance dissipated");
+        system.Noisy();
         system.OnDissipated(id);
     }
     return wrappedMethod(evt);
@@ -56,13 +59,13 @@ protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect
 
 @wrapMethod(ConsumeAction)
 public func CompleteAction(gameInstance: GameInstance) -> Void {
+  E(s"complete action");
   wrappedMethod(gameInstance);
-  let system = AddictedSystem.GetInstance(gameInstance);
-  system.Noisy();
 }
 
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
+  E(s"consume item");
   let system = AddictedSystem.GetInstance(executor.GetGame());
   system.Quiet();
   wrappedMethod(executor, itemID, fromInventory);

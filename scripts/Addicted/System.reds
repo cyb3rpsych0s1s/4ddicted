@@ -349,18 +349,24 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Quiet() -> Void {
+    E(s"quiet");
     if IsDefined(this.hintSoundEvent) {
       GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
+      E(s"quiet: stop sound and suppress noise");
     }
     this.quiet = true;
+    E(s"quiet: true");
   }
 
   public func Noisy() -> Void {
+    E(s"noisy");
     if IsDefined(this.hintSoundEvent) {
       this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
+      E(s"noisy: no audio effect");
     }
     this.quiet = false;
+    E(s"noisy: false");
   }
 
   private func CanPlayOnomatopea() -> Bool {
