@@ -285,12 +285,13 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
-    let score = EnumInt(threshold);
-    if score == 0 {
-      this.Consume(id, 0); // always get back clean
-    } else {
-      this.Consume(id, score + 1); // always cross the threshold
+    let consumption = EnumInt(threshold);
+    // always get back clean
+    if consumption > 0 {
+      // otherwise always cross the threshold
+      consumption += 1;
     }
+    this.Consume(id, consumption);
   }
 
   public func DebugThresholds() -> Void {
