@@ -13,7 +13,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let hintDelayID: DelayID;
 
-  private persistent let isildur: ref<Consumptions>;
+  private persistent let consumptions: ref<Consumptions>;
 
   private let board: ref<IBlackboard>;
   public let quiet: Bool = false;
@@ -33,8 +33,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
-    if !IsDefined(this.isildur) {
-      this.isildur = new Consumptions();
+    if !IsDefined(this.consumptions) {
+      this.consumptions = new Consumptions();
     }
     ModSettings.RegisterListenerToModifications(this);
   }
@@ -60,8 +60,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnConsumed(id: TweakDBID) -> Void {
     let std = Helper.EffectBaseName(id);
-    if this.isildur.KeyExist(std) {
-      let consumption: ref<Consumption> = this.isildur.Get(std);
+    if this.consumptions.KeyExist(std) {
+      let consumption: ref<Consumption> = this.consumptions.Get(std);
       let amount = Min(consumption.current + Helper.Potency(id), 100);
       this.Consume(std, amount);
     } else {
@@ -72,8 +72,8 @@ public class AddictedSystem extends ScriptableSystem {
   private func Consume(id: TweakDBID, amount: Int32) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     let std = Helper.EffectBaseName(id);
-    if this.isildur.KeyExist(std) {
-      let consumption: ref<Consumption> = this.isildur.Get(std);
+    if this.consumptions.KeyExist(std) {
+      let consumption: ref<Consumption> = this.consumptions.Get(std);
       let old = consumption.current;
       let before = Helper.Threshold(old);
       consumption.current = amount;
@@ -88,31 +88,31 @@ public class AddictedSystem extends ScriptableSystem {
       }
     } else {
       EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(std))");
-      this.isildur.Insert(std, Consumption.Create(id, now));
+      this.consumptions.Insert(std, Consumption.Create(id, now));
     }
   }
 
   public func OnRested() -> Void {
-    let size = this.isildur.Size();
+    let size = this.consumptions.Size();
     if size == 0 { return; }
-    let ids = this.isildur.Keys();
+    let ids = this.consumptions.Keys();
     let consumption: ref<Consumption>;
     for id in ids {
-      consumption = this.isildur.Get(id) as Consumption;
+      consumption = this.consumptions.Get(id) as Consumption;
       if consumption.current > 0 {
         consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
         consumption.doses = consumption.doses;
       } else {
-        this.isildur.Remove(id);
+        this.consumptions.Remove(id);
       }
     }
   }
 
   public func Hint(id: TweakDBID) -> Void {
-    let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
+    let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
     if IsDefined(consumption) {
       let consumable = Helper.Consumable(id);
-      let specific = this.isildur.Get(id);
+      let specific = this.consumptions.Get(id);
       let average = this.AverageConsumption(consumable);
       let specificThreshold = Helper.Threshold(specific.current);
       let averageThreshold = Helper.Threshold(average);
@@ -247,7 +247,7 @@ public class AddictedSystem extends ScriptableSystem {
     let found = 0;
     let consumption: wref<Consumption>;
     for id in ids {
-      consumption = this.isildur.Get(id) as Consumption;
+      consumption = this.consumptions.Get(id) as Consumption;
       if IsDefined(consumption) {
         total += consumption.current;
         found += 1;
@@ -276,7 +276,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   /// if hasn't consumed for a day or more
   public func IsWithdrawing(id: TweakDBID) -> Bool {
-    let consumption = this.isildur.Get(id) as Consumption;
+    let consumption = this.consumptions.Get(id) as Consumption;
     if !IsDefined(consumption) { return false; }
     let doses = consumption.doses;
     let size = ArraySize(doses);
@@ -328,14 +328,14 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func DebugThresholds() -> Void {
     E(s"debug thresholds:");
-    let size = this.isildur.Size();
-    let ids = this.isildur.Keys();
+    let size = this.consumptions.Size();
+    let ids = this.consumptions.Keys();
     if size == 0 {
       E(s"no consumption found!");
       return;
     }
     for id in ids {
-      let consumption: ref<Consumption> = this.isildur.Get(id) as Consumption;
+      let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
       if IsDefined(consumption) {
         let size = ArraySize(consumption.doses);
         EI(id, s"current: \(ToString(consumption.current)) doses: \(ToString(size))");
@@ -346,17 +346,17 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func DebugClear() -> Void {
-    E(s"clear all isildur...");
-    let size = this.isildur.Size();
-    let ids = this.isildur.Keys();
+    E(s"clear all consumptions...");
+    let size = this.consumptions.Size();
+    let ids = this.consumptions.Keys();
     if size == 0 {
       E(s"no consumption found!");
       return;
     } else {
       for id in ids {
-        this.isildur.Remove(id);
+        this.consumptions.Remove(id);
       }
-      this.isildur.Clear();
+      this.consumptions.Clear();
       E(s"consumption cleaned!");
     }
   }
