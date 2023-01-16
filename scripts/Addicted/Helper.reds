@@ -5,12 +5,7 @@ import Addicted.Utils.{E,EI}
 
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
-    switch(id) {
-      case t"BaseStatusEffect.BlackLaceV0":
-        return Category.Hard;
-      default:
-        break;
-    }
+    if Helper.IsBlackLace(id) { return Category.Hard; }
     return Category.Mild;
   }
 
@@ -55,11 +50,8 @@ public class Helper {
   }
 
   public static func IsBooster(id: TweakDBID) -> Bool {
-    return Helper.IsCapacityBooster(id) ||
-    Helper.IsStaminaBooster(id) ||
-    Helper.IsMemoryBooster(id) ||
-    Helper.IsOxyBooster(id) ||
-    Helper.IsHealthBooster(id);
+    let str = TDBID.ToStringDEBUG(id);
+    return StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "Booster");
   }
 
   public static func IsInhaler(id: TweakDBID) -> Bool {
@@ -135,20 +127,12 @@ public class Helper {
     switch (consumable) {
       case Consumable.Alcohol:
         return [t"BaseStatusEffect.AlcoholDebuff"];
-      case Consumable.BounceBack:
-        return [
-          t"BaseStatusEffect.BonesMcCoy70V0",
-          t"BaseStatusEffect.BonesMcCoy70V1",
-          t"BaseStatusEffect.BonesMcCoy70V2"
-        ];
       case Consumable.MaxDOC:
-        return [
-          t"BaseStatusEffect.FirstAidWhiffV0",
-          t"BaseStatusEffect.FirstAidWhiffV1",
-          t"BaseStatusEffect.FirstAidWhiffV2"
-        ];
+        return Helper.EffectsByName("FirstAidWhiff");
+      case Consumable.BounceBack:
+        return Helper.EffectsByName("BonesMcCoy70");
       case Consumable.HealthBooster:
-        return [t"BaseStatusEffect.HealthBooster"];
+        return Helper.EffectsByName("HealthBooster");
       case Consumable.MemoryBooster:
         return [t"BaseStatusEffect.MemoryBooster"];
       case Consumable.OxyBooster:
@@ -175,14 +159,14 @@ public class Helper {
       switch(version) {
         case 0:
           if severe {
-            return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV0";
+            return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV0";
           }
-          return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV0";
+          return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV0";
         case 1:
           if severe {
-            return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV1";
+            return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV1";
           }
-          return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV1";
+          return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV1";
         case 2:
           if severe {
             return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV2";
@@ -253,51 +237,21 @@ public class Helper {
   }
 
   public static func IsMaxDOC(id: TweakDBID) -> Bool {
-    switch(id) {
-      case t"BaseStatusEffect.FirstAidWhiffV0":
-      case t"BaseStatusEffect.FirstAidWhiffV1":
-      case t"BaseStatusEffect.FirstAidWhiffV2":
-      case t"BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0":
-      case t"BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1":
-      case t"BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2":
-      case t"BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0":
-      case t"BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1":
-      case t"BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2":
-        return true;
-      default:
-        break;
-    }
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "FirstAidWhiff") { return true; }
     return Helper.IsMaxDOCAction(id);
   }
 
   public static func IsBounceBack(id: TweakDBID) -> Bool {
-    switch(id) {
-      case t"BaseStatusEffect.BonesMcCoy70V0":
-      case t"BaseStatusEffect.BonesMcCoy70V1":
-      case t"BaseStatusEffect.BonesMcCoy70V2":
-      case t"BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0":
-      case t"BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1":
-      case t"BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2":
-      case t"BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0":
-      case t"BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1":
-      case t"BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2":
-        return true;
-      default:
-        break;
-    }
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "BonesMcCoy70") { return true; }
     return Helper.IsBounceBackAction(id);
   }
 
   public static func IsHealthBooster(id: TweakDBID) -> Bool {
-    switch(id) {
-      case t"BaseStatusEffect.HealthBooster":
-      case t"BaseStatusEffect.NotablyWeakenedHealthBooster":
-      case t"BaseStatusEffect.SeverelyWeakenedHealthBooster":
-        return true;
-      default:
-        break;
-    }
-    return false;
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "HealthBooster") { return true; }
+    return Helper.IsHealthBoosterAction(id);
   }
 
   public static func IsBlackLace(id: TweakDBID) -> Bool {
@@ -326,16 +280,10 @@ public class Helper {
   }
 
   private static func RateMaxDOCAction(id: TweakDBID) -> Int32 {
-    switch(id) {
-      case t"Items.FirstAidWhiffV0_inline2":
-        return 0;
-      case t"Items.FirstAidWhiffV1_inline6":
-        return 1;
-      case t"Items.FirstAidWhiffV2_inline6":
-        return 2;
-      default:
-        break;
-    }
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV0") { return 0; }
+    if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV1") { return 1; }
+    if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV2") { return 2; }
     return -1;
   }
 
@@ -345,16 +293,41 @@ public class Helper {
   }
 
   private static func RateBounceBackAction(id: TweakDBID) -> Int32 {
-    switch(id) {
-      case t"Items.BonesMcCoy70V0_inline2":
-        return 0;
-      case t"Items.BonesMcCoy70V1_inline2":
-        return 1;
-      case t"Items.BonesMcCoy70V2_inline6":
-        return 2;
-      default:
-        break;
-    }
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "BonesMcCoy70V0") { return 0; }
+    if StrBeginsWith(str, "Items") && StrContains(str, "BonesMcCoy70V1") { return 1; }
+    if StrBeginsWith(str, "Items") && StrContains(str, "BonesMcCoy70V2") { return 2; }
     return -1;
+  }
+
+  private static func IsHealthBoosterAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "HealthBooster") { return true; }
+    return false;
+  }
+
+  private static func EffectsByName(name: String) -> array<TweakDBID> {
+    let records = TweakDBInterface.GetRecords(n"StatusEffect_Record");
+    let out: array<TweakDBID> = [];
+    let id: TweakDBID;
+    let str: String;
+    for record in records {
+      id = (record as StatusEffect_Record).GetID();
+      str = TDBID.ToStringDEBUG(id);
+      if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, name) {
+        ArrayPush(out, id);
+      }
+    }
+    return out;
+  }
+
+  public static func EffectBaseName(id: TweakDBID) -> TweakDBID {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrContains(str, "NotablyWeakened") || StrContains(str, "SeverelyWeakened") {
+      let base = StrReplace(str, "NotablyWeakened", "");
+      base = StrReplace(str, "SeverelyWeakened", "");
+      return TDBID.Create(base);
+    }
+    return id;
   }
 }

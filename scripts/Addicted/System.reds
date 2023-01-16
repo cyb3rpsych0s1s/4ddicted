@@ -55,34 +55,36 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnConsumed(id: TweakDBID) -> Void {
-    if this.isildur.KeyExist(id) {
-      let consumption: ref<Consumption> = this.isildur.Get(id);
+    let std = Helper.EffectBaseName(id);
+    if this.isildur.KeyExist(std) {
+      let consumption: ref<Consumption> = this.isildur.Get(std);
       let amount = Min(consumption.current + Helper.Potency(id), 100);
-      this.Consume(id, amount);
+      this.Consume(std, amount);
     } else {
-      this.Consume(id, Helper.Potency(id));
+      this.Consume(std, Helper.Potency(id));
     }
   }
 
   private func Consume(id: TweakDBID, amount: Int32) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
-    if this.isildur.KeyExist(id) {
-      let consumption: ref<Consumption> = this.isildur.Get(id);
+    let std = Helper.EffectBaseName(id);
+    if this.isildur.KeyExist(std) {
+      let consumption: ref<Consumption> = this.isildur.Get(std);
       let old = consumption.current;
       let before = Helper.Threshold(old);
       consumption.current = amount;
       let after = Helper.Threshold(consumption.current);
       ArrayPush(consumption.doses, now);
-      E(s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
-      if Helper.IsInstant(id) {
+      EI(id, s"additional consumption \(TDBID.ToStringDEBUG(std)) \(ToString(old)) -> \(ToString(consumption.current))");
+      if (amount > old) && Helper.IsInstant(id) {
         this.Hint(id);
       }
       if !Equals(EnumInt(before), EnumInt(after)) {
         this.Warn(id, before, after);
       }
     } else {
-      E(s"first time consumption for \(TDBID.ToStringDEBUG(id))");
-      this.isildur.Insert(id, Consumption.Create(id, now));
+      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(std))");
+      this.isildur.Insert(std, Consumption.Create(id, now));
     }
   }
 
