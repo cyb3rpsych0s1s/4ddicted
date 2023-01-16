@@ -37,7 +37,9 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
   E(s"process status effects");
   let system = AddictedSystem.GetInstance(gameInstance);
-  system.quiet = true;
+  let timeSystem = GameInstance.GetTimeSystem(gameInstance) as TimeSystem;
+  let now = timeSystem.GetGameTimeStamp();
+  system.quietUntil = now + 5.;
 
   let healing = false;
   for record in actionEffects {
@@ -60,7 +62,7 @@ protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect
 public func CompleteAction(gameInstance: GameInstance) -> Void {
   wrappedMethod(gameInstance);
   let system = AddictedSystem.GetInstance(gameInstance);
-  system.quiet = false;
+  system.Noisy();
 }
 
 @addMethod(StatusEffectEvent)

@@ -12,11 +12,12 @@ public class AddictedSystem extends ScriptableSystem {
   private let config: ref<AddictedConfig>;
 
   private let hintDelayID: DelayID;
+  private let soundDelayID: DelayID;
 
   private persistent let consumptions: ref<Consumptions>;
 
-  private let board: ref<IBlackboard>;
-  public let quiet: Bool = false;
+  private let board: wref<IBlackboard>;
+  private let quietUntil: Float = 0;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -174,18 +175,28 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    let yes = this.CanPlayOnomatopea();
-    if yes {
-      GameObject.PlaySoundEvent(this.player, request.Sound());
-      request.times += 1;
+    let can = this.CanPlayOnomatopea();
+    if can {
+      if !Equals(this.soundDelayID, GetInvalidDelayID()) {
+        let evt = new SoundPlayEvent();
+        evt.soundName = request.Sound();
+        let entity = this.player;
+        this.soundDelayID = this.delaySystem.DelayEvent(entity, evt, 1., true);
+        request.times += 1;
+      }
     } else {
-      GameObject.StopSoundEvent(this.player, request.Sound());
+      if !Equals(this.soundDelayID, GetInvalidDelayID()) {
+        this.delaySystem.CancelCallback(this.soundDelayID);
+        this.delaySystem.CancelDelay(this.soundDelayID);
+        this.soundDelayID = GetInvalidDelayID();
+      }
       request.until += 5.;
     }
     let now = this.timeSystem.GetGameTimeStamp();
-    E(s"process hint request: now \(ToString(now)) <= \(ToString(request.until))");
+    E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
     if now <= request.until && request.times < 3 {
-      let delay = RandRangeF(1, 3);
+      let delay = RandRangeF(2, 4);
+      this.delaySystem.CancelCallback(this.hintDelayID);
       this.delaySystem.CancelDelay(this.hintDelayID);
       this.hintDelayID = GetInvalidDelayID();
       this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
@@ -295,10 +306,23 @@ public class AddictedSystem extends ScriptableSystem {
     return false;
   }
 
+  public func Quiet() -> Void {
+    let now = this.timeSystem.GetGameTimeStamp();
+    this.quietUntil = now + 10.;
+  }
+
+  public func Noisy() -> Void {
+    this.quietUntil = 0.;
+  }
+
   private func CanPlayOnomatopea() -> Bool {
-    if this.quiet {
-      E(s"cannot play onomatopea: quiet (from consuming)");
-      return false;
+    if this.quietUntil != 0. {
+      let now = this.timeSystem.GetGameTimeStamp();
+      let early = now < this.quietUntil;
+      if early {
+        E(s"cannot play onomatopea: quiet (from consuming)");
+        return false;
+      }
     }
     let scene = GameInstance.GetSceneSystem(this.player.GetGame());
     let interface = scene.GetScriptInterface();
