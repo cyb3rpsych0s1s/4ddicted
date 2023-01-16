@@ -171,7 +171,7 @@ public class AddictedSystem extends ScriptableSystem {
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
     let toast: SimpleScreenMessage;
     toast.isShown = true;
-    toast.isInstant = false;
+    toast.isInstant = true;
     toast.duration = 5.;
     let consumable = Helper.Consumable(id);
     if EnumInt(before) < EnumInt(after) {
