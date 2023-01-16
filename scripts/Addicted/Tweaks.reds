@@ -14,7 +14,6 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     if evt.isNewApplication && evt.IsAddictive() {
       EI(id, s"consumed addictive substance");
       system.OnConsumed(id);
-      system.Quiet();
     }
     // decrease score on rest
     if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
@@ -29,9 +28,9 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
 
     let id = evt.staticData.GetID();
     if evt.IsAddictive() {
-        EI(id, s"addictive substance dissipated");
-        system.Noisy();
-        system.OnDissipated(id);
+      EI(id, s"addictive substance dissipated");
+      system.OnDissipated(id);
+      if Helper.IsInstant(id) { system.Noisy(); }
     }
     return wrappedMethod(evt);
 }
