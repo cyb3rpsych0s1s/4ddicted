@@ -68,6 +68,10 @@ public class Helper {
     Helper.IsMemoryBooster(id);
   }
 
+  public static func IsAnabolic(id: TweakDBID) -> Bool {
+    return Helper.IsCapacityBooster(id) || Helper.IsStaminaBooster(id);
+  }
+
   public static func IsInstant(id: TweakDBID) -> Bool {
     let effect = TweakDBInterface.GetRecord(id);
     if effect.IsA(n"gamedataStatusEffect_Record") {

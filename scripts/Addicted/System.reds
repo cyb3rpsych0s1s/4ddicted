@@ -12,8 +12,6 @@ public class AddictedSystem extends ScriptableSystem {
   private let config: ref<AddictedConfig>;
 
   private let hintDelayID: DelayID;
-  private let soundDelayID: DelayID;
-
   private let hintSoundEvent: ref<PlaySoundEvent>;
 
   private persistent let consumptions: ref<Consumptions>;
@@ -131,8 +129,29 @@ public class AddictedSystem extends ScriptableSystem {
           if Helper.IsInhaler(id) {
             request = new CoughingRequest();
           }
-          if Helper.IsPill(id) {
-            request = new VomitingRequest();
+          // anabolic are also pills, but the opposite isn't true
+          let anabolic = Helper.IsAnabolic(id);
+          let pill = Helper.IsPill(id);
+          if anabolic || pill {
+            let random = RandRangeF(1, 10);
+            let above: Bool;
+            if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) {
+              above = random >= 7.;
+            } else {
+              above = random >= 9.;
+            }
+            E(s"random: \(random), above: \(above)");
+            if anabolic {
+              if above {
+                request = new VomitingRequest();
+              }
+              request = new BreatheringRequest();
+            } else {
+              if above {
+                request = new VomitingRequest();
+              }
+              request = new HeadAchingRequest();
+            }
           }
           if Helper.IsInjector(id) {
             request = new AchingRequest();
@@ -204,6 +223,9 @@ public class AddictedSystem extends ScriptableSystem {
     } else {
       this.CancelHintRequest();
       if IsDefined(this.hintSoundEvent) {
+        if Equals(this.hintSoundEvent.soundEvent, n"q101_sc_03_heart_loop") {
+          GameObject.BreakReplicatedEffectLoopEvent(this.player, n"q101_sc_03_heart_loop");
+        }
         GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       }
     }
@@ -230,8 +252,13 @@ public class AddictedSystem extends ScriptableSystem {
     this.ProcessHintRequest(request);
   }
 
-  protected final func OnBreatherRequest(request: ref<BreatherRequest>) -> Void {
-    E(s"on breather request");
+  protected final func OnBreatheringRequest(request: ref<BreatheringRequest>) -> Void {
+    E(s"on breathering request");
+    this.ProcessHintRequest(request);
+  }
+
+  protected final func OnHeadAchingRequest(request: ref<HeadAchingRequest>) -> Void {
+    E(s"on headaching request");
     this.ProcessHintRequest(request);
   }
 

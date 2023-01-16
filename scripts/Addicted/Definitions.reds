@@ -25,7 +25,7 @@ public class VomitingRequest extends HintRequest {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"g_sc_v_sickness_cough_blood";
     }
-    return n"sq032_sc_04_v_pukes";
+    return n"ono_v_choking";
   }
 }
 // hint for injectors
@@ -38,12 +38,21 @@ public class AchingRequest extends HintRequest {
   }
 }
 // hint for anabolics
-public class BreatherRequest extends HintRequest {
+public class BreatheringRequest extends HintRequest {
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
       return n"ono_v_effort_long";
     }
     return n"ono_v_effort_short";
+  }
+}
+// hint for memory booster
+public class HeadAchingRequest extends HintRequest {
+  public func Sound() -> CName {
+    if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
+      return n"q101_sc_03_heart_loop";
+    }
+    return n"q004_sc_04a_heartbeat_rev";
   }
 }
 
