@@ -36,6 +36,7 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
   E(s"process status effects");
+  let system = AddictedSystem.GetInstance(gameInstance);
   let healing = false;
   for record in actionEffects {
     EI(record.GetID(), s"checking if healer action effect");
@@ -62,7 +63,7 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
 
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
-  let system = AddictedSystem.GetInstance(gameInstance);
+  let system = AddictedSystem.GetInstance(executor.GetGame());
   system.Quiet();
   wrappedMethod(executor, itemID, fromInventory);
 }

@@ -157,7 +157,6 @@ public class AddictedSystem extends ScriptableSystem {
             request = new AchingRequest();
           }
           let now = this.timeSystem.GetGameTimeStamp();
-          request.until = now + (3. * request.Duration()) + 100.;
           request.threshold = threshold;
           EI(id, s"now: \(ToString(now)) until: \(ToString(request.until)) threshold: \(ToString(request.threshold))");
           this.RescheduleHintRequest(request);
@@ -194,14 +193,12 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func RescheduleHintRequest(request: ref<HintRequest>) -> Void {
-    let now = this.timeSystem.GetGameTimeStamp();
-    E(s"between request {{{{{  \(ToString(now))  }}}}}}");
     if !Equals(this.hintDelayID, GetInvalidDelayID()) {
       this.CancelHintRequest();
     }
-    let least = request.Duration() * 2.;
-    let most = request.Duration() * 3.;
-    let delay = RandRangeF(least, most);
+    let now = this.timeSystem.GetGameTimeStamp();
+    let delay = RandRangeF(2, 4);
+    request.until = now + delay + request.TotalTime();
     this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
   }
 
@@ -220,7 +217,7 @@ public class AddictedSystem extends ScriptableSystem {
     }
     let now = this.timeSystem.GetGameTimeStamp();
     E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
-    if now <= request.until && request.times < 3 {
+    if (now <= request.until) && (request.times < 3) {
       this.RescheduleHintRequest(request);
     } else {
       this.CancelHintRequest();

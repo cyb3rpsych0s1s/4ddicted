@@ -12,6 +12,21 @@ public abstract class HintRequest extends ScriptableSystemRequest {
   public func Onomatopea() -> Onomatopea;
   public func IsLoop() -> Bool { return false; }
   public func Duration() -> Float { return 5.; }
+  public func AtMost() -> Float {
+    if this.IsLoop() { return 1.; }
+    if Equals(EnumInt(this.threshold), EnumInt(Threshold.Severely)) {
+      return 5.;
+    }
+    return 3.;
+  }
+  public func TotalTime() -> Float {
+    let playTime = this.Duration() * this.AtMost();
+    let gapTime = (this.AtMost() - 1.) * 2.;
+    let least = playTime * gapTime;
+    let most = least * 2.;
+    let delay = RandRangeF(least, most);
+    return delay;
+  }
 }
 
 // hint for inhalers
