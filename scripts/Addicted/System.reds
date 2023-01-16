@@ -189,17 +189,12 @@ public class AddictedSystem extends ScriptableSystem {
     if can {
       if !IsDefined(this.hintSoundEvent) {
         this.hintSoundEvent = new PlaySoundEvent();
-      } else {
-        this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
       }
       let sound = request.Sound();
       this.hintSoundEvent.soundEvent = sound;
       GameObject.PlaySoundEvent(this.player, sound);
       request.times += 1;
     } else {
-      if IsDefined(this.hintSoundEvent) {
-        this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.DEAFENED);
-      }
       request.until += 5.;
     }
     let now = this.timeSystem.GetGameTimeStamp();
@@ -324,17 +319,25 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Quiet() -> Void {
+    if IsDefined(this.hintSoundEvent) {
+      GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
+      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
+    }
     let now = this.timeSystem.GetGameTimeStamp();
     this.quietUntil = now + 100.;
   }
 
   public func Noisy() -> Void {
+    if IsDefined(this.hintSoundEvent) {
+      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
+    }
     this.quietUntil = 0.;
   }
 
   private func CanPlayOnomatopea() -> Bool {
     if this.quietUntil != 0. {
       let now = this.timeSystem.GetGameTimeStamp();
+      E(s"[[[ now \(ToString(now)) VS \(ToString(this.quietUntil)) ]]]");
       let early = now < this.quietUntil;
       if early {
         E(s"cannot play onomatopea: quiet (from consuming)");
