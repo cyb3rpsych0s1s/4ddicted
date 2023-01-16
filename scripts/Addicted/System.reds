@@ -187,15 +187,19 @@ public class AddictedSystem extends ScriptableSystem {
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
     let can = this.CanPlayOnomatopea();
     if can {
-      this.ControlCurrentOnomatopea(ESoundStatusEffects.NONE);
       if !IsDefined(this.hintSoundEvent) {
         this.hintSoundEvent = new PlaySoundEvent();
+      } else {
+        this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
       }
-      this.hintSoundEvent.soundEvent = request.Sound();
-      GameObject.PlaySoundEvent(this.player, request.Sound());
+      let sound = request.Sound();
+      this.hintSoundEvent.soundEvent = sound;
+      GameObject.PlaySoundEvent(this.player, sound);
       request.times += 1;
     } else {
-      this.ControlCurrentOnomatopea(ESoundStatusEffects.DEAFENED);
+      if IsDefined(this.hintSoundEvent) {
+        this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.DEAFENED);
+      }
       request.until += 5.;
     }
     let now = this.timeSystem.GetGameTimeStamp();
@@ -204,18 +208,13 @@ public class AddictedSystem extends ScriptableSystem {
       this.RescheduleHintRequest(request, 2, 4);
     } else {
       this.CancelHintRequest();
-    }
-  }
-
-  private func ControlCurrentOnomatopea(setting: ESoundStatusEffects) -> Void {
-    if IsDefined(this.hintSoundEvent) {
-      this.hintSoundEvent.SetStatusEffect(setting);
+      if IsDefined(this.hintSoundEvent) {
+        GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
+      }
     }
   }
 
   private func CancelHintRequest() -> Void {
-    // let audio: ref<AudioSystem>;
-    // audio.Stop(this.soundEventID.name, this.soundEventID, emitterName);
     this.delaySystem.CancelDelay(this.hintDelayID);
     this.delaySystem.CancelCallback(this.hintDelayID);
     this.hintDelayID = GetInvalidDelayID();
