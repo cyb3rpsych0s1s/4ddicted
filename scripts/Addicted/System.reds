@@ -15,6 +15,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private persistent let isildur: ref<Consumptions>;
 
+  public let quiet: Bool = false;
+
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
@@ -170,11 +172,14 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    GameObject.PlaySoundEvent(this.player, request.Sound());
+    if !this.quiet {
+      GameObject.PlaySoundEvent(this.player, request.Sound());
+      request.times += 1;
+    } else {
+      GameObject.StopSoundEvent(this.player, request.Sound());
+      request.until += 5.;
+    }
     let now = this.timeSystem.GetGameTimeStamp();
-    E(s"request times: \(ToString(request.times))");
-    request.times += 1;
-    E(s"request times: \(ToString(request.times))");
     E(s"now \(ToString(now)) <= \(ToString(request.until))");
     if now <= request.until && request.times < 3 {
       let delay = RandRangeF(1, 3);
