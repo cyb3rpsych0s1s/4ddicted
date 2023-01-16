@@ -70,6 +70,11 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  public func OnDissipated(id: TweakDBID) -> Void {
+    EI(id, s"on dissipation");
+    this.Hint(id);
+  }
+
   private func Consume(id: TweakDBID, amount: Int32) -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     let std = Helper.EffectBaseName(id);
@@ -187,11 +192,6 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
     GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(toast), true);
-  }
-
-  public func OnDissipated(id: TweakDBID) -> Void {
-    EI(id, s"on dissipation");
-    this.Hint(id);
   }
 
   private func RescheduleHintRequest(request: ref<HintRequest>) -> Void {
@@ -340,14 +340,17 @@ public class AddictedSystem extends ScriptableSystem {
     let doses = consumption.doses;
     let size = ArraySize(doses);
     if size == 0 { return false; }
-    let now = this.timeSystem.GetGameTime();
+    let tms = this.timeSystem.GetGameTimeStamp();
+    let now =  this.timeSystem.RealTimeSecondsToGameTime(tms);
     let today = GameTime.Days(now);
-    let first = doses[0];
-    let last = this.timeSystem.RealTimeSecondsToGameTime(first);
+    let last = this.timeSystem.RealTimeSecondsToGameTime(doses[0]);
     let before = GameTime.Days(last);
     let yesterday = today - 1;
     let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(last))) >= 24);
     let moreThan1Day = today >= (before + 2);
+    EI(id, s"size \(size)");
+    EI(id, s"e.g. dose \(doses[0])");
+    EI(id, s"last consumption \(before), today \(today), yesterday \(yesterday)");
     if moreThan1Day || moreThan24Hours {
       return true;
     }
@@ -438,6 +441,15 @@ public class AddictedSystem extends ScriptableSystem {
       }
       this.consumptions.Clear();
       E(s"consumption cleaned!");
+    }
+  }
+
+  public func DebugWithdrawing() -> Void {
+    let ids = this.consumptions.Keys();
+    let withdrawing: Bool;
+    for id in ids {
+      withdrawing = this.IsWithdrawing(id);
+      EI(id, s"withdrawing ? \(withdrawing)");
     }
   }
 }

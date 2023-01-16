@@ -34,3 +34,9 @@ public func DebugClear() -> Void {
 public func DebugClearEffects() -> Void {
   StatusEffectHelper.RemoveAllStatusEffects(this);
 }
+
+@addMethod(PlayerPuppet)
+public func DebugWithdrawing() -> Void {
+  let system = AddictedSystem.GetInstance(this.GetGame());
+  system.DebugWithdrawing();
+}
