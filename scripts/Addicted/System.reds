@@ -17,7 +17,7 @@ public class AddictedSystem extends ScriptableSystem {
   private persistent let consumptions: ref<Consumptions>;
 
   private let board: wref<IBlackboard>;
-  private let quietUntil: Float = 0;
+  private let quiet: Bool = false;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -356,26 +356,20 @@ public class AddictedSystem extends ScriptableSystem {
       GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
     }
-    let now = this.timeSystem.GetGameTimeStamp();
-    this.quietUntil = now + 100.;
+    this.quiet = true;
   }
 
   public func Noisy() -> Void {
     if IsDefined(this.hintSoundEvent) {
       this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
     }
-    this.quietUntil = 0.;
+    this.quiet = false;
   }
 
   private func CanPlayOnomatopea() -> Bool {
-    if this.quietUntil != 0. {
-      let now = this.timeSystem.GetGameTimeStamp();
-      E(s"[[[ now \(ToString(now)) VS \(ToString(this.quietUntil)) ]]]");
-      let early = now < this.quietUntil;
-      if early {
-        E(s"cannot play onomatopea: quiet (from consuming)");
-        return false;
-      }
+    if this.quiet {
+      E(s"cannot play onomatopea: quiet (from consuming)");
+      return false;
     }
     let scene = GameInstance.GetSceneSystem(this.player.GetGame());
     let interface = scene.GetScriptInterface();
