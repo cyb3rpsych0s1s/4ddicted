@@ -2,6 +2,7 @@ module Addicted.System
 
 import Addicted.Utils.*
 import Addicted.*
+import Addicted.Manager.*
 
 public class AddictedSystem extends ScriptableSystem {
   
@@ -13,6 +14,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let hintDelayID: DelayID;
   private let hintSoundEvent: ref<PlaySoundEvent>;
+
+  private let healerManager: ref<HealerManager>;
 
   private persistent let consumptions: ref<Consumptions>;
 
@@ -34,15 +37,26 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
+
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
     }
+    this.healerManager = new HealerManager();
+    this.healerManager.Initialize(this);
+
     ModSettings.RegisterListenerToModifications(this);
   }
 
   private func OnDetach() -> Void {
     E(s"on detach system");
+
     ModSettings.UnregisterListenerToModifications(this);
+  }
+
+  private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
+    E(s"on restored system");
+
+    this.healerManager.Initialize(this);
   }
 
   public func RefreshConfig() -> Void {
@@ -59,6 +73,11 @@ public class AddictedSystem extends ScriptableSystem {
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
   }
 
+  public func OnConsumeItem() -> Void {
+    E(s"consume item");
+    this.Quiet();
+  }
+
   public func OnConsumed(id: TweakDBID) -> Void {
     let std = Helper.EffectBaseName(id);
     if this.consumptions.KeyExist(std) {
@@ -71,31 +90,13 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
-    EI(id, s"on dissipation");
-    this.Hint(id);
-  }
-
-  private func Consume(id: TweakDBID, amount: Int32) -> Void {
-    let now = this.timeSystem.GetGameTimeStamp();
-    let std = Helper.EffectBaseName(id);
-    if this.consumptions.KeyExist(std) {
-      let consumption: ref<Consumption> = this.consumptions.Get(std);
-      let old = consumption.current;
-      let before = Helper.Threshold(old);
-      consumption.current = amount;
-      let after = Helper.Threshold(consumption.current);
-      ArrayPush(consumption.doses, now);
-      EI(id, s"additional consumption \(TDBID.ToStringDEBUG(std)) \(ToString(old)) -> \(ToString(consumption.current))");
-      if (amount > old) && Helper.IsInstant(id) {
-        this.Hint(id);
-      }
-      if !Equals(EnumInt(before), EnumInt(after)) {
-        this.Warn(id, before, after);
-      }
-    } else {
-      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(std))");
-      this.consumptions.Insert(std, Consumption.Create(id, now));
+    if this.Hinting() { return; }
+    let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
+    if !IsDefined(consumption) {
+      FI(id, s"no consumption recorded while just dissipated");
+      return;
     }
+    this.Hint(id, consumption);
   }
 
   public func OnRested() -> Void {
@@ -114,61 +115,81 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
-  public func Hint(id: TweakDBID) -> Void {
-    if !Equals(this.hintDelayID, GetInvalidDelayID()) { return; }
-    let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
-    if IsDefined(consumption) {
-      let consumable = Helper.Consumable(id);
-      let specific = this.consumptions.Get(id);
-      let average = this.AverageConsumption(consumable);
-      let specificThreshold = Helper.Threshold(specific.current);
-      let averageThreshold = Helper.Threshold(average);
-      let threshold: Threshold;
-      if EnumInt(specificThreshold) >= EnumInt(averageThreshold) {
-        threshold = specificThreshold;
-      } else {
-        threshold = averageThreshold;
+  public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
+    if this.healerManager.ContainsHealerStatusEffects(actionEffects) {
+      return this.healerManager.AlterHealerStatusEffects(actionEffects);
+    }
+    return actionEffects;
+  }
+
+  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
+    E(s"on coughing request");
+    this.ProcessHintRequest(request);
+  }
+
+  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
+    E(s"on vomiting request");
+    this.ProcessHintRequest(request);
+  }
+
+  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
+    E(s"on aching request");
+    this.ProcessHintRequest(request);
+  }
+
+  protected final func OnBreatheringRequest(request: ref<BreatheringRequest>) -> Void {
+    E(s"on breathering request");
+    this.ProcessHintRequest(request);
+  }
+
+  protected final func OnHeadAchingRequest(request: ref<HeadAchingRequest>) -> Void {
+    E(s"on headaching request");
+    this.ProcessHintRequest(request);
+  }
+
+  private func Consume(id: TweakDBID, amount: Int32) -> Void {
+    let now = this.timeSystem.GetGameTimeStamp();
+    let std = Helper.EffectBaseName(id);
+    if this.consumptions.KeyExist(std) {
+      let consumption: ref<Consumption> = this.consumptions.Get(std);
+      let old = consumption.current;
+      let before = Helper.Threshold(old);
+      consumption.current = amount;
+      let after = Helper.Threshold(consumption.current);
+      ArrayPush(consumption.doses, now);
+      EI(id, s"additional consumption \(TDBID.ToStringDEBUG(std)) \(ToString(old)) -> \(ToString(consumption.current))");
+      if (amount > old) && Helper.IsInstant(id) {
+        this.Hint(id, consumption);
       }
-      EI(id, s"consumable: \(ToString(consumable)) current: \(ToString(specific)), variant threshold: \(ToString(specificThreshold)), consumable threshold: \(ToString(averageThreshold))");
-      if Helper.IsSerious(threshold) {
-          let request: ref<HintRequest>;
-          if Helper.IsInhaler(id) {
-            request = new CoughingRequest();
-          }
-          // anabolic are also pills, but the opposite isn't true
-          let anabolic = Helper.IsAnabolic(id);
-          let pill = Helper.IsPill(id);
-          if anabolic || pill {
-            let random = RandRangeF(1, 10);
-            let above: Bool;
-            if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) {
-              above = random >= 7.;
-            } else {
-              above = random >= 9.;
-            }
-            E(s"random: \(random), above: \(above)");
-            if anabolic {
-              if above {
-                request = new VomitingRequest();
-              }
-              request = new BreatheringRequest();
-            } else {
-              if above {
-                request = new VomitingRequest();
-              }
-              request = new HeadAchingRequest();
-            }
-          }
-          if Helper.IsInjector(id) {
-            request = new AchingRequest();
-          }
-          let now = this.timeSystem.GetGameTimeStamp();
-          request.threshold = threshold;
-          EI(id, s"now: \(ToString(now)) until: \(ToString(request.until)) threshold: \(ToString(request.threshold))");
-          this.RescheduleHintRequest(request);
+      if !Equals(EnumInt(before), EnumInt(after)) {
+        this.Warn(id, before, after);
       }
     } else {
-      FI(id, s"no consumption recorded while just dissipated");
+      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(std))");
+      this.consumptions.Insert(std, Consumption.Create(id, now));
+    }
+  }
+
+  public func Hint(id: TweakDBID, consumption: ref<Consumption>) -> Void {
+    let consumable = Helper.Consumable(id);
+    let specific = this.consumptions.Get(id);
+    let average = this.AverageConsumption(consumable);
+    let specificThreshold = Helper.Threshold(specific.current);
+    let averageThreshold = Helper.Threshold(average);
+    let threshold: Threshold;
+    if EnumInt(specificThreshold) >= EnumInt(averageThreshold) {
+      threshold = specificThreshold;
+    } else {
+      threshold = averageThreshold;
+    }
+    E(s"consumed \(ToString(consumable))" + "\n" +
+      s"current consumption \(ToString(specific))" + "\n" +
+      s"\(ToString(specificThreshold)) addicted (version threshold)" + "\n" +
+      s"\(ToString(averageThreshold)) addicted (consumable threshold)"
+    );
+    let request = Helper.AppropriateHintRequest(id, threshold);
+    if IsDefined(request) {
+      this.RescheduleHintRequest(request);
     }
   }
 
@@ -194,14 +215,25 @@ public class AddictedSystem extends ScriptableSystem {
     GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(toast), true);
   }
 
-  private func RescheduleHintRequest(request: ref<HintRequest>) -> Void {
-    if !Equals(this.hintDelayID, GetInvalidDelayID()) {
-      this.CancelHintRequest();
+  public func Quiet() -> Void {
+    E(s"quiet");
+    if IsDefined(this.hintSoundEvent) {
+      GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
+      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
+      E(s"quiet: stop sound and suppress noise");
     }
-    let now = this.timeSystem.GetGameTimeStamp();
-    let delay = RandRangeF(3, 5);
-    request.until = now + delay + request.TotalTime();
-    this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+    this.quiet = true;
+    E(s"quiet: true");
+  }
+
+  public func Noisy() -> Void {
+    E(s"noisy");
+    if IsDefined(this.hintSoundEvent) {
+      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
+      E(s"noisy: no audio effect");
+    }
+    this.quiet = false;
+    E(s"noisy: false");
   }
 
   /// play an onomatopea as a hint to the player when reaching notably or severely addicted
@@ -234,66 +266,69 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  private func RescheduleHintRequest(request: ref<HintRequest>) -> Void {
+    if this.Hinting() {
+      this.CancelHintRequest();
+    }
+    let now = this.timeSystem.GetGameTimeStamp();
+    let delay = RandRangeF(3, 5);
+    request.until = now + delay + request.TotalTime();
+    this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+  }
+
   private func CancelHintRequest() -> Void {
     this.delaySystem.CancelDelay(this.hintDelayID);
     this.delaySystem.CancelCallback(this.hintDelayID);
     this.hintDelayID = GetInvalidDelayID();
   }
 
-  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
-    E(s"on coughing request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
-    E(s"on vomiting request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
-    E(s"on aching request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnBreatheringRequest(request: ref<BreatheringRequest>) -> Void {
-    E(s"on breathering request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnHeadAchingRequest(request: ref<HeadAchingRequest>) -> Void {
-    E(s"on headaching request");
-    this.ProcessHintRequest(request);
-  }
-
-  /// weaken healers efficiency by subtituting them with debuffed ones
-  /// this is because actionEffects are immutable
-  public func OnProcessHealerEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
-    E(s"on process healer effects");
-    let idx = 0;
-    let action: TweakDBID;
-    let threshold: Threshold;
-    let consumable: Consumable;
-    let average: Int32;
-    let id: TweakDBID;
-    let groupAverage = this.AverageAddiction(Addiction.Healers);
-    let groupThreshold = Helper.Threshold(groupAverage);
-    for effect in actionEffects {
-      id = effect.GetID();
-      consumable = Helper.Consumable(id);
-      average = this.AverageConsumption(consumable);
-      threshold = Helper.Threshold(average);
-      if EnumInt(threshold) < EnumInt(groupThreshold) {
-        threshold = groupThreshold;
-      }
-      action = Helper.ActionEffect(id, threshold);
-      if !Equals(action, id) {
-        EI(id, s"replace with \(TDBID.ToStringDEBUG(action))");
-        let weakened = TweakDBInterface.GetObjectActionEffectRecord(action);
-        actionEffects[idx] = weakened;
-      }
-      idx += 1;
+  /// if hasn't consumed for a day or more
+  public func IsWithdrawing(id: TweakDBID) -> Bool {
+    let consumption = this.consumptions.Get(id) as Consumption;
+    if !IsDefined(consumption) { return false; }
+    let doses = consumption.doses;
+    let size = ArraySize(doses);
+    if size == 0 { return false; }
+    let tms = this.timeSystem.GetGameTimeStamp();
+    let now =  Helper.MakeGameTime(tms);
+    let today = GameTime.Days(now);
+    let last = Helper.MakeGameTime(doses[0]);
+    let before = GameTime.Days(last);
+    let yesterday = today - 1;
+    let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(last))) >= 24);
+    let moreThan1Day = today >= (before + 2);
+    EI(id, s"size \(size)");
+    EI(id, s"e.g. dose \(doses[0])");
+    EI(id, s"last consumption \(before), today \(today), yesterday \(yesterday)");
+    if moreThan1Day || moreThan24Hours {
+      return true;
     }
-    return actionEffects;
+    return false;
+  }
+
+  public func Hinting() -> Bool {
+    return !Equals(this.hintDelayID, GetInvalidDelayID());
+  }
+
+  private func CanPlayOnomatopea() -> Bool {
+    if this.quiet {
+      E(s"cannot play onomatopea: quiet (from consuming)");
+      return false;
+    }
+    let scene = GameInstance.GetSceneSystem(this.player.GetGame());
+    let interface = scene.GetScriptInterface();
+    let chatting = interface.IsEntityInDialogue(this.player.GetEntityID());
+    if chatting {
+      E(s"cannot play onomatopea: currently chatting");
+      return false;
+    }
+    let swimming: Int32 = this.board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
+    if Equals(swimming, EnumInt(gamePSMSwimming.Diving)) {
+      E(s"cannot play onomatopea: currently diving");
+      return false;
+    }
+    E(s"can play onomatopea");
+    return true;
   }
 
   /// average consumption for a given consumable
@@ -331,72 +366,6 @@ public class AddictedSystem extends ScriptableSystem {
   public func Threshold(addiction: Addiction) -> Threshold {
     let average = this.AverageAddiction(addiction);
     return Helper.Threshold(average);
-  }
-
-  /// if hasn't consumed for a day or more
-  public func IsWithdrawing(id: TweakDBID) -> Bool {
-    let consumption = this.consumptions.Get(id) as Consumption;
-    if !IsDefined(consumption) { return false; }
-    let doses = consumption.doses;
-    let size = ArraySize(doses);
-    if size == 0 { return false; }
-    let tms = this.timeSystem.GetGameTimeStamp();
-    let now =  this.timeSystem.RealTimeSecondsToGameTime(tms);
-    let today = GameTime.Days(now);
-    let last = this.timeSystem.RealTimeSecondsToGameTime(doses[0]);
-    let before = GameTime.Days(last);
-    let yesterday = today - 1;
-    let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(last))) >= 24);
-    let moreThan1Day = today >= (before + 2);
-    EI(id, s"size \(size)");
-    EI(id, s"e.g. dose \(doses[0])");
-    EI(id, s"last consumption \(before), today \(today), yesterday \(yesterday)");
-    if moreThan1Day || moreThan24Hours {
-      return true;
-    }
-    return false;
-  }
-
-  public func Quiet() -> Void {
-    E(s"quiet");
-    if IsDefined(this.hintSoundEvent) {
-      GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
-      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
-      E(s"quiet: stop sound and suppress noise");
-    }
-    this.quiet = true;
-    E(s"quiet: true");
-  }
-
-  public func Noisy() -> Void {
-    E(s"noisy");
-    if IsDefined(this.hintSoundEvent) {
-      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
-      E(s"noisy: no audio effect");
-    }
-    this.quiet = false;
-    E(s"noisy: false");
-  }
-
-  private func CanPlayOnomatopea() -> Bool {
-    if this.quiet {
-      E(s"cannot play onomatopea: quiet (from consuming)");
-      return false;
-    }
-    let scene = GameInstance.GetSceneSystem(this.player.GetGame());
-    let interface = scene.GetScriptInterface();
-    let chatting = interface.IsEntityInDialogue(this.player.GetEntityID());
-    if chatting {
-      E(s"cannot play onomatopea: currently chatting");
-      return false;
-    }
-    let swimming: Int32 = this.board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
-    if Equals(swimming, EnumInt(gamePSMSwimming.Diving)) {
-      E(s"cannot play onomatopea: currently diving");
-      return false;
-    }
-    E(s"can play onomatopea");
-    return true;
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
@@ -451,5 +420,20 @@ public class AddictedSystem extends ScriptableSystem {
       withdrawing = this.IsWithdrawing(id);
       EI(id, s"withdrawing ? \(withdrawing)");
     }
+  }
+
+  public func DebugTime() -> Void {
+    let timestamp = this.timeSystem.GetGameTimeStamp();
+
+    let gametime = this.timeSystem.GetGameTime();
+    let gametime_seconds = GameTime.GetSeconds(gametime);
+
+    let gt = Helper.MakeGameTime(Cast<Float>(gametime_seconds));
+    let tms = Helper.MakeGameTime(timestamp);
+
+    E(s"timestamp                           \(timestamp)");
+    E(s"gametime seconds                    \(gametime_seconds)");
+    E(s"recalculated from timestamp         \(tms)");
+    E(s"recalculated from gametime seconds  \(gt)");
   }
 }

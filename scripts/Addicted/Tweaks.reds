@@ -43,22 +43,8 @@ public func HasBiomonitor() -> Bool {
 
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
-  E(s"process status effects");
   let system = AddictedSystem.GetInstance(gameInstance);
-  let healing = false;
-  for record in actionEffects {
-    EI(record.GetID(), s"checking if healer action effect");
-    if Helper.IsHealer(record.GetID()) {
-      healing = true;
-      break;
-    }
-  }
-  let effects: array<wref<ObjectActionEffect_Record>>;
-  if healing {
-    effects = system.OnProcessHealerEffects(actionEffects);
-  } else {
-    effects = actionEffects;
-  }
+  let effects = system.OnProcessStatusEffects(actionEffects);
   wrappedMethod(effects, gameInstance);
 }
 
@@ -70,9 +56,8 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
 
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
-  E(s"consume item");
   let system = AddictedSystem.GetInstance(executor.GetGame());
-  system.Quiet();
+  system.OnConsumeItem();
   wrappedMethod(executor, itemID, fromInventory);
 }
 
@@ -105,5 +90,5 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
 
 @wrapMethod(RipperDocGameController)
 private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
-
+  E(s"equip cyberware");
 }

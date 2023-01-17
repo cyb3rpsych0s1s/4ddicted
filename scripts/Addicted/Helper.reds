@@ -334,4 +334,52 @@ public class Helper {
     }
     return id;
   }
+
+  public static func AppropriateHintRequest(id: TweakDBID, threshold: Threshold) -> ref<HintRequest> {
+    if Helper.IsSerious(threshold) {
+      let request: ref<HintRequest>;
+      if Helper.IsInhaler(id) {
+        request = new CoughingRequest();
+      }
+      // anabolic are also pills, but the opposite isn't true
+      let anabolic = Helper.IsAnabolic(id);
+      let pill = Helper.IsPill(id);
+      if anabolic || pill {
+        let random = RandRangeF(1, 10);
+        let above: Bool;
+        if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) {
+          above = random >= 7.;
+        } else {
+          above = random >= 9.;
+        }
+        if anabolic {
+          if above {
+            request = new VomitingRequest();
+          }
+          request = new BreatheringRequest();
+        } else {
+          if above {
+            request = new VomitingRequest();
+          }
+          request = new HeadAchingRequest();
+        }
+      }
+      if Helper.IsInjector(id) {
+        request = new AchingRequest();
+      }
+      request.threshold = threshold;
+      return request;
+    }
+    return null;
+  }
+
+  static public final func MakeGameTime(timestamp: Float) -> GameTime {
+    timestamp = Cast<Float>(RoundF(timestamp));
+    let days: Float = timestamp / 86400.;
+    let hours: Float = (timestamp % 86400.) / 3600.;
+    let minutes: Float = ((timestamp % 86400.) % 3600.) / 60.;
+    let seconds: Float = (((timestamp % 86400.) % 3600.) % 60.) / 60.;
+    let time = GameTime.MakeGameTime(RoundF(days), RoundF(hours), RoundF(minutes), RoundF(seconds));
+    return time;
+  }
 }

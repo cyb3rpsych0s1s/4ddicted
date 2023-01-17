@@ -40,3 +40,9 @@ public func DebugWithdrawing() -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame());
   system.DebugWithdrawing();
 }
+
+@addMethod(PlayerPuppet)
+public func DebugTime() -> Void {
+  let system = AddictedSystem.GetInstance(this.GetGame());
+  system.DebugTime();
+}
