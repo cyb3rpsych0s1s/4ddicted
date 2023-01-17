@@ -404,18 +404,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func DebugClear() -> Void {
     E(s"clear all consumptions...");
-    let size = this.consumptions.Size();
-    let ids = this.consumptions.Keys();
-    if size == 0 {
-      E(s"no consumption found!");
-      return;
-    } else {
-      for id in ids {
-        this.consumptions.Remove(id);
-      }
-      this.consumptions.Clear();
-      E(s"consumption cleaned!");
-    }
+    this.consumptions.Clear();
   }
 
   public func DebugWithdrawing() -> Void {

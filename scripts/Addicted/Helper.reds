@@ -51,7 +51,8 @@ public class Helper {
 
   public static func IsBooster(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
-    return StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "Booster");
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "Booster");
   }
 
   public static func IsInhaler(id: TweakDBID) -> Bool {
@@ -264,45 +265,56 @@ public class Helper {
   }
 
   public static func IsAlcohol(id: TweakDBID) -> Bool {
-    return Equals(id, t"AlcoholDebuff");
+    let str = TDBID.ToStringDEBUG(id);
+    return StrContains(str, "Alcohol");
   }
 
   public static func IsMaxDOC(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "FirstAidWhiff") { return true; }
-    return Helper.IsMaxDOCAction(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "FirstAidWhiff");
   }
 
   public static func IsBounceBack(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "BonesMcCoy70") { return true; }
-    return Helper.IsBounceBackAction(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "BonesMcCoy70");
   }
 
   public static func IsHealthBooster(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, "HealthBooster") { return true; }
-    return Helper.IsHealthBoosterAction(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "HealthBooster");
   }
 
   public static func IsBlackLace(id: TweakDBID) -> Bool {
-    return Equals(id, t"BaseStatusEffect.BlackLaceV0") || Equals(id, t"BaseStatusEffect.BlackLace");
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "BlackLace");
   }
 
   public static func IsCapacityBooster(id: TweakDBID) -> Bool {
-    return Equals(id, t"BaseStatusEffect.CarryCapacityBooster");
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "CarryCapacityBooster");
   }
 
   public static func IsStaminaBooster(id: TweakDBID) -> Bool {
-    return Equals(id, t"BaseStatusEffect.StaminaBooster");
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "StaminaBooster");
   }
 
   public static func IsMemoryBooster(id: TweakDBID) -> Bool {
-    return Equals(id, t"BaseStatusEffect.MemoryBooster");
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "MemoryBooster");
   }
 
   public static func IsOxyBooster(id: TweakDBID) -> Bool {
-    return Equals(id, t"BaseStatusEffect.OxyBooster");
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "OxyBooster");
   }
 
   private static func IsMaxDOCAction(id: TweakDBID) -> Bool {
