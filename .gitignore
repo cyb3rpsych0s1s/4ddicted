@@ -4,8 +4,8 @@ samples/
 **/.DS_Store
 book/
 saved.json
-!scripts/Addicted/
-scripts/
+scripts/mod_settings*
+scripts/TweakXL*
 archive/install_log.xml
 archive/Addicted.zip
 .VSCodeCounter
