@@ -86,7 +86,7 @@ public class Consumptions {
   private persistent let values: array<ref<Consumption>>;
 
   public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let base = Helper.EffectBaseName(key);
+    let base = Helper.ItemBaseName(key);
     if this.KeyExist(base) { return; }
     ArrayPush(this.values, value);
     ArrayPush(this.keys, base);
@@ -107,19 +107,19 @@ public class Consumptions {
     return -1;
   }
   public func Get(key: TweakDBID) -> ref<Consumption> {
-    let base = Helper.EffectBaseName(key);
+    let base = Helper.ItemBaseName(key);
     let idx = this.Index(base);
     if idx == -1 { return null; }
     return this.values[idx];
   }
   public func Set(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let base = Helper.EffectBaseName(key);
+    let base = Helper.ItemBaseName(key);
     let idx = this.Index(base);
     if idx == -1 { return; }
     this.values[idx] = value;
   }
   public func KeyExist(key: TweakDBID) -> Bool {
-    let base = Helper.EffectBaseName(key);
+    let base = Helper.ItemBaseName(key);
     for existing in this.keys {
       if existing == base {
         return true;
@@ -128,7 +128,7 @@ public class Consumptions {
     return false;
   }
   public func Remove(key: TweakDBID) -> Void {
-    let base = Helper.EffectBaseName(key);
+    let base = Helper.ItemBaseName(key);
     let idx = this.Index(base);
     if idx == -1 { return; }
     ArrayErase(this.keys, idx);

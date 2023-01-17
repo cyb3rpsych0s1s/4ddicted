@@ -74,7 +74,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
-    E(s"consume item");
+    E(s"consume item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     this.Quiet();
     let id = ItemID.GetTDBID(itemID);
     let before: Threshold;
@@ -168,9 +168,7 @@ public class AddictedSystem extends ScriptableSystem {
       let consumption: ref<Consumption> = this.consumptions.Get(id);
       let old = consumption.current;
       consumption.current = amount;
-      E(s"ARRAY DOSES BEFORE: \(ToString(consumption.doses))");
       ArrayPush(consumption.doses, now);
-      E(s"ARRAY DOSES AFTER: \(ToString(consumption.doses))");
       EI(id, s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
       return (amount > old) && Helper.IsInstant(id);
     } else {

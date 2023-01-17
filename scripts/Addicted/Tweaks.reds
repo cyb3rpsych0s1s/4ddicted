@@ -53,13 +53,22 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
   wrappedMethod(gameInstance);
 }
 
-// increase score on consumption
+// increase score on consumption (catch direct consumption from quick slot)
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
   let system = AddictedSystem.GetInstance(executor.GetGame());
   system.OnConsumeItem(itemID);
 
   wrappedMethod(executor, itemID, fromInventory);
+}
+
+// increase score on consumption (catch interaction in backpack)
+@wrapMethod(ItemActionsHelper)
+public final static func PerformItemAction(executor: wref<GameObject>, itemID: ItemID) -> Void {
+  let system = AddictedSystem.GetInstance(executor.GetGame());
+  system.OnConsumeItem(itemID);
+
+  wrappedMethod(executor, itemID);
 }
 
 @addMethod(StatusEffectEvent)

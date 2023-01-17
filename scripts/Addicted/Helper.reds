@@ -376,7 +376,7 @@ public class Helper {
     return out;
   }
 
-  public static func EffectBaseName(id: TweakDBID) -> TweakDBID {
+  public static func ItemBaseName(id: TweakDBID) -> TweakDBID {
     let str = TDBID.ToStringDEBUG(id);
     if StrContains(str, "NotablyWeakened") || StrContains(str, "SeverelyWeakened") {
       let base = StrReplace(str, "NotablyWeakened", "");
@@ -386,7 +386,8 @@ public class Helper {
     if StrContains(str, "BlackLace") {
       return TDBID.Create("Items.BlackLaceV0");
     }
-    return id;
+    let suffix = StrAfterFirst(str, ".");
+    return TDBID.Create("Items." + suffix);
   }
 
   public static func AppropriateHintRequest(id: TweakDBID, threshold: Threshold) -> ref<HintRequest> {
