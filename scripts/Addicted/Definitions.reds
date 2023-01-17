@@ -86,9 +86,10 @@ public class Consumptions {
   private persistent let values: array<ref<Consumption>>;
 
   public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
-    if this.KeyExist(key) { return; }
+    let base = Helper.EffectBaseName(key);
+    if this.KeyExist(base) { return; }
     ArrayPush(this.values, value);
-    ArrayPush(this.keys, key);
+    ArrayPush(this.keys, base);
   }
   private func Index(key: TweakDBID) -> Int32 {
     let idx = 0;
@@ -106,25 +107,29 @@ public class Consumptions {
     return -1;
   }
   public func Get(key: TweakDBID) -> ref<Consumption> {
-    let idx = this.Index(key);
+    let base = Helper.EffectBaseName(key);
+    let idx = this.Index(base);
     if idx == -1 { return null; }
     return this.values[idx];
   }
   public func Set(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(key);
+    let base = Helper.EffectBaseName(key);
+    let idx = this.Index(base);
     if idx == -1 { return; }
     this.values[idx] = value;
   }
   public func KeyExist(key: TweakDBID) -> Bool {
+    let base = Helper.EffectBaseName(key);
     for existing in this.keys {
-      if existing == key {
+      if existing == base {
         return true;
       }
     }
     return false;
   }
   public func Remove(key: TweakDBID) -> Void {
-    let idx = this.Index(key);
+    let base = Helper.EffectBaseName(key);
+    let idx = this.Index(base);
     if idx == -1 { return; }
     ArrayErase(this.keys, idx);
     ArrayErase(this.values, idx);
@@ -149,13 +154,6 @@ public class Consumption {
   public static func Create(id: TweakDBID, when: Float) -> ref<Consumption> {
     let consumption = new Consumption();
     consumption.current = Helper.Potency(id);
-    consumption.doses = [when];
-    return consumption;
-  }
-
-  public static func Cheat(id: TweakDBID, amount: Int32, when: Float) -> ref<Consumption> {
-    let consumption = new Consumption();
-    consumption.current = amount;
     consumption.doses = [when];
     return consumption;
   }

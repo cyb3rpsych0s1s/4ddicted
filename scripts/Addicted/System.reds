@@ -73,19 +73,33 @@ public class AddictedSystem extends ScriptableSystem {
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
   }
 
-  public func OnConsumeItem() -> Void {
+  public func OnConsumeItem(itemID: ItemID) -> Void {
     E(s"consume item");
     this.Quiet();
-  }
-
-  public func OnConsumed(id: TweakDBID) -> Void {
-    let std = Helper.EffectBaseName(id);
-    if this.consumptions.KeyExist(std) {
-      let consumption: ref<Consumption> = this.consumptions.Get(std);
-      let amount = Min(consumption.current + Helper.Potency(id), 100);
-      this.Consume(std, amount);
-    } else {
-      this.Consume(std, Helper.Potency(id));
+    let id = ItemID.GetTDBID(itemID);
+    let before: Threshold;
+    let after: Threshold;
+    let amount: Int32;
+    let hint: Bool;
+    if Helper.IsAddictive(id) {
+      if this.consumptions.KeyExist(id) {
+        let consumption: ref<Consumption> = this.consumptions.Get(id);
+        before = Helper.Threshold(consumption.current);
+        amount = Min(consumption.current + Helper.Potency(id), 100);
+        after = Helper.Threshold(amount); 
+        hint = this.Consume(id, amount);
+      } else {
+        before = Threshold.Clean;
+        amount = Helper.Potency(id);
+        after = Helper.Threshold(amount);
+        hint = this.Consume(id, amount);
+      }
+      if hint {
+        this.Hint(id);
+      }
+      if !Equals(EnumInt(before), EnumInt(after)) {
+        this.Warn(id, before, after);
+      }
     }
   }
 
@@ -96,7 +110,7 @@ public class AddictedSystem extends ScriptableSystem {
       FI(id, s"no consumption recorded while just dissipated");
       return;
     }
-    this.Hint(id, consumption);
+    this.Hint(id);
   }
 
   public func OnRested() -> Void {
@@ -147,30 +161,26 @@ public class AddictedSystem extends ScriptableSystem {
     this.ProcessHintRequest(request);
   }
 
-  private func Consume(id: TweakDBID, amount: Int32) -> Void {
+  private func Consume(id: TweakDBID, amount: Int32) -> Bool {
+    E(s"consume");
     let now = this.timeSystem.GetGameTimeStamp();
-    let std = Helper.EffectBaseName(id);
-    if this.consumptions.KeyExist(std) {
-      let consumption: ref<Consumption> = this.consumptions.Get(std);
+    if this.consumptions.KeyExist(id) {
+      let consumption: ref<Consumption> = this.consumptions.Get(id);
       let old = consumption.current;
-      let before = Helper.Threshold(old);
       consumption.current = amount;
-      let after = Helper.Threshold(consumption.current);
+      E(s"ARRAY DOSES BEFORE: \(ToString(consumption.doses))");
       ArrayPush(consumption.doses, now);
-      EI(id, s"additional consumption \(TDBID.ToStringDEBUG(std)) \(ToString(old)) -> \(ToString(consumption.current))");
-      if (amount > old) && Helper.IsInstant(id) {
-        this.Hint(id, consumption);
-      }
-      if !Equals(EnumInt(before), EnumInt(after)) {
-        this.Warn(id, before, after);
-      }
+      E(s"ARRAY DOSES AFTER: \(ToString(consumption.doses))");
+      EI(id, s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
+      return (amount > old) && Helper.IsInstant(id);
     } else {
-      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(std))");
-      this.consumptions.Insert(std, Consumption.Create(id, now));
+      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(id))");
+      this.consumptions.Insert(id, Consumption.Create(id, now));
+      return true;
     }
   }
 
-  public func Hint(id: TweakDBID, consumption: ref<Consumption>) -> Void {
+  public func Hint(id: TweakDBID) -> Void {
     let consumable = Helper.Consumable(id);
     let specific = this.consumptions.Get(id);
     let average = this.AverageConsumption(consumable);
@@ -183,7 +193,7 @@ public class AddictedSystem extends ScriptableSystem {
       threshold = averageThreshold;
     }
     E(s"consumed \(ToString(consumable))" + "\n" +
-      s"current consumption \(ToString(specific))" + "\n" +
+      s"current consumption \(ToString(specific.current))" + "\n" +
       s"\(ToString(specificThreshold)) addicted (version threshold)" + "\n" +
       s"\(ToString(averageThreshold)) addicted (consumable threshold)"
     );
@@ -216,24 +226,20 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Quiet() -> Void {
-    E(s"quiet");
+    E(s"QUIET");
     if IsDefined(this.hintSoundEvent) {
       GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
-      E(s"quiet: stop sound and suppress noise");
     }
     this.quiet = true;
-    E(s"quiet: true");
   }
 
   public func Noisy() -> Void {
-    E(s"noisy");
+    E(s"NOISY");
     if IsDefined(this.hintSoundEvent) {
       this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
-      E(s"noisy: no audio effect");
     }
     this.quiet = false;
-    E(s"noisy: false");
   }
 
   /// play an onomatopea as a hint to the player when reaching notably or severely addicted
@@ -292,14 +298,15 @@ public class AddictedSystem extends ScriptableSystem {
     let tms = this.timeSystem.GetGameTimeStamp();
     let now =  Helper.MakeGameTime(tms);
     let today = GameTime.Days(now);
-    let last = Helper.MakeGameTime(doses[0]);
-    let before = GameTime.Days(last);
+    let last = ArrayLast(doses);
+    let previous = Helper.MakeGameTime(last);
+    let previousDay = GameTime.Days(previous);
     let yesterday = today - 1;
-    let moreThan24Hours = (before == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(last))) >= 24);
-    let moreThan1Day = today >= (before + 2);
+    let moreThan24Hours = (previousDay == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(previous))) >= 24);
+    let moreThan1Day = today >= (previousDay + 2);
     EI(id, s"size \(size)");
     EI(id, s"e.g. dose \(doses[0])");
-    EI(id, s"last consumption \(before), today \(today), yesterday \(yesterday)");
+    EI(id, s"last consumption \(previousDay), today \(today), yesterday \(yesterday)");
     if moreThan1Day || moreThan24Hours {
       return true;
     }

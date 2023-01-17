@@ -4,24 +4,22 @@ import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI}
 
+
+// decrease score on rest
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
     wrappedMethod(evt);
     let system = AddictedSystem.GetInstance(this.GetGame());
     let id = evt.staticData.GetID();
     EI(id, s"status effect applied");
-    // increase score on consumption
-    if evt.isNewApplication && evt.IsAddictive() {
-      EI(id, s"consumed addictive substance");
-      system.OnConsumed(id);
-    }
-    // decrease score on rest
+    
     if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
       EI(id, s"housing");
       system.OnRested();
     }
 }
 
+// play hints on dissipation
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     let system = AddictedSystem.GetInstance(this.GetGame());
@@ -30,7 +28,7 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     if evt.IsAddictive() {
       EI(id, s"addictive substance dissipated");
       system.OnDissipated(id);
-      if Helper.IsInstant(id) { system.Noisy(); }
+      system.Noisy();
     }
     return wrappedMethod(evt);
 }
@@ -41,6 +39,7 @@ public func HasBiomonitor() -> Bool {
   return system.IsEquipped(this, ItemID.FromTDBID(t"Items.generic_selling_biomonitor"));
 }
 
+// alter some effects based on addiction threshold
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
   let system = AddictedSystem.GetInstance(gameInstance);
@@ -54,10 +53,12 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
   wrappedMethod(gameInstance);
 }
 
+// increase score on consumption
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
   let system = AddictedSystem.GetInstance(executor.GetGame());
-  system.OnConsumeItem();
+  system.OnConsumeItem(itemID);
+
   wrappedMethod(executor, itemID, fromInventory);
 }
 

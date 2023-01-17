@@ -72,6 +72,33 @@ public class Helper {
     return Helper.IsCapacityBooster(id) || Helper.IsStaminaBooster(id);
   }
 
+  public static func IsHealerAction(id: TweakDBID) -> Bool {
+    return Helper.IsMaxDOC(id) || Helper.IsBounceBack(id) || Helper.IsHealthBooster(id);
+  }
+
+  public static func IsBoosterAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    return StrBeginsWith(str, "Items") && StrContains(str, "Booster");
+  }
+
+  public static func IsInhalerAction(id: TweakDBID) -> Bool {
+    return Helper.IsMaxDOCAction(id) || Helper.IsBlackLaceAction(id);
+  }
+
+  public static func IsInjectorAction(id: TweakDBID) -> Bool {
+    return Helper.IsBounceBackAction(id);
+  }
+
+  public static func IsPillAction(id: TweakDBID) -> Bool {
+    return Helper.IsCapacityBooster(id) ||
+    Helper.IsStaminaBoosterAction(id) ||
+    Helper.IsMemoryBoosterAction(id);
+  }
+
+  public static func IsAnabolicAction(id: TweakDBID) -> Bool {
+    return Helper.IsCapacityBoosterAction(id) || Helper.IsStaminaBoosterAction(id);
+  }
+
   public static func IsInstant(id: TweakDBID) -> Bool {
     let effect = TweakDBInterface.GetRecord(id);
     if effect.IsA(n"gamedataStatusEffect_Record") {
@@ -259,7 +286,7 @@ public class Helper {
   }
 
   public static func IsBlackLace(id: TweakDBID) -> Bool {
-    return Equals(id, t"BaseStatusEffect.BlackLaceV0");
+    return Equals(id, t"BaseStatusEffect.BlackLaceV0") || Equals(id, t"BaseStatusEffect.BlackLace");
   }
 
   public static func IsCapacityBooster(id: TweakDBID) -> Bool {
@@ -310,6 +337,30 @@ public class Helper {
     return false;
   }
 
+  private static func IsBlackLaceAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "BlackLace") { return true; }
+    return false;
+  }
+
+  private static func IsCapacityBoosterAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "CarryCapacityBooster") { return true; }
+    return false;
+  }
+
+  private static func IsStaminaBoosterAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "StaminaBooster") { return true; }
+    return false;
+  }
+
+  private static func IsMemoryBoosterAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrContains(str, "MemoryBooster") { return true; }
+    return false;
+  }
+
   private static func EffectsByName(name: String) -> array<TweakDBID> {
     let records = TweakDBInterface.GetRecords(n"StatusEffect_Record");
     let out: array<TweakDBID> = [];
@@ -331,6 +382,9 @@ public class Helper {
       let base = StrReplace(str, "NotablyWeakened", "");
       base = StrReplace(str, "SeverelyWeakened", "");
       return TDBID.Create(base);
+    }
+    if StrContains(str, "BlackLace") {
+      return TDBID.Create("Items.BlackLaceV0");
     }
     return id;
   }
