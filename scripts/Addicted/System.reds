@@ -104,7 +104,6 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
-    if this.Hinting() { return; }
     let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
     if !IsDefined(consumption) {
       FI(id, s"no consumption recorded while just dissipated");
@@ -179,6 +178,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Hint(id: TweakDBID) -> Void {
+    if this.Hinting() { return; }
     let consumable = Helper.Consumable(id);
     let specific = this.consumptions.Get(id);
     let average = this.AverageConsumption(consumable);
@@ -247,10 +247,10 @@ public class AddictedSystem extends ScriptableSystem {
     if can {
       if !IsDefined(this.hintSoundEvent) {
         this.hintSoundEvent = new PlaySoundEvent();
+        let sound = request.Sound();
+        this.hintSoundEvent.soundEvent = sound;
+        GameObject.PlaySoundEvent(this.player, sound);
       }
-      let sound = request.Sound();
-      this.hintSoundEvent.soundEvent = sound;
-      GameObject.PlaySoundEvent(this.player, sound);
       request.times += 1;
     } else {
       request.until += request.Duration() * 1.5;
@@ -260,13 +260,10 @@ public class AddictedSystem extends ScriptableSystem {
     if (now > request.until) || (request.times >= Cast<Int32>(request.AtMost())) {
       this.CancelHintRequest();
       if IsDefined(this.hintSoundEvent) {
-        if request.IsLoop() {
-          GameObject.BreakReplicatedEffectLoopEvent(this.player, request.Sound());
-        }
-      }
-      if IsDefined(this.hintSoundEvent) {
         GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
       }
+    } else {
+      this.RescheduleHintRequest(request);
     }
   }
 

@@ -73,12 +73,10 @@ public class BreatheringRequest extends HintRequest {
 public class HeadAchingRequest extends HintRequest {
   public func Onomatopea() -> Onomatopea { return Onomatopea.Headache; }
   public func Sound() -> CName {
-    if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
-      return n"q101_sc_03_heart_loop";
-    }
-    return n"q004_sc_04a_heartbeat_rev";
+    return n"q101_sc_03_heart_loop";
   }
-  public func IsLoop() -> Bool { return EnumInt(this.threshold) == EnumInt(Threshold.Severely); }
+  public func IsLoop() -> Bool { return true; }
+  public func Duration() -> Float { return 15.; }
 }
 
 public class Consumptions {

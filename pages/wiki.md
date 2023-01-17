@@ -63,6 +63,14 @@ Game.AddToInventory("Items.FirstAidWhiffV0", 10)
 Game.AddToInventory("Items.BlackLaceV0", 10)
 ```
 
+## quickly call methods
+
+```lua
+GameObject.PlaySoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.StopSoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.BreakReplicatedEffectLoopEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+```
+
 ### autocompletion
 
 REDscripts functions annotated with `@if` conditional compilation macros won't be evaluated.
