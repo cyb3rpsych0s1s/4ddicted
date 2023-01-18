@@ -101,9 +101,17 @@ public class Helper {
   }
 
   public static func IsInstant(id: TweakDBID) -> Bool {
-    let effect = TweakDBInterface.GetRecord(id);
-    if effect.IsA(n"gamedataStatusEffect_Record") {
-      let status = effect as StatusEffect_Record;
+    let record = TweakDBInterface.GetRecord(id);
+    let effect = Helper.IsInstantEffect(record);
+    if effect { return true; }
+    let item = Helper.IsInstantItem(record);
+    if item { return true; }
+    return false;
+  }
+
+  public static func IsInstantEffect(record: ref<TweakDBRecord>) -> Bool {
+    if record.IsA(n"gamedataStatusEffect_Record") {
+      let status = record as StatusEffect_Record;
       let duration: wref<StatModifierGroup_Record> = status.Duration();
       let records: array<wref<StatModifier_Record>>;
       let stat: wref<Stat_Record>;
@@ -118,6 +126,33 @@ public class Helper {
           modifier = record as ConstantStatModifier_Record;
           value = modifier.Value();
           return value < 1.;
+        }
+      }
+    }
+    return false;
+  }
+
+  public static func IsInstantItem(record: ref<TweakDBRecord>) -> Bool {
+    if record.IsA(n"gamedataConsumableItem_Record") {
+      let item = record as Item_Record;
+      let size = item.GetObjectActionsCount();
+      if size == 0 { return false ;}
+      let actions: array<wref<ObjectAction_Record>> = [];
+      let effectors: array<wref<ObjectActionEffect_Record>> = [];
+      let status: wref<StatusEffect_Record>;
+      let found: Bool = false;
+      item.ObjectActions(actions);
+      for action in actions {
+        if Equals(action.ActionName(), n"Consume") {
+          effectors = [];
+          action.CompletionEffects(effectors);
+          for effector in effectors {
+            status = effector.StatusEffect();
+            found = Helper.IsInstantEffect(status);
+            if found {
+              return true;
+            }
+          }
         }
       }
     }

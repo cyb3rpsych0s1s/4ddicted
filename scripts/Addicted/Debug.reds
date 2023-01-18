@@ -48,3 +48,10 @@ public func DebugTime() -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame());
   system.DebugTime();
 }
+
+// use like: Game.GetPlayer():Checkup();
+@addMethod(PlayerPuppet)
+public func Checkup() -> Void {
+  let system = AddictedSystem.GetInstance(this.GetGame());
+  system.Checkup();
+}

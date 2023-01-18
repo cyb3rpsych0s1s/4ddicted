@@ -8,6 +8,7 @@ public class HintProgressCallback extends DelayCallback {
   public let owner: wref<AudioManager>;
   public func Call() -> Void {
     E(s"on hint progress callback ...");
+    this.owner.Update();
   }
 }
 
@@ -109,6 +110,7 @@ public class AudioManager extends IScriptable {
   }
 
   public func Update() -> Void {
+    E(s"on update");
     if ArraySize(this.oneshot) > 0 {
       let now = GameInstance
         .GetTimeSystem(this.owner.GetGame())

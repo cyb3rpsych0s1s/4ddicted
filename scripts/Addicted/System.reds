@@ -103,6 +103,7 @@ public class AddictedSystem extends ScriptableSystem {
         after = Helper.Threshold(amount);
         hint = this.Consume(id, amount);
       }
+      E(s"consumption hint: \(ToString(hint))");
       if hint {
         this.Hint(id);
       }
@@ -187,6 +188,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Hint(id: TweakDBID) -> Void {
+    E(s"hint");
     let consumable = Helper.Consumable(id);
     let specific = this.consumptions.Get(id);
     let average = this.AverageConsumption(consumable);
@@ -253,9 +255,9 @@ public class AddictedSystem extends ScriptableSystem {
     let yesterday = today - 1;
     let moreThan24Hours = (previousDay == yesterday) && ((GameTime.Hours(now) + (24 - GameTime.Hours(previous))) >= 24);
     let moreThan1Day = today >= (previousDay + 2);
-    EI(id, s"size \(size)");
-    EI(id, s"e.g. dose \(doses[0])");
-    EI(id, s"last consumption \(previousDay), today \(today), yesterday \(yesterday)");
+    // EI(id, s"size \(size)");
+    // EI(id, s"e.g. dose \(doses[0])");
+    // EI(id, s"last consumption \(previousDay), today \(today), yesterday \(yesterday)");
     if moreThan1Day || moreThan24Hours {
       return true;
     }
@@ -328,6 +330,27 @@ public class AddictedSystem extends ScriptableSystem {
       consumption += 1;
     }
     this.Consume(id, consumption);
+  }
+
+  public func Checkup() -> Void {
+    E(s"checkup");
+    let size = this.consumptions.Size();
+    let ids = this.consumptions.Keys();
+    if size == 0 {
+      E(s"no consumption found!");
+      return;
+    }
+    for id in ids {
+      let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
+      if IsDefined(consumption) {
+        let size = ArraySize(consumption.doses);
+        let threshold = Helper.Threshold(consumption.current);
+        let withdrawing = this.IsWithdrawing(id);
+        EI(id, s"current: \(ToString(consumption.current)), doses: \(ToString(size)), threshold \(ToString(threshold)), withdrawing \(ToString(withdrawing))");
+      } else {
+        FI(id, s"consumption found empty");
+      }
+    }
   }
 
   public func DebugThresholds() -> Void {
