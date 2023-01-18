@@ -3,7 +3,7 @@ module Addicted
 import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI}
-
+import Addicted.Manager.{AudioManager,CheckSoundEvent}
 
 // decrease score on rest
 @wrapMethod(PlayerPuppet)
@@ -12,6 +12,9 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     let system = AddictedSystem.GetInstance(this.GetGame());
     let id = evt.staticData.GetID();
     EI(id, s"status effect applied");
+
+    let board: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
+    board.SetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, false);
     
     if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
       EI(id, s"housing");
@@ -56,8 +59,15 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
 // increase score on consumption (catch direct consumption from quick slot)
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
-  let system = AddictedSystem.GetInstance(executor.GetGame());
-  system.OnConsumeItem(itemID);
+  E(s"top level consume item");
+  let player = executor as PlayerPuppet;
+  E(s"is defined player ? \(ToString(IsDefined(player)))");
+  if IsDefined(player) {
+    let board: ref<IBlackboard> = player.GetPlayerStateMachineBlackboard();
+    board.SetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, true);
+    let system = AddictedSystem.GetInstance(executor.GetGame());
+    system.OnConsumeItem(itemID);
+  } else { E(s"undefined player (consume item)"); }
 
   wrappedMethod(executor, itemID, fromInventory);
 }
@@ -101,4 +111,34 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
 @wrapMethod(RipperDocGameController)
 private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
   E(s"equip cyberware");
+}
+
+@addMethod(PlayerPuppet)
+protected cb func OnCheckSoundEvent(evt: ref<CheckSoundEvent>) -> Bool {
+  return true;
+}
+
+@addField(PlayerStateMachineDef)
+public let IsInDialogue: BlackboardID_Bool;
+
+@addField(PlayerStateMachineDef)
+public let IsConsuming: BlackboardID_Bool;
+
+@addMethod(PlayerPuppet)
+public func CanPlayOnomatopea() -> Bool {
+  let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(this.GetGame()) as IBlackboard;
+  let swimming = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
+  let diving = Equals(swimming, EnumInt(gamePSMSwimming.Diving));
+  if diving {
+    E(s"can only play ambient onomatopea: currently diving");
+    return false;
+  }
+  let scene = GameInstance.GetSceneSystem(this.GetGame());
+  let interface = scene.GetScriptInterface();
+  let chatting = interface.IsEntityInDialogue(this.GetEntityID());
+  if chatting {
+    E(s"cannot play onomatopea: currently chatting");
+    return false;
+  }
+  return true;
 }

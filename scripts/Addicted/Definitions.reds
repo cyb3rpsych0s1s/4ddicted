@@ -200,3 +200,9 @@ enum Kind {
 enum Addiction {
   Healers = 0,
 }
+
+enum PlaySoundPolicy {
+  None = 0,
+  AmbientOnly = 1,
+  All = 2,
+}

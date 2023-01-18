@@ -16,6 +16,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let hintSoundEvent: ref<PlaySoundEvent>;
 
   private let healerManager: ref<HealerManager>;
+  private let onoManager: ref<AudioManager>;
 
   private persistent let consumptions: ref<Consumptions>;
 
@@ -29,7 +30,13 @@ public class AddictedSystem extends ScriptableSystem {
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
-      this.board = this.player.GetPlayerStateMachineBlackboard();
+      this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
+
+      this.onoManager = new AudioManager();
+      this.onoManager.Register(this.player);
+
+      // let evt: ref<CheckSoundEvent> = new CheckSoundEvent();
+      // this.delaySystem.TickOnEvent(this.player, evt, 3.);
 
       this.RefreshConfig();
     } else { F(s"no player found!"); }
@@ -50,6 +57,10 @@ public class AddictedSystem extends ScriptableSystem {
   private func OnDetach() -> Void {
     E(s"on detach system");
 
+    this.onoManager.Unregister();
+    this.healerManager = null;
+    this.onoManager = null;
+
     ModSettings.UnregisterListenerToModifications(this);
   }
 
@@ -57,6 +68,8 @@ public class AddictedSystem extends ScriptableSystem {
     E(s"on restored system");
 
     this.healerManager.Initialize(this);
+    this.onoManager = new AudioManager();
+    this.onoManager.Register(this.player);
   }
 
   public func RefreshConfig() -> Void {

@@ -258,7 +258,7 @@ public class Manager extends IScriptable {
     let board: ref<IBlackboard> = GameInstance
       .GetBlackboardSystem(playerPuppet.GetGame());
 
-    board.RegisterListenerBool(GetAllBlackboardDefs().UIGameData.Popup_IsModal, this, n"OnPopupModalChanged");
+    this.listener = board.RegisterListenerBool(GetAllBlackboardDefs().UIGameData.Popup_IsModal, this, n"OnPopupModalChanged");
   }
   // don't forget to unregister when finished
   private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
