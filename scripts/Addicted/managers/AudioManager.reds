@@ -4,16 +4,7 @@ import Addicted.System.AddictedSystem
 import Addicted.Utils.E
 import Addicted.*
 
-public class CheckSoundEvent extends TickableEvent {}
-
-// @addField(PlayerPuppet)
-// public let onomatopeaEventID: DelayID;
-
-// public class PlayOnomotopeaEvent extends Event {
-//   public let player: wref<PlayerPuppet>;
-//   public let sound: CName;
-//   public let duration: Float;
-// }
+public class HintProgressCallback extends DelayCallback {}
 
 public class AudioManager extends IScriptable {
 
@@ -28,10 +19,88 @@ public class AudioManager extends IScriptable {
   private let onChatting: ref<CallbackHandle>;
   private let board: ref<IBlackboard>;
 
+  private let ambient: ref<HintRequest>;
+  private let oneshot: array<ref<HintRequest>>;
+  private let ambientSFX: ref<PlaySoundEvent>;
+  private let oneshotSFX: array<ref<PlaySoundEvent>>;
+
+  private func Loop(request: ref<HintRequest>) -> Void {
+    if IsDefined(this.ambient) {
+      let sfx = new PlaySoundEvent();
+      sfx.soundName = request.sound;
+      let lastSFX = this.ambientSFX;
+      this.ambientSFX = sfx;
+      GameInstance.GetAudioSystem(this.owner.GetGame())
+        .Switch(lastSFX.soundName, sfx.soundName, this.owner, n"Addicted");
+    }
+    else
+    {
+      let sfx = new PlaySoundEvent();
+      sfx.soundName = request.sound;
+      GameInstance.GetAudioSystem(this.owner.GetGame())
+        .Play(sfx.soundName, this.owner, n"Addicted");
+    }
+  }
+  private func Add(request: ref<HintRequest>) -> Void {
+    let sfx = new PlaySoundEvent();
+    sfx.soundName = request.sound;
+    ArrayPush(this.oneshot, request);
+    ArrayPush(this.oneshotSFX, sfx);
+    GameInstance.GetAudioSystem(this.owner.GetGame())
+      .Play(sfx.soundName, this.owner, n"Addicted");
+  }
+  private func Augment(request: ref<HintRequest>) -> Bool {
+    let matches = false;
+    for shot in this.oneshot {
+      if shot.sound == request.sound {
+        if request.until > shot.until {
+          shot.until = request.until;
+        }
+        if shot.times <= 3 {
+          shot.times += 1;
+        }
+        matches = true;
+        break;
+      }
+    }
+    return matches;
+  }
+  private func SwapLast(request: ref<HintRequest>) -> Void {
+    let sfx = new PlaySoundEvent();
+    sfx.soundName = request.sound;
+    let lastRequest = ArrayPop(this.oneshot);
+    let lastSFX = ArrayPop(this.oneshotSFX);
+    GameInstance.GetAudioSystem(this.owner.GetGame())
+      .Switch(lastSFX.soundName, sfx.soundName, this.owner, n"Addicted");
+  }
+
+  public func Hint(request: ref<HintRequest>) -> Void {
+    if request.IsLoop() {
+      this.Loop(request);
+    }
+    else
+    {
+      if ArraySize(this.oneshot) == 0 {
+        this.Add(request);
+      }
+      if ArraySize(this.oneshot) == 1 {
+        let matches = this.Augment(request);
+        if !matches {
+          this.Add(request);
+        }
+      }
+      if ArraySize(this.oneshot) == 2 {
+        let matches = this.Augment(request);
+        if !matches {
+          this.SwapLast(request);
+        }
+      }
+    }
+  }
+
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register audio manager");
     this.owner = player;
-    E(s"register listeners...");
     this.board = this.owner.GetPlayerStateMachineBlackboard();
     E(s"board is defined ? \(IsDefined(this.board))");
     if IsDefined(this.board) {
@@ -63,12 +132,19 @@ public class AudioManager extends IScriptable {
     switch(policy) {
       case PlaySoundPolicy.AmbientOnly:
         E(s"policy to AMBIENT_ONLY");
-        break;
-      case PlaySoundPolicy.None:
-        E(s"policy to NONE");
+        if ArraySize(this.oneshotSFX) > 0 {
+          for sfx in this.oneshotSFX {
+            sfx.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
+          }
+        }
         break;
       default:
         E(s"policy to ALL");
+        if ArraySize(this.oneshotSFX) > 0 {
+          for sfx in this.oneshotSFX {
+            sfx.SetStatusEffect(ESoundStatusEffects.NONE);
+          }
+        }
         break;
     }
   }

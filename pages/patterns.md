@@ -242,6 +242,8 @@ protected cb func OnGameAttached() -> Bool {
 
 ## Blackboards
 
+// TODO: DOUBLE CHECK
+
 Blackboards act as a global storage for variables.
 Other parts of the code can get, set or listen to blackboard entries to be notified of changes.
 
