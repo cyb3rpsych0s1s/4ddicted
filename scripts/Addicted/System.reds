@@ -12,9 +12,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let config: ref<AddictedConfig>;
 
-  private let hintDelayID: DelayID;
-  private let hintSoundEvent: ref<PlaySoundEvent>;
-
   private let healerManager: ref<HealerManager>;
   private let onoManager: ref<AudioManager>;
 
@@ -88,7 +85,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
     E(s"consume item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
-    this.Quiet();
     let id = ItemID.GetTDBID(itemID);
     let before: Threshold;
     let after: Threshold;
@@ -191,7 +187,6 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Hint(id: TweakDBID) -> Void {
-    if this.Hinting() { return; }
     let consumable = Helper.Consumable(id);
     let specific = this.consumptions.Get(id);
     let average = this.AverageConsumption(consumable);
@@ -210,7 +205,7 @@ public class AddictedSystem extends ScriptableSystem {
     );
     let request = Helper.AppropriateHintRequest(id, threshold);
     if IsDefined(request) {
-      this.RescheduleHintRequest(request);
+      this.ProcessHintRequest(request);
     }
   }
 
@@ -236,64 +231,10 @@ public class AddictedSystem extends ScriptableSystem {
     GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(toast), true);
   }
 
-  public func Quiet() -> Void {
-    E(s"QUIET");
-    if IsDefined(this.hintSoundEvent) {
-      GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
-      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
-    }
-    this.quiet = true;
-  }
-
-  public func Noisy() -> Void {
-    E(s"NOISY");
-    if IsDefined(this.hintSoundEvent) {
-      this.hintSoundEvent.SetStatusEffect(ESoundStatusEffects.NONE);
-    }
-    this.quiet = false;
-  }
-
   /// play an onomatopea as a hint to the player when reaching notably or severely addicted
   /// also randomly reschedule if in timeframe
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    let can = this.CanPlayOnomatopea();
-    if can {
-      if !IsDefined(this.hintSoundEvent) {
-        this.hintSoundEvent = new PlaySoundEvent();
-        let sound = request.Sound();
-        this.hintSoundEvent.soundEvent = sound;
-        GameObject.PlaySoundEvent(this.player, sound);
-      }
-      request.times += 1;
-    } else {
-      request.until += request.Duration() * 1.5;
-    }
-    let now = this.timeSystem.GetGameTimeStamp();
-    E(s"process hint request: can \(ToString(can)), now \(ToString(now)) <= \(ToString(request.until)) (\(ToString(request.times)) times)");
-    if (now > request.until) || (request.times >= Cast<Int32>(request.AtMost())) {
-      this.CancelHintRequest();
-      if IsDefined(this.hintSoundEvent) {
-        GameObject.StopSoundEvent(this.player, this.hintSoundEvent.soundEvent);
-      }
-    } else {
-      this.RescheduleHintRequest(request);
-    }
-  }
-
-  private func RescheduleHintRequest(request: ref<HintRequest>) -> Void {
-    if this.Hinting() {
-      this.CancelHintRequest();
-    }
-    let now = this.timeSystem.GetGameTimeStamp();
-    let delay = RandRangeF(3, 5);
-    request.until = now + delay + request.TotalTime();
-    this.hintDelayID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
-  }
-
-  private func CancelHintRequest() -> Void {
-    this.delaySystem.CancelDelay(this.hintDelayID);
-    this.delaySystem.CancelCallback(this.hintDelayID);
-    this.hintDelayID = GetInvalidDelayID();
+    this.onoManager.Hint(request);
   }
 
   /// if hasn't consumed for a day or more
@@ -319,10 +260,6 @@ public class AddictedSystem extends ScriptableSystem {
       return true;
     }
     return false;
-  }
-
-  public func Hinting() -> Bool {
-    return !Equals(this.hintDelayID, GetInvalidDelayID());
   }
 
   private func CanPlayOnomatopea() -> Bool {

@@ -30,7 +30,6 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     if evt.IsAddictive() {
       EI(id, s"addictive substance dissipated");
       system.OnDissipated(id);
-      system.Noisy();
     }
     return wrappedMethod(evt);
 }
