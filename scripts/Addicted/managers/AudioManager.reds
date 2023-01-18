@@ -4,7 +4,12 @@ import Addicted.System.AddictedSystem
 import Addicted.Utils.E
 import Addicted.*
 
-public class HintProgressCallback extends DelayCallback {}
+public class HintProgressCallback extends DelayCallback {
+  public let caller: wref<AudioManager>;
+  public func Call() -> Void {
+    E(s"on hint progress callback ...");
+  }
+}
 
 public class AudioManager extends IScriptable {
 
@@ -24,11 +29,14 @@ public class AudioManager extends IScriptable {
   private let ambientSFX: ref<PlaySoundEvent>;
   private let oneshotSFX: array<ref<PlaySoundEvent>>;
 
+  private let callbackID: DelayID;
+
   private func Loop(request: ref<HintRequest>) -> Void {
     if IsDefined(this.ambient) {
       let sfx = new PlaySoundEvent();
       sfx.soundName = request.sound;
       let lastSFX = this.ambientSFX;
+      this.ambient = request;
       this.ambientSFX = sfx;
       GameInstance.GetAudioSystem(this.owner.GetGame())
         .Switch(lastSFX.soundName, sfx.soundName, this.owner, n"Addicted");
@@ -37,6 +45,8 @@ public class AudioManager extends IScriptable {
     {
       let sfx = new PlaySoundEvent();
       sfx.soundName = request.sound;
+      this.ambient = request;
+      this.ambientSFX = sfx;
       GameInstance.GetAudioSystem(this.owner.GetGame())
         .Play(sfx.soundName, this.owner, n"Addicted");
     }
@@ -95,6 +105,46 @@ public class AudioManager extends IScriptable {
           this.SwapLast(request);
         }
       }
+    }
+    this.Interrupt();
+    this.Schedule();
+  }
+
+  private func Interrupt() -> Void {
+    if IsDefined(this.callbackID) && !Equals(this.callbackID, GetInvalidID()) {
+      GameInstance.GetDelaySystem(this.owner.GetGame())
+      .CancelCallback(this.callbackID);
+    }
+  }
+
+  private func Schedule() {
+    let callback: ref<HintProgressCallback> = new HintProgressCallback();
+    callback.owner = this;
+    this.callbackID = GameInstance.GetDelaySystem(this.owner.GetGame())
+      .DelayCallback(callback, 3, true);
+  }
+
+  public func Update() -> Void {
+    if ArraySize(this.oneshot) > 0 {
+      let now = GameInstance
+        .GetTimeSystem(this.owner.GetGame())
+        .GetGameTimeStamp();
+      let size = ArraySize(this.oneshot);
+      if size == 2 {
+        if this.oneshot[1].times == 3 || this.oneshot[1].until <= now {
+          ArrayPop(this.oneshot);
+          ArrayPop(this.oneshotSFX);
+        }
+      }
+      if this.oneshot[0].times == 3 || this.oneshot[0].until <= now {
+        ArrayPop(this.oneshot);
+        ArrayPop(this.oneshotSFX);
+      }
+    }
+    if ArraySize(this.oneshot) == 0 {
+      this.Interrupt();
+    } else {
+      this.Schedule();
     }
   }
 
