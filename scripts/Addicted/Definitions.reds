@@ -202,7 +202,6 @@ enum Addiction {
 }
 
 enum PlaySoundPolicy {
-  None = 0,
+  All = 0,
   AmbientOnly = 1,
-  All = 2,
 }
