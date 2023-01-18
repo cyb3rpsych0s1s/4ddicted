@@ -10,8 +10,16 @@ let v: LocKey = l"MyMod-Setting-Desc";
 
 ```swift
 let v: String = NameToString(n"Debuff");
+let v: Bool = IsNameValid(n"Debuff");
+
+let v: TweakDBID = TDBID.None();
 let v: TweakDBID = TDBID.Create("Items.BlackLaceV0");
+let v: Bool = TDBID.IsValid(t"Items.BlackLaceV0");
+let v: Uint64 = TDBID.ToNumber(t"Items.BlackLaceV0");
 let v: String = TDBID.ToStringDEBUG(t"Items.BlackLaceV0");
+
+let v: String = ItemID.ToDebugString(someItemID);
+let v: Bool = ItemID.IsDefined(someItemID);
 let v: TweakDBID = ItemID.GetTDBID(someItemID);
 let v: ItemID = ItemID.FromTDBID(t"Items.FirstAidWhiffV0");
 
