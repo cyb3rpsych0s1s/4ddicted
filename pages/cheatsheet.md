@@ -27,3 +27,8 @@ let system: ICooldownSystem = Game.ICooldownSystem();
 let v: Int32 = system.GetCIDByItemID(someItemID);
 let v: Int32 = system.GetCIDByRecord(t"BaseStatusEffect.HealthBooster");
 ```
+
+```swift
+let delay: DelayID = GameInstance.GetDelaySystem(player.GetGame()).DelayCallback();
+let defined: Bool = Equals(delay, GetInvalidDelayID());
+```

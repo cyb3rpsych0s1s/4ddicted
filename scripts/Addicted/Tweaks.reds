@@ -3,7 +3,6 @@ module Addicted
 import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI}
-import Addicted.Manager.{AudioManager,CheckSoundEvent}
 
 // decrease score on rest
 @wrapMethod(PlayerPuppet)
@@ -111,11 +110,6 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
 @wrapMethod(RipperDocGameController)
 private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
   E(s"equip cyberware");
-}
-
-@addMethod(PlayerPuppet)
-protected cb func OnCheckSoundEvent(evt: ref<CheckSoundEvent>) -> Bool {
-  return true;
 }
 
 @addField(PlayerStateMachineDef)
