@@ -194,46 +194,4 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
           statType: BaseStats.Health
           value: 1.1
 
-# object action effect
-
-# bounce back (a.k.a bones mccoy)
-
-## v0
-
-Items.NotablyWeakenedActionEffectBonesMcCoy70V0:
-  $base: Items.BonesMcCoy70V0_inline2
-  statusEffect: BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0
-
-Items.SeverelyWeakenedActionEffectBonesMcCoy70V0:
-  $base: Items.BonesMcCoy70V0_inline2
-  statusEffect: BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0
-
-## v1
-
-Items.NotablyWeakenedActionEffectBonesMcCoy70V1:
-  $base: Items.BonesMcCoy70V1_inline2
-  statusEffect: BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1
-
-Items.SeverelyWeakenedActionEffectBonesMcCoy70V1:
-  $base: Items.BonesMcCoy70V1_inline2
-  statusEffect: BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1
-
-## v2
-
-Items.NotablyWeakenedActionEffectBonesMcCoy70V2:
-  $base: Items.BonesMcCoy70V2_inline6
-  statusEffect: BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2
-
-Items.SeverelyWeakenedActionEffectBonesMcCoy70V2:
-  $base: Items.BonesMcCoy70V2_inline6
-  statusEffect: BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2
-
-# health booster
-
-Items.NotablyWeakenedActionEffectHealthBooster:
-  $base: Items.HealthBooster_inline1
-  statusEffect: BaseStatusEffect.NotablyWeakenedHealthBooster
-
-Items.SeverelyWeakenedActionEffectHealthBooster:
-  $base: Items.HealthBooster_inline1
-  statusEffect: BaseStatusEffect.SeverelyWeakenedHealthBooster
+# object action effect: see scriptable tweaks

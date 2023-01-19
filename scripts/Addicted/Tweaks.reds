@@ -2,7 +2,7 @@ module Addicted
 
 import Addicted.System.AddictedSystem
 import Addicted.Helper
-import Addicted.Utils.{E,EI}
+import Addicted.Utils.{E,EI,F}
 
 // decrease score on rest
 @wrapMethod(PlayerPuppet)
@@ -145,51 +145,68 @@ private final func Apply() -> Void {
   wrappedMethod();
 }
 
+// object action effects
+//
+// reduce boilerplate in YAML Tweaks
 public class HealerTweaks extends ScriptableTweak {
   protected cb func OnApply() -> Void {
-    let notably = "NotablyWeakened";
-    let severely = "SeverelyWeakened";
+    let notably   = "NotablyWeakened";
+    let severely  = "SeverelyWeakened";
+    let prefixes  = [notably, severely];
 
-    this.DeriveMaxDOC(notably,  0, 30);
-    this.DeriveMaxDOC(severely, 0, 20);
+    let maxdoc        = "FirstAidWhiff";
+    let bounceback    = "BonesMcCoy70";
+    let healthbooster = "HealthBooster";
 
-    this.DeriveMaxDOC(notably,  1, 45);
-    this.DeriveMaxDOC(severely, 1, 30);
-
-    this.DeriveMaxDOC(notably,  2, 60);
-    this.DeriveMaxDOC(severely, 2, 45);
+    this.Derive(prefixes, maxdoc,       ["_inline2", "_inline6", "_inline6"]);
+    this.Derive(prefixes, bounceback,   ["_inline2", "_inline2", "_inline6"]);
+    this.Derive(prefixes, healthbooster,["_inline1"]);
   }
 
-  private func DeriveMaxDOC(prefix: String, version: Int32, value: Float) -> Void {
-    let name: String = "FirstAidWhiff" + "V" + ToString(version);
-
+  // create object action effect for weakened healers :
+  // e.g. Items.NotablyWeakenedActionEffectFirstAidWhiffV0 from Items.FirstAidWhiffV0_inline2
+  // with status effect set as BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0
+  private func Derive(prefixes: array<String>, diminutive: String, versions: array<String>) -> Void {
+    let size: Int32 = ArraySize(versions);
+    let many = size > 1;
+    let name: String;
     let suffix: String;
-    switch (version) {
-      case 0:
-        suffix = "_inline2";
-        break;
-      case 1:
-        suffix = "_inline6";
-        break;
-      case 2:
-        suffix = "_inline6";
-        break;
-      default:
-        EI(s"there's no more than 3 variants of maxdoc");
-        return;
+    let i = 0;
+    for prefix in prefixes {
+      for version in versions {
+        if many {
+          // consumables with versions, e.g. FirstAidWhiff
+          name = diminutive + "V" + ToString(i);
+          suffix = version;
+        } else {
+          // consumables without version, e.g. HealthBooster
+          name = diminutive;
+          suffix = "";
+        }
+
+        let original: String      = name + suffix;
+        let variantItem: String   = prefix + "ActionEffect" + name;
+        let variantEffect: String = prefix + name;
+
+        let originalItemId: TweakDBID   = TDBID.Create(("Items." + original));
+
+        let variantItemName: CName      = StringToName(("Items." + variantItem));
+        let variantItemId: TweakDBID    = TDBID.Create(("Items." + variantItem));
+        let variantEffectId: TweakDBID  = TDBID.Create("BaseStatusEffect." + variantEffect);
+
+        let cloned = TweakDBManager.CloneRecord(variantItemName, originalItemId);
+        if !cloned {
+          F(s"unable to clone \(TDBID.ToStringDEBUG(originalItemId)) as \(NameToString(variantItemName))");
+          return;
+        }
+
+        let item: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantItemId);
+        let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
+        TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
+        TweakDBManager.UpdateRecord(item.GetID());
+
+        i += 1;
+      }
     }
-
-    let original: String      = name + suffix;
-    let variant: String       = prefix + original;
-
-    let reference: TweakDBID  = TDBID.Create(("Items." + original));
-    let deviation: CName      = StringToName(("Items." + variant));
-    let alien: TweakDBID      = TDBID.Create("BaseStatusEffect." + variant);
-
-    let effect: TweakDBID     = TweakDBManager.GetRecord(alien);
-
-    let item: ref<ObjectActionEffect_Record> = TweakDBManager.CloneRecord(deviation, reference);
-    TweakDBManager.SetFlat(n".statusEffect", effect.GetID());
-    TweakDBManager.UpdateRecord(deviation);
   }
 }
