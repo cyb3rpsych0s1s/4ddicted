@@ -143,7 +143,7 @@ public class AddictedSystem extends ScriptableSystem {
         E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(id))");
       }
       if consumption.current > 0 {
-        // energized and energized are not affected
+        // energized and refreshed are not affected
         if !sleep || !under_influence {
           let current = consumption.current;
           let next = Max(current - Helper.Resilience(id), 0);
