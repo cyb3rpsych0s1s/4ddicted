@@ -9,8 +9,7 @@ public class HintProgressCallback extends DelayCallback {
   public func Call() -> Void {
     E(s"on hint progress callback ...");
     if this.manager.ambient != null {
-      GameInstance.GetAudioSystem(this.manager.owner.GetGame())
-        .Play(this.manager.ambientSFX.GetSoundName(), this.manager.owner.GetEntityID(), n"Addicted");
+      this.manager.Play(this.manager.ambient);
     }
     if ArraySize(this.manager.oneshot) > 0 {
       let size = ArraySize(this.manager.oneshot);
@@ -102,10 +101,12 @@ public class AudioManager extends IScriptable {
   public func Play(tracked: ref<TrackedHintRequest>) -> Void {
     let policy = this.ToPolicy();
     if EnumInt(policy) == EnumInt(PlaySoundPolicy.AmbientOnly) { return; }
+    if tracked.playing { return; }
 
     GameInstance.GetAudioSystem(this.owner.GetGame())
       .Play(tracked.got.Sound(), this.owner.GetEntityID(), n"Addicted");
     tracked.played += 1;
+    tracked.playing = tracked.got.IsLoop();
   }
 
   protected func InvalidateState() -> Void {
@@ -214,7 +215,7 @@ public class AudioManager extends IScriptable {
         if request.until > shot.got.until {
           shot.got.until = request.until;
         }
-        if shot.got.times <= this.Max(request.threshold) {
+        if shot.got.times <= Cast<Int32>(request.AtMost()) {
           shot.got.times += 1;
         }
         matches = true;
@@ -250,6 +251,7 @@ public class AudioManager extends IScriptable {
   }
 
   private func Done(request: ref<TrackedHintRequest>, now: Float) -> Bool {
+    if request.got.IsLoop() { this.Outdated(request.got, now); }
     return this.Finished(request) || this.Outdated(request.got, now);
   }
 
@@ -286,13 +288,6 @@ public class AudioManager extends IScriptable {
 
   protected final func IsDiving() -> Bool {
     return this.swimming == EnumInt(gamePSMSwimming.Diving);
-  }
-
-  protected func Max(threshold: Threshold) -> Int32 {
-    if EnumInt(threshold) == EnumInt(Threshold.Severely) {
-      return 5;
-    }
-    return 3;
   }
 
   protected cb func OnDivingChanged(value: Int32) -> Bool {
