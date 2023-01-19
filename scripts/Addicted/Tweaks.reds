@@ -135,3 +135,11 @@ public func CanPlayOnomatopea() -> Bool {
   }
   return true;
 }
+
+@wrapMethod(TimeskipGameController)
+private final func Apply() -> Void {
+  if this.m_hoursToSkip > 0 {
+    let system = AddictedSystem.GetInstance(this.m_gameInstance);
+    system.restingSince = this.m_timeSystem.GetGameTimeStamp();
+  }
+}

@@ -16,6 +16,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let onoManager: ref<AudioManager>;
 
   private persistent let consumptions: ref<Consumptions>;
+  public let restingSince: Float;
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
@@ -120,6 +121,11 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnRested(id: TweakDBID) -> Void {
+    let sleep = Helper.IsSleep(id);
+    let now = this.timeSystem.GetGameTimeStamp();
+    let light = (now - this.restingSince) > (60. * 60. * 6.);
+    if sleep && light { return; }
+    
     let size = this.consumptions.Size();
     if size == 0 { return; }
     let ids = this.consumptions.Keys();
@@ -127,7 +133,6 @@ public class AddictedSystem extends ScriptableSystem {
     for id in ids {
       consumption = this.consumptions.Get(id) as Consumption;
       let under_influence = false;
-      let sleep = Helper.IsSleep(id);
       if this.IsHard() {
         under_influence = this.UnderInfluence(id);
       }
@@ -247,7 +252,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func UnderInfluence(id: TweakDBID) -> Bool {
     let effect = StatusEffectHelper.GetStatusEffectByID(this.player, id);
-    return effect == null;
+    E(s"under influence: \(IsDefined(effect)) \(TDBID.ToStringDEBUG(id))");
+    return IsDefined(effect);
   }
 
   /// if hasn't consumed for a day or more
