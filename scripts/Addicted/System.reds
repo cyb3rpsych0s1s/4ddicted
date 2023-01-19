@@ -140,7 +140,10 @@ public class AddictedSystem extends ScriptableSystem {
       let under_influence = false;
       if this.IsHard() {
         under_influence = this.SleptUnderInfluence(id);
-        E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(id))");
+        if sleep && under_influence
+        { 
+          E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(id))");
+        }
       }
       if consumption.current > 0 {
         // energized and refreshed are not affected
@@ -153,7 +156,7 @@ public class AddictedSystem extends ScriptableSystem {
           }
           else
           {
-            E(s"housing, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(id))");
+            E(s"energized or refreshed, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(id))");
           }
         }
       } else {
