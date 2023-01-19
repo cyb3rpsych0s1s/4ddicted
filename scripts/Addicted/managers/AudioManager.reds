@@ -8,7 +8,7 @@ public class HintProgressCallback extends DelayCallback {
   public let manager: wref<AudioManager>;
   public func Call() -> Void {
     E(s"on hint progress callback ...");
-    if this.manager.ambient != null {
+    if this.manager.ambient != null && !this.manager.ambient.playing {
       this.manager.Play(this.manager.ambient);
     }
     if ArraySize(this.manager.oneshot) > 0 {
@@ -83,8 +83,10 @@ public class AudioManager extends IScriptable {
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
     E(s"unregister audio manager");
+
     let board: ref<IBlackboard>;
     if player != null {
+      this.Shutdown();
       board = player.GetPlayerStateMachineBlackboard();
       if IsDefined(board) {
         if IsDefined(this.onDiving)     { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this.onDiving); }
@@ -107,6 +109,7 @@ public class AudioManager extends IScriptable {
         if ArraySize(this.oneshotSFX) > 0 {
           for sfx in this.oneshotSFX {
             sfx.SetStatusEffect(ESoundStatusEffects.SUPRESS_NOISE);
+            this.Stop(sfx.GetSoundName());
           }
         }
         break;
@@ -173,12 +176,41 @@ public class AudioManager extends IScriptable {
     E(s"-----------------------------------------------");
   }
 
+  public func Stop(sound: CName) -> Void {
+    GameInstance.GetAudioSystem(this.owner.GetGame())
+      .Stop(sound, this.owner.GetEntityID(), n"Addicted");
+  }
+
+  public func StopAll() -> Void {
+    if IsDefined(this.ambient) {
+      this.Stop(this.ambient.got.Sound());
+    }
+    for ono in this.oneshot {
+      this.Stop(ono.got.Sound());
+    }
+  }
+
+  private func Shutdown() -> Void {
+    this.StopAll();
+    this.ambient = null;
+    this.ambientSFX = null;
+    ArrayClear(this.oneshot);
+    ArrayClear(this.oneshotSFX);
+  }
+
   public func Update() -> Void {
     E(s"on update");
+    let now = GameInstance
+      .GetTimeSystem(this.owner.GetGame())
+      .GetGameTimeStamp();
+    if IsDefined(this.ambient) && this.Done(this.ambient, now) {
+      E(s"now: \(now)");
+      E(s"ambient is done, stopin... \(ToString(this.ambient.got.until))");
+      this.Stop(this.ambient.got.Sound());
+      this.ambientSFX = null;
+      this.ambient = null;
+    }
     if ArraySize(this.oneshot) > 0 {
-      let now = GameInstance
-        .GetTimeSystem(this.owner.GetGame())
-        .GetGameTimeStamp();
       let size = ArraySize(this.oneshot);
       E(s"has \(ToString(size)) ono(s) (\(ToString(now)))");
       if size == 2 {
@@ -194,7 +226,7 @@ public class AudioManager extends IScriptable {
         this.Pop();
       }
     }
-    if ArraySize(this.oneshot) == 0 {
+    if !IsDefined(this.ambient) && ArraySize(this.oneshot) == 0 {
       E(s"terminate!");
       this.Terminate();
     } else {
@@ -204,14 +236,25 @@ public class AudioManager extends IScriptable {
   }
 
   private func Loop(request: ref<HintRequest>) -> Void {
-    if IsDefined(this.ambient) {
-      let sfx = new PlaySoundEvent();
-      sfx.SetSoundName(request.Sound());
-      let lastSFX = this.ambientSFX;
-      this.ambient = TrackedHintRequest.Wrap(request);
-      this.ambientSFX = sfx;
-      GameInstance.GetAudioSystem(this.owner.GetGame())
-        .Switch(lastSFX.GetSoundName(), sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
+    if IsDefined(this.ambient)
+    {
+      if Equals(this.ambient.got.Sound(), request.Sound())
+      {
+        if request.until > this.ambient.got.until {
+          this.ambient.got.until = request.until;
+        }
+        return;
+      }
+      if !this.ambient.playing
+      {
+        let sfx = new PlaySoundEvent();
+        sfx.SetSoundName(request.Sound());
+        let lastSFX = this.ambientSFX;
+        this.ambient = TrackedHintRequest.Wrap(request);
+        this.ambientSFX = sfx;
+        GameInstance.GetAudioSystem(this.owner.GetGame())
+          .Switch(lastSFX.GetSoundName(), sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
+      }
     }
     else
     {
@@ -276,7 +319,7 @@ public class AudioManager extends IScriptable {
   }
 
   private func Done(request: ref<TrackedHintRequest>, now: Float) -> Bool {
-    if request.got.IsLoop() { this.Outdated(request.got, now); }
+    if request.got.IsLoop() { return this.Outdated(request.got, now); }
     return this.Finished(request) || this.Outdated(request.got, now);
   }
 
@@ -337,6 +380,4 @@ public class AudioManager extends IScriptable {
       this.InvalidateState();
     }
   }
-
-  public func IsPlaying() -> Bool { return this.playing; }
 }

@@ -5,13 +5,20 @@ import Addicted.Helper
 public abstract class HintRequest extends ScriptableSystemRequest {
   // game timestamp where to stop at
   protected let until: Float;
-  protected let times: Int32 = 1;
+  protected let times: Int32;
   protected let threshold: Threshold;
   protected let onomatopea: Onomatopea;
   public func Sound() -> CName;
   public func Onomatopea() -> Onomatopea;
   public func IsLoop() -> Bool { return false; }
   public func Duration() -> Float { return 5.; }
+  public func InitialTimes() -> Int32 {
+    if this.IsLoop() { return 1; }
+    if Equals(EnumInt(this.threshold), EnumInt(Threshold.Severely)) {
+      return 3;
+    }
+    return 1;
+  }
   public func AtMost() -> Float {
     if this.IsLoop() { return 1.; }
     if Equals(EnumInt(this.threshold), EnumInt(Threshold.Severely)) {
@@ -20,9 +27,10 @@ public abstract class HintRequest extends ScriptableSystemRequest {
     return 3.;
   }
   public func RandTime() -> Float {
+    let consumeTime = 3.;
     let playTime = this.Duration() * this.AtMost();
     let gapTime = (this.AtMost() - 1.) * 2.;
-    let least = playTime * gapTime;
+    let least = consumeTime + playTime + gapTime;
     let most = least * 2.;
     let delay = RandRangeF(least, most);
     return delay;
@@ -76,7 +84,12 @@ public class HeadAchingRequest extends HintRequest {
     return n"q101_sc_03_heart_loop";
   }
   public func IsLoop() -> Bool { return true; }
-  public func Duration() -> Float { return 15.; }
+  public func Duration() -> Float {
+    if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
+      return 90.;
+    }
+    return 45.;
+  }
 }
 
 public class Consumptions {
