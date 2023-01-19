@@ -17,7 +17,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
-  public let sleptUnderInfluence: array<TweakDBID>;
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
@@ -124,8 +123,13 @@ public class AddictedSystem extends ScriptableSystem {
   public func OnRested(id: TweakDBID) -> Void {
     let sleep = Helper.IsSleep(id);
     let now = this.timeSystem.GetGameTimeStamp();
-    let light = (now - this.restingSince) > (60. * 60. * 6.);
-    if sleep && light { return; }
+    let duration = now - this.restingSince;
+    let minimum = 60. * 60. * 6.; // 6h
+    let light = duration < minimum;
+    if sleep && light {
+      E(s"not enough sleep ! no wean off");
+      return;
+    }
     
     let size = this.consumptions.Size();
     if size == 0 { return; }
@@ -135,19 +139,26 @@ public class AddictedSystem extends ScriptableSystem {
       consumption = this.consumptions.Get(id) as Consumption;
       let under_influence = false;
       if this.IsHard() {
-        for appliedId in this.sleptUnderInfluence {
-          if Equals(id, appliedId) {
-            under_influence = true;
-            break;
-          }
-        }
+        under_influence = this.SleptUnderInfluence(id);
+        E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(id))");
       }
       if consumption.current > 0 {
-        if !(sleep && under_influence) {
-          consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
+        // energized and energized are not affected
+        if !sleep || !under_influence {
+          let current = consumption.current;
+          let next = Max(current - Helper.Resilience(id), 0);
+          consumption.current = next;
+          if sleep {
+            E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(id))");
+          }
+          else
+          {
+            E(s"housing, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(id))");
+          }
         }
       } else {
         this.consumptions.Remove(id);
+        E(s"clean again from \(TDBID.ToStringDEBUG(id))");
       }
     }
   }
@@ -259,6 +270,16 @@ public class AddictedSystem extends ScriptableSystem {
   public func UnderInfluence(id: TweakDBID) -> Bool {
     let effect = StatusEffectHelper.GetStatusEffectByID(this.player, id);
     return IsDefined(effect);
+  }
+
+  public func SleptUnderInfluence(id: TweakDBID) -> Bool {
+    if !this.consumptions.KeyExist(id) { return false; }
+    let consumption = this.consumptions.Get(id);
+    if ArraySize(consumption.doses) == 0 { return false; }
+    let last: Float = ArrayLast(consumption.doses);
+    let difference: Float = this.restingSince - last;
+    let maximum = 60. * 60.; // 1h
+    return difference < maximum;
   }
 
   /// if hasn't consumed for a day or more
