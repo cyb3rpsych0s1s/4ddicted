@@ -28,8 +28,13 @@ public class HintProgressCallback extends DelayCallback {
 
 public class TrackedHintRequest {
   public let got: ref<HintRequest>;
-  public let played: Int32;
+  public let played: Int32 = 0;
   public let playing: Bool = false;
+  public static func Wrap(request: ref<HintRequest>) -> ref<TrackedHintRequest> {
+    let track = new TrackedHintRequest();
+    track.got = request;
+    return track;
+  }
 }
 
 public class AudioManager extends IScriptable {
@@ -44,7 +49,7 @@ public class AudioManager extends IScriptable {
   private let onConsuming: ref<CallbackHandle>;
   private let onChatting: ref<CallbackHandle>;
 
-  private let ambient: ref<HintRequest>;
+  private let ambient: ref<TrackedHintRequest>;
   private let oneshot: array<ref<TrackedHintRequest>>;
   private let ambientSFX: ref<PlaySoundEvent>;
   private let oneshotSFX: array<ref<PlaySoundEvent>>;
@@ -97,7 +102,7 @@ public class AudioManager extends IScriptable {
   public func Play(tracked: ref<TrackedHintRequest>) -> Void {
     let policy = this.ToPolicy();
     if EnumInt(policy) == EnumInt(PlaySoundPolicy.AmbientOnly) { return; }
-    
+
     GameInstance.GetAudioSystem(this.owner.GetGame())
       .Play(tracked.got.Sound(), this.owner.GetEntityID(), n"Addicted");
     tracked.played += 1;
@@ -180,7 +185,7 @@ public class AudioManager extends IScriptable {
       let sfx = new PlaySoundEvent();
       sfx.SetSoundName(request.Sound());
       let lastSFX = this.ambientSFX;
-      this.ambient = request;
+      this.ambient = TrackedHintRequest.Wrap(request);
       this.ambientSFX = sfx;
       GameInstance.GetAudioSystem(this.owner.GetGame())
         .Switch(lastSFX.GetSoundName(), sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
@@ -189,7 +194,7 @@ public class AudioManager extends IScriptable {
     {
       let sfx = new PlaySoundEvent();
       sfx.SetSoundName(request.Sound());
-      this.ambient = request;
+      this.ambient = TrackedHintRequest.Wrap(request);
       this.ambientSFX = sfx;
     }
   }
@@ -197,9 +202,7 @@ public class AudioManager extends IScriptable {
   private func Add(request: ref<HintRequest>) -> Void {
     let sfx = new PlaySoundEvent();
     sfx.SetSoundName(request.Sound());
-    let tracked = new TrackedHintRequest();
-    tracked.got = request;
-    tracked.played = 0;
+    let tracked = TrackedHintRequest.Wrap(request);
     ArrayPush(this.oneshot, tracked);
     ArrayPush(this.oneshotSFX, sfx);
   }
@@ -224,9 +227,7 @@ public class AudioManager extends IScriptable {
   private func SwapLast(request: ref<HintRequest>) -> Void {
     let sfx = new PlaySoundEvent();
     sfx.SetSoundName(request.Sound());
-    let tracked = new TrackedHintRequest();
-    tracked.got = request;
-    tracked.played = 0;
+    let tracked = TrackedHintRequest.Wrap(request);
     ArrayPop(this.oneshot);
     ArrayPush(this.oneshot, tracked);
     let lastSFX = ArrayPop(this.oneshotSFX);
