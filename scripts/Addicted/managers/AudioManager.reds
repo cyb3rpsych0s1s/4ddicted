@@ -12,6 +12,11 @@ public class HintProgressCallback extends DelayCallback {
   }
 }
 
+public class TrackedHintRequest {
+  public let got: ref<HintRequest>;
+  public let played: Int32;
+}
+
 public class AudioManager extends IScriptable {
 
   private let owner: wref<PlayerPuppet>;
@@ -25,7 +30,7 @@ public class AudioManager extends IScriptable {
   private let onChatting: ref<CallbackHandle>;
 
   private let ambient: ref<HintRequest>;
-  private let oneshot: array<ref<HintRequest>>;
+  private let oneshot: array<ref<TrackedHintRequest>>;
   private let ambientSFX: ref<PlaySoundEvent>;
   private let oneshotSFX: array<ref<PlaySoundEvent>>;
 
@@ -131,11 +136,11 @@ public class AudioManager extends IScriptable {
         .GetGameTimeStamp();
       let size = ArraySize(this.oneshot);
       if size == 2 {
-        if this.Expired(this.oneshot[1], now) {
+        if this.Done(this.oneshot[1], now) {
           this.Pop();
         }
       }
-      if this.Expired(this.oneshot[0], now) {
+      if this.Done(this.oneshot[0], now) {
         this.Pop();
       }
     }
@@ -170,7 +175,10 @@ public class AudioManager extends IScriptable {
   private func Add(request: ref<HintRequest>) -> Void {
     let sfx = new PlaySoundEvent();
     sfx.SetSoundName(request.Sound());
-    ArrayPush(this.oneshot, request);
+    let tracked = new TrackedHintRequest();
+    tracked.got = request;
+    tracked.played = 0;
+    ArrayPush(this.oneshot, tracked);
     ArrayPush(this.oneshotSFX, sfx);
     GameInstance.GetAudioSystem(this.owner.GetGame())
       .Play(sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
@@ -179,12 +187,12 @@ public class AudioManager extends IScriptable {
   private func Augment(request: ref<HintRequest>) -> Bool {
     let matches = false;
     for shot in this.oneshot {
-      if Equals(shot.Sound(), request.Sound()) {
-        if request.until > shot.until {
-          shot.until = request.until;
+      if Equals(shot.got.Sound(), request.Sound()) {
+        if request.until > shot.got.until {
+          shot.got.until = request.until;
         }
-        if shot.times <= 3 {
-          shot.times += 1;
+        if shot.got.times <= this.Max(request.threshold) {
+          shot.got.times += 1;
         }
         matches = true;
         break;
@@ -196,8 +204,13 @@ public class AudioManager extends IScriptable {
   private func SwapLast(request: ref<HintRequest>) -> Void {
     let sfx = new PlaySoundEvent();
     sfx.SetSoundName(request.Sound());
+    let tracked = new TrackedHintRequest();
+    tracked.got = request;
+    tracked.played = 0;
     ArrayPop(this.oneshot);
+    ArrayPush(this.oneshot, tracked);
     let lastSFX = ArrayPop(this.oneshotSFX);
+    ArrayPush(this.oneshotSFX, sfx);
     GameInstance.GetAudioSystem(this.owner.GetGame())
       .Switch(lastSFX.GetSoundName(), sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
   }
@@ -207,8 +220,16 @@ public class AudioManager extends IScriptable {
     ArrayPop(this.oneshotSFX);
   }
 
-  private func Expired(request: ref<HintRequest>, now: Float) -> Bool {
-    return request.times == 3 || request.until <= now;
+  private func Finished(request: ref<TrackedHintRequest>) -> Bool {
+    return request.played == request.got.times;
+  }
+
+  private func Outdated(request: ref<HintRequest>, now: Float) -> Bool {
+    return request.until <= now;
+  }
+
+  private func Done(request: ref<TrackedHintRequest>, now: Float) -> Bool {
+    return this.Finished(request) || this.Outdated(request.got, now);
   }
 
   private func Scheduled() -> Bool {
@@ -243,6 +264,13 @@ public class AudioManager extends IScriptable {
 
   protected final func IsDiving() -> Bool {
     return this.swimming == EnumInt(gamePSMSwimming.Diving);
+  }
+
+  protected func Max(threshold: Threshold) -> Int32 {
+    if EnumInt(threshold) == EnumInt(Threshold.Severely) {
+      return 5;
+    }
+    return 3;
   }
 
   protected cb func OnDivingChanged(value: Int32) -> Bool {
