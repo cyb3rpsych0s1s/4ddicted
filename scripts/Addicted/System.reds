@@ -17,6 +17,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
+  public let sleptUnderInfluence: array<TweakDBID>;
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
@@ -134,7 +135,12 @@ public class AddictedSystem extends ScriptableSystem {
       consumption = this.consumptions.Get(id) as Consumption;
       let under_influence = false;
       if this.IsHard() {
-        under_influence = this.UnderInfluence(id);
+        for appliedId in this.sleptUnderInfluence {
+          if Equals(id, appliedId) {
+            under_influence = true;
+            break;
+          }
+        }
       }
       if consumption.current > 0 {
         if !(sleep && under_influence) {
@@ -252,7 +258,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func UnderInfluence(id: TweakDBID) -> Bool {
     let effect = StatusEffectHelper.GetStatusEffectByID(this.player, id);
-    E(s"under influence: \(IsDefined(effect)) \(TDBID.ToStringDEBUG(id))");
     return IsDefined(effect);
   }
 

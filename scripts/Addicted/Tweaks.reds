@@ -139,7 +139,14 @@ public func CanPlayOnomatopea() -> Bool {
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
   if this.m_hoursToSkip > 0 {
+    let effects = StatusEffectHelper.GetAppliedEffects(this.GetPlayerControlledObject());
+    let ids: array<TweakDBID>;
+    for effect in effects {
+      ArrayPush(ids, effect.GetRecord().GetID());
+    }
     let system = AddictedSystem.GetInstance(this.m_gameInstance);
     system.restingSince = this.m_timeSystem.GetGameTimeStamp();
+    system.sleptUnderInfluence = ids;
   }
+  wrappedMethod();
 }
