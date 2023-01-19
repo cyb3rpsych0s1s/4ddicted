@@ -23,7 +23,6 @@ public class AudioManager extends IScriptable {
   private let onDiving: ref<CallbackHandle>;
   private let onConsuming: ref<CallbackHandle>;
   private let onChatting: ref<CallbackHandle>;
-  private let board: ref<IBlackboard>;
 
   private let ambient: ref<HintRequest>;
   private let oneshot: array<ref<HintRequest>>;
@@ -34,28 +33,43 @@ public class AudioManager extends IScriptable {
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register audio manager");
-    this.owner = player;
-    this.board = this.owner.GetPlayerStateMachineBlackboard();
-    E(s"board is defined ? \(IsDefined(this.board))");
-    if IsDefined(this.board) {
-      this.swimming     = this.board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
-      this.chatting     = this.board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue);
-      this.consuming    = this.board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming);
-      this.onDiving     = this.board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this, n"OnDivingChanged", true);
-      this.onConsuming  = this.board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this, n"OnConsumingChanged", true);
-      this.onChatting   = this.board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this, n"OnChattingChanged", true);
+    let board: ref<IBlackboard>;
+    if player != null {
+      this.owner = player;
+      board = this.owner.GetPlayerStateMachineBlackboard();
+      E(s"board is defined ? \(IsDefined(board))");
+      if IsDefined(board) {
+        if !IsDefined(this.onDiving) {
+          this.swimming     = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
+          this.onDiving     = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this, n"OnDivingChanged", true);
+        }
+        if !IsDefined(this.onConsuming) {
+          this.consuming    = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming);
+          this.onConsuming  = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this, n"OnConsumingChanged", true);
+        }
+        if !IsDefined(this.onChatting) {
+          this.chatting     = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue);
+          this.onChatting   = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this, n"OnChattingChanged", true);
+        }
+      }
+      E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onChatting))");
     }
-    E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onChatting))");
     this.InvalidateState();
   }
 
-  public func Unregister() -> Void {
+  public func Unregister(player: ref<PlayerPuppet>) -> Void {
     E(s"unregister audio manager");
-    if IsDefined(this.board) {
-      this.board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this.onDiving);
-      this.board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this.onConsuming);
-      this.board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this.onChatting);
-      this.board = null;
+    let board: ref<IBlackboard>;
+    if player != null {
+      board = player.GetPlayerStateMachineBlackboard();
+      if IsDefined(board) {
+        if IsDefined(this.onDiving)     { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this.onDiving); }
+        if IsDefined(this.onConsuming)  { board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this.onConsuming); }
+        if IsDefined(this.onChatting)   { board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this.onChatting); }
+      }
+      this.onDiving = null;
+      this.onConsuming = null;
+      this.onChatting = null;
     }
     this.owner = null;
   }

@@ -32,9 +32,6 @@ public class AddictedSystem extends ScriptableSystem {
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
 
-      // let evt: ref<CheckSoundEvent> = new CheckSoundEvent();
-      // this.delaySystem.TickOnEvent(this.player, evt, 3.);
-
       this.RefreshConfig();
     } else { F(s"no player found!"); }
   }
@@ -54,9 +51,9 @@ public class AddictedSystem extends ScriptableSystem {
   private func OnDetach() -> Void {
     E(s"on detach system");
 
-    this.onoManager.Unregister();
-    this.healerManager = null;
+    this.onoManager.Unregister(this.player);
     this.onoManager = null;
+    this.healerManager = null;
 
     ModSettings.UnregisterListenerToModifications(this);
   }
