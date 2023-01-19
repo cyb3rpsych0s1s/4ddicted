@@ -425,15 +425,15 @@ public class Helper {
 
   public static func ItemBaseName(id: TweakDBID) -> TweakDBID {
     let str = TDBID.ToStringDEBUG(id);
-    if StrContains(str, "NotablyWeakened") || StrContains(str, "SeverelyWeakened") {
-      let base = StrReplace(str, "NotablyWeakened", "");
-      base = StrReplace(str, "SeverelyWeakened", "");
-      return TDBID.Create(base);
+    let suffix = StrAfterFirst(str, ".");
+    if StrContains(suffix, "NotablyWeakened") || StrContains(suffix, "SeverelyWeakened") {
+      suffix = StrReplace(suffix, "NotablyWeakened", "");
+      suffix = StrReplace(suffix, "SeverelyWeakened", "");
+      return TDBID.Create("Items." + suffix);
     }
     if StrContains(str, "BlackLace") {
       return TDBID.Create("Items.BlackLaceV0");
     }
-    let suffix = StrAfterFirst(str, ".");
     return TDBID.Create("Items." + suffix);
   }
 
