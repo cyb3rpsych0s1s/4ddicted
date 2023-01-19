@@ -263,7 +263,7 @@ public class Manager extends IScriptable {
     this.listener = board.RegisterListenerBool(GetAllBlackboardDefs().UIGameData.Popup_IsModal, this, n"OnPopupModalChanged");
   }
   // don't forget to unregister when finished
-  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
+  private final func PlayerDetachedCallback(playerPuppet: ref<GameObject>) -> Void {
     let board: ref<IBlackboard> = GameInstance
       .GetBlackboardSystem(playerPuppet.GetGame());
 
@@ -284,7 +284,7 @@ Detoxifier (a.k.a `ToxinCleanser`) grants:
 `gamedataStatType.PoisonImmunity`
 `gamedataStatType.HasPoisonImmunity`
 
-example from the sources:
+example from the sources for `gamedataStatType.AutoReveal`:
 
 ```swift
 public class AutoRevealStatListener extends ScriptStatsListener {
