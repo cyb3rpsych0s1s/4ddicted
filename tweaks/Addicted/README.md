@@ -13,8 +13,11 @@ Relevant documentation: [YAML Tweaks](https://github.com/psiberx/cp2077-tweak-xl
   > e.g. with `BaseStatusEffect.InhalerBuff` there's a slight sound effect played altogether with the VFX (see Tweak Browser for reference, there's no SFX)
 - sometimes there's no `SFX` field declared at the top, but there can be `packages` defined with a `PlaySFXEffector`, or both.
  > `PlaySFXEffector`: see `BaseStatusEffect.JohnnySicknessHeavy`
+ >
  > `SFX`: see `BaseStatusEffect.Madness`
+ >
  > both: see `BaseStatusEffect.DruggedSevere`
+ >
  > `activationSFXName` and `deactivationSFXName` echoe to what can be found in **Toxicity** mod: `GameObject.SetAudioParameter(this, n"vfx_fullscreen_drugged_level", 3.00);` where e.g. `BaseStatusEffect.DruggedSevere` has `vfx_fullscreen_drugged_start` and `vfx_fullscreen_drugged_stop`
 
 ## VFX

@@ -196,38 +196,6 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
 
 # object action effect
 
-## first aid whiff (a.k.a maxdoc)
-
-### v0
-
-Items.NotablyWeakenedActionEffectFirstAidWhiffV0:
-  $base: Items.FirstAidWhiffV0_inline2
-  statusEffect: BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0
-
-Items.SeverelyWeakenedActionEffectFirstAidWhiffV0:
-  $base: Items.FirstAidWhiffV0_inline2
-  statusEffect: BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0
-
-### v1
-
-Items.NotablyWeakenedActionEffectFirstAidWhiffV1:
-  $base: Items.FirstAidWhiffV1_inline6
-  statusEffect: BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1
-
-Items.SeverelyWeakenedActionEffectFirstAidWhiffV1:
-  $base: Items.FirstAidWhiffV1_inline6
-  statusEffect: BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1
-
-### v2
-
-Items.NotablyWeakenedActionEffectFirstAidWhiffV2:
-  $base: Items.FirstAidWhiffV2_inline6
-  statusEffect: BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2
-
-Items.SeverelyWeakenedActionEffectFirstAidWhiffV2:
-  $base: Items.FirstAidWhiffV2_inline6
-  statusEffect: BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2
-
 # bounce back (a.k.a bones mccoy)
 
 ## v0

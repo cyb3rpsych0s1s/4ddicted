@@ -144,3 +144,52 @@ private final func Apply() -> Void {
   }
   wrappedMethod();
 }
+
+public class HealerTweaks extends ScriptableTweak {
+  protected cb func OnApply() -> Void {
+    let notably = "NotablyWeakened";
+    let severely = "SeverelyWeakened";
+
+    this.DeriveMaxDOC(notably,  0, 30);
+    this.DeriveMaxDOC(severely, 0, 20);
+
+    this.DeriveMaxDOC(notably,  1, 45);
+    this.DeriveMaxDOC(severely, 1, 30);
+
+    this.DeriveMaxDOC(notably,  2, 60);
+    this.DeriveMaxDOC(severely, 2, 45);
+  }
+
+  private func DeriveMaxDOC(prefix: String, version: Int32, value: Float) -> Void {
+    let name: String = "FirstAidWhiff" + "V" + ToString(version);
+
+    let suffix: String;
+    switch (version) {
+      case 0:
+        suffix = "_inline2";
+        break;
+      case 1:
+        suffix = "_inline6";
+        break;
+      case 2:
+        suffix = "_inline6";
+        break;
+      default:
+        EI(s"there's no more than 3 variants of maxdoc");
+        return;
+    }
+
+    let original: String      = name + suffix;
+    let variant: String       = prefix + original;
+
+    let reference: TweakDBID  = TDBID.Create(("Items." + original));
+    let deviation: CName      = StringToName(("Items." + variant));
+    let alien: TweakDBID      = TDBID.Create("BaseStatusEffect." + variant);
+
+    let effect: TweakDBID     = TweakDBManager.GetRecord(alien);
+
+    let item: ref<ObjectActionEffect_Record> = TweakDBManager.CloneRecord(deviation, reference);
+    TweakDBManager.SetFlat(n".statusEffect", effect.GetID());
+    TweakDBManager.UpdateRecord(deviation);
+  }
+}
