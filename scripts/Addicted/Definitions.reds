@@ -149,9 +149,9 @@ public class Consumption {
   public persistent let current: Int32;
   public persistent let doses: array<Float>;
 
-  public static func Create(id: TweakDBID, when: Float) -> ref<Consumption> {
+  public static func Create(id: TweakDBID, amount: Int32, when: Float) -> ref<Consumption> {
     let consumption = new Consumption();
-    consumption.current = Helper.Potency(id);
+    consumption.current = amount;
     consumption.doses = [when];
     return consumption;
   }

@@ -178,8 +178,8 @@ public class AddictedSystem extends ScriptableSystem {
       EI(id, s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
       return (amount > old) && Helper.IsInstant(id);
     } else {
-      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(id))");
-      this.consumptions.Insert(id, Consumption.Create(id, now));
+      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(id)) -> \(ToString(amount))");
+      this.consumptions.Insert(id, Consumption.Create(id, amount, now));
       return true;
     }
   }
@@ -320,13 +320,13 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
-    let consumption = EnumInt(threshold);
+    let amount = EnumInt(threshold);
     // always get back clean
-    if consumption != 0 {
+    if amount != 0 {
       // otherwise always cross the threshold
-      consumption = consumption + 1;
+      amount = amount + 1;
     }
-    this.Consume(id, consumption);
+    this.Consume(id, amount);
   }
 
   public func Checkup() -> Void {
