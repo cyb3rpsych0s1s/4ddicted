@@ -299,6 +299,8 @@ public class Helper {
     return false;
   }
 
+  public static func IsSleep(id: TweakDBID) -> Bool { return Equals(id, t"HousingStatusEffect.Rested"); }
+
   public static func IsAlcohol(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     return StrContains(str, "Alcohol");

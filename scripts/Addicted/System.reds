@@ -119,16 +119,22 @@ public class AddictedSystem extends ScriptableSystem {
     this.Hint(id);
   }
 
-  public func OnRested() -> Void {
+  public func OnRested(id: TweakDBID) -> Void {
     let size = this.consumptions.Size();
     if size == 0 { return; }
     let ids = this.consumptions.Keys();
     let consumption: ref<Consumption>;
     for id in ids {
       consumption = this.consumptions.Get(id) as Consumption;
+      let under_influence = false;
+      let sleep = Helper.IsSleep(id);
+      if this.IsHard() {
+        under_influence = this.UnderInfluence(id);
+      }
       if consumption.current > 0 {
-        consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
-        consumption.doses = consumption.doses;
+        if !(sleep && under_influence) {
+          consumption.current = Max(consumption.current - Helper.Resilience(id), 0);
+        }
       } else {
         this.consumptions.Remove(id);
       }
@@ -235,6 +241,13 @@ public class AddictedSystem extends ScriptableSystem {
   /// also randomly reschedule if in timeframe
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
     this.onoManager.Hint(request);
+  }
+
+  public func IsHard() -> Bool { return Equals(EnumInt(this.config.mode), EnumInt(AddictedMode.Hard)); }
+
+  public func UnderInfluence(id: TweakDBID) -> Bool {
+    let effect = StatusEffectHelper.GetStatusEffectByID(this.player, id);
+    return effect == null;
   }
 
   /// if hasn't consumed for a day or more

@@ -17,7 +17,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     
     if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
       EI(id, s"housing");
-      system.OnRested();
+      system.OnRested(id);
     }
 }
 
