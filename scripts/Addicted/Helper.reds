@@ -437,7 +437,7 @@ public class Helper {
     return TDBID.Create("Items." + suffix);
   }
 
-  public static func AppropriateHintRequest(id: TweakDBID, threshold: Threshold) -> ref<HintRequest> {
+  public static func AppropriateHintRequest(id: TweakDBID, threshold: Threshold, now: Float) -> ref<HintRequest> {
     if Helper.IsSerious(threshold) {
       let request: ref<HintRequest>;
       if Helper.IsInhaler(id) {
@@ -470,6 +470,7 @@ public class Helper {
         request = new AchingRequest();
       }
       request.threshold = threshold;
+      request.until = now + request.RandTime();
       return request;
     }
     return null;

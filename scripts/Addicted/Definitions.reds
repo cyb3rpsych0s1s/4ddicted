@@ -19,7 +19,7 @@ public abstract class HintRequest extends ScriptableSystemRequest {
     }
     return 3.;
   }
-  public func TotalTime() -> Float {
+  public func RandTime() -> Float {
     let playTime = this.Duration() * this.AtMost();
     let gapTime = (this.AtMost() - 1.) * 2.;
     let least = playTime * gapTime;

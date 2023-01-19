@@ -98,17 +98,6 @@ public class AudioManager extends IScriptable {
     this.owner = null;
   }
 
-  public func Play(tracked: ref<TrackedHintRequest>) -> Void {
-    let policy = this.ToPolicy();
-    if EnumInt(policy) == EnumInt(PlaySoundPolicy.AmbientOnly) { return; }
-    if tracked.playing { return; }
-
-    GameInstance.GetAudioSystem(this.owner.GetGame())
-      .Play(tracked.got.Sound(), this.owner.GetEntityID(), n"Addicted");
-    tracked.played += 1;
-    tracked.playing = tracked.got.IsLoop();
-  }
-
   protected func InvalidateState() -> Void {
     E(s"invalidate state");
     let policy = this.ToPolicy();
@@ -133,29 +122,55 @@ public class AudioManager extends IScriptable {
   }
 
   public func Hint(request: ref<HintRequest>) -> Void {
+    E(s"hint");
     if request.IsLoop() {
+      E(s"loopin...");
       this.Loop(request);
     }
     else
     {
       if ArraySize(this.oneshot) == 0 {
+        E(s"no ono, addin...");
         this.Add(request);
       }
       if ArraySize(this.oneshot) == 1 {
+        E(s"single ono found");
         let matches = this.Augment(request);
         if !matches {
+          E(s"a different ono, so addin...");
           this.Add(request);
         }
       }
       if ArraySize(this.oneshot) == 2 {
+        E(s"2 onos found");
         let matches = this.Augment(request);
         if !matches {
+          E(s"a brand new ono, so swapin' last...");
           this.SwapLast(request);
         }
       }
     }
     this.Interrupt();
     this.Schedule();
+  }
+
+  public func Play(tracked: ref<TrackedHintRequest>) -> Void {
+    let policy = this.ToPolicy();
+    E(s"-----------------------------------------------");
+    E(s"play");
+    E(s"policy \(ToString(policy))");
+    E(s"tracked.playing \(ToString(tracked.playing))");
+    if EnumInt(policy) == EnumInt(PlaySoundPolicy.AmbientOnly) { return; }
+    if tracked.playing { return; }
+
+    GameInstance.GetAudioSystem(this.owner.GetGame())
+      .Play(tracked.got.Sound(), this.owner.GetEntityID(), n"Addicted");
+    E(s"tracked.played (before) \(ToString(tracked.played))");
+    tracked.played += 1;
+    tracked.playing = tracked.got.IsLoop();
+    E(s"tracked.played (after) \(ToString(tracked.played))");
+    E(s"tracked.playing \(ToString(tracked.playing))");
+    E(s"-----------------------------------------------");
   }
 
   public func Update() -> Void {
@@ -165,18 +180,25 @@ public class AudioManager extends IScriptable {
         .GetTimeSystem(this.owner.GetGame())
         .GetGameTimeStamp();
       let size = ArraySize(this.oneshot);
+      E(s"has \(ToString(size)) ono(s) (\(ToString(now)))");
       if size == 2 {
         if this.Done(this.oneshot[1], now) {
+          E(s"now: \(now)");
+          E(s"secondary ono is done, popin... \(ToString(this.oneshot[1].got.until))");
           this.Pop();
         }
       }
       if this.Done(this.oneshot[0], now) {
+        E(s"now: \(now)");
+        E(s"primary ono is done, popin... \(ToString(this.oneshot[0].got.until))");
         this.Pop();
       }
     }
     if ArraySize(this.oneshot) == 0 {
+      E(s"terminate!");
       this.Terminate();
     } else {
+      E(s"reschedule...");
       this.Schedule();
     }
   }
@@ -212,10 +234,13 @@ public class AudioManager extends IScriptable {
     let matches = false;
     for shot in this.oneshot {
       if Equals(shot.got.Sound(), request.Sound()) {
+        E(s"same ono, augmenting initial request...");
         if request.until > shot.got.until {
+          E(s"will last to \(ToString(request.until)) instead of \(ToString(shot.got.until))");
           shot.got.until = request.until;
         }
-        if shot.got.times <= Cast<Int32>(request.AtMost()) {
+        if shot.got.times < Cast<Int32>(request.AtMost()) {
+          E(s"times increased: \(ToString(shot.got.times)) -> \(ToString(shot.got.times+1))");
           shot.got.times += 1;
         }
         matches = true;
@@ -260,10 +285,8 @@ public class AudioManager extends IScriptable {
   }
 
   private func Interrupt() -> Void {
-    if this.Scheduled() {
-      GameInstance.GetDelaySystem(this.owner.GetGame())
-        .CancelCallback(this.callbackID);
-    }
+    GameInstance.GetDelaySystem(this.owner.GetGame())
+      .CancelCallback(this.callbackID);
   }
 
   private func Terminate() -> Void {

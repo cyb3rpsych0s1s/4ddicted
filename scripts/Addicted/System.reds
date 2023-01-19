@@ -202,7 +202,8 @@ public class AddictedSystem extends ScriptableSystem {
       s"\(ToString(specificThreshold)) addicted (version threshold)" + "\n" +
       s"\(ToString(averageThreshold)) addicted (consumable threshold)"
     );
-    let request = Helper.AppropriateHintRequest(id, threshold);
+    let now = this.timeSystem.GetGameTimeStamp();
+    let request = Helper.AppropriateHintRequest(id, threshold, now);
     if IsDefined(request) {
       this.ProcessHintRequest(request);
     }
