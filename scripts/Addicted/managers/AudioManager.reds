@@ -5,16 +5,31 @@ import Addicted.Utils.E
 import Addicted.*
 
 public class HintProgressCallback extends DelayCallback {
-  public let owner: wref<AudioManager>;
+  public let manager: wref<AudioManager>;
   public func Call() -> Void {
     E(s"on hint progress callback ...");
-    this.owner.Update();
+    if this.manager.ambient != null {
+      GameInstance.GetAudioSystem(this.manager.owner.GetGame())
+        .Play(this.manager.ambientSFX.GetSoundName(), this.manager.owner.GetEntityID(), n"Addicted");
+    }
+    if ArraySize(this.manager.oneshot) > 0 {
+      let size = ArraySize(this.manager.oneshot);
+      let tracked: ref<TrackedHintRequest>;
+      if size == 1 || this.manager.oneshot[0].played == 0 { tracked = this.manager.oneshot[0]; }
+      else {
+        let random = RandRangeF(0, 1);
+        tracked = this.manager.oneshot[Cast<Int32>(random)];
+      }
+      this.manager.Play(tracked);
+    }
+    this.manager.Update();
   }
 }
 
 public class TrackedHintRequest {
   public let got: ref<HintRequest>;
   public let played: Int32;
+  public let playing: Bool = false;
 }
 
 public class AudioManager extends IScriptable {
@@ -44,17 +59,17 @@ public class AudioManager extends IScriptable {
       board = this.owner.GetPlayerStateMachineBlackboard();
       E(s"board is defined ? \(IsDefined(board))");
       if IsDefined(board) {
+        this.swimming = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
         if !IsDefined(this.onDiving) {
-          this.swimming     = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
-          this.onDiving     = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this, n"OnDivingChanged", true);
+          this.onDiving = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this, n"OnDivingChanged", true);
         }
+        this.consuming = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming);
         if !IsDefined(this.onConsuming) {
-          this.consuming    = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming);
-          this.onConsuming  = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this, n"OnConsumingChanged", true);
+          this.onConsuming = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this, n"OnConsumingChanged", true);
         }
+        this.chatting = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue);
         if !IsDefined(this.onChatting) {
-          this.chatting     = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue);
-          this.onChatting   = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this, n"OnChattingChanged", true);
+          this.onChatting = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this, n"OnChattingChanged", true);
         }
       }
       E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onChatting))");
@@ -77,6 +92,15 @@ public class AudioManager extends IScriptable {
       this.onChatting = null;
     }
     this.owner = null;
+  }
+
+  public func Play(tracked: ref<TrackedHintRequest>) -> Void {
+    let policy = this.ToPolicy();
+    if EnumInt(policy) == EnumInt(PlaySoundPolicy.AmbientOnly) { return; }
+    
+    GameInstance.GetAudioSystem(this.owner.GetGame())
+      .Play(tracked.got.Sound(), this.owner.GetEntityID(), n"Addicted");
+    tracked.played += 1;
   }
 
   protected func InvalidateState() -> Void {
@@ -167,8 +191,6 @@ public class AudioManager extends IScriptable {
       sfx.SetSoundName(request.Sound());
       this.ambient = request;
       this.ambientSFX = sfx;
-      GameInstance.GetAudioSystem(this.owner.GetGame())
-        .Play(sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
     }
   }
 
@@ -180,8 +202,6 @@ public class AudioManager extends IScriptable {
     tracked.played = 0;
     ArrayPush(this.oneshot, tracked);
     ArrayPush(this.oneshotSFX, sfx);
-    GameInstance.GetAudioSystem(this.owner.GetGame())
-      .Play(sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
   }
 
   private func Augment(request: ref<HintRequest>) -> Bool {
@@ -252,9 +272,10 @@ public class AudioManager extends IScriptable {
 
   private func Schedule() {
     let callback: ref<HintProgressCallback> = new HintProgressCallback();
-    callback.owner = this;
+    callback.manager = this;
+    let delay = RandRangeF(3, 5);
     this.callbackID = GameInstance.GetDelaySystem(this.owner.GetGame())
-      .DelayCallback(callback, 3, true);
+      .DelayCallback(callback, delay, true);
   }
 
   protected final func ToPolicy() -> PlaySoundPolicy {

@@ -5,7 +5,7 @@ import Addicted.Helper
 public abstract class HintRequest extends ScriptableSystemRequest {
   // game timestamp where to stop at
   protected let until: Float;
-  protected let times: Int32 = 0;
+  protected let times: Int32 = 1;
   protected let threshold: Threshold;
   protected let onomatopea: Onomatopea;
   public func Sound() -> CName;
