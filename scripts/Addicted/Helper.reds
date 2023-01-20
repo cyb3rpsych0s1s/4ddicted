@@ -304,7 +304,7 @@ public class Helper {
     return ArrayContains(variants, id);
   }
 
-  public static Biomonitors() -> array<TweakDBID> {
+  public static func Biomonitors() -> array<TweakDBID> {
     return [
       t"Items.HealthMonitorCommon",
       t"Items.HealthMonitorUncommon",

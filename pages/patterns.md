@@ -330,7 +330,7 @@ public class PlayerPuppet extends ScriptedPuppet {
 - `ScriptStatPoolsListener` :arrow_right: `BaseStatPools`
 - ...
 
-## effectors
+## Effectors
 
 Or simply put, adding custom logic at runtime to statically defined status effects.
 

@@ -99,8 +99,9 @@ private final func UnequipItem(itemID: ItemID) -> Void {
   if cyberware {
     E(s"uninstalled by item id \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
-    if Helper.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(this.GetGame());
+    let player = this.m_owner as PlayerPuppet;
+    if IsDefined(player) && Helper.IsBiomonitor(id) {
+      let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnBiomonitorChanged(false);
     }
   }
@@ -115,8 +116,9 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
   if cyberware {
     E(s"uninstalled by index(es) \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
-    if Helper.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(this.GetGame());
+    let player = this.m_owner as PlayerPuppet;
+    if IsDefined(player) && Helper.IsBiomonitor(id) {
+      let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnBiomonitorChanged(false);
     }
   }
@@ -128,12 +130,12 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
   let itemID: ItemID = itemData.GetID();
   let area: gamedataEquipmentArea = EquipmentSystem.GetEquipAreaType(itemID);
   let cyberware = InventoryDataManagerV2.IsEquipmentAreaCyberware(area);
-  wrappedMethod(equipAreaIndex, slotIndex);
+  wrappedMethod(itemData);
   if cyberware {
     E(s"installed \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     if Helper.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(this.GetGame());
+      let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnBiomonitorChanged(true);
     }
   }
