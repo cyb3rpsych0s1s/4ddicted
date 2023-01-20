@@ -300,8 +300,9 @@ public class Helper {
   }
 
   public static func IsBiomonitor(id: TweakDBID) -> Bool {
-    let variants = Helper.Biomonitors();
-    return ArrayContains(variants, id);
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrBeginsWith(suffix, "HealthMonitor");
   }
 
   public static func Biomonitors() -> array<TweakDBID> {
