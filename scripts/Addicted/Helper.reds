@@ -511,6 +511,32 @@ public class Helper {
     }
   }
 
+  public static func Lower(threshold: Threshold) -> Threshold {
+    switch(threshold) {
+      case Threshold.Severely:
+        return Threshold.Notably;
+      case Threshold.Notably:
+        return Threshold.Mildly;
+      case Threshold.Mildly:
+        return Threshold.Barely;
+      default:
+        return Threshold.Clean;
+    }
+  }
+
+  public static func Higher(threshold: Threshold) -> Threshold {
+    switch(threshold) {
+      case Threshold.Clean:
+        return Threshold.Barely;
+      case Threshold.Barely:
+        return Threshold.Mildly;
+      case Threshold.Mildly:
+        return Threshold.Notably;
+      default:
+        return Threshold.Severely;
+    }
+  }
+
   public static final func MakeGameTime(timestamp: Float) -> GameTime {
     timestamp = Cast<Float>(RoundF(timestamp));
     let days: Float = timestamp / 86400.;

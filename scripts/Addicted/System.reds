@@ -178,6 +178,23 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnCyberwareInstalled(hasBiomonitor: Bool) -> Void {
     this.hasBiomonitorEquipped = hasBiomonitor;
+    if hasBiomonitor {
+      let size = this.consumptions.Size();
+      if size == 0 { return; }
+      let threshold: Threshold;
+      let consumption: ref<Consumption>;
+      let ids = this.consumptions.Keys();
+      // if just equipped, trigger warning since V might be already addicted
+      // and didn't have a chance previously to get warned about
+      for id in ids {
+        consumption = this.consumptions.Get(id);
+        threshold = Helper.Threshold(consumption.current);
+        if Helper.IsSerious(threshold) {
+          let lower = Helper.Lower(threshold);
+          this.Warn(id, lower, threshold);
+        }
+      }
+    }
   }
 
   protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
