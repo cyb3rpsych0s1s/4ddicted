@@ -43,10 +43,10 @@ public class AudioManager extends IScriptable {
 
   private let swimming: Int32;
   private let consuming: Bool;
-  private let chatting: Bool;
+  private let tier: Int32;
   private let onDiving: ref<CallbackHandle>;
   private let onConsuming: ref<CallbackHandle>;
-  private let onChatting: ref<CallbackHandle>;
+  private let onTierChanged: ref<CallbackHandle>;
 
   private let ambient: ref<TrackedHintRequest>;
   private let oneshot: array<ref<TrackedHintRequest>>;
@@ -71,12 +71,12 @@ public class AudioManager extends IScriptable {
         if !IsDefined(this.onConsuming) {
           this.onConsuming = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this, n"OnConsumingChanged", true);
         }
-        this.chatting = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue);
-        if !IsDefined(this.onChatting) {
-          this.onChatting = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this, n"OnChattingChanged", true);
+        this.tier = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.SceneTier);
+        if !IsDefined(this.onTierChanged) {
+          this.onTierChanged = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.SceneTier, this, n"OnSceneTierChanged", true);
         }
       }
-      E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onChatting))");
+      E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onTierChanged))");
     }
     this.InvalidateState();
   }
@@ -91,11 +91,11 @@ public class AudioManager extends IScriptable {
       if IsDefined(board) {
         if IsDefined(this.onDiving)     { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this.onDiving); }
         if IsDefined(this.onConsuming)  { board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this.onConsuming); }
-        if IsDefined(this.onChatting)   { board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsInDialogue, this.onChatting); }
+        if IsDefined(this.onTierChanged)   { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.SceneTier, this.onTierChanged); }
       }
       this.onDiving = null;
       this.onConsuming = null;
-      this.onChatting = null;
+      this.onTierChanged = null;
     }
     this.owner = null;
   }
@@ -348,12 +348,17 @@ public class AudioManager extends IScriptable {
   }
 
   protected final func ToPolicy() -> PlaySoundPolicy {
-    if this.consuming || this.IsDiving() || this.chatting { return PlaySoundPolicy.AmbientOnly; }
+    if this.consuming || this.IsDiving() || this.IsChatting() { return PlaySoundPolicy.AmbientOnly; }
     return PlaySoundPolicy.All;
   }
 
   protected final func IsDiving() -> Bool {
     return this.swimming == EnumInt(gamePSMSwimming.Diving);
+  }
+
+  protected final func IsChatting() -> Bool {
+    return this.tier != EnumInt(GameplayTier.Tier1_FullGameplay) &&
+      this.tier != EnumInt(GameplayTier.Tier2_StagedGameplay);
   }
 
   protected cb func OnDivingChanged(value: Int32) -> Bool {
@@ -373,10 +378,10 @@ public class AudioManager extends IScriptable {
     }
   }
 
-  protected cb func OnChattingChanged(value: Bool) -> Bool {
-    if !Equals(this.chatting, value) {
+  protected cb func OnTierChanged(value: Int32) -> Bool {
+    if !Equals(this.tier, value) {
       E(s"chatting status changed: \(ToString(value))");
-      this.chatting = value;
+      this.tier = value;
       this.InvalidateState();
     }
   }

@@ -142,29 +142,7 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
 }
 
 @addField(PlayerStateMachineDef)
-public let IsInDialogue: BlackboardID_Bool;
-
-@addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
-
-@addMethod(PlayerPuppet)
-public func CanPlayOnomatopea() -> Bool {
-  let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(this.GetGame()) as IBlackboard;
-  let swimming = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
-  let diving = Equals(swimming, EnumInt(gamePSMSwimming.Diving));
-  if diving {
-    E(s"can only play ambient onomatopea: currently diving");
-    return false;
-  }
-  let scene = GameInstance.GetSceneSystem(this.GetGame());
-  let interface = scene.GetScriptInterface();
-  let chatting = interface.IsEntityInDialogue(this.GetEntityID());
-  if chatting {
-    E(s"cannot play onomatopea: currently chatting");
-    return false;
-  }
-  return true;
-}
 
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {

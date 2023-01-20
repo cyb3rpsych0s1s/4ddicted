@@ -340,27 +340,6 @@ public class AddictedSystem extends ScriptableSystem {
     return false;
   }
 
-  private func CanPlayOnomatopea() -> Bool {
-    if this.quiet {
-      E(s"cannot play onomatopea: quiet (from consuming)");
-      return false;
-    }
-    let scene = GameInstance.GetSceneSystem(this.player.GetGame());
-    let interface = scene.GetScriptInterface();
-    let chatting = interface.IsEntityInDialogue(this.player.GetEntityID());
-    if chatting {
-      E(s"cannot play onomatopea: currently chatting");
-      return false;
-    }
-    let swimming: Int32 = this.board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming);
-    if Equals(swimming, EnumInt(gamePSMSwimming.Diving)) {
-      E(s"cannot play onomatopea: currently diving");
-      return false;
-    }
-    E(s"can play onomatopea");
-    return true;
-  }
-
   /// average consumption for a given consumable
   /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
   public func AverageConsumption(consumable: Consumable) -> Int32 {
