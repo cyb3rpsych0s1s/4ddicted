@@ -176,7 +176,7 @@ public class AddictedSystem extends ScriptableSystem {
     return actionEffects;
   }
 
-  public func OnCyberwareInstalled(hasBiomonitor: Bool) -> Void {
+  public func OnCyberwareChanged(hasBiomonitor: Bool) -> Void {
     this.hasBiomonitorEquipped = hasBiomonitor;
     if hasBiomonitor {
       let size = this.consumptions.Size();
