@@ -299,6 +299,21 @@ public class Helper {
     return false;
   }
 
+  public static func IsBiomonitor(id: TweakDBID) -> Bool {
+    let variants = Helper.Biomonitors();
+    return ArrayContains(variants, id);
+  }
+
+  public static Biomonitors() -> array<TweakDBID> {
+    return [
+      t"Items.HealthMonitorCommon",
+      t"Items.HealthMonitorUncommon",
+      t"Items.HealthMonitorRare",
+      t"Items.HealthMonitorEpic",
+      t"Items.HealthMonitorLegendary"
+    ];
+  }
+
   public static func IsSleep(id: TweakDBID) -> Bool { return Equals(id, t"HousingStatusEffect.Rested"); }
 
   public static func IsAlcohol(id: TweakDBID) -> Bool {
@@ -481,7 +496,22 @@ public class Helper {
     return null;
   }
 
-  static public final func MakeGameTime(timestamp: Float) -> GameTime {
+  public static func GetTranslation(threshold: Threshold) -> String {
+    switch (threshold) {
+      case Threshold.Severely:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Severely");
+      case Threshold.Notably:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Notably");
+      case Threshold.Mildly:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Mildly");
+      case Threshold.Barely:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Barely");
+      case Threshold.Clean:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Clean");
+    }
+  }
+
+  public static final func MakeGameTime(timestamp: Float) -> GameTime {
     timestamp = Cast<Float>(RoundF(timestamp));
     let days: Float = timestamp / 86400.;
     let hours: Float = (timestamp % 86400.) / 3600.;

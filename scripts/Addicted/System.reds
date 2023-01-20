@@ -18,8 +18,11 @@ public class AddictedSystem extends ScriptableSystem {
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
 
+  private persistent let hasBiomonitorEquipped: Bool;
+
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
+
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -173,6 +176,10 @@ public class AddictedSystem extends ScriptableSystem {
     return actionEffects;
   }
 
+  public func OnCyberwareInstalled(hasBiomonitor: Bool) -> Void {
+    this.hasBiomonitorEquipped = hasBiomonitor;
+  }
+
   protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
     E(s"on coughing request");
     this.ProcessHintRequest(request);
@@ -242,6 +249,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   /// warn a player with a biomonitor
   public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
+    if !this.player.HasBiomonitor() { return; }
     // avoids meaningless notifications
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
     let toast: SimpleScreenMessage;
@@ -249,14 +257,19 @@ public class AddictedSystem extends ScriptableSystem {
     toast.isInstant = true;
     toast.duration = 5.;
     let consumable = Helper.Consumable(id);
+    let desc: String = GetLocalizedTextByKey(n"Mod-Addicted-Substance") +
+      ToString(consumable) +
+      s"\n" +
+      GetLocalizedTextByKey(n"Mod-Addicted-Threshold") +
+      Helper.GetTranslation(after);
     if EnumInt(before) < EnumInt(after) {
-      toast.message = s"symptoms of addiction detected\nsubstance: \(ToString(consumable))\nthreshold: \(ToString(after))";
+      toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Increased") + s"\n" +desc;
     } else {
       E(s"threshold after: \(ToString(after))");
       if EnumInt(after) == 0 {
-        toast.message = s"symptoms of addiction gone\nsubstance: \(ToString(consumable))\nthreshold: \(ToString(after))";
+        toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Gone") + s"\n" +desc;
       } else {
-        toast.message = s"symptoms of addiction in recession\nsubstance: \(ToString(consumable))\nthreshold: \(ToString(after))\nit's getting better, keep this way !";
+        toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Decreased") + s"\n" +desc;
       }
     }
     GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(toast), true);

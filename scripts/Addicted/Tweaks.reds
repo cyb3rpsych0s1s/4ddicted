@@ -37,7 +37,13 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
 @addMethod(PlayerPuppet)
 public func HasBiomonitor() -> Bool {
   let system = EquipmentSystem.GetInstance(this);
-  return system.IsEquipped(this, ItemID.FromTDBID(t"Items.generic_selling_biomonitor"));
+  let biomonitors = Helper.Biomonitors();
+  for biomonitor in biomonitors {
+    if system.IsEquipped(this, ItemID.FromTDBID(biomonitor)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // alter some effects based on addiction threshold
@@ -92,6 +98,11 @@ private final func UnequipItem(itemID: ItemID) -> Void {
   wrappedMethod(itemID);
   if cyberware {
     E(s"uninstalled by item id \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
+    let id = ItemID.GetTDBID(itemID);
+    if Helper.IsBiomonitor(id) {
+      let system = AddictedSystem.GetInstance(this.GetGame());
+      system.OnCyberwareChanged(false);
+    }
   }
 }
 
@@ -103,12 +114,29 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
   wrappedMethod(equipAreaIndex, slotIndex);
   if cyberware {
     E(s"uninstalled by index(es) \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
+    let id = ItemID.GetTDBID(itemID);
+    if Helper.IsBiomonitor(id) {
+      let system = AddictedSystem.GetInstance(this.GetGame());
+      system.OnCyberwareChanged(false);
+    }
   }
 }
 
 @wrapMethod(RipperDocGameController)
 private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
   E(s"equip cyberware");
+  let itemID: ItemID = itemData.GetID();
+  let area: gamedataEquipmentArea = EquipmentSystem.GetEquipAreaType(itemID);
+  let cyberware = InventoryDataManagerV2.IsEquipmentAreaCyberware(area);
+  wrappedMethod(equipAreaIndex, slotIndex);
+  if cyberware {
+    E(s"installed \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
+    let id = ItemID.GetTDBID(itemID);
+    if Helper.IsBiomonitor(id) {
+      let system = AddictedSystem.GetInstance(this.GetGame());
+      system.OnCyberwareChanged(true);
+    }
+  }
 }
 
 @addField(PlayerStateMachineDef)
