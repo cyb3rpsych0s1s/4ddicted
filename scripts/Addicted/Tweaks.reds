@@ -101,7 +101,7 @@ private final func UnequipItem(itemID: ItemID) -> Void {
     let id = ItemID.GetTDBID(itemID);
     if Helper.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(this.GetGame());
-      system.OnCyberwareChanged(false);
+      system.OnBiomonitorChanged(false);
     }
   }
 }
@@ -117,7 +117,7 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
     let id = ItemID.GetTDBID(itemID);
     if Helper.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(this.GetGame());
-      system.OnCyberwareChanged(false);
+      system.OnBiomonitorChanged(false);
     }
   }
 }
@@ -134,7 +134,7 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
     let id = ItemID.GetTDBID(itemID);
     if Helper.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(this.GetGame());
-      system.OnCyberwareChanged(true);
+      system.OnBiomonitorChanged(true);
     }
   }
 }
