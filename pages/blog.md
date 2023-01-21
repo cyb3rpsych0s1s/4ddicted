@@ -1,0 +1,42 @@
+# Blog
+
+## 2023/01/21
+
+### cyberware research
+
+- `PlaySFXEffector` -> heart beat (deactivation: heart beat rev) : but bound to status effect or manually playable ?
+- make the onomotopea happens less often if too frequent ?
+- what about dexotifier ? -> immune to withdrawal symptoms ! boost resilience ? (2?)
+	> main trait of this item is immunity
+  > `Items.ToxinCleanser`
+- what about metabolic editor ? -> boost resilience ! (4?) immune ? regenerate health on symptoms ?
+	> main trait of this is regeneration
+  > `Items.ReverseMetabolicEnhancer`
+
+### bibliography
+
+#### Cyberpunk 2077 wiki
+
+The Immune System has **2 slots** that can be used to implant a cyberware for V.
+
+#### Health Direct
+
+Addiction withdrawal symptoms | healthdirecthttps://www.healthdirect.gov.au
+
+a residential detox unit or in a hospital; at home. **Detoxing** or **withdrawing** without support can lead to relapse. It can also be dangerous to your health.
+
+#### Drug withdrawal
+
+Drug withdrawal, drug withdrawal syndrome, or substance withdrawal syndrome,[1] is the group of symptoms that occur upon the abrupt discontinuation or decrease in the intake of pharmaceutical or recreational drugs.
+
+In order for the symptoms of withdrawal to occur, one must have first developed a form of drug dependence. This may occur as physical dependence, psychological dependence or both. Drug dependence develops from consuming one or more substances over a period of time.
+
+Dependence arises in a dose-dependent manner and produces withdrawal symptoms that vary with the type of drug that is consumed. For example, prolonged use of an antidepressant medication is likely to cause a rather different reaction when discontinued compared to discontinuation of an opioid, such as heroin. **Withdrawal symptoms from opiates include anxiety, sweating, vomiting, and diarrhea. Alcohol withdrawal symptoms include irritability, fatigue, shaking, sweating, and nausea. Withdrawal from nicotine can cause irritability, fatigue, insomnia, headache, and difficulty concentrating. Many prescription and legal nonprescription substances can also cause withdrawal symptoms when individuals stop consuming them, even if they were taken as directed by a physician.**
+
+**The route of administration, whether intravenous, intramuscular, oral or otherwise, can also play a role in determining the severity of withdrawal symptoms.** There are different stages of withdrawal as well; **generally, a person will start to feel bad (crash or come down), progress to feeling worse, hit a plateau, and then the symptoms begin to dissipate. However, withdrawal from certain drugs (barbiturates, benzodiazepines, alcohol, glucocorticoids) can be fatal.** While it is seldom fatal to the user, withdrawal from opiates (and some other drugs) can cause miscarriage, due to fetal withdrawal. The term "cold turkey" is used to describe the sudden cessation of use of a substance and the ensuing physiologic manifestations.
+
+#### Wikipedia
+
+What are 3 important functions of the liver?
+
+The liver is an essential organ of the body that performs over 500 vital functions. **These include removing waste products and foreign substances from the bloodstream**, regulating blood sugar levels, and creating essential nutrients.
