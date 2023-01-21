@@ -12,6 +12,10 @@
 - what about metabolic editor ? -> boost resilience ! (4?) immune ? regenerate health on symptoms ?
 	> main trait of this is regeneration
   > `Items.ReverseMetabolicEnhancer`
+- if one can `@wrapMethod` over `class StatPoolEffector`'s  then maybe the penalty for healers can be applied directly there.
+  another long-told alternative would be a custom status effect but SFX should still be handled separately by `AudioManager`.
+- there's an `ApplyShaderOnObjectEffector` !
+- looking at *splinter_buff_fx.effect* in Wolvenkit's Asset browser, it appears that it contains an `itemTrackItemSound` in `events` with `eventName` set to `vfx_fullscreen_splinter_buff`. finding a way to disable/remove it would probably allows for playing VFX without associated SFX.
 
 ### bibliography
 
