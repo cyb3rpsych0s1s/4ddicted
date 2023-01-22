@@ -195,3 +195,12 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
           value: 1.1
 
 # object action effect: see scriptable tweaks
+
+BaseStatusEffect.CustomSplinter:
+  $base: BaseStatusEffect.FirstAidWhiffV0
+  packages: []
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: splinter_addicted
+      shouldReapply: true
+     
