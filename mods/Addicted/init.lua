@@ -25,14 +25,8 @@ function addicted:new()
             print("[Addicted]:OnSessionStart")
             Cron.After(0.25, function ()
                 print("[Addicted]:Cron:After:tick")
-                self.runtimeData.inGame = true
-                CName.new("purple_haze");
-                effects = GetPlayer():FindComponentByName("fx_player").effectDescs;
-                custom = entEffectDesc.new();
-                custom.effectName = "purple_haze";
-                custom.effect = "base\\fx\\camera\\splinter_buff\\purple_haze_fx.effect";
-                table.insert(effects, custom);
-                GetPlayer():FindComponentByName("fx_player").effectDescs = effects;
+                self.runtimeData.inGame = true;
+                RegisterVFXs()
             end, nil)
         end)
 
@@ -47,6 +41,37 @@ function addicted:new()
         -- This is required for Cron to function
         Cron.Update(delta)
     end)
+
+    function CreateVFX(effectName, effect)
+        CName.new(effectName);
+        local custom = entEffectDesc.new();
+        custom.effectName = effectName;
+        custom.effect = effect;
+        return custom
+    end
+
+    function CreateVFXs()
+        local vfxs = {}
+        local mildly_splinter_buff = CreateVFX("mildly_splinter_buff", "base\\fx\\camera\\splinter_buff\\mildly_splinter_buff_fx.effect")
+        local purple_haze = CreateVFX("purple_haze", "base\\fx\\camera\\splinter_buff\\purple_haze_fx.effect")
+        table.insert(vfxs, mildly_splinter_buff)
+        table.insert(vfxs, purple_haze)
+        return vfxs
+    end
+
+    function RegisterVFXs()
+        local vfxs = CreateVFXs()
+        local size = table.maxn(vfxs)
+        local effects = GetPlayer():FindComponentByName("fx_player").effectDescs
+        local vfx
+        for i = 0,size,1
+        do
+            vfx = vfxs[i]
+            table.insert(effects, vfx)
+
+        end
+        GetPlayer():FindComponentByName("fx_player").effectDescs = effects
+    end
 
     function StrLocKey(key)
         if type(key) == "string" then
