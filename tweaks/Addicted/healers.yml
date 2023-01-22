@@ -198,6 +198,13 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
 
 BaseStatusEffect.CustomSplinter:
   $base: BaseStatusEffect.FirstAidWhiffV0
+  duration:
+    $base: Items.LongLastingConsumableDuration
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.MaxDuration
+        value: 15
   packages: []
   VFX:
     - $type: StatusEffectFX_Record

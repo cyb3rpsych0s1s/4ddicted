@@ -25,8 +25,9 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     let system = AddictedSystem.GetInstance(this.GetGame());
-
     let id = evt.staticData.GetID();
+    EI(id, s"status effect removed");
+
     if evt.IsAddictive() {
       EI(id, s"addictive substance dissipated");
       system.OnDissipated(id);
