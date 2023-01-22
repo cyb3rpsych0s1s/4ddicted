@@ -196,7 +196,7 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
 
 # object action effect: see scriptable tweaks
 
-BaseStatusEffect.CustomSplinter:
+BaseStatusEffect.PurpleHaze:
   $base: BaseStatusEffect.FirstAidWhiffV0
   duration:
     $base: Items.LongLastingConsumableDuration

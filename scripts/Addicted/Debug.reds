@@ -4,29 +4,17 @@ import Addicted.Threshold
 import Addicted.System.AddictedSystem
 import Addicted.Utils.{E,EI}
 
-// Game.GetPlayer():Splinter()
-@addMethod(PlayerPuppet)
-public func Splinter() -> Void {
-  GameInstance
-    .GetStatusEffectSystem(this.GetGame())
-    .ApplyStatusEffect(this.GetEntityID(), t"BaseStatusEffect.CustomSplinter", this.GetRecordID(), this.GetEntityID());
-}
-
-// Game.GetPlayer():SplinterOriginal()
-@addMethod(PlayerPuppet)
-public func SplinterOriginal() -> Void {
-  GameObjectEffectHelper.StartEffectEvent(this, n"splinter_addicted");
-}
-
-// Game.GetPlayer():SplinterBuff()
-@addMethod(PlayerPuppet)
-public func SplinterBuff() -> Void {
-  GameObjectEffectHelper.StartEffectEvent(this, n"splinter_buff");
-}
-
 // Game.GetPlayer():PurpleHaze()
 @addMethod(PlayerPuppet)
 public func PurpleHaze() -> Void {
+  GameInstance
+    .GetStatusEffectSystem(this.GetGame())
+    .ApplyStatusEffect(this.GetEntityID(), t"BaseStatusEffect.PurpleHaze", this.GetRecordID(), this.GetEntityID());
+}
+
+// Game.GetPlayer():PurpleHazeVFX()
+@addMethod(PlayerPuppet)
+public func PurpleHazeVFX() -> Void {
   GameObjectEffectHelper.StartEffectEvent(this, n"purple_haze");
 }
 
