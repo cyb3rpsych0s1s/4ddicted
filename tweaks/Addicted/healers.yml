@@ -196,18 +196,18 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
 
 # object action effect: see scriptable tweaks
 
-BaseStatusEffect.CustomSplinter:
-  $base: BaseStatusEffect.FirstAidWhiffV0
-  duration:
-    $base: Items.LongLastingConsumableDuration
-    statModifiers:
-      - $type: ConstantStatModifier_Record
-        modifierType: Additive
-        statType: BaseStats.MaxDuration
-        value: 15
-  packages: []
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: splinter_addicted
-      shouldReapply: true
+# BaseStatusEffect.CustomSplinter:
+#   $base: BaseStatusEffect.FirstAidWhiffV0
+#   duration:
+#     $base: Items.LongLastingConsumableDuration
+#     statModifiers:
+#       - $type: ConstantStatModifier_Record
+#         modifierType: Additive
+#         statType: BaseStats.MaxDuration
+#         value: 15
+#   packages: []
+#   VFX:
+#     - $type: StatusEffectFX_Record
+#       name: splinter_addicted
+#       shouldReapply: true
      

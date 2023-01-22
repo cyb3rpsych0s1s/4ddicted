@@ -18,6 +18,18 @@ public func SplinterOriginal() -> Void {
   GameObjectEffectHelper.StartEffectEvent(this, n"splinter_addicted");
 }
 
+// Game.GetPlayer():SplinterBuff()
+@addMethod(PlayerPuppet)
+public func SplinterBuff() -> Void {
+  GameObjectEffectHelper.StartEffectEvent(this, n"splinter_buff");
+}
+
+// Game.GetPlayer():PurpleHaze()
+@addMethod(PlayerPuppet)
+public func PurpleHaze() -> Void {
+  GameObjectEffectHelper.StartEffectEvent(this, n"purple_haze");
+}
+
 // use like:
 // Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("Items.FirstAidWhiffV0"), 40);
 // Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("Items.BonesMcCoy70V0"), 40);
