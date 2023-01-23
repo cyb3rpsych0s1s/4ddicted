@@ -47,6 +47,26 @@ public func HasBiomonitor() -> Bool {
   return false;
 }
 
+@addMethod(PlayerPuppet)
+public func HasDetoxifier() -> Bool {
+  let system = EquipmentSystem.GetInstance(this);
+  return system.IsEquipped(this, ItemID.FromTDBID(t"Items.ToxinCleanser"));
+}
+
+@addMethod(PlayerPuppet)
+public func HasMetabolicEditor() -> Bool {
+  let system = EquipmentSystem.GetInstance(this);
+  return system.IsEquipped(this, ItemID.FromTDBID(t"Items.ReverseMetabolicEnhancer"));
+}
+
+@addMethod(PlayerPuppet)
+public func CyberwareImmunity() -> Int32 {
+  let resilience = 0;
+  if this.HasMetabolicEditor() { resilience += 4; }
+  if this.HasDetoxifier() { resilience += 2; }
+  return resilience;
+}
+
 // alter some effects based on addiction threshold
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
@@ -104,6 +124,17 @@ private final func UnequipItem(itemID: ItemID) -> Void {
     if IsDefined(player) && Helper.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnBiomonitorChanged(false);
+      return;
+    }
+    if IsDefined(player) && Helper.IsDetoxifier(id) {
+      let system = AddictedSystem.GetInstance(player.GetGame());
+      system.OnDetoxifierChanged(false);
+      return;
+    }
+    if IsDefined(player) && Helper.IsMetabolicEditor(id) {
+      let system = AddictedSystem.GetInstance(player.GetGame());
+      system.OnMetabolicEditorChanged(false);
+      return;
     }
   }
 }
@@ -121,6 +152,17 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
     if IsDefined(player) && Helper.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnBiomonitorChanged(false);
+      return;
+    }
+    if IsDefined(player) && Helper.IsDetoxifier(id) {
+      let system = AddictedSystem.GetInstance(player.GetGame());
+      system.OnDetoxifierChanged(false);
+      return;
+    }
+    if IsDefined(player) && Helper.IsMetabolicEditor(id) {
+      let system = AddictedSystem.GetInstance(player.GetGame());
+      system.OnMetabolicEditorChanged(false);
+      return;
     }
   }
 }
@@ -138,6 +180,17 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
     if Helper.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnBiomonitorChanged(true);
+      return;
+    }
+    if Helper.IsDetoxifier(id) {
+      let system = AddictedSystem.GetInstance(this.m_player.GetGame());
+      system.OnDetoxifierChanged(true);
+      return;
+    }
+    if Helper.IsMetabolicEditor(id) {
+      let system = AddictedSystem.GetInstance(this.m_player.GetGame());
+      system.OnMetabolicEditorChanged(true);
+      return;
     }
   }
 }

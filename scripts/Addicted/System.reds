@@ -19,6 +19,8 @@ public class AddictedSystem extends ScriptableSystem {
   public let restingSince: Float;
 
   private persistent let hasBiomonitorEquipped: Bool;
+  private persistent let hasDetoxifierEquipped: Bool;
+  private persistent let hasMetabolicEditorEquipped: Bool;
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
@@ -142,7 +144,7 @@ public class AddictedSystem extends ScriptableSystem {
       consumption = this.consumptions.Get(id) as Consumption;
       let under_influence = false;
       if this.IsHard() {
-        under_influence = this.SleptUnderInfluence(id);
+        under_influence = this.SleptUnderInfluence(id) && !this.hasDetoxifierEquipped;
         if sleep && under_influence
         { 
           E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(id))");
@@ -152,7 +154,7 @@ public class AddictedSystem extends ScriptableSystem {
         // energized and refreshed are not affected
         if !sleep || !under_influence {
           let current = consumption.current;
-          let next = Max(current - Helper.Resilience(id), 0);
+          let next = Max(current - Helper.Resilience(id) - this.player.CyberwareImmunity(), 0);
           consumption.current = next;
           if sleep {
             E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(id))");
@@ -195,6 +197,14 @@ public class AddictedSystem extends ScriptableSystem {
         }
       }
     }
+  }
+
+  public func OnDetoxifierChanged(hasDetoxifier: Bool) -> Void {
+    this.hasDetoxifierEquipped = hasDetoxifier;
+  }
+
+  public func OnMetabolicEditorChanged(hasMetabolicEditor: Bool) -> Void {
+    this.hasMetabolicEditorEquipped = hasMetabolicEditor;
   }
 
   protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
