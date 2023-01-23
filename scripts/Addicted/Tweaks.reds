@@ -4,6 +4,21 @@ import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 
+@addMethod(PlayerPuppet)
+public func IsPossessed() -> Bool {
+  let system: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.GetGame());
+  let possessed: Bool = Cast<Bool>(system.GetFactStr("isPlayerPossessedByJohnny"));
+  let replacer: Bool = this.GetRecordID() == t"Character.johnny_replacer";
+  return replacer || possessed;
+}
+
+@addMethod(PlayerPuppet)
+public func PastPrologue() -> Bool {
+  let system: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.GetGame());
+  let fact: Int32 = system.GetFact(n"watson_prolog_unlock");
+  return Equals(fact, 1);
+}
+
 // decrease score on rest
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {

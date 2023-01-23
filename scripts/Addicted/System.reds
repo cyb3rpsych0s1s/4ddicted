@@ -88,6 +88,10 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
     E(s"consume item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
+    if !this.player.PastPrologue() {
+      E(s"no consumption tracked during prologue");
+      return;
+    }
     let id = ItemID.GetTDBID(itemID);
     let before: Threshold;
     let after: Threshold;
@@ -251,6 +255,10 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func Hint(id: TweakDBID) -> Void {
     E(s"hint");
+    if this.player.IsPossessed() {
+      E(s"no hint when possessed");
+      return;
+    }
     let consumable = Helper.Consumable(id);
     let specific = this.consumptions.Get(id);
     let average = this.AverageConsumption(consumable);
