@@ -116,6 +116,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 10
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_reflex_buster
+      shouldReapply: false
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   $base: BaseStatusEffect.BonesMcCoy70V0
@@ -131,6 +135,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 5
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_reflex_buster
+      shouldReapply: false
 
 ### v1
 
@@ -148,6 +156,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 15
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_reflex_buster
+      shouldReapply: false
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
   $base: BaseStatusEffect.BonesMcCoy70V1
@@ -163,6 +175,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 10
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_reflex_buster
+      shouldReapply: false
 
 ### v2
 
@@ -180,6 +196,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 20
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_reflex_buster
+      shouldReapply: false
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
   $base: BaseStatusEffect.BonesMcCoy70V1
@@ -195,6 +215,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 15
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_reflex_buster
+      shouldReapply: false
 
 ## health booster
 

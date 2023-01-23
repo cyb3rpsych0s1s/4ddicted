@@ -4,24 +4,50 @@ import Addicted.Threshold
 import Addicted.System.AddictedSystem
 import Addicted.Utils.{E,EI}
 
-// Game.GetPlayer():PurpleHaze()
+public class TestVFXThresholdCallback extends DelayCallback {
+  public let player: wref<PlayerPuppet>;
+  public let id: TweakDBID;
+  public func Call() -> Void {
+    this.player.DebugClearEffects();
+    EI(this.id, s"playing VFX");
+    GameInstance
+    .GetStatusEffectSystem(this.player.GetGame())
+    .ApplyStatusEffect(this.player.GetEntityID(), this.id, this.player.GetRecordID(), this.player.GetEntityID());
+  }
+}
+
+// use like:
+// Game.GetPlayer():TestVFX("FirstAidWhiffV0")
+// Game.GetPlayer():TestVFX("BonesMcCoy70V0")
+// Game.GetPlayer():TestVFX("HealthBooster")
 @addMethod(PlayerPuppet)
-public func PurpleHaze() -> Void {
+public func TestVFX(version: String) -> Void {
+  let c_name = "BaseStatusEffect." + version;
+  let clean: ref<TestVFXThresholdCallback> = new TestVFXThresholdCallback();
+  clean.id = TDBID.Create(c_name);
+  clean.player = this;
+
+  let n_name = "BaseStatusEffect.NotablyWeakened" + version;
+  let notable: ref<TestVFXThresholdCallback> = new TestVFXThresholdCallback();
+  notable.id = TDBID.Create(n_name);
+  notable.player = this;
+
+  let s_name = "BaseStatusEffect.SeverelyWeakened" + version;
+  let severe: ref<TestVFXThresholdCallback> = new TestVFXThresholdCallback();
+  severe.id =  TDBID.Create(s_name);
+  severe.player = this;
+
   GameInstance
-    .GetStatusEffectSystem(this.GetGame())
-    .ApplyStatusEffect(this.GetEntityID(), t"BaseStatusEffect.PurpleHaze", this.GetRecordID(), this.GetEntityID());
-}
+    .GetDelaySystem(this.GetGame())
+    .DelayCallback(clean, 4);
 
-// Game.GetPlayer():PurpleHazeVFX()
-@addMethod(PlayerPuppet)
-public func PurpleHazeVFX() -> Void {
-  GameObjectEffectHelper.StartEffectEvent(this, n"purple_haze");
-}
+  GameInstance
+    .GetDelaySystem(this.GetGame())
+    .DelayCallback(notable, 8);
 
-// Game.GetPlayer():MildlySplinterBuffVFX()
-@addMethod(PlayerPuppet)
-public func MildlySplinterBuffVFX() -> Void {
-  GameObjectEffectHelper.StartEffectEvent(this, n"mildly_splinter_buff");
+  GameInstance
+    .GetDelaySystem(this.GetGame())
+    .DelayCallback(severe, 12);
 }
 
 // use like:
