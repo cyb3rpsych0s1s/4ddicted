@@ -315,6 +315,9 @@ public class Helper {
     ];
   }
 
+  public static func IsDetoxifier(id: TweakDBID) -> Bool { return Equals(id, t"Items.ToxinCleanser"); }
+  public static func IsMetabolicEditor(id: TweakDBID) -> Bool { return Equals(id, t"Items.ReverseMetabolicEnhancer"); }
+
   public static func IsSleep(id: TweakDBID) -> Bool { return Equals(id, t"HousingStatusEffect.Rested"); }
 
   public static func IsAlcohol(id: TweakDBID) -> Bool {
