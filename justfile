@@ -38,13 +38,14 @@ uninstall-tweak:
 clear:
     rm -rf '{{ join(game_dir, "r6", "cache", "modded") }}'
 
-# copy codebase files to game files
-build:
+# copy codebase files to game files (excluding archive, use hot reload during dev instead)
+rebuild:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
 
-rebuild: build
+# copy codebase files to game files (including archive)
+build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{archive_output_dir}}'
 
 # copy codebase files to remote shared folder

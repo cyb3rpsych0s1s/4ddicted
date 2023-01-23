@@ -14,6 +14,10 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 30
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_splinter_buff
+      shouldReapply: false
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
   $base: BaseStatusEffect.FirstAidWhiffV0
@@ -25,6 +29,10 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 20
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_splinter_buff
+      shouldReapply: false
 
 ### v1
 
@@ -38,6 +46,10 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 45
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_splinter_buff
+      shouldReapply: false
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
   $base: BaseStatusEffect.FirstAidWhiffV1
@@ -49,6 +61,10 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 30
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_splinter_buff
+      shouldReapply: false
 
 ### v2
 
@@ -62,6 +78,10 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 60
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_splinter_buff
+      shouldReapply: false
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
   $base: BaseStatusEffect.FirstAidWhiffV2
@@ -73,6 +93,10 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStats.Health
               statPoolValue: 40
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_splinter_buff
+      shouldReapply: false
 
 ## bounce back (a.k.a bones mccoy)
 
@@ -195,19 +219,3 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
           value: 1.1
 
 # object action effect: see scriptable tweaks
-
-BaseStatusEffect.PurpleHaze:
-  $base: BaseStatusEffect.FirstAidWhiffV0
-  duration:
-    $base: Items.LongLastingConsumableDuration
-    statModifiers:
-      - $type: ConstantStatModifier_Record
-        modifierType: Additive
-        statType: BaseStats.MaxDuration
-        value: 8
-  packages: []
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: purple_haze
-      shouldReapply: true
-     

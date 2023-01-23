@@ -52,10 +52,10 @@ function addicted:new()
 
     function CreateVFXs()
         local vfxs = {}
-        local mildly_splinter_buff = CreateVFX("mildly_splinter_buff", "base\\fx\\camera\\splinter_buff\\mildly_splinter_buff_fx.effect")
-        local purple_haze = CreateVFX("purple_haze", "base\\fx\\camera\\splinter_buff\\purple_haze_fx.effect")
+        local mildly_splinter_buff  = CreateVFX("mildly_splinter_buff", "base\\fx\\camera\\splinter_buff\\mildly_splinter_buff_fx.effect")
+        local piddly_splinter_buff  = CreateVFX("piddly_splinter_buff", "base\\fx\\camera\\splinter_buff\\piddly_splinter_buff_fx.effect")
         table.insert(vfxs, mildly_splinter_buff)
-        table.insert(vfxs, purple_haze)
+        table.insert(vfxs, piddly_splinter_buff)
         return vfxs
     end
 
@@ -66,9 +66,9 @@ function addicted:new()
         local vfx
         for i = 0,size,1
         do
+            print("[Addicted]:RegisterVFXs", " ", vfxs[i])
             vfx = vfxs[i]
             table.insert(effects, vfx)
-
         end
         GetPlayer():FindComponentByName("fx_player").effectDescs = effects
     end
