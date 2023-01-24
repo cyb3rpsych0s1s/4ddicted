@@ -2,12 +2,12 @@
 
 UIIcon.NotablyWeakenedFirstAidWhiff:
   $type: UIIcon_Record
-  atlasPartName: first_aid_whiff
+  atlasPartName: notably_first_aid_whiff
   atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedFirstAidWhiff:
   $type: UIIcon_Record
-  atlasPartName: first_aid_whiff
+  atlasPartName: severely_first_aid_whiff
   atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 # status effect
@@ -32,7 +32,9 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: UIIcon.NotablyWeakenedFirstAidWhiff
+    icon:
+      atlasPartName: notably_first_aid_whiff
+      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
   $base: BaseStatusEffect.FirstAidWhiffV0
@@ -50,7 +52,9 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: UIIcon.SeverelyWeakenedFirstAidWhiff
+    icon:
+      atlasPartName: notably_first_aid_whiff
+      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 ### v1
 
@@ -138,6 +142,11 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
     - $type: StatusEffectFX_Record
       name: mildly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V0_inline7
+    icon:
+      atlasPartName: notably_regeneration_icon
+      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   $base: BaseStatusEffect.BonesMcCoy70V0
@@ -157,6 +166,11 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
     - $type: StatusEffectFX_Record
       name: piddly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V0_inline7
+    icon:
+      atlasPartName: severely_regeneration_icon
+      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 ### v1
 

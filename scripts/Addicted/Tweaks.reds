@@ -248,8 +248,8 @@ public class HealerTweaks extends ScriptableTweak {
     let many = size > 1;
     let name: String;
     let suffix: String;
-    let i = 0;
     for prefix in prefixes {
+      let i = 0;
       for version in versions {
         if many {
           // consumables with versions, e.g. FirstAidWhiff
@@ -281,7 +281,7 @@ public class HealerTweaks extends ScriptableTweak {
         let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
         TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
         TweakDBManager.UpdateRecord(item.GetID());
-
+        
         i += 1;
       }
     }
