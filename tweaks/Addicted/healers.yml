@@ -1,3 +1,15 @@
+# weakened status effect icons
+
+UIIcon.NotablyWeakenedFirstAidWhiff:
+  $type: UIIcon_Record
+  atlasPartName: first_aid_whiff
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedFirstAidWhiff:
+  $type: UIIcon_Record
+  atlasPartName: first_aid_whiff
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
 # status effect
 
 ## first aid whiff (a.k.a maxdoc)
@@ -18,6 +30,9 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
     - $type: StatusEffectFX_Record
       name: mildly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: UIIcon.NotablyWeakenedFirstAidWhiff
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
   $base: BaseStatusEffect.FirstAidWhiffV0
@@ -33,6 +48,9 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
     - $type: StatusEffectFX_Record
       name: piddly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: UIIcon.SeverelyWeakenedFirstAidWhiff
 
 ### v1
 

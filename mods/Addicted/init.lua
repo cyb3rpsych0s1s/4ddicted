@@ -70,9 +70,11 @@ function addicted:new()
         local vfx
         for i = 0,size,1
         do
-            print("[Addicted]:RegisterVFXs", " ", vfxs[i])
-            vfx = vfxs[i]
-            table.insert(effects, vfx)
+            if vfxs[i] then
+                print("[Addicted]:RegisterVFXs", " ", vfxs[i])
+                vfx = vfxs[i]
+                table.insert(effects, vfx)
+            end
         end
         GetPlayer():FindComponentByName("fx_player").effectDescs = effects
     end
