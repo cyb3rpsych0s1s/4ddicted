@@ -51,7 +51,7 @@
                                     "Right": 0.5828125,
                                     "Top": 0.005859375
                                 },
-                                "partName": "severely-regeneration-icon"
+                                "partName": "severely_regeneration_icon"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -69,7 +69,7 @@
                                     "Right": 0.4828125,
                                     "Top": 0.001953125
                                 },
-                                "partName": "notably-regeneration-icon"
+                                "partName": "notably_regeneration_icon"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -87,7 +87,7 @@
                                     "Right": 0.396875,
                                     "Top": 0.005859375
                                 },
-                                "partName": "severely-health-booster-regen"
+                                "partName": "severely_health_booster_regen"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -105,7 +105,7 @@
                                     "Right": 0.296875,
                                     "Top": 0.009765625
                                 },
-                                "partName": "notably-health-booster-regen"
+                                "partName": "notably_health_booster_regen"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -123,7 +123,7 @@
                                     "Right": 0.1984375,
                                     "Top": 0.001953125
                                 },
-                                "partName": "severely-first-aid-whiff"
+                                "partName": "severely_first_aid_whiff"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -141,7 +141,7 @@
                                     "Right": 0.1,
                                     "Top": 0
                                 },
-                                "partName": "notably-first-aid-whiff"
+                                "partName": "notably_first_aid_whiff"
                             }
                         ],
                         "slices": [],
@@ -169,7 +169,7 @@
                                     "Right": 0.5828125,
                                     "Top": 0.005859375
                                 },
-                                "partName": "severely-regeneration-icon"
+                                "partName": "severely_regeneration_icon"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -187,7 +187,7 @@
                                     "Right": 0.4828125,
                                     "Top": 0.001953125
                                 },
-                                "partName": "notably-regeneration-icon"
+                                "partName": "notably_regeneration_icon"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -205,7 +205,7 @@
                                     "Right": 0.396875,
                                     "Top": 0.005859375
                                 },
-                                "partName": "severely-health-booster-regen"
+                                "partName": "severely_health_booster_regen"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -223,7 +223,7 @@
                                     "Right": 0.296875,
                                     "Top": 0.009765625
                                 },
-                                "partName": "notably-health-booster-regen"
+                                "partName": "notably_health_booster_regen"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -241,7 +241,7 @@
                                     "Right": 0.1984375,
                                     "Top": 0.001953125
                                 },
-                                "partName": "severely-first-aid-whiff"
+                                "partName": "severely_first_aid_whiff"
                             },
                             {
                                 "$type": "inkTextureAtlasMapper",
@@ -259,7 +259,7 @@
                                     "Right": 0.1,
                                     "Top": 0
                                 },
-                                "partName": "notably-first-aid-whiff"
+                                "partName": "notably_first_aid_whiff"
                             }
                         ],
                         "slices": [],
