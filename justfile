@@ -1,5 +1,6 @@
 # installation dir for Cyberpunk 2077, e.g. Steam
 game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+bundle_dir := 'Addicted'
 alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
 
 # codebase (outside of game files)
@@ -13,6 +14,12 @@ cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks",
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
 archive_output_dir := game_dir
+
+# bundle files for release
+cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
+red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
+tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
+archive_release_dir := bundle_dir
 
 # REDscript CLI
 cli := join("tools", "redmod", "bin", "redMod.exe")
@@ -90,3 +97,13 @@ quick:
 
 assemble:
     mdbook build
+
+bundle:
+    mkdir -p '{{archive_release_dir}}'
+    mkdir -p '{{cet_release_dir}}'
+    mkdir -p '{{red_release_dir}}'
+    mkdir -p '{{tweak_release_dir}}'
+    cp -r '{{archive_input_dir}}'/. '{{archive_release_dir}}'
+    cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
+    cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
+    cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
