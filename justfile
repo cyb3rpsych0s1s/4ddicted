@@ -19,7 +19,7 @@ archive_output_dir := game_dir
 cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
 red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
-archive_release_dir := bundle_dir
+archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
 
 # REDscript CLI
 cli := join("tools", "redmod", "bin", "redMod.exe")
@@ -99,6 +99,10 @@ assemble:
     mdbook build
 
 bundle:
+    mkdir -p '{{archive_input_dir}}'
+    mv archive.archive '{{ join(archive_input_dir, "Addicted.archive") }}'
+    cp '{{ join("archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(archive_input_dir, "Addicted.archive.xl") }}'
+
     mkdir -p '{{archive_release_dir}}'
     mkdir -p '{{cet_release_dir}}'
     mkdir -p '{{red_release_dir}}'
