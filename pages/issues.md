@@ -1,5 +1,10 @@
 # Issues
 
+## clean cache
+
+from dddzzzkkk on Discord:
+> basically to fix your issue i think you have to delete the files in the r6\cache\modded folder, delete r6\cache\final.redscripts, rename r6\cache\final.redscripts.bk to r6\cache\final.redscripts, redeploy your REDmods, THEN launch the game
+
 ## "anchor" variables
 
 one cannot e.g.
