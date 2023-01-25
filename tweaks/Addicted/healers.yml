@@ -10,6 +10,26 @@ UIIcon.SeverelyWeakenedFirstAidWhiff:
   atlasPartName: severely_first_aid_whiff
   atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
+UIIcon.NotablyWeakenedBonesMcCoy70:
+  $type: UIIcon_Record
+  atlasPartName: notably_regeneration_icon
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedBonesMcCoy70:
+  $type: UIIcon_Record
+  atlasPartName: severely_regeneration_icon
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.NotablyWeakenedHealthBooster:
+  $type: UIIcon_Record
+  atlasPartName: notably_health_booster_regen
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedHealthBooster:
+  $type: UIIcon_Record
+  atlasPartName: severely_health_booster_regen
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
 # status effect
 
 ## first aid whiff (a.k.a maxdoc)
@@ -32,9 +52,7 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    icon:
-      atlasPartName: notably_first_aid_whiff
-      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+    iconPath: NotablyWeakenedFirstAidWhiff
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
   $base: BaseStatusEffect.FirstAidWhiffV0
@@ -52,9 +70,7 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    icon:
-      atlasPartName: notably_first_aid_whiff
-      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+    iconPath: SeverelyWeakenedFirstAidWhiff
 
 ### v1
 
@@ -144,9 +160,7 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.BonesMcCoy70V0_inline7
-    icon:
-      atlasPartName: notably_regeneration_icon
-      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+    iconPath: NotablyWeakenedBonesMcCoy70
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   $base: BaseStatusEffect.BonesMcCoy70V0
@@ -168,9 +182,7 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.BonesMcCoy70V0_inline7
-    icon:
-      atlasPartName: severely_regeneration_icon
-      atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+    iconPath: SeverelyWeakenedBonesMcCoy70
 
 ### v1
 
@@ -263,6 +275,9 @@ BaseStatusEffect.NotablyWeakenedHealthBooster:
           modifierType: Multiplier
           statType: BaseStats.Health
           value: 1.15
+  uiData:
+    $base: BaseStatusEffect.HealthBooster_inline2
+    iconPath: NotablyWeakenedHealthBooster
 
 BaseStatusEffect.SeverelyWeakenedHealthBooster:
   $base: BaseStatusEffect.HealthBooster
@@ -273,5 +288,8 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
           modifierType: Multiplier
           statType: BaseStats.Health
           value: 1.1
+  uiData:
+    $base: BaseStatusEffect.HealthBooster_inline2
+    iconPath: SeverelyWeakenedHealthBooster
 
 # object action effect: see scriptable tweaks
