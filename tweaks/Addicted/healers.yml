@@ -1,0 +1,295 @@
+# weakened status effect icons
+
+UIIcon.NotablyWeakenedFirstAidWhiff:
+  $type: UIIcon_Record
+  atlasPartName: notably_first_aid_whiff
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedFirstAidWhiff:
+  $type: UIIcon_Record
+  atlasPartName: severely_first_aid_whiff
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.NotablyWeakenedBonesMcCoy70:
+  $type: UIIcon_Record
+  atlasPartName: notably_regeneration_icon
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedBonesMcCoy70:
+  $type: UIIcon_Record
+  atlasPartName: severely_regeneration_icon
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.NotablyWeakenedHealthBooster:
+  $type: UIIcon_Record
+  atlasPartName: notably_health_booster_regen
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedHealthBooster:
+  $type: UIIcon_Record
+  atlasPartName: severely_health_booster_regen
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+# status effect
+
+## first aid whiff (a.k.a maxdoc)
+
+### v0
+
+BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
+  $base: BaseStatusEffect.FirstAidWhiffV0
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiffV0_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 30
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_splinter_buff
+      shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: NotablyWeakenedFirstAidWhiff
+
+BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
+  $base: BaseStatusEffect.FirstAidWhiffV0
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiffV0_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 20
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_splinter_buff
+      shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: SeverelyWeakenedFirstAidWhiff
+
+### v1
+
+BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1:
+  $base: BaseStatusEffect.FirstAidWhiffV1
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiffV1_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 45
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_splinter_buff
+      shouldReapply: false
+
+BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
+  $base: BaseStatusEffect.FirstAidWhiffV1
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiffV1_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 30
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_splinter_buff
+      shouldReapply: false
+
+### v2
+
+BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2:
+  $base: BaseStatusEffect.FirstAidWhiffV2
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiffV2_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 60
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_splinter_buff
+      shouldReapply: false
+
+BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
+  $base: BaseStatusEffect.FirstAidWhiffV2
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiffV2_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 40
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_splinter_buff
+      shouldReapply: false
+
+## bounce back (a.k.a bones mccoy)
+
+### v0
+
+BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
+  $base: BaseStatusEffect.BonesMcCoy70V0
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+      effectors:
+        - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V0_inline2
+            valuePerSec: 2
+        - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 10
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_reflex_buster
+      shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V0_inline7
+    iconPath: NotablyWeakenedBonesMcCoy70
+
+BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
+  $base: BaseStatusEffect.BonesMcCoy70V0
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+      effectors:
+        - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V0_inline2
+            valuePerSec: 1
+        - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 5
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_reflex_buster
+      shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V0_inline7
+    iconPath: SeverelyWeakenedBonesMcCoy70
+
+### v1
+
+BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1:
+  $base: BaseStatusEffect.BonesMcCoy70V1
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V1_inline0
+      effectors:
+        - $base: BaseStatusEffect.BonesMcCoy70V1_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V1_inline2
+            valuePerSec: 3
+        - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 15
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_reflex_buster
+      shouldReapply: false
+
+BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
+  $base: BaseStatusEffect.BonesMcCoy70V1
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V1_inline0
+      effectors:
+        - $base: BaseStatusEffect.BonesMcCoy70V1_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V1_inline2
+            valuePerSec: 2
+        - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 10
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_reflex_buster
+      shouldReapply: false
+
+### v2
+
+BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2:
+  $base: BaseStatusEffect.BonesMcCoy70V1
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V2_inline0
+      effectors:
+        - $base: BaseStatusEffect.BonesMcCoy70V2_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V2_inline2
+            valuePerSec: 4
+        - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 20
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: mildly_reflex_buster
+      shouldReapply: false
+
+BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
+  $base: BaseStatusEffect.BonesMcCoy70V1
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V2_inline0
+      effectors:
+        - $base: BaseStatusEffect.BonesMcCoy70V2_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V2_inline2
+            valuePerSec: 3
+        - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
+          statPoolUpdates:
+            - $type: StatPoolUpdate_Record
+              statPoolType: BaseStats.Health
+              statPoolValue: 15
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: piddly_reflex_buster
+      shouldReapply: false
+
+## health booster
+
+BaseStatusEffect.NotablyWeakenedHealthBooster:
+  $base: BaseStatusEffect.HealthBooster
+  packages:
+    - $base: BaseStatusEffect.HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: 1.15
+  uiData:
+    $base: BaseStatusEffect.HealthBooster_inline2
+    iconPath: NotablyWeakenedHealthBooster
+
+BaseStatusEffect.SeverelyWeakenedHealthBooster:
+  $base: BaseStatusEffect.HealthBooster
+  packages:
+    - $base: BaseStatusEffect.HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: 1.1
+  uiData:
+    $base: BaseStatusEffect.HealthBooster_inline2
+    iconPath: SeverelyWeakenedHealthBooster
+
+# object action effect: see scriptable tweaks

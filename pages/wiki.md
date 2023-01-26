@@ -43,12 +43,32 @@ you have to define a listener function and register it providing target object a
 I think this is the type based on native callbacks, they store `Callback<T>` instances (wrapping target object with the method name) and invoke them
 for example, blackboards `RegisterListenerBool(id : gamebbScriptID_Bool, object : handle:IScriptable, func : CName, fireIfValueExist : Bool)`
 
-## workflow
+## events
+
+- event has to be created in the class that owns it (e.g. player)
+- use `QueueEvent` for normal event, use `DelayEvent` for delayed one (see `DelaySystem`)
+
+more info on discord in #redscript-snippet (thanks @Lyralei)
+
+## in-game time vs IRL
+
+1 min in-game is 10 real seconds.
 
 ## quickly seed inventory with items
 
 ```lua
 Game.AddToInventory("Items.FR3SH", 1)
+Game.AddToInventory("Items.BonesMcCoy70V0", 3)
+Game.AddToInventory("Items.FirstAidWhiffV0", 10)
+Game.AddToInventory("Items.BlackLaceV0", 10)
+```
+
+## quickly call methods
+
+```lua
+GameObject.PlaySoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.StopSoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.BreakReplicatedEffectLoopEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
 ```
 
 ### autocompletion
@@ -87,6 +107,17 @@ All the status effects can be found [there](https://cyberpunk.fandom.com/wiki/Cy
 
 Animations can be handled with [WolvenKit](https://wiki.redmodding.org/cyberpunk-2077-modding/modding/redmod/quick-guide#animation-modding).
 [Change and potentially replace animations](https://wiki.redmodding.org/cyberpunk-2077-modding/developers/guides/quest/how-to-remove-an-animation-and-potentially-replace-it).
+
+## default method return values
+
+credits to psiberx on discord.
+
+```swift
+public static func NoRetInt() -> Int32 {} // returns 0
+public static func NoRetCName() -> CName {} // returns n"None"
+public static func NoRetStruct() -> SimpleScreenMessage {} // returns empty instance
+public static func NoRetArray() -> array<String> {} // returns empty array
+```
 
 ## glossary
 

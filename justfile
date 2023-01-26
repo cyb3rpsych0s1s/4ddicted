@@ -1,16 +1,25 @@
 # installation dir for Cyberpunk 2077, e.g. Steam
 game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+bundle_dir := 'Addicted'
 alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
 
 # codebase (outside of game files)
 cet_input_dir := join("mods", "Addicted")
 red_input_dir := join("scripts", "Addicted")
 tweak_input_dir := join("tweaks", "Addicted")
+archive_input_dir := join("archive", "packed")
 
 # game files
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
+archive_output_dir := game_dir
+
+# bundle files for release
+cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
+red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
+tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
+archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
 
 # REDscript CLI
 cli := join("tools", "redmod", "bin", "redMod.exe")
@@ -36,11 +45,15 @@ uninstall-tweak:
 clear:
     rm -rf '{{ join(game_dir, "r6", "cache", "modded") }}'
 
-# copy codebase files to game files
-build:
+# copy codebase files to game files (excluding archive, use hot reload during dev instead)
+rebuild:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
+
+# copy codebase files to game files (including archive)
+build: rebuild
+    cp -r '{{archive_input_dir}}'/. '{{archive_output_dir}}'
 
 # copy codebase files to remote shared folder
 # FIXME: remote user domain ip:
@@ -49,6 +62,8 @@ build:
 
 # show logs from CET and RED
 logs:
+    echo "\n=== TweakXL ===\n" && \
+    cat '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' && \
     echo "\n=== CET ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' && \
     echo "\n=== REDscript ===\n" && \
@@ -66,7 +81,8 @@ store:
 
 # clear out logs
 erase: clear
-    rm -f '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
+    rm -f '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
+    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
     '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
@@ -81,3 +97,17 @@ quick:
 
 assemble:
     mdbook build
+
+bundle:
+    mkdir -p '{{archive_input_dir}}'
+    mv archive.archive '{{ join(archive_input_dir, "Addicted.archive") }}'
+    cp '{{ join("archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(archive_input_dir, "Addicted.archive.xl") }}'
+
+    mkdir -p '{{archive_release_dir}}'
+    mkdir -p '{{cet_release_dir}}'
+    mkdir -p '{{red_release_dir}}'
+    mkdir -p '{{tweak_release_dir}}'
+    cp -r '{{archive_input_dir}}'/. '{{archive_release_dir}}'
+    cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
+    cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
+    cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
