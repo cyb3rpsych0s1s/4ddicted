@@ -5,7 +5,7 @@ env:
   REDSCRIPT_SRC: scripts/Addicted
 
 jobs:
-  lint:
+  redscript:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
