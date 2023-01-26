@@ -22,6 +22,10 @@ red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
 archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
 
+# list all commands
+default:
+  @just --list
+
 # create mod folders (if not exists) in game files
 setup:
     mkdir -p '{{cet_output_dir}}'
@@ -30,16 +34,20 @@ setup:
 # clear current mod files in game files
 uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak
 
+# clear current archive files in game files
 uninstall-archive:
     rm -f '{{archive_output_dir}}'/Addicted.archive
     rm -f '{{archive_output_dir}}'/Addicted.archive.xl
 
+# clear current CET files in game files
 uninstall-cet:
     rm -rf '{{cet_output_dir}}'
 
+# clear current REDscript files in game files
 uninstall-red:
     rm -rf '{{red_output_dir}}'
 
+# clear current tweaks files in game files
 uninstall-tweak:
     rm -rf '{{tweak_output_dir}}'
 
