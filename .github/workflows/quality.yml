@@ -2,9 +2,11 @@ name: Quality
 on:
   push:
     paths:
+      - '.github'
       - 'scripts/Addicted'
   pull_request:
     paths:
+      - '.github'
       - 'scripts/Addicted'
 env:
   REDSCRIPT_VERSION: '0.5.10'
