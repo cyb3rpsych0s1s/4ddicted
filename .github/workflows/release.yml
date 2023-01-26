@@ -57,6 +57,7 @@ jobs:
       - name: Bundle files
         run: just bundle
       - name: Zip files
+        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: thedoctor0/zip-release@0.7.0
         with:
           type: 'zip'
@@ -65,12 +66,14 @@ jobs:
           path: .
           recursive_exclusions: ${{ env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact ${{ matrix.os }}
+        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}-${{ github.ref_name }}-artifact
           path: Addicted/Addicted-${{ matrix.os }}-${{ github.ref_name }}.zip
           if-no-files-found: error
   release:
+    if: ${{ startsWith(github.event.ref, 'refs/tags') }}
     runs-on: ubuntu-latest
     needs: bundle
     steps:
