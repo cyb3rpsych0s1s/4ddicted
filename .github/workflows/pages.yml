@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'book.toml'
+      - 'pages'
+      - '*.md'
 
 jobs:
   deploy:
