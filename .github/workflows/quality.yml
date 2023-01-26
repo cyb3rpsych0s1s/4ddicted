@@ -17,7 +17,7 @@ jobs:
           wget https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
           chmod +x redscript-cli.exe
       - name: Lint code
-        run: redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
+        run: ./redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
         continue-on-error: true
       - name: Compile code
-        run: redscript-cli.exe compile --src ${{ env.REDSCRIPT_SRC }} --output dump.reds
+        run: ./redscript-cli.exe compile --src ${{ env.REDSCRIPT_SRC }} --output dump.reds
