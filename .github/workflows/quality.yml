@@ -6,16 +6,20 @@ env:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
       - name: Setup REDscript
         run: |
-          wget https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
-          chmod +x redscript-cli.exe
+          C:\msys64\usr\bin\wget.exe https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
+          dotnet tool install -g redscript-cli.exe
       - name: Lint code
         run: ./redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
         continue-on-error: true
