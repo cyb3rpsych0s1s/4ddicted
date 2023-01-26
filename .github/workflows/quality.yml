@@ -17,9 +17,7 @@ jobs:
         with:
           dotnet-version: '7.0.x'
       - name: Setup REDscript
-        run: |
-          C:\msys64\usr\bin\wget.exe https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
-          dotnet tool install -g redscript-cli.exe
+        run: C:\msys64\usr\bin\wget.exe https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
       - name: Lint code
         run: ./redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
         continue-on-error: true
