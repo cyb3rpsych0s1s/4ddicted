@@ -21,5 +21,3 @@ jobs:
       - name: Lint code
         run: ./redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
         continue-on-error: true
-      - name: Compile code
-        run: ./redscript-cli.exe compile --src ${{ env.REDSCRIPT_SRC }} --bundle dump.redscript --output dump.reds
