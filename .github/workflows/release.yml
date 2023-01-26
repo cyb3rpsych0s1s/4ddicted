@@ -11,6 +11,7 @@ on:
 env:
   WOLVENKIT_CORE_VERSION: '8.8.1'
   WOLVENKIT_CLI_VERSION: '1.8.1'
+  IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
 
 jobs:
   bundle:
@@ -62,6 +63,7 @@ jobs:
           filename: 'Addicted-${{ matrix.os }}-${{ github.ref_name }}.zip'
           directory: ./Addicted
           path: .
+          recursive_exclusions: ${{ env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact ${{ matrix.os }}
         uses: actions/upload-artifact@v3
         with:
@@ -89,6 +91,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "release/*.zip"
-          draft: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
+          draft: ${{ env.IS_DRAFT }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifactErrorsFailBuild: true
