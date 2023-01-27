@@ -4,6 +4,9 @@ import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 
+@addField(PlayerStateMachineDef)
+public let IsConsuming: BlackboardID_Bool;
+
 @addMethod(PlayerPuppet)
 public func IsPossessed() -> Bool {
   let system: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.GetGame());
@@ -209,9 +212,6 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
     }
   }
 }
-
-@addField(PlayerStateMachineDef)
-public let IsConsuming: BlackboardID_Bool;
 
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
