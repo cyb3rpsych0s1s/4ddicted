@@ -14,9 +14,11 @@ To ease development, a `justfile` is available with the following commands:
 
 - first, install [Just](https://just.systems/man/en/chapter_4.html?highlight=brew#packages)
 - then you can list all available commands:
+  
   ```sh
   just
   ```
+
 - generally speaking, while coding you will most likely be interested in these commands:
   - run once on install, to create folders if missing
 
@@ -37,6 +39,7 @@ To ease development, a `justfile` is available with the following commands:
     ```
 
 ### ℹ️ Coding process
+
 1. build:
    - `archive` can only be reloaded from Wolvenkit GUI's Hot Reload (RED Hot Tools required) while game is running.
    - `tweaks`, `scripts` and `mods` can be just copied over to game files.
