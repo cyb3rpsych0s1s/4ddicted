@@ -7,6 +7,9 @@ import Addicted.Utils.{E,EI,F}
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
 
+@addField(PlayerStateMachineDef)
+public let WithdrawalSymptoms: BlackboardID_Int;
+
 @addMethod(PlayerPuppet)
 public func IsPossessed() -> Bool {
   let system: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.GetGame());
@@ -83,6 +86,48 @@ public func CyberwareImmunity() -> Int32 {
   if this.HasMetabolicEditor() { resilience += 4; }
   if this.HasDetoxifier() { resilience += 2; }
   return resilience;
+}
+
+@addMethod(PlayerPuppet)
+public func IsWithdrawing(consumable: Consumable) -> Bool {
+  let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
+  let symptoms = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+  return ShiftRight(symptoms, EnumInt(consumable)) & 1;
+}
+
+@addMethod(PlayerPuppet)
+public func ToggleWithdrawalSymptom(consumable: Consumable, withdrawing: bool) -> Void {
+  let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
+  let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+  let after = before;
+  if withdrawing {
+    // set bit to 1
+    after |= ShiftLeft(1, flag);
+  } else {
+    // set bit to 0
+    after &= Invert(ShiftLeft(1, flag));
+  }
+  if !Equals(before, after) {
+    blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.IsWithdrawing, after);
+  }
+}
+
+public func ShiftRight(num: Int32, n: Int32) -> Int32 {
+  num / PowI(2, n)
+}
+public func ShiftLeft(num: Int32, n: Int32) -> Int32 {
+  num * PowI(2, n)
+}
+public func PowI(num: Int32, times: Int32) -> Int32 {
+  RoundMath(Cast<Float>(num).PowF(times))
+}
+public func Invert(num: Int32) -> Int32 {
+  let i = 0;
+  while i < 32 {
+    num = PowI(num, ShiftLeft(1, i));
+    i += 1;
+  }
+  return num;
 }
 
 // alter some effects based on addiction threshold
