@@ -3,6 +3,26 @@ module Addicted
 import Addicted.*
 import Addicted.Utils.{E,EI}
 
+public class Bits {
+  public static func ShiftRight(num: Int32, n: Int32) -> Int32 {
+    num / PowI(2, n)
+  }
+  public static func ShiftLeft(num: Int32, n: Int32) -> Int32 {
+    num * PowI(2, n)
+  }
+  public static func PowI(num: Int32, times: Int32) -> Int32 {
+    RoundMath(Cast<Float>(num).PowF(times))
+  }
+  public static func Invert(num: Int32) -> Int32 {
+    let i = 0;
+    while i < 32 {
+      num = PowI(num, ShiftLeft(1, i));
+      i += 1;
+    }
+    return num;
+  }
+}
+
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
     if Helper.IsBlackLace(id) { return Category.Hard; }

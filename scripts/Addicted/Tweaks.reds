@@ -1,7 +1,7 @@
 module Addicted
 
 import Addicted.System.AddictedSystem
-import Addicted.Helper
+import Addicted.{Bits,Helper}
 import Addicted.Utils.{E,EI,F}
 
 @addField(PlayerStateMachineDef)
@@ -92,42 +92,25 @@ public func CyberwareImmunity() -> Int32 {
 public func IsWithdrawing(consumable: Consumable) -> Bool {
   let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
   let symptoms = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-  return ShiftRight(symptoms, EnumInt(consumable)) & 1;
+  return Bits.ShiftRight(symptoms, EnumInt(consumable)) & 1;
 }
 
 @addMethod(PlayerPuppet)
-public func ToggleWithdrawalSymptom(consumable: Consumable, withdrawing: bool) -> Void {
+public func Withdraw(consumable: Consumable, withdrawing: bool, notify: bool = true) -> Int32 {
   let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
   let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
   let after = before;
   if withdrawing {
     // set bit to 1
-    after |= ShiftLeft(1, flag);
+    after |= Bits.ShiftLeft(1, flag);
   } else {
     // set bit to 0
-    after &= Invert(ShiftLeft(1, flag));
+    after &= Bits.Invert(Bits.ShiftLeft(1, flag));
   }
-  if !Equals(before, after) {
+  if notify && !Equals(before, after) {
     blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.IsWithdrawing, after);
   }
-}
-
-public func ShiftRight(num: Int32, n: Int32) -> Int32 {
-  num / PowI(2, n)
-}
-public func ShiftLeft(num: Int32, n: Int32) -> Int32 {
-  num * PowI(2, n)
-}
-public func PowI(num: Int32, times: Int32) -> Int32 {
-  RoundMath(Cast<Float>(num).PowF(times))
-}
-public func Invert(num: Int32) -> Int32 {
-  let i = 0;
-  while i < 32 {
-    num = PowI(num, ShiftLeft(1, i));
-    i += 1;
-  }
-  return num;
+  return after;
 }
 
 // alter some effects based on addiction threshold
