@@ -95,6 +95,12 @@ public func IsWithdrawing(consumable: Consumable) -> Bool {
   return Bits.Has(symptoms, EnumInt(consumable));
 }
 
+@addMethod(PlayerPuppet)
+public func Threshold(consumable: Consumable) -> Threshold {
+  let system = AddictedSystem.GetInstance(this.GetGame());
+  return system.Threshold(consumable);
+}
+
 // alter some effects based on addiction threshold
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {

@@ -92,11 +92,13 @@ public class AddictedSystem extends ScriptableSystem {
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let now: Int32 = 0;
-    let addictions = Helper.Addictions();
+    let consumables = Helper.Consumables();
     let withdrawing: Bool = false;
-    for addiction in addictions {
-      withdrawing = this.IsWithdrawing(addiction);
-      now = Bits.Set(now, EnumInt(addiction), withdrawing);
+    let threshold: Threshold;
+    for consumable in consumables {
+      withdrawing = this.IsWithdrawing(consumable);
+      threshold = this.consumptions.Threshold(consumable);
+      now = Bits.Set(now, EnumInt(consumable), withdrawing);
     }
     if !Equals(before, now) {
       blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
@@ -280,9 +282,8 @@ public class AddictedSystem extends ScriptableSystem {
     }
     let consumable = Helper.Consumable(id);
     let specific = this.consumptions.Get(id);
-    let average = this.AverageConsumption(consumable);
+    let averageThreshold = this.consumptions.Threshold(consumable);
     let specificThreshold = Helper.Threshold(specific.current);
-    let averageThreshold = Helper.Threshold(average);
     let threshold: Threshold;
     if EnumInt(specificThreshold) >= EnumInt(averageThreshold) {
       threshold = specificThreshold;
@@ -377,6 +378,14 @@ public class AddictedSystem extends ScriptableSystem {
     return false;
   }
 
+  public func Threshold(addiction: Addiction) -> Threshold {
+    return this.consumptions.Threshold(addiction);
+  }
+
+  public func Threshold(consumable: Consumable) -> Threshold {
+    return this.consumptions.Threshold(consumable);
+  }
+
   public func IsWithdrawing(addiction: Addiction) -> Bool {
     let ids = Helper.Drugs(addiction);
     for id in ids {
@@ -397,43 +406,6 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
     return false;
-  }
-
-  /// average consumption for a given consumable
-  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
-  public func AverageConsumption(consumable: Consumable) -> Int32 {
-    let ids = Helper.Effects(consumable);
-    let total = 0;
-    let found = 0;
-    let consumption: wref<Consumption>;
-    for id in ids {
-      consumption = this.consumptions.Get(id) as Consumption;
-      if IsDefined(consumption) {
-        total += consumption.current;
-        found += 1;
-      }
-    }
-    if found == 0 {
-      return 0;
-    }
-    return total / found;
-  }
-
-  /// average consumption for an addiction
-  /// a single addiction can be shared by multiple consumables
-  public func AverageAddiction(addiction: Addiction) -> Int32 {
-    let consumables = Helper.Consumables(addiction);
-    let size = ArraySize(consumables);
-    let total = 0;
-    for consumable in consumables {
-      total += this.AverageConsumption(consumable);
-    }
-    return total / size;
-  }
-
-  public func Threshold(addiction: Addiction) -> Threshold {
-    let average = this.AverageAddiction(addiction);
-    return Helper.Threshold(average);
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {

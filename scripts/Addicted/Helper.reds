@@ -202,6 +202,26 @@ public class Helper {
     return false;
   }
 
+  public static func IsApplied(effects: array<ref<StatusEffect>>, id: TweakDBID) -> Bool {
+    for effect in effects {
+      if Equals(effect.GetRecord().GetID(), id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static func AreApplied(effects: array<ref<StatusEffect>>, ids: array<TweakDBID>) -> Bool {
+    let contains: Bool;
+    for effect in effects {
+      contains = ArrayContains(ids, effect.GetRecord().GetID());
+      if contains {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static func Consumable(id: TweakDBID) -> Consumable {
     if Helper.IsMaxDOC(id) { return Consumable.MaxDOC; }
     if Helper.IsBounceBack(id) { return Consumable.BounceBack; }

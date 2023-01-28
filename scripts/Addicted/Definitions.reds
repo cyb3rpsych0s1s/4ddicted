@@ -158,6 +158,51 @@ public class Consumptions {
   public func Keys() -> array<TweakDBID> {
     return this.keys;
   }
+  public func Threshold(key: TweakDBID) -> Threshold {
+    let consumption = this.Get(key);
+    if IsDefined(consumption) {
+      return consumption.Threshold();
+    }
+    return Threshold.Clean;
+  }
+  public func Threshold(consumable: Consumable) -> Threshold {
+    let average = this.AverageConsumption(consumable);
+    return Helper.Threshold(average);
+  }
+  public func Threshold(addiction: Addiction) -> Threshold {
+    let average = this.AverageConsumption(addiction);
+    return Helper.Threshold(average);
+  }
+  /// average consumption for a given consumable
+  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
+  public func AverageConsumption(consumable: Consumable) -> Int32 {
+    let ids = Helper.Effects(consumable);
+    let total = 0;
+    let found = 0;
+    let consumption: wref<Consumption>;
+    for id in ids {
+      consumption = this.Get(id) as Consumption;
+      if IsDefined(consumption) {
+        total += consumption.current;
+        found += 1;
+      }
+    }
+    if found == 0 {
+      return 0;
+    }
+    return total / found;
+  }
+  /// average consumption for an addiction
+  /// a single addiction can be shared by multiple consumables
+  public func AverageConsumption(addiction: Addiction) -> Int32 {
+    let consumables = Helper.Consumables(addiction);
+    let size = ArraySize(consumables);
+    let total = 0;
+    for consumable in consumables {
+      total += this.AverageConsumption(consumable);
+    }
+    return total / size;
+  }
 }
 
 public class Consumption {
@@ -169,6 +214,10 @@ public class Consumption {
     consumption.current = amount;
     consumption.doses = [when];
     return consumption;
+  }
+
+  public func Threshold() -> Threshold {
+    return Helper.Threshold(this.current);
   }
 }
 

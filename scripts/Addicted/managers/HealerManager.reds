@@ -19,15 +19,12 @@ public class HealerManager extends IScriptable {
     let action: TweakDBID;
     let threshold: Threshold;
     let consumable: Consumable;
-    let average: Int32;
     let id: TweakDBID;
-    let groupAverage = this.system.AverageAddiction(Addiction.Healers);
-    let groupThreshold = Helper.Threshold(groupAverage);
+    let groupThreshold = this.system.Threshold(Addiction.Healers);
     for effect in actionEffects {
       id = effect.GetID();
       consumable = Helper.Consumable(id);
-      average = this.system.AverageConsumption(consumable);
-      threshold = Helper.Threshold(average);
+      threshold = this.system.Threshold(consumable);
       if EnumInt(threshold) < EnumInt(groupThreshold) {
         threshold = groupThreshold;
       }
