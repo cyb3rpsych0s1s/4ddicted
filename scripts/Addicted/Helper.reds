@@ -46,26 +46,6 @@ public class Helper {
     return Threshold.Barely;
   }
 
-  public static func IsApplied(effects: array<ref<StatusEffect>>, id: TweakDBID) -> Bool {
-    for effect in effects {
-      if Equals(effect.GetRecord().GetID(), id) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public static func AreApplied(effects: array<ref<StatusEffect>>, ids: array<TweakDBID>) -> Bool {
-    let contains: Bool;
-    for effect in effects {
-      contains = ArrayContains(ids, effect.GetRecord().GetID());
-      if contains {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public static func Consumables(addiction: Addiction) -> array<Consumable> {
     switch(addiction) {
       case Addiction.Healers:

@@ -2,6 +2,7 @@ module Addicted.Manager
 
 import Addicted.*
 import Addicted.Utils.*
+import Addicted.Helpers.Effect
 
 public class StimulantManager extends IScriptable {
 
@@ -101,13 +102,13 @@ public class StimulantManager extends IScriptable {
       let i = 0;
       while i < sizeApplicable {
         id = applicables[i];
-        if !withdrawing && Helper.IsApplied(applied, id) {
+        if !withdrawing && Effect.IsApplied(applied, id) {
           StatusEffectHelper.RemoveStatusEffect(this.owner, id);
         } 
         i += 1;
       }
     } else {
-      if !Helper.AreApplied(applied, applicables) {
+      if !Effect.AreApplied(applied, applicables) {
         let threshold = this.owner.Threshold(consumable);
         switch (threshold) {
         case Threshold.Severely:
