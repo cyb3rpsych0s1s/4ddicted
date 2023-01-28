@@ -99,6 +99,7 @@ public class Consumptions {
   private persistent let values: array<ref<Consumption>>;
 
   public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
+    let base = Helper.ItemBaseName(key);
     if this.KeyExist(base) { return; }
     ArrayPush(this.values, value);
     ArrayPush(this.keys, base);
@@ -120,12 +121,12 @@ public class Consumptions {
     return -1;
   }
   public func Get(key: TweakDBID) -> ref<Consumption> {
-    let idx = this.Index(base);
+    let idx = this.Index(key);
     if idx == -1 { return null; }
     return this.values[idx];
   }
   public func Set(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(base);
+    let idx = this.Index(key);
     if idx == -1 { return; }
     this.values[idx] = value;
   }
@@ -134,7 +135,7 @@ public class Consumptions {
     return idx != -1;
   }
   public func Remove(key: TweakDBID) -> Void {
-    let idx = this.Index(base);
+    let idx = this.Index(key);
     if idx == -1 { return; }
     ArrayErase(this.keys, idx);
     ArrayErase(this.values, idx);
