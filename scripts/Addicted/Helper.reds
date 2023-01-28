@@ -3,6 +3,45 @@ module Addicted
 import Addicted.*
 import Addicted.Utils.{E,EI}
 
+public class Bits {
+  public static func ShiftRight(num: Int32, n: Int32) -> Int32 {
+    num / PowI(2, n)
+  }
+
+  public static func ShiftLeft(num: Int32, n: Int32) -> Int32 {
+    num * PowI(2, n)
+  }
+
+  public static func PowI(num: Int32, times: Int32) -> Int32 {
+    RoundMath(Cast<Float>(num).PowF(times))
+  }
+
+  public static func Invert(num: Int32) -> Int32 {
+    let i = 0;
+    while i < 32 {
+      num = PowI(num, ShiftLeft(1, i));
+      i += 1;
+    }
+    return num;
+  }
+
+  public static func Has(num: Int32, n: Int32) -> Bool {
+    return Bits.ShiftRight(num, n) & 1;
+  }
+  
+  public static func Set(num: Int32, n: Int32, value: Bool) -> Int32 {
+    let after = num;
+    if value {
+      // set bit to 1
+      after |= Bits.ShiftLeft(1, n);
+    } else {
+      // set bit to 0
+      after &= Bits.Invert(Bits.ShiftLeft(1, n));
+    }
+    return after;
+  }
+}
+
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
     if Helper.IsBlackLace(id) { return Category.Hard; }
@@ -190,6 +229,25 @@ public class Helper {
     return [];
   }
 
+  // all related drugs (as general items name) for a given addiction
+  public static func Drugs(addiction: Addiction) -> array<TweakDBID> {
+    switch (addiction) {
+      case Addiction.Healers:
+        return [
+          t"Items.FirstAidWhiffV0",
+          t"Items.FirstAidWhiffV1",
+          t"Items.FirstAidWhiffV2",
+          t"Items.BonesMcCoy70V0",
+          t"Items.BonesMcCoy70V1",
+          t"Items.BonesMcCoy70V2",
+          t"Items.HealthBooster",
+        ];
+      default:
+        break;
+    }
+    return [];
+  }
+
   public static func Effects(consumable: Consumable) -> array<TweakDBID> {
     switch (consumable) {
       case Consumable.Alcohol:
@@ -281,6 +339,12 @@ public class Helper {
     Helper.IsBooster(id) ||
     Helper.IsInjector(id) ||
     Helper.IsHealthBooster(id);
+  }
+
+  public static func Addictions() -> array<Addiction> {
+    return [
+      Addiction.Healers
+    ];
   }
 
   public static func IsSerious(threshold: Threshold) -> Bool {
@@ -444,6 +508,9 @@ public class Helper {
     return out;
   }
 
+  // get a general item name based on any TweakDBID related to a consumable
+  // e.g. 'BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0' or 'Items.FirstAidWhiffV0', etc
+  //       would become 'Items.FirstAidWhiffV0'  
   public static func ItemBaseName(id: TweakDBID) -> TweakDBID {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");

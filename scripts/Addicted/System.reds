@@ -35,6 +35,8 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
+      this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
 
@@ -84,6 +86,23 @@ public class AddictedSystem extends ScriptableSystem {
   public final static func GetInstance(gameInstance: GameInstance) -> ref<AddictedSystem> {
     let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
+  }
+
+  public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
+    let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
+    let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+    let now: Int32 = 0;
+    let addictions = Helper.Addictions();
+    let withdrawing: Bool = false;
+    for addiction in addictions {
+      withdrawing = this.IsWithdrawing(addiction);
+      now = Bits.Set(now, EnumInt(addiction), withdrawing);
+    }
+    if !Equals(before, now) {
+      blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
+    }
+
+    this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600.);
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
@@ -354,6 +373,16 @@ public class AddictedSystem extends ScriptableSystem {
     // EI(id, s"last consumption \(previousDay), today \(today), yesterday \(yesterday)");
     if moreThan1Day || moreThan24Hours {
       return true;
+    }
+    return false;
+  }
+
+  public func IsWithdrawing(addiction: Addiction) -> Bool {
+    let ids = Helper.Drugs(addiction);
+    for id in ids {
+      if this.IsWithdrawing(id) {
+        return true;
+      }
     }
     return false;
   }
