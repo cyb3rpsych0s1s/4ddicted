@@ -3,7 +3,7 @@ module Addicted
 import Addicted.System.AddictedSystem
 import Addicted.{Bits,Helper}
 import Addicted.Utils.{E,EI,F}
-import Addicted.Helpers.{Generic,Items}
+import Addicted.Helpers.{Generic,Items,Effect}
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -37,7 +37,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     let board: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
     board.SetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, false);
     
-    if !evt.isAppliedOnSpawn && Helper.IsHousing(id) {
+    if !evt.isAppliedOnSpawn && Effect.IsHousing(id) {
       EI(id, s"housing");
       system.OnRested(id);
     }
