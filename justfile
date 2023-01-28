@@ -1,6 +1,8 @@
 set dotenv-load
 
+# default to steam default game dir
 DEFAULT_GAME_DIR := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+# default to CI RED cli path
 DEFAULT_RED_CLI := join(".", "redscript-cli.exe")
 
 # installation dir for Cyberpunk 2077, e.g. Steam
