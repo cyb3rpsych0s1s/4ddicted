@@ -99,18 +99,18 @@ public class Consumptions {
   private persistent let keys: array<TweakDBID>;
   private persistent let values: array<ref<Consumption>>;
 
-  public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let base = Generic.ItemBaseName(key);
-    if this.KeyExist(base) { return; }
+  public func Insert(id: TweakDBID, value: ref<Consumption>) -> Void {
+    let key = Generic.Designation(id);
+    if this.KeyExist(key) { return; }
     ArrayPush(this.values, value);
-    ArrayPush(this.keys, base);
+    ArrayPush(this.keys, key);
   }
-  private func Index(key: TweakDBID) -> Int32 {
-    let base = Generic.ItemBaseName(key);
+  private func Index(id: TweakDBID) -> Int32 {
+    let key = Generic.Designation(id);
     let idx = 0;
     let found = false;
     for existing in this.keys {
-      if existing == base {
+      if existing == key {
         found = true;
         break;
       }
@@ -121,22 +121,22 @@ public class Consumptions {
     }
     return -1;
   }
-  public func Get(key: TweakDBID) -> ref<Consumption> {
-    let idx = this.Index(key);
+  public func Get(id: TweakDBID) -> ref<Consumption> {
+    let idx = this.Index(id);
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(key);
+  public func Set(id: TweakDBID, value: ref<Consumption>) -> Void {
+    let idx = this.Index(id);
     if idx == -1 { return; }
     this.values[idx] = value;
   }
-  public func KeyExist(key: TweakDBID) -> Bool {
-    let idx = this.Index(key);
+  public func KeyExist(id: TweakDBID) -> Bool {
+    let idx = this.Index(id);
     return idx != -1;
   }
-  public func Remove(key: TweakDBID) -> Void {
-    let idx = this.Index(key);
+  public func Remove(id: TweakDBID) -> Void {
+    let idx = this.Index(id);
     if idx == -1 { return; }
     ArrayErase(this.keys, idx);
     ArrayErase(this.values, idx);
@@ -152,8 +152,8 @@ public class Consumptions {
   public func Keys() -> array<TweakDBID> {
     return this.keys;
   }
-  public func Threshold(key: TweakDBID) -> Threshold {
-    let consumption = this.Get(key);
+  public func Threshold(id: TweakDBID) -> Threshold {
+    let consumption = this.Get(id);
     if IsDefined(consumption) {
       return consumption.Threshold();
     }

@@ -2,16 +2,15 @@ module Addicted.Helpers
 
 import Addicted.*
 
-// generic
-// search for even similar correspondances
-// e.g. Items.FirstAidWhiffV0 or BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0
-// are generically similar
+// effects or items agnostic
 public class Generic {
 
-  // get a general item name based on any TweakDBID related to a consumable
-  // e.g. 'BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0' or 'Items.FirstAidWhiffV0', etc
-  //       would become 'Items.FirstAidWhiffV0'  
-  public static func ItemBaseName(id: TweakDBID) -> TweakDBID {
+  // provide a general item name no matter the TweakDBID
+  // as long as it's related to a consumable
+  // e.g. 'BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0',
+  //      'Items.FirstAidWhiffV0', etc ..
+  //       would be designated as 'Items.FirstAidWhiffV0'  
+  public static func Designation(id: TweakDBID) -> TweakDBID {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
     if StrContains(suffix, "NotablyWeakened") || StrContains(suffix, "SeverelyWeakened") {
@@ -26,23 +25,15 @@ public class Generic {
   }
 
   public static func Consumable(id: TweakDBID) -> Consumable {
-    if Generic.IsMaxDOC(id) { return Consumable.MaxDOC; }
-    if Generic.IsBounceBack(id) { return Consumable.BounceBack; }
-    if Generic.IsHealthBooster(id) { return Consumable.HealthBooster; }
-    switch(id) {
-      case t"BaseStatusEffect.AlcoholDebuff":
-        return Consumable.Alcohol;
-      case t"BaseStatusEffect.MemoryBooster":
-        return Consumable.MemoryBooster;
-      case t"BaseStatusEffect.OxyBooster":
-        return Consumable.OxyBooster;
-      case t"BaseStatusEffect.StaminaBooster":
-        return Consumable.StaminaBooster;
-      case t"BaseStatusEffect.BlackLaceV0":
-        return Consumable.BlackLace;
-      default:
-        break;
-    }
+    if Generic.IsAlcohol(id)          { return Consumable.Alcohol; }
+    if Generic.IsMaxDOC(id)           { return Consumable.MaxDOC; }
+    if Generic.IsBounceBack(id)       { return Consumable.BounceBack; }
+    if Generic.IsHealthBooster(id)    { return Consumable.HealthBooster; }
+    if Generic.IsCapacityBooster(id)  { return Consumable.CarryCapacityBooster; }
+    if Generic.IsStaminaBooster(id)   { return Consumable.StaminaBooster; }
+    if Generic.IsMemoryBooster(id)    { return Consumable.MemoryBooster; }
+    if Generic.IsBlackLace(id)        { return Consumable.BlackLace; }
+    if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
     return Consumable.Invalid;
   }
 
