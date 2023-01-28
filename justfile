@@ -33,6 +33,8 @@ latest_artifact_linux := "Addicted-ubuntu-latest-alpha-0.3.0.zip"
 
 # path to REDscript CLI
 red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
+
+# path to RED cache bundle file in game files
 red_cache_bundle := join(red_cache_dir, "final.redscripts")
 
 # list all commands
