@@ -7,12 +7,15 @@ public class Bits {
   public static func ShiftRight(num: Int32, n: Int32) -> Int32 {
     num / PowI(2, n)
   }
+
   public static func ShiftLeft(num: Int32, n: Int32) -> Int32 {
     num * PowI(2, n)
   }
+
   public static func PowI(num: Int32, times: Int32) -> Int32 {
     RoundMath(Cast<Float>(num).PowF(times))
   }
+
   public static func Invert(num: Int32) -> Int32 {
     let i = 0;
     while i < 32 {
@@ -21,9 +24,11 @@ public class Bits {
     }
     return num;
   }
+
   public static func Has(num: Int32, n: Int32) -> Bool {
     return Bits.ShiftRight(num, n) & 1;
   }
+  
   public static func Set(num: Int32, n: Int32, value: Bool) -> Int32 {
     let after = num;
     if value {
