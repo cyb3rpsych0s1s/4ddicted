@@ -38,6 +38,8 @@ red_cache_bundle := join(red_cache_dir, "final.redscripts")
 # list all commands
 default:
   @just --list --unsorted
+  @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
+  @echo 'e.g. RED_CLI=C:\\\\somewhere\\\\on\\\\my\\\\computer\\\\redscript-cli.exe'
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
