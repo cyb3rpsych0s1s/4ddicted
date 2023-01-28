@@ -35,6 +35,8 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
+      this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
 
@@ -84,6 +86,10 @@ public class AddictedSystem extends ScriptableSystem {
   public final static func GetInstance(gameInstance: GameInstance) -> ref<AddictedSystem> {
     let container = GameInstance.GetScriptableSystemsContainer(gameInstance);
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
+  }
+
+  public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
+    this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600.);
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {

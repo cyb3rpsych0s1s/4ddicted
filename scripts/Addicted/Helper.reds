@@ -21,6 +21,20 @@ public class Bits {
     }
     return num;
   }
+  public static func Has(num: Int32, n: Int32) -> Bool {
+    return Bits.ShiftRight(num, n) & 1;
+  }
+  public static func Set(num: Int32, n: Int32, value: Bool) -> Int32 {
+    let after = num;
+    if value {
+      // set bit to 1
+      after |= Bits.ShiftLeft(1, n);
+    } else {
+      // set bit to 0
+      after &= Bits.Invert(Bits.ShiftLeft(1, n));
+    }
+    return after;
+  }
 }
 
 public class Helper {
