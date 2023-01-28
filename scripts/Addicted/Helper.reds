@@ -237,6 +237,20 @@ public class Helper {
     return [];
   }
 
+  public static func Consumables() -> array<Consumable> {
+    return [
+      Consumable.Alcohol,
+      Consumable.MaxDOC,
+      Consumable.BounceBack,
+      Consumable.HealthBooster,
+      Consumable.MemoryBooster,
+      Consumable.OxyBooster,
+      Consumable.StaminaBooster,
+      Consumable.BlackLace,
+      Consumable.CarryCapacityBooster
+    ];
+  }
+
   // all related drugs (as general items name) for a given addiction
   public static func Drugs(addiction: Addiction) -> array<TweakDBID> {
     switch (addiction) {
