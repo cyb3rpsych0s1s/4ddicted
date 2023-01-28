@@ -14,6 +14,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let healerManager: ref<HealerManager>;
   private let onoManager: ref<AudioManager>;
+  private let stimulantManager: ref<StimulantManager>;
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
@@ -36,6 +37,9 @@ public class AddictedSystem extends ScriptableSystem {
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
       this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+
+      this.stimulantManager = new StimulantManager();
+      this.stimulantManager.Register(this.player);
 
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
@@ -61,6 +65,10 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.onoManager.Unregister(this.player);
     this.onoManager = null;
+    
+    this.stimulantManager.Unregister(this.player);
+    this.stimulantManager = null;
+
     this.healerManager = null;
 
     ModSettings.UnregisterListenerToModifications(this);
@@ -70,6 +78,10 @@ public class AddictedSystem extends ScriptableSystem {
     E(s"on restored system");
 
     this.healerManager.Initialize(this);
+
+    this.stimulantManager = new StimulantManager();
+    this.stimulantManager.Register(this.player);
+
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);
   }

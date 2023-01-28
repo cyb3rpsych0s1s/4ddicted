@@ -1,19 +1,19 @@
 module Addicted.Manager
 
-import Addicted.System.AddictedSystem
 import Addicted.*
 import Addicted.Utils.*
 
-public class AnabolicManager extends IScriptable {
+public class StimulantManager extends IScriptable {
 
  private let owner: wref<PlayerPuppet>;
 
  private let onWithdrawing: ref<CallbackHandle>;
  private let withdrawingFromStaminaBooster: Bool;
  private let withdrawingFromCarryCapacityBooster: Bool;
+ private let withdrawingFromMemoryBooster: Bool;
 
  public func Register(player: ref<PlayerPuppet>) -> Void {
-    E(s"register anabolic manager");
+    E(s"register stimulant manager");
     let board: ref<IBlackboard>;
     if player != null {
       this.owner = player;
@@ -22,6 +22,7 @@ public class AnabolicManager extends IScriptable {
         let symptoms = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
         this.withdrawingFromStaminaBooster = Bits.Has(symptoms, EnumInt(Consumable.StaminaBooster));
         this.withdrawingFromCarryCapacityBooster = Bits.Has(symptoms, EnumInt(Consumable.CarryCapacityBooster));
+        this.withdrawingFromMemoryBooster = Bits.Has(symptoms, EnumInt(Consumable.MemoryBooster));
         if !IsDefined(this.onWithdrawing) {
           this.onWithdrawing = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, this, n"OnWithdrawalSymptomsChanged", true);
         }
@@ -31,7 +32,7 @@ public class AnabolicManager extends IScriptable {
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
-    E(s"unregister anabolic manager");
+    E(s"unregister stimulant manager");
 
     let board: ref<IBlackboard>;
     if player != null {
@@ -47,6 +48,7 @@ public class AnabolicManager extends IScriptable {
   protected cb func OnWithdrawalSymptomsChanged(value: Int32) -> Bool {
    let stamina = Bits.Has(value, EnumInt(Consumable.StaminaBooster));
    let capacity = Bits.Has(value, EnumInt(Consumable.CarryCapacityBooster));
+   let memory = Bits.Has(value, EnumInt(Consumable.MemoryBooster));
    let invalidate: Bool = false;
    if !Equals(stamina, this.withdrawingFromStaminaBooster) {
     this.withdrawingFromStaminaBooster = stamina;
@@ -54,6 +56,10 @@ public class AnabolicManager extends IScriptable {
    }
    if !Equals(capacity, this.withdrawingFromCarryCapacityBooster) {
     this.withdrawingFromCarryCapacityBooster = capacity;
+    invalidate = true;
+   }
+   if !Equals(capacity, this.withdrawingFromMemoryBooster) {
+    this.withdrawingFromMemoryBooster = memory;
     invalidate = true;
    }
    if invalidate {
@@ -72,44 +78,46 @@ public class AnabolicManager extends IScriptable {
      t"BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster",
      t"BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster"
     ];
+    let memory = [
+     t"BaseStatusEffect.NotablyWithdrawnFromMemoryBooster",
+     t"BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster"
+    ];
 
     let applied: array<ref<StatusEffect>>;
     StatusEffectHelper.GetAppliedEffectsWithTag(this.owner, n"WithdrawalSymptom", applied);
-    
-    if !this.withdrawingFromStaminaBooster && Helper.IsApplied(applied, stamina[0]) {
-     StatusEffectHelper.RemoveStatusEffect(this.owner, stamina[0]);
-    }
-    if !this.withdrawingFromStaminaBooster && Helper.IsApplied(applied, stamina[1]) {
-     StatusEffectHelper.RemoveStatusEffect(this.owner, stamina[1]);
-    }
-    if this.withdrawingFromStaminaBooster && !Helper.AreApplied(applied, stamina) {
-     let threshold = (this.owner as PlayerPuppet).Threshold(Consumable.StaminaBooster);
-     switch (threshold) {
-      case Threshold.Severely:
-       StatusEffectHelper.ApplyStatusEffect(this.owner, stamina[1]);
-       break;
-      case Threshold.Notably:
-       StatusEffectHelper.ApplyStatusEffect(this.owner, stamina[0]);
-       break;
-     }
-    }
 
-    if !this.withdrawingFromCarryCapacityBooster && Helper.IsApplied(applied, capacity[0]) {
-     StatusEffectHelper.RemoveStatusEffect(this.owner, capacity[0]);
-    }
-    if !this.withdrawingFromCarryCapacityBooster && Helper.IsApplied(applied, capacity[1]) {
-     StatusEffectHelper.RemoveStatusEffect(this.owner, capacity[1]);
-    }
-    if this.withdrawingFromCarryCapacityBooster && !Helper.AreApplied(applied, capacity) {
-     let threshold = (this.owner as PlayerPuppet).Threshold(Consumable.CarryCapacityBooster);
-     switch (threshold) {
-      case Threshold.Severely:
-       StatusEffectHelper.ApplyStatusEffect(this.owner, capacity[1]);
-       break;
-      case Threshold.Notably:
-       StatusEffectHelper.ApplyStatusEffect(this.owner, capacity[0]);
-       break;
-     }
+    this.Invalidate(Consumable.StaminaBooster, this.withdrawingFromStaminaBooster, applied, stamina);
+    this.Invalidate(Consumable.CarryCapacityBooster, this.withdrawingFromCarryCapacityBooster, applied, capacity);
+    this.Invalidate(Consumable.MemoryBooster, this.withdrawingFromMemoryBooster, applied, memory);
+  }
+
+  protected func Invalidate(consumable: Consumable, withdrawing: Bool, applied: array<ref<StatusEffect>>, applicables: array<TweakDBID>) -> Void {
+    let sizeApplied = ArraySize(applied);
+    let sizeApplicable = ArraySize(applicables);
+    if sizeApplied == 0 || sizeApplicable != 2 { return: }
+
+    if !withdrawing {
+      let id: TweakDBID;
+      let i = 0;
+      while i < sizeApplicable {
+        id = applicables[i];
+        if !withdrawing && Helper.IsApplied(applied, id) {
+          StatusEffectHelper.RemoveStatusEffect(this.owner, id);
+        } 
+        i += 1;
+      }
+    } else {
+      if !Helper.AreApplied(applied, applicables) {
+        let threshold = this.owner.Threshold(consumable);
+        switch (threshold) {
+        case Threshold.Severely:
+          StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[1]);
+          break;
+        case Threshold.Notably:
+          StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
+          break;
+        }
+      }
     }
   }
 }

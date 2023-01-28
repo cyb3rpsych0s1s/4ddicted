@@ -1,6 +1,5 @@
 module Addicted.Manager
 
-import Addicted.System.AddictedSystem
 import Addicted.Utils.E
 import Addicted.*
 

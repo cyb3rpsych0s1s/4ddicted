@@ -43,6 +43,26 @@ BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
           statType: BaseStats.CarryCapacity
           value: 0.7
 
+BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
+  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Memory
+          value: 0.9
+
+BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
+  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Memory
+          value: 0.7
+
 Items.ShortLastingAddictionDuration:
   $type: StatModifierGroup_Record
   drawBasedOnStatType: false
