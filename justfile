@@ -29,9 +29,10 @@ red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
 archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
 
-latest_release := "untagged-9789ada54a0e8ff606d0"
-latest_artifact_windows := "Addicted-windows-latest-alpha-0.3.0.zip"
-latest_artifact_linux := "Addicted-ubuntu-latest-alpha-0.3.0.zip"
+latest_release := env_var_or_default("LATEST_RELEASE", "")
+latest_version := env_var_or_default("LATEST_VERSION", "")
+latest_artifact_windows := 'Addicted-windows-latest-{{latest_version}}.zip'
+latest_artifact_linux := "Addicted-ubuntu-latest-{{latest_version}}.zip"
 
 # path to REDscript CLI
 red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
@@ -99,10 +100,13 @@ erase: clear
     '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
 
-alias install := install-on-windows
+# check if given env vars exists
+check-env NAME:
+    [[ "{{ env_var_or_default(NAME, '') }}" != "" ]] || {{ error('please set env var: ' + NAME) }};
 
 # 💠 direct install on Windows from repository (use `just --shell powershell.exe --shell-arg -c install`)
-install-on-windows:
+[windows]
+install: (check-env 'LATEST_RELEASE') (check-env 'LATEST_VERSION')
     New-Item -ItemType Directory -Force -Path ".installation"
     C:\msys64\usr\bin\wget.exe "https://github.com/cyb3rpsych0s1s/4ddicted/releases/download/{{latest_release}}/{{latest_artifact_windows}}" -P ".installation"
     7z x '${{ join(".installation", latest_artifact_windows) }}' -o ".installation"
@@ -112,7 +116,8 @@ install-on-windows:
     start "${{game_dir}}"
 
 # 🐧 direct install on Linux from repository (use `just install`)
-install-on-linux:
+[linux]
+install: (check-env 'LATEST_RELEASE') (check-env 'LATEST_VERSION')
     mkdir -p ".installation"
     wget "https://github.com/cyb3rpsych0s1s/4ddicted/releases/download/{{latest_release}}/{{latest_artifact_linux}}" -P ".installation"
     7z x '${{ join(".installation", latest_artifact_linux) }}' -o ".installation"
@@ -120,6 +125,11 @@ install-on-linux:
     mv ".installation"/. "${{game_dir}}"
     rm -rf ".installation"
     open "${{game_dir}}"
+
+#  Cyberpunk 2077 is not available on MacOS
+[macos]
+install:
+    @echo '🚫 Cyberpunk 2077 is not available on MacOS'
 
 # 📖 read book directly
 read:
