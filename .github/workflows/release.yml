@@ -64,7 +64,7 @@ jobs:
           filename: 'Addicted-${{ matrix.os }}-${{ github.ref_name }}.zip'
           directory: ./Addicted
           path: .
-          recursive_exclusions: ${{ env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
+          recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact ${{ matrix.os }}
         if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: actions/upload-artifact@v3

@@ -1,6 +1,4 @@
-# Recipes
-
-## sounds
+# Sounds
 
 Sounds can be played like:
 

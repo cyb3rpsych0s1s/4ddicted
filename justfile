@@ -13,7 +13,8 @@ archive_input_dir := join("archive", "packed")
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
-archive_output_dir := game_dir
+archive_output_dir := join(game_dir, "archive", "pc", "mod")
+red_cache_dir := join(game_dir, "r6", "cache")
 
 # bundle files for release
 cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
@@ -21,46 +22,31 @@ red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
 archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
 
-# REDscript CLI
-cli := join("tools", "redmod", "bin", "redMod.exe")
+latest_release := "untagged-9789ada54a0e8ff606d0"
+latest_artifact_windows := "Addicted-windows-latest-alpha-0.3.0.zip"
+latest_artifact_linux := "Addicted-ubuntu-latest-alpha-0.3.0.zip"
 
-# create mod folders (if not exists) in game files
+# list all commands
+default:
+  @just --list --unsorted
+
+# 📁 run once to create mod folders (if not exist) in game files
 setup:
     mkdir -p '{{cet_output_dir}}'
     mkdir -p '{{red_output_dir}}'
 
-# clear current mod files in game files
-uninstall: uninstall-cet uninstall-red uninstall-tweak
+# ➡️  copy codebase files to game files, including archive
+build: rebuild
+    cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
 
-uninstall-cet:
-    rm -rf '{{cet_output_dir}}'
-
-uninstall-red:
-    rm -rf '{{red_output_dir}}'
-
-uninstall-tweak:
-    rm -rf '{{tweak_output_dir}}'
-
-# clear current cache
-clear:
-    rm -rf '{{ join(game_dir, "r6", "cache", "modded") }}'
-
-# copy codebase files to game files (excluding archive, use hot reload during dev instead)
+# see WolvenKit archive Hot Reload (with Red Hot Tools)
+# ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
 
-# copy codebase files to game files (including archive)
-build: rebuild
-    cp -r '{{archive_input_dir}}'/. '{{archive_output_dir}}'
-
-# copy codebase files to remote shared folder
-# FIXME: remote user domain ip:
-# FIXME: curl -T "{$(echo * | tr ' ' ',')}" -u '{{domain}}\{{user}}' smb://{{ip}}/Addicted/mods/Addicted
-# FIXME: curl -T '{{red_input_dir}}'/'Addicted.reds' -u '{{domain}}\{{user}}' smb://{{ip}}/Addicted/scripts/Addicted/Addicted.reds
-
-# show logs from CET and RED
+# 🧾 show logs from CET and RED
 logs:
     echo "\n=== TweakXL ===\n" && \
     cat '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' && \
@@ -69,35 +55,62 @@ logs:
     echo "\n=== REDscript ===\n" && \
     cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}' && \
     echo "\n=== Toxicity ===\n" && \
-    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}'
-    echo "\n=== Addicted ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
-# echo "\n=== WE3D - Drugs of Night City ===\n" && \
-# cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}'
 
-# store (or overwrite) logs in latest.log
+# 🧹 clear current cache
+clear:
+    rm -rf '{{ join(red_cache_dir, "modded") }}'/.
+    cp -f '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'
+    rm -f '{{ join(red_cache_dir, "final.redscripts.bk") }}'
+
+# 💾 store (or overwrite) logs in latest.log
 store:
     (just logs)  > 'latest.log'
 
-# clear out logs
+alias forget := erase
+
+# 🗑️🧾 clear out logs
 erase: clear
     rm -f '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
     '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
-    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Toxicity", "Toxicity.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
-# '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "WE3D - Drugs of Night City", "WE3D - Drugs of Night City.log") }}' \
 
-# shortcut for red cli
-cli *args="":
-    '{{cli}}' {{args}}
+alias install := install-on-windows
 
-quick:
-    cat '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}'
+# 💠 direct install on Windows from repository (use `just --shell powershell.exe --shell-arg -c install`)
+install-on-windows:
+    New-Item -ItemType Directory -Force -Path ".installation"
+    C:\msys64\usr\bin\wget.exe "https://github.com/cyb3rpsych0s1s/4ddicted/releases/download/{{latest_release}}/{{latest_artifact_windows}}" -P ".installation"
+    7z x '${{ join(".installation", latest_artifact_windows) }}' -o ".installation"
+    rm -Force "${{latest_artifact_windows}}"
+    Get-ChildItem -Path ".installation" | Copy-Item -Destination "${{game_dir}}" -Recurse -Container
+    rm -r -Force ".installation"
+    start "${{game_dir}}"
 
+# 🐧 direct install on Linux from repository (use `just install`)
+install-on-linux:
+    mkdir -p ".installation"
+    wget "https://github.com/cyb3rpsych0s1s/4ddicted/releases/download/{{latest_release}}/{{latest_artifact_linux}}" -P ".installation"
+    7z x '${{ join(".installation", latest_artifact_linux) }}' -o ".installation"
+    rm -f '${{ join(".installation", latest_artifact_linux) }}'
+    mv ".installation"/. "${{game_dir}}"
+    rm -rf ".installation"
+    open "${{game_dir}}"
+
+# 📖 read book directly
+read:
+    mdbook build --open
+
+# 🖊️  book with live hot reload
+draft:
+    mdbook watch
+
+# 📕 assemble book (for release in CI)
 assemble:
     mdbook build
 
+# 📦 bundle mod files (for release in CI)
 bundle:
     mkdir -p '{{archive_input_dir}}'
     mv archive.archive '{{ join(archive_input_dir, "Addicted.archive") }}'
@@ -111,3 +124,23 @@ bundle:
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
+
+# 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
+uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak
+
+# 🗑️🎭  clear out mod archive files in game files
+uninstall-archive:
+    rm -f '{{archive_output_dir}}'/Addicted.archive
+    rm -f '{{archive_output_dir}}'/Addicted.archive.xl
+
+# 🗑️⚙️   clear out mod CET files in game files
+uninstall-cet:
+    rm -rf '{{cet_output_dir}}'
+
+# 🗑️🧧  clear out mod REDscript files in game files
+uninstall-red:
+    rm -rf '{{red_output_dir}}'
+
+# 🗑️🗜️   clear out mod tweaks files in game files
+uninstall-tweak:
+    rm -rf '{{tweak_output_dir}}'

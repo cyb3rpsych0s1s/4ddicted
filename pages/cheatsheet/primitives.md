@@ -1,4 +1,4 @@
-# Cheatsheet
+# Primitives
 
 ```swift
 let v: String = "Hello world";

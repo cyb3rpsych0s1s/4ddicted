@@ -44,19 +44,25 @@ Then, in any order:
 
 At the current time of this writing:
 
-- CET                       1.21.0
-- RED4ext                   1.9.0
-- REDscript                 0.5.10
-- RED Hot Tools             0.4.5
-- TweakXL                   1.1.1
-- ArchiveXL                 1.3.5
-- clipTester                ?
-- cybercmd                  0.0.6
-- Wannabe Edgerunner        5jan23
-- Native Settings UI        1.92
-- mod_settings              0.0.10
-- Toxicity                  5jan23
-- Status Bar Bug Fixes      9jan23
-- WE3D Drugs of Night City  14jan23
+| Tools                    | versions|
+|--------------------------|---------|
+| WolvenKit                | 8.8.1   |
+| CET                      | 1.21.0  |
+| RED4ext                  | 1.9.0   |
+| REDscript                | 0.5.10  |
+| RED Hot Tools            | 0.4.5   |
+| TweakXL                  | 1.1.1   |
+| ArchiveXL                | 1.3.5   |
+| clipTester               | ?       |
+| cybercmd                 | 0.0.6   |
+| Native Settings UI       | 1.92    |
+| mod_settings             | 0.0.10  |
+
+| Mods                     | versions| compatibility |
+|--------------------------|---------|---------------|
+| Status Bar Bug Fixes     | 9jan23  | ✅            |
+| Toxicity                 | 5jan23  | ✅            |
+| WE3D Drugs of Night City | 14jan23 | ❌            |
+| Wannabe Edgerunner       | 5jan23  | ✅            |
 
 updated on 14jan23.
