@@ -1,5 +1,7 @@
 # Addicted
 
+![build](https://github.com/cyb3rpsych0s1s/4ddicted/actions/workflows/quality.yml/badge.svg) ![book](https://github.com/cyb3rpsych0s1s/4ddicted/actions/workflows/pages.yml/badge.svg)
+
 An amplifier mod based on core game consumables, and optionally on community mods `Toxicity` (not yet compatible with `WE3D - Drugs in Night City`).
 
 Basically adds a chance to become addicted to substances too frequently consumed, like MAXdoc and the likes, offering additional debuffs and effects in an immersive way.
