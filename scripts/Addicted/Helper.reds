@@ -112,6 +112,10 @@ public class Helper {
     return Helper.IsCapacityBooster(id) || Helper.IsStaminaBooster(id);
   }
 
+  public static func IsNeurotransmitter(id: TweakDBID) -> Bool {
+    return Helper.IsMemoryBooster(id);
+  }
+
   public static func IsHealerAction(id: TweakDBID) -> Bool {
     return Helper.IsMaxDOC(id) || Helper.IsBounceBack(id) || Helper.IsHealthBooster(id);
   }
@@ -223,6 +227,10 @@ public class Helper {
     switch(addiction) {
       case Addiction.Healers:
         return [Consumable.BounceBack, Consumable.MaxDOC, Consumable.HealthBooster];
+      case Addiction.Anabolics:
+        return [Consumable.StaminaBooster, Consumable.CarryCapacityBooster];
+      case Addiction.Neuros:
+        return [Consumable.MemoryBooster];
       default:
         break;
     }
@@ -343,7 +351,9 @@ public class Helper {
 
   public static func Addictions() -> array<Addiction> {
     return [
-      Addiction.Healers
+      Addiction.Healers,
+      Addiction.Anabolics,
+      Addiction.Neuros
     ];
   }
 

@@ -204,6 +204,7 @@ enum Consumable {
   OxyBooster = 5,
   StaminaBooster = 6,
   BlackLace = 7,
+  CarryCapacityBooster = 8,
 }
 
 enum Kind {
@@ -214,6 +215,8 @@ enum Kind {
 
 enum Addiction {
   Healers = 0,
+  Anabolics = 1,
+  Neuros = 2,
 }
 
 enum PlaySoundPolicy {
