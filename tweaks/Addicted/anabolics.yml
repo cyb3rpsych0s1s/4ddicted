@@ -1,0 +1,55 @@
+BaseStatusEffect.BoosterWithdrawalSymptom:
+  $type: StatusEffect_Record
+  duration: Items.ShortLastingAddictionDuration
+  gameplayTags: [Debuff, WithdrawalSymptom]
+
+BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
+  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Stamina
+          value: 0.9
+
+BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
+  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Stamina
+          value: 0.7
+
+BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
+  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.CarryCapacity
+          value: 0.9
+
+BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
+  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.CarryCapacity
+          value: 0.7
+
+Items.ShortLastingAddictionDuration:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  statModifiers:
+    - $type: ConstantStatModifier_Record
+      modifierType: Additive
+      statType: BaseStats.MaxDuration
+      value: 900
+  statModsLimit: -1
+  statModsLimitModifier: None
