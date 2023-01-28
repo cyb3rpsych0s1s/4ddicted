@@ -92,25 +92,7 @@ public func CyberwareImmunity() -> Int32 {
 public func IsWithdrawing(consumable: Consumable) -> Bool {
   let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
   let symptoms = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-  return Bits.ShiftRight(symptoms, EnumInt(consumable)) & 1;
-}
-
-@addMethod(PlayerPuppet)
-public func Withdraw(consumable: Consumable, withdrawing: bool, notify: bool = true) -> Int32 {
-  let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
-  let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-  let after = before;
-  if withdrawing {
-    // set bit to 1
-    after |= Bits.ShiftLeft(1, flag);
-  } else {
-    // set bit to 0
-    after &= Bits.Invert(Bits.ShiftLeft(1, flag));
-  }
-  if notify && !Equals(before, after) {
-    blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.IsWithdrawing, after);
-  }
-  return after;
+  return Bits.Has(symptoms, EnumInt(consumable));
 }
 
 // alter some effects based on addiction threshold

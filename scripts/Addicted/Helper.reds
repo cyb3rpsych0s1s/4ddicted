@@ -5,28 +5,28 @@ import Addicted.Utils.{E,EI}
 
 public class Bits {
   public static func ShiftRight(num: Int32, n: Int32) -> Int32 {
-    num / PowI(2, n)
+    return num / Bits.PowI(2, n);
   }
 
   public static func ShiftLeft(num: Int32, n: Int32) -> Int32 {
-    num * PowI(2, n)
+    return num * Bits.PowI(2, n);
   }
 
   public static func PowI(num: Int32, times: Int32) -> Int32 {
-    RoundMath(Cast<Float>(num).PowF(times))
+    return RoundMath(PowF(Cast<Float>(num), Cast<Float>(times)));
   }
 
   public static func Invert(num: Int32) -> Int32 {
     let i = 0;
     while i < 32 {
-      num = PowI(num, ShiftLeft(1, i));
+      num = Bits.PowI(num, Bits.ShiftLeft(1, i));
       i += 1;
     }
     return num;
   }
 
   public static func Has(num: Int32, n: Int32) -> Bool {
-    return Bits.ShiftRight(num, n) & 1;
+    return Cast<Bool>(Bits.ShiftRight(num, n) & 1);
   }
   
   public static func Set(num: Int32, n: Int32, value: Bool) -> Int32 {
@@ -240,7 +240,7 @@ public class Helper {
           t"Items.BonesMcCoy70V0",
           t"Items.BonesMcCoy70V1",
           t"Items.BonesMcCoy70V2",
-          t"Items.HealthBooster",
+          t"Items.HealthBooster"
         ];
       default:
         break;
