@@ -1,5 +1,10 @@
+set dotenv-load
+
+DEFAULT_GAME_DIR := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+DEFAULT_RED_CLI := join(".", "redscript-cli.exe")
+
 # installation dir for Cyberpunk 2077, e.g. Steam
-game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+game_dir := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
 bundle_dir := 'Addicted'
 alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
 
@@ -26,6 +31,10 @@ latest_release := "untagged-9789ada54a0e8ff606d0"
 latest_artifact_windows := "Addicted-windows-latest-alpha-0.3.0.zip"
 latest_artifact_linux := "Addicted-ubuntu-latest-alpha-0.3.0.zip"
 
+# path to REDscript CLI
+red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
+red_cache_bundle := join(red_cache_dir, "final.redscripts")
+
 # list all commands
 default:
   @just --list --unsorted
@@ -34,6 +43,14 @@ default:
 setup:
     mkdir -p '{{cet_output_dir}}'
     mkdir -p '{{red_output_dir}}'
+
+# 🎨 lint code
+lint:
+    '{{red_cli}}' lint -s 'scripts' -b '{{red_cache_bundle}}'
+
+# 🔛 just compile to check (without building)
+compile:
+    '{{red_cli}}' compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
 
 # ➡️  copy codebase files to game files, including archive
 build: rebuild

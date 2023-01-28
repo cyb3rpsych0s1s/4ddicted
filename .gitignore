@@ -13,3 +13,5 @@ archive/packed/
 .VSCodeCounter
 ./Addicted/
 .installation/
+dump.redscripts
+*.env
