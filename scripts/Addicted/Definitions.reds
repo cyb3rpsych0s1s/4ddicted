@@ -1,6 +1,7 @@
 module Addicted
 
 import Addicted.Helper
+import Addicted.Helpers.Generic
 
 public abstract class HintRequest extends ScriptableSystemRequest {
   // game timestamp where to stop at
@@ -99,13 +100,13 @@ public class Consumptions {
   private persistent let values: array<ref<Consumption>>;
 
   public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let base = Helper.ItemBaseName(key);
+    let base = Generic.ItemBaseName(key);
     if this.KeyExist(base) { return; }
     ArrayPush(this.values, value);
     ArrayPush(this.keys, base);
   }
   private func Index(key: TweakDBID) -> Int32 {
-    let base = Helper.ItemBaseName(key);
+    let base = Generic.ItemBaseName(key);
     let idx = 0;
     let found = false;
     for existing in this.keys {

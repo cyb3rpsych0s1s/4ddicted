@@ -250,23 +250,6 @@ public class Helper {
     return out;
   }
 
-  // get a general item name based on any TweakDBID related to a consumable
-  // e.g. 'BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0' or 'Items.FirstAidWhiffV0', etc
-  //       would become 'Items.FirstAidWhiffV0'  
-  public static func ItemBaseName(id: TweakDBID) -> TweakDBID {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    if StrContains(suffix, "NotablyWeakened") || StrContains(suffix, "SeverelyWeakened") {
-      suffix = StrReplace(suffix, "NotablyWeakened", "");
-      suffix = StrReplace(suffix, "SeverelyWeakened", "");
-      return TDBID.Create("Items." + suffix);
-    }
-    if StrContains(str, "BlackLace") {
-      return TDBID.Create("Items.BlackLaceV0");
-    }
-    return TDBID.Create("Items." + suffix);
-  }
-
   public static func Addictions() -> array<Addiction> {
     return [
       Addiction.Healers,

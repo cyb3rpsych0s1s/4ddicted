@@ -413,7 +413,7 @@ public class AddictedSystem extends ScriptableSystem {
     let effects = Helper.Effects(consumable);
     let item: TweakDBID;
     for effect in effects {
-      item = Helper.ItemBaseName(effect);
+      item = Generic.ItemBaseName(effect);
       if this.IsWithdrawing(item) {
         return true;
       }
