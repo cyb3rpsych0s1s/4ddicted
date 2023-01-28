@@ -387,6 +387,18 @@ public class AddictedSystem extends ScriptableSystem {
     return false;
   }
 
+  public func IsWithdrawing(consumable: Consumable) -> Bool {
+    let effects = Helper.Effects(consumable);
+    let item: TweakDBID;
+    for effect in effects {
+      item = Helper.ItemBaseName(effect);
+      if this.IsWithdrawing(item) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// average consumption for a given consumable
   /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
   public func AverageConsumption(consumable: Consumable) -> Int32 {
