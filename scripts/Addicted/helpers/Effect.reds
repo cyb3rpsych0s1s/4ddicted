@@ -15,6 +15,8 @@ public class Effect {
     return false;
   }
 
+  public static func IsSleep(id: TweakDBID) -> Bool { return Equals(id, t"HousingStatusEffect.Rested"); }
+
   public static func IsInstant(record: ref<TweakDBRecord>) -> Bool {
     if record.IsA(n"gamedataStatusEffect_Record") {
       let status = record as StatusEffect_Record;

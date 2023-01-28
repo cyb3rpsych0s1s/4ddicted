@@ -164,7 +164,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnRested(id: TweakDBID) -> Void {
-    let sleep = Helper.IsSleep(id);
+    let sleep = Effect.IsSleep(id);
     let now = this.timeSystem.GetGameTimeStamp();
     let duration = now - this.restingSince;
     let minimum = 60. * 60. * 6.; // 6h
@@ -329,7 +329,7 @@ public class AddictedSystem extends ScriptableSystem {
       ToString(consumable) +
       s"\n" +
       GetLocalizedTextByKey(n"Mod-Addicted-Threshold") +
-      Helper.GetTranslation(after);
+      Translations.Get(after);
     if EnumInt(before) < EnumInt(after) {
       toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Increased") + s"\n" +desc;
     } else {
