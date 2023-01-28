@@ -94,7 +94,7 @@ public class StimulantManager extends IScriptable {
   protected func Invalidate(consumable: Consumable, withdrawing: Bool, applied: array<ref<StatusEffect>>, applicables: array<TweakDBID>) -> Void {
     let sizeApplied = ArraySize(applied);
     let sizeApplicable = ArraySize(applicables);
-    if sizeApplied == 0 || sizeApplicable != 2 { return: }
+    if sizeApplied == 0 || sizeApplicable != 2 { return; }
 
     if !withdrawing {
       let id: TweakDBID;
