@@ -3,6 +3,7 @@ module Addicted
 import Addicted.System.AddictedSystem
 import Addicted.{Bits,Helper}
 import Addicted.Utils.{E,EI,F}
+import Addicted.Helpers.{Generic,Items}
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -143,7 +144,7 @@ public final static func PerformItemAction(executor: wref<GameObject>, itemID: I
 @addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
   let id = this.staticData.GetID();
-  return Helper.IsAddictive(id);
+  return Generic.IsAddictive(id);
 }
 
 @wrapMethod(EquipmentSystemPlayerData)
@@ -155,17 +156,17 @@ private final func UnequipItem(itemID: ItemID) -> Void {
     E(s"uninstalled by item id \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     let player = this.m_owner as PlayerPuppet;
-    if IsDefined(player) && Helper.IsBiomonitor(id) {
+    if IsDefined(player) && Generic.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnBiomonitorChanged(false);
       return;
     }
-    if IsDefined(player) && Helper.IsDetoxifier(id) {
+    if IsDefined(player) && Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnDetoxifierChanged(false);
       return;
     }
-    if IsDefined(player) && Helper.IsMetabolicEditor(id) {
+    if IsDefined(player) && Items.IsMetabolicEditor(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnMetabolicEditorChanged(false);
       return;
@@ -183,17 +184,17 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> V
     E(s"uninstalled by index(es) \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     let player = this.m_owner as PlayerPuppet;
-    if IsDefined(player) && Helper.IsBiomonitor(id) {
+    if IsDefined(player) && Generic.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnBiomonitorChanged(false);
       return;
     }
-    if IsDefined(player) && Helper.IsDetoxifier(id) {
+    if IsDefined(player) && Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnDetoxifierChanged(false);
       return;
     }
-    if IsDefined(player) && Helper.IsMetabolicEditor(id) {
+    if IsDefined(player) && Items.IsMetabolicEditor(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnMetabolicEditorChanged(false);
       return;
@@ -211,17 +212,17 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
   if cyberware {
     E(s"installed \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
-    if Helper.IsBiomonitor(id) {
+    if Generic.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnBiomonitorChanged(true);
       return;
     }
-    if Helper.IsDetoxifier(id) {
+    if Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnDetoxifierChanged(true);
       return;
     }
-    if Helper.IsMetabolicEditor(id) {
+    if Items.IsMetabolicEditor(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnMetabolicEditorChanged(true);
       return;

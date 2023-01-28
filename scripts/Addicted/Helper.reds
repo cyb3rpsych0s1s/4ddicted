@@ -2,6 +2,7 @@ module Addicted
 
 import Addicted.*
 import Addicted.Utils.{E,EI}
+import Addicted.Helpers.*
 
 public class Bits {
   public static func ShiftRight(num: Int32, n: Int32) -> Int32 {
@@ -44,7 +45,7 @@ public class Bits {
 
 public class Helper {
   public static func Category(id: TweakDBID) -> Category {
-    if Helper.IsBlackLace(id) { return Category.Hard; }
+    if Generic.IsBlackLace(id) { return Category.Hard; }
     return Category.Mild;
   }
 
@@ -82,65 +83,6 @@ public class Helper {
       return Threshold.Mildly;
     }
     return Threshold.Barely;
-  }
-
-  public static func IsHealer(id: TweakDBID) -> Bool {
-    return Helper.IsMaxDOC(id) || Helper.IsBounceBack(id) || Helper.IsHealthBooster(id);
-  }
-
-  public static func IsBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "Booster");
-  }
-
-  public static func IsInhaler(id: TweakDBID) -> Bool {
-    return Helper.IsMaxDOC(id) || Helper.IsBlackLace(id);
-  }
-
-  public static func IsInjector(id: TweakDBID) -> Bool {
-    return Helper.IsBounceBack(id);
-  }
-
-  public static func IsPill(id: TweakDBID) -> Bool {
-    return Helper.IsCapacityBooster(id) ||
-    Helper.IsStaminaBooster(id) ||
-    Helper.IsMemoryBooster(id);
-  }
-
-  public static func IsAnabolic(id: TweakDBID) -> Bool {
-    return Helper.IsCapacityBooster(id) || Helper.IsStaminaBooster(id);
-  }
-
-  public static func IsNeurotransmitter(id: TweakDBID) -> Bool {
-    return Helper.IsMemoryBooster(id);
-  }
-
-  public static func IsHealerAction(id: TweakDBID) -> Bool {
-    return Helper.IsMaxDOC(id) || Helper.IsBounceBack(id) || Helper.IsHealthBooster(id);
-  }
-
-  public static func IsBoosterAction(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    return StrBeginsWith(str, "Items") && StrContains(str, "Booster");
-  }
-
-  public static func IsInhalerAction(id: TweakDBID) -> Bool {
-    return Helper.IsMaxDOCAction(id) || Helper.IsBlackLaceAction(id);
-  }
-
-  public static func IsInjectorAction(id: TweakDBID) -> Bool {
-    return Helper.IsBounceBackAction(id);
-  }
-
-  public static func IsPillAction(id: TweakDBID) -> Bool {
-    return Helper.IsCapacityBooster(id) ||
-    Helper.IsStaminaBoosterAction(id) ||
-    Helper.IsMemoryBoosterAction(id);
-  }
-
-  public static func IsAnabolicAction(id: TweakDBID) -> Bool {
-    return Helper.IsCapacityBoosterAction(id) || Helper.IsStaminaBoosterAction(id);
   }
 
   public static func IsInstant(id: TweakDBID) -> Bool {
@@ -220,27 +162,6 @@ public class Helper {
       }
     }
     return false;
-  }
-
-  public static func Consumable(id: TweakDBID) -> Consumable {
-    if Helper.IsMaxDOC(id) { return Consumable.MaxDOC; }
-    if Helper.IsBounceBack(id) { return Consumable.BounceBack; }
-    if Helper.IsHealthBooster(id) { return Consumable.HealthBooster; }
-    switch(id) {
-      case t"BaseStatusEffect.AlcoholDebuff":
-        return Consumable.Alcohol;
-      case t"BaseStatusEffect.MemoryBooster":
-        return Consumable.MemoryBooster;
-      case t"BaseStatusEffect.OxyBooster":
-        return Consumable.OxyBooster;
-      case t"BaseStatusEffect.StaminaBooster":
-        return Consumable.StaminaBooster;
-      case t"BaseStatusEffect.BlackLaceV0":
-        return Consumable.BlackLace;
-      default:
-        break;
-    }
-    return Consumable.Invalid;
   }
 
   public static func Consumables(addiction: Addiction) -> array<Consumable> {
@@ -353,8 +274,8 @@ public class Helper {
       return id;
     }
     let severe = EnumInt(threshold) == EnumInt(Threshold.Severely);
-    if Helper.IsMaxDOC(id) {
-      let version = Helper.RateMaxDOCAction(id);
+    if Generic.IsMaxDOC(id) {
+      let version = Items.RateMaxDOCAction(id);
       switch(version) {
         case 0:
           if severe {
@@ -375,8 +296,8 @@ public class Helper {
           return id;
       }
     }
-    if Helper.IsBounceBack(id) {
-      let version = Helper.RateBounceBackAction(id);
+    if Generic.IsBounceBack(id) {
+      let version = Items.RateBounceBackAction(id);
       switch(version) {
         case 0:
           if severe {
@@ -397,22 +318,13 @@ public class Helper {
           return id;
       }
     }
-    if Helper.IsHealthBooster(id) {
+    if Generic.IsHealthBooster(id) {
       if severe {
         return t"Items.SeverelyWeakenedActionEffectHealthBooster";
       }
       return t"Items.NotablyWeakenedActionEffectHealthBooster";
     }
     return id;
-  }
-
-  public static func IsAddictive(id: TweakDBID) -> Bool {
-    // t"BaseStatusEffect.CombatStim" double-check
-    return Helper.IsAlcohol(id) ||
-    Helper.IsInhaler(id) ||
-    Helper.IsBooster(id) ||
-    Helper.IsInjector(id) ||
-    Helper.IsHealthBooster(id);
   }
 
   public static func Addictions() -> array<Addiction> {
@@ -439,12 +351,6 @@ public class Helper {
     return false;
   }
 
-  public static func IsBiomonitor(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrBeginsWith(suffix, "HealthMonitor");
-  }
-
   public static func Biomonitors() -> array<TweakDBID> {
     return [
       t"Items.HealthMonitorCommon",
@@ -455,129 +361,17 @@ public class Helper {
     ];
   }
 
-  public static func IsDetoxifier(id: TweakDBID) -> Bool { return Equals(id, t"Items.ToxinCleanser"); }
-  public static func IsMetabolicEditor(id: TweakDBID) -> Bool { return Equals(id, t"Items.ReverseMetabolicEnhancer"); }
-
   public static func IsSleep(id: TweakDBID) -> Bool { return Equals(id, t"HousingStatusEffect.Rested"); }
-
-  public static func IsAlcohol(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    return StrContains(str, "Alcohol");
-  }
-
-  public static func IsMaxDOC(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "FirstAidWhiff");
-  }
-
-  public static func IsBounceBack(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "BonesMcCoy70");
-  }
-
-  public static func IsHealthBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "HealthBooster");
-  }
-
-  public static func IsBlackLace(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "BlackLace");
-  }
-
-  public static func IsCapacityBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "CarryCapacityBooster");
-  }
-
-  public static func IsStaminaBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "StaminaBooster");
-  }
-
-  public static func IsMemoryBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "MemoryBooster");
-  }
-
-  public static func IsOxyBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "OxyBooster");
-  }
-
-  private static func IsMaxDOCAction(id: TweakDBID) -> Bool {
-    let rate = Helper.RateMaxDOCAction(id);
-    return rate != -1;
-  }
-
-  private static func RateMaxDOCAction(id: TweakDBID) -> Int32 {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV0") { return 0; }
-    if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV1") { return 1; }
-    if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV2") { return 2; }
-    return -1;
-  }
-
-  private static func IsBounceBackAction(id: TweakDBID) -> Bool {
-    let version = Helper.RateBounceBackAction(id);
-    return version != -1;
-  }
-
-  private static func RateBounceBackAction(id: TweakDBID) -> Int32 {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "BonesMcCoy70V0") { return 0; }
-    if StrBeginsWith(str, "Items") && StrContains(str, "BonesMcCoy70V1") { return 1; }
-    if StrBeginsWith(str, "Items") && StrContains(str, "BonesMcCoy70V2") { return 2; }
-    return -1;
-  }
-
-  private static func IsHealthBoosterAction(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "HealthBooster") { return true; }
-    return false;
-  }
-
-  private static func IsBlackLaceAction(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "BlackLace") { return true; }
-    return false;
-  }
-
-  private static func IsCapacityBoosterAction(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "CarryCapacityBooster") { return true; }
-    return false;
-  }
-
-  private static func IsStaminaBoosterAction(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "StaminaBooster") { return true; }
-    return false;
-  }
-
-  private static func IsMemoryBoosterAction(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    if StrBeginsWith(str, "Items") && StrContains(str, "MemoryBooster") { return true; }
-    return false;
-  }
 
   public static func AppropriateHintRequest(id: TweakDBID, threshold: Threshold, now: Float) -> ref<HintRequest> {
     if Helper.IsSerious(threshold) {
       let request: ref<HintRequest>;
-      if Helper.IsInhaler(id) {
+      if Generic.IsInhaler(id) {
         request = new CoughingRequest();
       }
       // anabolic are also pills, but the opposite isn't true
-      let anabolic = Helper.IsAnabolic(id);
-      let pill = Helper.IsPill(id);
+      let anabolic = Generic.IsAnabolic(id);
+      let pill = Generic.IsPill(id);
       if anabolic || pill {
         let random = RandRangeF(1, 10);
         let above: Bool;
@@ -598,7 +392,7 @@ public class Helper {
           request = new HeadAchingRequest();
         }
       }
-      if Helper.IsInjector(id) {
+      if Generic.IsInjector(id) {
         request = new AchingRequest();
       }
       request.threshold = threshold;

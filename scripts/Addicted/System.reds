@@ -2,6 +2,7 @@ module Addicted.System
 
 import Addicted.Utils.*
 import Addicted.*
+import Addicted.Helpers.*
 import Addicted.Manager.*
 
 public class AddictedSystem extends ScriptableSystem {
@@ -130,7 +131,7 @@ public class AddictedSystem extends ScriptableSystem {
     let after: Threshold;
     let amount: Int32;
     let hint: Bool;
-    if Helper.IsAddictive(id) {
+    if Generic.IsAddictive(id) {
       if this.consumptions.KeyExist(id) {
         let consumption: ref<Consumption> = this.consumptions.Get(id);
         before = Helper.Threshold(consumption.current);
@@ -292,10 +293,10 @@ public class AddictedSystem extends ScriptableSystem {
       E(s"no hint when possessed");
       return;
     }
-    let consumable = Helper.Consumable(id);
+    let consumable = Generic.Consumable(id);
     let specific = this.consumptions.Get(id);
     let averageThreshold = this.consumptions.Threshold(consumable);
-    let specificThreshold = Helper.Threshold(specific.current);
+    let specificThreshold = specific.Threshold();
     let threshold: Threshold;
     if EnumInt(specificThreshold) >= EnumInt(averageThreshold) {
       threshold = specificThreshold;
@@ -323,7 +324,7 @@ public class AddictedSystem extends ScriptableSystem {
     toast.isShown = true;
     toast.isInstant = true;
     toast.duration = 5.;
-    let consumable = Helper.Consumable(id);
+    let consumable = Generic.Consumable(id);
     let desc: String = GetLocalizedTextByKey(n"Mod-Addicted-Substance") +
       ToString(consumable) +
       s"\n" +

@@ -3,6 +3,7 @@ module Addicted.Manager
 import Addicted.System.AddictedSystem
 import Addicted.*
 import Addicted.Utils.*
+import Addicted.Helpers.Generic
 
 public class HealerManager extends IScriptable {
 
@@ -23,7 +24,7 @@ public class HealerManager extends IScriptable {
     let groupThreshold = this.system.Threshold(Addiction.Healers);
     for effect in actionEffects {
       id = effect.GetID();
-      consumable = Helper.Consumable(id);
+      consumable = Generic.Consumable(id);
       threshold = this.system.Threshold(consumable);
       if EnumInt(threshold) < EnumInt(groupThreshold) {
         threshold = groupThreshold;
@@ -41,7 +42,7 @@ public class HealerManager extends IScriptable {
 
   public func ContainsHealerStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
     for record in actionEffects {
-      if Helper.IsHealer(record.GetID()) {
+      if Generic.IsHealer(record.GetID()) {
         return true;
       }
     }
