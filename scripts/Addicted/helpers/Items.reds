@@ -88,4 +88,64 @@ public class Items {
     if StrBeginsWith(str, "Items") && StrContains(str, "FirstAidWhiffV2") { return 2; }
     return -1;
   }
+
+  public static func ActionEffect(id: TweakDBID, threshold: Threshold) -> TweakDBID {
+    E(s"action effect for \(TDBID.ToStringDEBUG(id))");
+    let serious = Helper.IsSerious(threshold);
+    if !serious {
+      return id;
+    }
+    let severe = EnumInt(threshold) == EnumInt(Threshold.Severely);
+    if Generic.IsMaxDOC(id) {
+      let version = Items.RateMaxDOCAction(id);
+      switch(version) {
+        case 0:
+          if severe {
+            return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV0";
+          }
+          return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV0";
+        case 1:
+          if severe {
+            return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV1";
+          }
+          return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV1";
+        case 2:
+          if severe {
+            return t"Items.SeverelyWeakenedActionEffectFirstAidWhiffV2";
+          }
+          return t"Items.NotablyWeakenedActionEffectFirstAidWhiffV2";
+        default:
+          return id;
+      }
+    }
+    if Generic.IsBounceBack(id) {
+      let version = Items.RateBounceBackAction(id);
+      switch(version) {
+        case 0:
+          if severe {
+            return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V0";
+          }
+          return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V0";
+        case 1:
+          if severe {
+            return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V1";
+          }
+          return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V1";
+        case 2:
+          if severe {
+            return t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V2";
+          }
+          return t"Items.NotablyWeakenedActionEffectBonesMcCoy70V2";
+        default:
+          return id;
+      }
+    }
+    if Generic.IsHealthBooster(id) {
+      if severe {
+        return t"Items.SeverelyWeakenedActionEffectHealthBooster";
+      }
+      return t"Items.NotablyWeakenedActionEffectHealthBooster";
+    }
+    return id;
+  }
 }

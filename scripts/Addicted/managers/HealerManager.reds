@@ -3,7 +3,7 @@ module Addicted.Manager
 import Addicted.System.AddictedSystem
 import Addicted.*
 import Addicted.Utils.*
-import Addicted.Helpers.Generic
+import Addicted.Helpers.{Generic, Items}
 
 public class HealerManager extends IScriptable {
 
@@ -29,7 +29,7 @@ public class HealerManager extends IScriptable {
       if EnumInt(threshold) < EnumInt(groupThreshold) {
         threshold = groupThreshold;
       }
-      action = Helper.ActionEffect(id, threshold);
+      action = Items.ActionEffect(id, threshold);
       if !Equals(action, id) {
         EI(id, s"replace with \(TDBID.ToStringDEBUG(action))");
         let weakened = TweakDBInterface.GetObjectActionEffectRecord(action);
