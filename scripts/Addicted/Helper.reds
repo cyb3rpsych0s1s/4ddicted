@@ -229,6 +229,25 @@ public class Helper {
     return [];
   }
 
+  // all related drugs (as general items name) for a given addiction
+  public static func Drugs(addiction: Addiction) -> array<TweakDBID> {
+    switch (addiction) {
+      case Addiction.Healers:
+        return [
+          t"Items.FirstAidWhiffV0",
+          t"Items.FirstAidWhiffV1",
+          t"Items.FirstAidWhiffV2",
+          t"Items.BonesMcCoy70V0",
+          t"Items.BonesMcCoy70V1",
+          t"Items.BonesMcCoy70V2",
+          t"Items.HealthBooster",
+        ];
+      default:
+        break;
+    }
+    return [];
+  }
+
   public static func Effects(consumable: Consumable) -> array<TweakDBID> {
     switch (consumable) {
       case Consumable.Alcohol:
@@ -320,6 +339,12 @@ public class Helper {
     Helper.IsBooster(id) ||
     Helper.IsInjector(id) ||
     Helper.IsHealthBooster(id);
+  }
+
+  public static func Addictions() -> array<Addiction> {
+    return [
+      Addiction.Healers
+    ];
   }
 
   public static func IsSerious(threshold: Threshold) -> Bool {
