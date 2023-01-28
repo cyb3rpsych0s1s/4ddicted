@@ -61,6 +61,15 @@ public class Generic {
     Generic.IsHealthBooster(id);
   }
 
+  public static func IsInstant(id: TweakDBID) -> Bool {
+    let record = TweakDBInterface.GetRecord(id);
+    let effect = Effect.IsInstant(record);
+    if effect { return true; }
+    let item = Items.IsInstant(record);
+    if item { return true; }
+    return false;
+  }
+
   public static func IsPill(id: TweakDBID) -> Bool {
     return Generic.IsCapacityBooster(id) ||
     Generic.IsStaminaBooster(id) ||

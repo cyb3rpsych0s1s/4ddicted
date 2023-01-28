@@ -148,4 +148,31 @@ public class Items {
     }
     return id;
   }
+
+  public static func IsInstant(record: ref<TweakDBRecord>) -> Bool {
+    if record.IsA(n"gamedataConsumableItem_Record") {
+      let item = record as Item_Record;
+      let size = item.GetObjectActionsCount();
+      if size == 0 { return false ;}
+      let actions: array<wref<ObjectAction_Record>> = [];
+      let effectors: array<wref<ObjectActionEffect_Record>> = [];
+      let status: wref<StatusEffect_Record>;
+      let found: Bool = false;
+      item.ObjectActions(actions);
+      for action in actions {
+        if Equals(action.ActionName(), n"Consume") {
+          effectors = [];
+          action.CompletionEffects(effectors);
+          for effector in effectors {
+            status = effector.StatusEffect();
+            found = Effect.IsInstant(status);
+            if found {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
 }

@@ -279,7 +279,7 @@ public class AddictedSystem extends ScriptableSystem {
       consumption.current = amount;
       ArrayPush(consumption.doses, now);
       EI(id, s"additional consumption \(TDBID.ToStringDEBUG(id)) \(ToString(old)) -> \(ToString(consumption.current))");
-      return (amount > old) && Helper.IsInstant(id);
+      return (amount > old) && Generic.IsInstant(id);
     } else {
       EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(id)) -> \(ToString(amount))");
       this.consumptions.Insert(id, Consumption.Create(id, amount, now));

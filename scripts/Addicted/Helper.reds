@@ -46,65 +46,6 @@ public class Helper {
     return Threshold.Barely;
   }
 
-  public static func IsInstant(id: TweakDBID) -> Bool {
-    let record = TweakDBInterface.GetRecord(id);
-    let effect = Helper.IsInstantEffect(record);
-    if effect { return true; }
-    let item = Helper.IsInstantItem(record);
-    if item { return true; }
-    return false;
-  }
-
-  public static func IsInstantEffect(record: ref<TweakDBRecord>) -> Bool {
-    if record.IsA(n"gamedataStatusEffect_Record") {
-      let status = record as StatusEffect_Record;
-      let duration: wref<StatModifierGroup_Record> = status.Duration();
-      let records: array<wref<StatModifier_Record>>;
-      let stat: wref<Stat_Record>;
-      let rtype: CName;
-      let modifier: wref<ConstantStatModifier_Record>;
-      let value: Float;
-      duration.StatModifiers(records);
-      for record in records {
-        stat = record.StatType();
-        rtype = record.ModifierType();
-        if Equals(stat.GetID(), t"BaseStats.MaxDuration") && Equals(rtype, n"Additive") && record.IsA(n"gamedataConstantStatModifier_Record") {
-          modifier = record as ConstantStatModifier_Record;
-          value = modifier.Value();
-          return value < 1.;
-        }
-      }
-    }
-    return false;
-  }
-
-  public static func IsInstantItem(record: ref<TweakDBRecord>) -> Bool {
-    if record.IsA(n"gamedataConsumableItem_Record") {
-      let item = record as Item_Record;
-      let size = item.GetObjectActionsCount();
-      if size == 0 { return false ;}
-      let actions: array<wref<ObjectAction_Record>> = [];
-      let effectors: array<wref<ObjectActionEffect_Record>> = [];
-      let status: wref<StatusEffect_Record>;
-      let found: Bool = false;
-      item.ObjectActions(actions);
-      for action in actions {
-        if Equals(action.ActionName(), n"Consume") {
-          effectors = [];
-          action.CompletionEffects(effectors);
-          for effector in effectors {
-            status = effector.StatusEffect();
-            found = Helper.IsInstantEffect(status);
-            if found {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-
   public static func IsApplied(effects: array<ref<StatusEffect>>, id: TweakDBID) -> Bool {
     for effect in effects {
       if Equals(effect.GetRecord().GetID(), id) {
