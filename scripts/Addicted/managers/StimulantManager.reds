@@ -2,7 +2,7 @@ module Addicted.Manager
 
 import Addicted.*
 import Addicted.Utils.*
-import Addicted.Helpers.Effect
+import Addicted.Helpers.{Bits,Effect}
 
 public class StimulantManager extends IScriptable {
 

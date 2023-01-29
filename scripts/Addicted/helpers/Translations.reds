@@ -1,5 +1,7 @@
 module Addicted.Helpers
 
+import Addicted.*
+
 public class Translations {
 
   public static func Threshold(threshold: Threshold) -> String {

@@ -1,5 +1,8 @@
 module Addicted.Helpers
 
+import Addicted.*
+import Addicted.Utils.{E,EI,F}
+
 // items helper
 public class Items {
 

@@ -329,7 +329,7 @@ public class AddictedSystem extends ScriptableSystem {
       ToString(consumable) +
       s"\n" +
       GetLocalizedTextByKey(n"Mod-Addicted-Threshold") +
-      Translations.Get(after);
+      Translations.Threshold(after);
     if EnumInt(before) < EnumInt(after) {
       toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Increased") + s"\n" +desc;
     } else {

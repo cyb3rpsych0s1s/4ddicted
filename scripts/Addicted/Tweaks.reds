@@ -1,9 +1,9 @@
 module Addicted
 
 import Addicted.System.AddictedSystem
-import Addicted.{Bits,Helper}
+import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
-import Addicted.Helpers.{Generic,Items,Effect}
+import Addicted.Helpers.{Bits,Generic,Items,Effect}
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;

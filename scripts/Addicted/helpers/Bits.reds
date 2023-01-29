@@ -1,3 +1,5 @@
+module Addicted.Helpers
+
 public class Bits {
   public static func ShiftRight(num: Int32, n: Int32) -> Int32 {
     return num / Bits.PowI(2, n);
