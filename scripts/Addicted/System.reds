@@ -113,7 +113,7 @@ public class AddictedSystem extends ScriptableSystem {
       threshold = this.consumptions.Threshold(consumable);
       now = Bits.Set(now, EnumInt(consumable), withdrawing);
     }
-    if !Equals(before, now) {
+    if NotEquals(before, now) {
       blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
     }
 
@@ -148,7 +148,7 @@ public class AddictedSystem extends ScriptableSystem {
       if hint {
         this.Hint(id);
       }
-      if !Equals(EnumInt(before), EnumInt(after)) {
+      if NotEquals(EnumInt(before), EnumInt(after)) {
         this.Warn(id, before, after);
       }
     }

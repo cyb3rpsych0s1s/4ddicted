@@ -51,15 +51,15 @@ public class StimulantManager extends IScriptable {
    let capacity = Bits.Has(value, EnumInt(Consumable.CarryCapacityBooster));
    let memory = Bits.Has(value, EnumInt(Consumable.MemoryBooster));
    let invalidate: Bool = false;
-   if !Equals(stamina, this.withdrawingFromStaminaBooster) {
+   if NotEquals(stamina, this.withdrawingFromStaminaBooster) {
     this.withdrawingFromStaminaBooster = stamina;
     invalidate = true;
    }
-   if !Equals(capacity, this.withdrawingFromCarryCapacityBooster) {
+   if NotEquals(capacity, this.withdrawingFromCarryCapacityBooster) {
     this.withdrawingFromCarryCapacityBooster = capacity;
     invalidate = true;
    }
-   if !Equals(capacity, this.withdrawingFromMemoryBooster) {
+   if NotEquals(capacity, this.withdrawingFromMemoryBooster) {
     this.withdrawingFromMemoryBooster = memory;
     invalidate = true;
    }

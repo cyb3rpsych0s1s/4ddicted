@@ -30,7 +30,7 @@ public class HealerManager extends IScriptable {
         threshold = groupThreshold;
       }
       action = Items.ActionEffect(id, threshold);
-      if !Equals(action, id) {
+      if NotEquals(action, id) {
         EI(id, s"replace with \(TDBID.ToStringDEBUG(action))");
         let weakened = TweakDBInterface.GetObjectActionEffectRecord(action);
         actionEffects[idx] = weakened;

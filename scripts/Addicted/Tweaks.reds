@@ -23,7 +23,7 @@ public func IsPossessed() -> Bool {
 public func PastPrologue() -> Bool {
   let system: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.GetGame());
   let fact: Int32 = system.GetFact(n"watson_prolog_unlock");
-  return !Equals(fact, 1);
+  return NotEquals(fact, 1);
 }
 
 // decrease score on rest
