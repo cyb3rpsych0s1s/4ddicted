@@ -4,7 +4,6 @@ import Addicted.Utils.*
 import Addicted.*
 import Addicted.Helpers.*
 import Addicted.Manager.*
-import Addicted.Controller.*
 
 public class AddictedSystem extends ScriptableSystem {
   
