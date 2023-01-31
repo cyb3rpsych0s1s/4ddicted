@@ -9,3 +9,4 @@ A little travel blog in modding land.
 - [2023-01-27](./travelog/2023-01-27.md)
 - [2023-01-29](./travelog/2023-01-29.md)
 - [2023-01-30](./travelog/2023-01-30.md)
+- [2023-01-30](./travelog/2023-01-31.md)
