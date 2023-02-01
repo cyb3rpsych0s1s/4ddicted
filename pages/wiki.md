@@ -1,5 +1,9 @@
 # wiki
 
+## browse packages and classes
+
+[Cyberpunk Tweaks](https://cdpr-modding-documentation.github.io/Cyberpunk-Tweaks/)
+
 ## lua VS reds
 
 Cyber Engine Tweaks (CET) and REDscript both offer access to the game API.
