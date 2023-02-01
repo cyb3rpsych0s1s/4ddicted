@@ -176,3 +176,14 @@ uninstall-red:
 # 🗑️🗜️   clear out mod tweaks files in game files
 uninstall-tweak:
     rm -rf '{{tweak_output_dir}}'
+
+alias nuke := nuclear
+
+# 🧨 nuke your game files as a last resort (vanilla reset)
+nuclear:
+    rm -rf '{{ join(game_dir, "mods") }}'
+    rm -rf '{{ join(game_dir, "plugins") }}'
+    rm -rf '{{ join(game_dir, "engine") }}'
+    rm -rf '{{ join(game_dir, "r6") }}'
+    rm -rf '{{ join(game_dir, "red4ext") }}'
+    rm -rf '{{ join(game_dir, "archive", "pc", "mod") }}'
