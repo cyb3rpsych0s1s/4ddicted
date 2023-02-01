@@ -83,8 +83,17 @@ logs:
 
 # 🧹 clear current cache
 clear:
-    rm -rf '{{ join(red_cache_dir, "modded") }}'
-    if [[ -f "{{ join(red_cache_dir, 'final.redscripts.bk') }}" ]]; then cp -f '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'; rm -f '{{ join(red_cache_dir, "final.redscripts.bk") }}'; fi
+    @if [[ -f "{{ join(red_cache_dir, 'modded') }}" ]]; then \
+        rm -rf '{{ join(red_cache_dir, "modded") }}'; \
+    else \
+        echo "missing {{ join(red_cache_dir, 'modded') }}"; \
+    fi
+    @if [[ -f "{{ join(red_cache_dir, 'final.redscripts.bk') }}" ]]; then \
+        cp -f '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'; \
+        rm -f '{{ join(red_cache_dir, "final.redscripts.bk") }}'; \
+    else \
+        echo "missing {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
+    fi
 
 # 💾 store (or overwrite) logs in latest.log
 store:
