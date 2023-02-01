@@ -53,7 +53,7 @@ logs:
     echo "\n=== CET ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' && \
     echo "\n=== REDscript ===\n" && \
-    cat '{{ join(game_dir, "r6", "logs", "redscript.log") }}' && \
+    cat '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}' && \
     echo "\n=== Toxicity ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
 
@@ -73,7 +73,7 @@ alias forget := erase
 erase: clear
     rm -f '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
-    '{{ join(game_dir, "r6", "logs", "redscript.log") }}' \
+    '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
 
 alias install := install-on-windows
