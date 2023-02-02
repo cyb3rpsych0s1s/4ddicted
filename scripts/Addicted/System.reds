@@ -58,7 +58,7 @@ public class AddictedSystem extends ScriptableSystem {
     this.healerManager = new HealerManager();
     this.healerManager.Initialize(this);
 
-    ModSettings.RegisterListenerToModifications(this);
+    // ModSettings.RegisterListenerToModifications(this);
   }
 
   private func OnDetach() -> Void {
@@ -72,7 +72,7 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.healerManager = null;
 
-    ModSettings.UnregisterListenerToModifications(this);
+    // ModSettings.UnregisterListenerToModifications(this);
   }
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
