@@ -95,6 +95,13 @@ public func DebugTime() -> Void {
   system.DebugTime();
 }
 
+// use like: Game.GetPlayer():DebugBiomon();
+@addMethod(PlayerPuppet)
+public func DebugBiomon() -> Void {
+  let event: ref<BiomonitorEvent> = new BiomonitorEvent();
+  GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
+}
+
 // use like: Game.GetPlayer():Checkup();
 @addMethod(PlayerPuppet)
 public func Checkup() -> Void {
