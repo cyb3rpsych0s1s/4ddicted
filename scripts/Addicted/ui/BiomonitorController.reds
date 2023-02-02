@@ -23,6 +23,8 @@ enum BiomonitorState {
     Contacting = 4,
     Requesting = 5,
     Validating = 6,
+    Locating = 7,
+    Summoning = 8,
 }
 
 public class BiomonitorEvent extends Event {}
@@ -97,7 +99,7 @@ public class MyController extends inkGameController {
             options.executionDelay = 5.;
             options.fromMarker = n"requesting_start";
             options.toMarker = n"requesting_end";
-            options.oneSegment = false;
+            options.oneSegment = false; // avoids glitch when meeting original timecode : loop01_start
             this.state = BiomonitorState.Requesting;
             this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
@@ -113,6 +115,27 @@ public class MyController extends inkGameController {
             this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             E(s"validating in 5sec...");
+            return true;
+        }
+        if EnumInt(this.state) == EnumInt(BiomonitorState.Validating) {
+            options.executionDelay = 5.;
+            options.fromMarker = n"locating_start";
+            options.toMarker = n"locating_end";
+            options.oneSegment = true;
+            this.state = BiomonitorState.Locating;
+            this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
+            this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
+            E(s"locating in 5sec...");
+            return true;
+        }
+        if EnumInt(this.state) == EnumInt(BiomonitorState.Locating) {
+            options.executionDelay = 5.;
+            options.fromMarker = n"summoning_start";
+            options.oneSegment = true;
+            this.state = BiomonitorState.Summoning;
+            this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
+            this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
+            E(s"summoning in 5sec...");
             return true;
         }
         return false;
