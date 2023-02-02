@@ -320,27 +320,19 @@ public class AddictedSystem extends ScriptableSystem {
     if !this.player.HasBiomonitor() { return; }
     // avoids meaningless notifications
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
-    let toast: SimpleScreenMessage;
-    toast.isShown = true;
-    toast.isInstant = true;
-    toast.duration = 5.;
-    let consumable = Generic.Consumable(id);
-    let desc: String = GetLocalizedTextByKey(n"Mod-Addicted-Substance") +
-      ToString(consumable) +
-      s"\n" +
-      GetLocalizedTextByKey(n"Mod-Addicted-Threshold") +
-      Translations.Threshold(after);
-    if EnumInt(before) < EnumInt(after) {
-      toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Increased") + s"\n" +desc;
-    } else {
-      E(s"threshold after: \(ToString(after))");
-      if EnumInt(after) == 0 {
-        toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Gone") + s"\n" +desc;
-      } else {
-        toast.message = GetLocalizedTextByKey(n"Mod-Addicted-Warn-Decreased") + s"\n" +desc;
-      }
-    }
-    GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UI_Notifications).SetVariant(GetAllBlackboardDefs().UI_Notifications.WarningMessage, ToVariant(toast), true);
+
+    let customer: ref<Customer>;
+    customer.FirstName = "V";
+    customer.LastName = "UNKNOWN";
+    customer.Age = "27";
+    customer.BloodGroup = "UNKNOWN";
+
+    let event: ref<BiomonitorEvent>;
+    event.Customer = customer;
+    event.Symptoms = [];
+    event.boot = true;
+
+    GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
   }
 
   /// play an onomatopea as a hint to the player when reaching notably or severely addicted

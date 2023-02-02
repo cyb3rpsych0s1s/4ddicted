@@ -103,7 +103,7 @@ public func DebugBiomon() -> Void {
   customer.FirstName = "V";
   customer.LastName = "UNKNOWN";
   customer.Age = "UNKNOWN";
-  customer.BloodGroup = BloodGroup.AB;
+  customer.BloodGroup = ToString(BloodGroup.AB);
   event.Customer = customer;
   event.boot = true;
   GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
