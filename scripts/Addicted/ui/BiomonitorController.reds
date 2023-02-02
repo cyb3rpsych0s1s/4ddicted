@@ -27,32 +27,68 @@ enum BiomonitorState {
     Summoning = 8,
 }
 
-public class BiomonitorEvent extends Event {}
+enum BloodGroup {
+    Unknown = 0,
+    A = 1,
+    B = 2,
+    O = 3,
+    AB = 4,
+}
+
+public class Symptom {
+    public let Title: String;
+    public let Description: String;
+}
+
+public class Customer {
+    public let FirstName: String;
+    public let LastName: String;
+    public let Age: String;
+    public let BloodGroup: BloodGroup;
+}
+
+public class BiomonitorEvent extends Event {
+    public let Customer: ref<Customer>;
+    public let Symptoms: array<ref<Symptom>>;
+    public let boot: Bool;
+}
 
 // Custom controller with your logic
 public class MyController extends inkGameController {
     private let animation: ref<inkAnimProxy>;
     private let root: ref<inkCompoundWidget>;
     private let state: BiomonitorState;
+
+    private let reason: ref<inkText>;
+    private let firstname: ref<inkText>;
+    private let lastname: ref<inkText>;
+    private let age: ref<inkText>;
+    private let blood: ref<inkText>;
+
     protected cb func OnInitialize() {
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
         this.root.SetVisible(false);
+        this.firstname = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas/SANDRA_HPanel/Info_SANDRA_Text") as inkText;
+        this.lastname = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas/DORSET_HPanel/Info_DORSETT_Text") as inkText;
+        this.age = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas/AGE_HPanel/Info_29_Text") as inkText;
+        this.reason = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
+        this.reason.SetText("HELLO WORLD :)");
     }
 
-    private func UpdateBooting() -> Void {
-        let panel = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BIOMONITOR_DATA_PANEL_text") as inkText;
-        let booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
-        panel.SetText("HELLO WORLD");
-        booting.SetText("HELLO WORLD");
-    }
     protected cb func OnBiomonitorEvent(evt: ref<BiomonitorEvent>) -> Bool {
+        this.firstname.SetText(evt.Customer.FirstName);
+        this.lastname.SetText(evt.Customer.LastName);
+        this.age.SetText(evt.Customer.Age);
+        this.blood.SetText(ToString(evt.Customer.BloodGroup));
+
         this.root.SetVisible(true);
-        this.PlayNext();
+        this.PlayNext(evt.boot);
     }
-    private func PlayNext() -> Bool {
+
+    private func PlayNext(opt boot: Bool) -> Bool {
         let options: inkAnimOptions;
-        if EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
+        if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.fromMarker = n"booting_start";
             options.toMarker = n"booting_end";
             options.oneSegment = true;
@@ -62,7 +98,7 @@ public class MyController extends inkGameController {
             E(s"currently booting...");
             return true;
         }
-        if EnumInt(this.state) == EnumInt(BiomonitorState.Booting) {
+        if EnumInt(this.state) == EnumInt(BiomonitorState.Booting) || EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.executionDelay = 5.;
             options.fromMarker = n"analyzing_start";
             options.toMarker = n"analyzing_end";
@@ -84,6 +120,7 @@ public class MyController extends inkGameController {
             E(s"summarizing in 5sec...");
             return true;
         }
+        //we don't need other steps past it, but for the sake of example ...
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             options.executionDelay = 5.;
             options.fromMarker = n"contacting_start";

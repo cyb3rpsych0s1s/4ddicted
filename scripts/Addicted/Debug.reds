@@ -99,6 +99,13 @@ public func DebugTime() -> Void {
 @addMethod(PlayerPuppet)
 public func DebugBiomon() -> Void {
   let event: ref<BiomonitorEvent> = new BiomonitorEvent();
+  let customer: ref<Customer> = new Customer();
+  customer.FirstName = "V";
+  customer.LastName = "UNKNOWN";
+  customer.Age = "UNKNOWN";
+  customer.BloodGroup = BloodGroup.AB;
+  event.Customer = customer;
+  event.boot = true;
   GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
 }
 
