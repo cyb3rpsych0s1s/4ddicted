@@ -81,46 +81,76 @@ public class BiomonitorController extends inkGameController {
         this.blood      = infos.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
         this.insurance  = infos.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
 
-        // let row: array<ref<inkWidget>>;
-
-        // let leftmost    = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2/CriticalVertical") as inkVerticalPanel;
-        // let center      = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2/CriticalVertical2") as inkVerticalPanel;
-        // let rightmost   = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2/Critical_Vertical_Warning") as inkVerticalPanel;
-
-        // row = [];
-        // ArrayPush(row, leftmost.GetWidget(n"Critical_BLOOD_PRESSURE_text"));
-        // ArrayPush(row, center.GetWidget(n"inkCanvasWidget8/80x50/Critical_80_50_text1"));
-        // ArrayPush(row, rightmost.GetWidgetByIndex(0));
-        // ArrayPush(this.vitals, row);
+        let row: array<ref<inkWidget>>;
         
-        // row = [];
-        // ArrayPush(row, leftmost.GetWidget(n"Critical_LEVEL_AO_text"));
-        // ArrayPush(row, center.GetWidget(n"inkCanvasWidget8/80x50/Critical_80_50_text2"));
-        // ArrayPush(row, rightmost.GetWidgetByIndex(1));
-        // ArrayPush(this.vitals, row);
-        
-        // row = [];
-        // ArrayPush(row, leftmost.GetWidget(n"Critical_ALBU_GLOBU_text"));
-        // ArrayPush(row, center.GetWidget(n"inkCanvasWidget8/80x50/Critical_80_50_text3"));
-        // ArrayPush(row, rightmost.GetWidgetByIndex(2));
-        // ArrayPush(this.vitals, row);
-        
-        // let esr         = leftmost.GetWidget(n"Critical_ESR_text") as inkText;
-        // let respiratory = leftmost.GetWidget(n"Critical_RESPIRATORY_text") as inkText;
-        // let immune      = leftmost.GetWidget(n"Critical_IMMUNE_text") as inkText;
-        // let cns         = leftmost.GetWidget(n"Critical_CNS_text") as inkText;
-        // let pns         = leftmost.GetWidget(n"Critical_PNS_text") as inkText;
-        // esr.SetText("");
-        // respiratory.SetText("");
-        // immune.SetText("");
-        // cns.SetText("");
-        // pns.SetText("");
+        let summary     = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2") as inkHorizontalPanel;
+        let leftmost    = summary.GetWidget(n"Critical_Vertical") as inkVerticalPanel;
+        let center      = summary.GetWidget(n"Critical_Vertical2") as inkVerticalPanel;
+        let rightmost   = summary.GetWidget(n"Critical_Vertical_Warning") as inkVerticalPanel;
 
-        // rightmost.GetWidgetByIndex(3).SetVisible(false);
-        // rightmost.GetWidgetByIndex(4).SetVisible(false);
-        // rightmost.GetWidgetByIndex(5).SetVisible(false);
-        // rightmost.GetWidgetByIndex(6).SetVisible(false);
-        // rightmost.GetWidgetByIndex(7).SetVisible(false);
+
+        E(s"summary: \(ToString(summary))");
+        E(s"leftmost: \(ToString(leftmost))");
+        E(s"center: \(ToString(center))");
+        E(s"rightmost: \(ToString(rightmost))");
+
+        let size = center.GetNumChildren();
+        let j = 0;
+        let child: ref<inkWidget>;
+        while j < size {
+            child = center.GetWidgetByIndex(j);
+            E(s"name: \(child.GetName()), type: \(ToString(child))");
+            j += 1;
+        }
+
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_BLOOD_PRESSURE_text"));
+        ArrayPush(row, center.GetWidgetByIndex(0));
+        ArrayPush(row, rightmost.GetWidgetByIndex(0));
+        ArrayPush(this.vitals, row);
+
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_LEVEL_AO_text"));
+        ArrayPush(row, center.GetWidgetByIndex(1));
+        ArrayPush(row, rightmost.GetWidgetByIndex(1));
+        ArrayPush(this.vitals, row);
+        
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_ALBU_GLOBU_text"));
+        ArrayPush(row, center.GetWidgetByIndex(2));
+        ArrayPush(row, rightmost.GetWidgetByIndex(2));
+        ArrayPush(this.vitals, row);
+
+        ///
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_ESR_text"));
+        ArrayPush(row, center.GetWidget(n"Critical_CRITICAL_text"));
+        ArrayPush(row, rightmost.GetWidgetByIndex(3));
+        ArrayPush(this.vitals, row);
+
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_RESPIRATORY_text"));
+        ArrayPush(row, center.GetWidget(n"Critical_AT_RISK_text"));
+        ArrayPush(row, rightmost.GetWidgetByIndex(4));
+        ArrayPush(this.vitals, row);
+        
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_IMMUNE_text"));
+        ArrayPush(row, center.GetWidget(n"Critical_AT_RISK2_text"));
+        ArrayPush(row, rightmost.GetWidgetByIndex(5));
+        ArrayPush(this.vitals, row);
+
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_CNS_text"));
+        ArrayPush(row, center.GetWidget(n"Critical_AT_RISK3_text"));
+        ArrayPush(row, rightmost.GetWidgetByIndex(6));
+        ArrayPush(this.vitals, row);
+        
+        row = [];
+        ArrayPush(row, leftmost.GetWidget(n"Critical_PNS_text"));
+        ArrayPush(row, center.GetWidget(n"Critical_CRITICAL2_text"));
+        ArrayPush(row, rightmost.GetWidgetByIndex(7));
+        ArrayPush(this.vitals, row);
         
         this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
     }
@@ -135,24 +165,33 @@ public class BiomonitorController extends inkGameController {
             this.blood.SetText(evt.Customer.BloodGroup);
             this.insurance.SetText(evt.Customer.Insurance);
 
-            // let i = 0;
-            // let total = ArraySize(this.vitals);
-            // let symptom: ref<Symptom>;
-            // let symptoms: array<ref<Symptom>> = evt.Symptoms;
-            // let size = ArraySize(symptoms);
-            // while i < total {
-            //     if i < size {
-            //         symptom = symptoms[i];
-            //         (this.vitals[i][0] as inkText).SetText(symptom.Title);
-            //         (this.vitals[i][1] as inkText).SetText(symptom.Status);
-            //         this.vitals[i][2].SetVisible(true);
-            //     } else {
-            //         (this.vitals[i][0] as inkText).SetText("");
-            //         (this.vitals[i][1] as inkText).SetText("");
-            //         this.vitals[i][2].SetVisible(false);
-            //     }
-            //     i += 1;
-            // }
+            let i = 0;
+            let total = ArraySize(this.vitals);
+            let symptom: ref<Symptom>;
+            let symptoms: array<ref<Symptom>> = evt.Symptoms;
+            let size = ArraySize(symptoms);
+            while i < total {
+                if i < size {
+                    symptom = symptoms[i];
+                    E(s"\(ToString(this.vitals[i][0])): \(symptom.Title)");
+                    E(s"\(ToString(this.vitals[i][1])): \(symptom.Status)");
+                    E(s"\(ToString(this.vitals[i][2])): show");
+                    (this.vitals[i][0] as inkText).SetText(symptom.Title);
+                    (this.vitals[i][1] as inkText).SetText(symptom.Status);
+                    this.vitals[i][0].SetVisible(true);
+                    this.vitals[i][1].SetVisible(true);
+                    this.vitals[i][2].SetVisible(true);
+                } else {
+                    E(s"\(ToString(this.vitals[i][0])): empty");
+                    E(s"\(ToString(this.vitals[i][1])): empty");
+                    E(s"\(ToString(this.vitals[i][2])): hide");
+                    this.vitals[i][0].SetVisible(false);
+                    this.vitals[i][1].SetVisible(false);
+                    this.vitals[i][2].SetVisible(false);
+                }
+                i += 1;
+            }
+            E(s"");
 
             this.PlayNext(evt.boot);
         }
