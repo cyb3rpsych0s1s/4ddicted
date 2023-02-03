@@ -20,28 +20,26 @@ public class Translations {
   }
 
   public static func Appellation(id: TweakDBID) -> String {
-    let designation = Generic.Designation(id);
-    switch (designation) {
-      case "Items.FirstAidWhiffV0":
-      case "Items.FirstAidWhiffV1":
-      case "Items.FirstAidWhiffV2":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
-      case "Items.BonesMcCoy70V0":
-      case "Items.BonesMcCoy70V1":
-      case "Items.BonesMcCoy70V2":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BounceBack");
-      case "Items.HealthBooster":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-HealthBooster");
-      case "Items.BlackLaceV0":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BlackLace");
-      case "Items.StaminaBooster":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-StaminaBooster");
-      case "Items.CarryCapacityBooster":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-CarryCapacityBooster");
-      case "Items.MemoryBooster":
-        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MemoryBooster");
-      default:
-        break;
+    if Helper.IsMaxDOC(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
+    }
+    if Helper.IsBounceBack(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BounceBack");
+    }
+    if Helper.IsHealthBooster(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-HealthBooster");
+    }
+    if Helper.IsBlackLace(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BlackLace");
+    }
+    if Helper.IsStaminaBooster(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-StaminaBooster");
+    }
+    if Helper.IsCapacityBooster(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-CarryCapacityBooster");
+    }
+    if Helper.IsMemoryBooster(id) {
+      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MemoryBooster");
     }
     return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Unknown");
   }
