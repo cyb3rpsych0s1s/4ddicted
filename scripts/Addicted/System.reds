@@ -317,7 +317,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   /// warn a player with a biomonitor
   public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
-    if !this.player.HasBiomonitor() { return; }
+    // if !this.player.HasBiomonitor() { return; }
     // avoids meaningless notifications
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
 
@@ -326,10 +326,13 @@ public class AddictedSystem extends ScriptableSystem {
     customer.LastName = "UNKNOWN";
     customer.Age = "27";
     customer.BloodGroup = "UNKNOWN";
+    customer.Insurance = "-";
+
+    let symptoms = this.Symptoms();
 
     let event: ref<BiomonitorEvent>;
     event.Customer = customer;
-    event.Symptoms = [];
+    event.Symptoms = symptoms;
     event.boot = true;
 
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
@@ -389,6 +392,11 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func Threshold(consumable: Consumable) -> Threshold {
     return this.consumptions.Threshold(consumable);
+  }
+
+  public func Symptoms() -> array<ref<Symptom>> {
+    let symptoms = this.consumptions.Symptoms();
+    return symptoms;
   }
 
   public func IsWithdrawing(addiction: Addiction) -> Bool {

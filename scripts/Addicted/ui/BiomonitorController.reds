@@ -34,7 +34,7 @@ enum BloodGroup {
 
 public class Symptom {
     public let Title: String;
-    public let Description: String;
+    public let Status: String;
 }
 
 public class Customer {
@@ -63,23 +63,7 @@ public class BiomonitorController extends inkGameController {
     private let age: ref<inkText>;
     private let blood: ref<inkText>;
     private let insurance: ref<inkText>;
-
-    private let topLeftChemicalLabel: ref<inkText>;
-    private let topLeftChemicalRatio: ref<inkText>;
-    private let topMiddleChemicalLabel: ref<inkText>;
-    private let topMiddleChemicalRatio: ref<inkText>;
-    private let topRightChemicalLabel: ref<inkText>;
-    private let topRightChemicalRatio: ref<inkText>;
-
-    private let middleLeftChemicalLabel: ref<inkText>;
-    private let middleLeftChemicalRatio: ref<inkText>;
-    private let middleMiddleChemicalLabel: ref<inkText>;
-    private let middleMiddleChemicalRatio: ref<inkText>;
-    private let middleRightChemicalLabel: ref<inkText>;
-    private let middleRightChemicalRatio: ref<inkText>;
-
-    private let bottomLeftChemicalLabel: ref<inkText>;
-    private let bottomLeftChemicalRatio: ref<inkText>;
+    private let vitals: array<array<ref<inkWidget>>>;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
@@ -96,26 +80,47 @@ public class BiomonitorController extends inkGameController {
         this.age        = infos.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
         this.blood      = infos.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
         this.insurance  = infos.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
-        let top         = infos.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkHorizontalPanel;
-        let middle      = infos.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line2") as inkHorizontalPanel;
-        let bottom      = infos.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line3") as inkHorizontalPanel;
-        E(s"\(ToString(top))");
-        this.topLeftChemicalLabel   = top.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
-        this.topLeftChemicalRatio   = top.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
-        this.topMiddleChemicalLabel = top.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
-        this.topMiddleChemicalRatio = top.GetWidget(n"inkHorizontalPanelWidget3/720/Info_TR2_TRAMADOL_Text") as inkText;
-        this.topRightChemicalLabel  = top.GetWidget(n"Info_DESVENLAFAXINE_Text") as inkText;
-        this.topRightChemicalRatio  = top.GetWidget(n"inkHorizontalPanelWidget4/300/Info_DESVENLAFAXINE_Text") as inkText;
-        E(s"\(ToString(middle))");
-        this.middleLeftChemicalLabel   = middle.GetWidget(n"Info_AMOXAPINE_Text") as inkText;
-        this.middleLeftChemicalRatio   = middle.GetWidget(n"inkHorizontalPanelWidget5/220/Info_AMOXAPINE_Text") as inkText;
-        this.middleMiddleChemicalLabel = middle.GetWidget(n"Info_R7_LACTOBACILLIUS_Text") as inkText;
-        this.middleMiddleChemicalRatio = middle.GetWidget(n"inkHorizontalPanelWidget6/400/Info_R7_LACTOBACILLIUS_Text") as inkText;
-        this.middleRightChemicalLabel  = middle.GetWidget(n"Info_ACETAMINOFEN_Text") as inkText;
-        this.middleRightChemicalRatio  = middle.GetWidget(n"inkHorizontalPanelWidget7/250/Info_ACETAMINOFEN_Text") as inkText;
-        E(s"\(ToString(bottom))");
-        this.bottomLeftChemicalLabel   = bottom.GetWidget(n"Info_BUPROPION_Text") as inkText;
-        this.bottomLeftChemicalRatio   = bottom.GetWidget(n"inkHorizontalPanelWidget5/Info_BUPROPION_Text") as inkText;
+
+        // let row: array<ref<inkWidget>>;
+
+        // let leftmost    = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2/CriticalVertical") as inkVerticalPanel;
+        // let center      = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2/CriticalVertical2") as inkVerticalPanel;
+        // let rightmost   = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2/Critical_Vertical_Warning") as inkVerticalPanel;
+
+        // row = [];
+        // ArrayPush(row, leftmost.GetWidget(n"Critical_BLOOD_PRESSURE_text"));
+        // ArrayPush(row, center.GetWidget(n"inkCanvasWidget8/80x50/Critical_80_50_text1"));
+        // ArrayPush(row, rightmost.GetWidgetByIndex(0));
+        // ArrayPush(this.vitals, row);
+        
+        // row = [];
+        // ArrayPush(row, leftmost.GetWidget(n"Critical_LEVEL_AO_text"));
+        // ArrayPush(row, center.GetWidget(n"inkCanvasWidget8/80x50/Critical_80_50_text2"));
+        // ArrayPush(row, rightmost.GetWidgetByIndex(1));
+        // ArrayPush(this.vitals, row);
+        
+        // row = [];
+        // ArrayPush(row, leftmost.GetWidget(n"Critical_ALBU_GLOBU_text"));
+        // ArrayPush(row, center.GetWidget(n"inkCanvasWidget8/80x50/Critical_80_50_text3"));
+        // ArrayPush(row, rightmost.GetWidgetByIndex(2));
+        // ArrayPush(this.vitals, row);
+        
+        // let esr         = leftmost.GetWidget(n"Critical_ESR_text") as inkText;
+        // let respiratory = leftmost.GetWidget(n"Critical_RESPIRATORY_text") as inkText;
+        // let immune      = leftmost.GetWidget(n"Critical_IMMUNE_text") as inkText;
+        // let cns         = leftmost.GetWidget(n"Critical_CNS_text") as inkText;
+        // let pns         = leftmost.GetWidget(n"Critical_PNS_text") as inkText;
+        // esr.SetText("");
+        // respiratory.SetText("");
+        // immune.SetText("");
+        // cns.SetText("");
+        // pns.SetText("");
+
+        // rightmost.GetWidgetByIndex(3).SetVisible(false);
+        // rightmost.GetWidgetByIndex(4).SetVisible(false);
+        // rightmost.GetWidgetByIndex(5).SetVisible(false);
+        // rightmost.GetWidgetByIndex(6).SetVisible(false);
+        // rightmost.GetWidgetByIndex(7).SetVisible(false);
         
         this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
     }
@@ -130,22 +135,24 @@ public class BiomonitorController extends inkGameController {
             this.blood.SetText(evt.Customer.BloodGroup);
             this.insurance.SetText(evt.Customer.Insurance);
 
-            // this.topLeftChemicalLabel.SetText("HELLO WORLD");
-            // this.topLeftChemicalRatio.SetText("HELLO WORLD");
-            // this.topMiddleChemicalLabel.SetText("HELLO WORLD");
-            // this.topMiddleChemicalRatio.SetText("HELLO WORLD");
-            // this.topRightChemicalLabel.SetText("HELLO WORLD");
-            // this.topRightChemicalRatio.SetText("HELLO WORLD");
-
-            // this.middleLeftChemicalLabel.SetText("HELLO WORLD");
-            // this.middleLeftChemicalRatio.SetText("HELLO WORLD");
-            // this.middleMiddleChemicalLabel.SetText("HELLO WORLD");
-            // this.middleMiddleChemicalRatio.SetText("HELLO WORLD");
-            // this.middleRightChemicalLabel.SetText("HELLO WORLD");
-            // this.middleRightChemicalRatio.SetText("HELLO WORLD");
-
-            // this.bottomLeftChemicalLabel.SetText("HELLO WORLD");
-            // this.bottomLeftChemicalRatio.SetText("HELLO WORLD");
+            // let i = 0;
+            // let total = ArraySize(this.vitals);
+            // let symptom: ref<Symptom>;
+            // let symptoms: array<ref<Symptom>> = evt.Symptoms;
+            // let size = ArraySize(symptoms);
+            // while i < total {
+            //     if i < size {
+            //         symptom = symptoms[i];
+            //         (this.vitals[i][0] as inkText).SetText(symptom.Title);
+            //         (this.vitals[i][1] as inkText).SetText(symptom.Status);
+            //         this.vitals[i][2].SetVisible(true);
+            //     } else {
+            //         (this.vitals[i][0] as inkText).SetText("");
+            //         (this.vitals[i][1] as inkText).SetText("");
+            //         this.vitals[i][2].SetVisible(false);
+            //     }
+            //     i += 1;
+            // }
 
             this.PlayNext(evt.boot);
         }

@@ -103,8 +103,11 @@ public func DebugBiomon() -> Void {
   customer.FirstName = "V";
   customer.LastName = "UNKNOWN";
   customer.Age = "27";
-  customer.BloodGroup = ToString(BloodGroup.AB);
+  customer.BloodGroup = "UNKNOWN";
   customer.Insurance = "-";
+  let system: ref<AddictedSystem> = AddictedSystem.GetInstance(this.GetGame());
+  let symptoms = system.Symptoms();
+  event.Symptoms = symptoms;
   event.Customer = customer;
   event.boot = true;
   GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);

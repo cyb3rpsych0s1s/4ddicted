@@ -1,7 +1,7 @@
 module Addicted
 
 import Addicted.Helper
-import Addicted.Helpers.Generic
+import Addicted.Helpers.{Generic,Translations}
 
 public abstract class HintRequest extends ScriptableSystemRequest {
   // game timestamp where to stop at
@@ -196,6 +196,27 @@ public class Consumptions {
       total += this.AverageConsumption(consumable);
     }
     return total / size;
+  }
+  /// symptoms for biomonitor
+  public func Symptoms() -> array<ref<Symptom>> {
+    let symptoms: array<ref<Symptom>> = [];
+    let symptom: ref<Symptom>;
+    let consumption: ref<Consumption>;
+    let threshold: Threshold;
+    let keys = this.Keys();
+    for key in keys {
+      consumption = this.Get(key);
+      if IsDefined(consumption) {
+        threshold = consumption.Threshold();
+        if Helper.IsSerious(threshold) {
+            symptom = new Symptom();
+            symptom.Title = Translations.Appellation(key);
+            symptom.Status = Translations.Threshold(threshold);
+            ArrayPush(symptoms, symptom);
+        }
+      }
+    }
+    return symptoms;
   }
 }
 
