@@ -20,25 +20,25 @@ public class Translations {
   }
 
   public static func Appellation(id: TweakDBID) -> String {
-    if Helper.IsMaxDOC(id) {
+    if Generic.IsMaxDOC(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
     }
-    if Helper.IsBounceBack(id) {
+    if Generic.IsBounceBack(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BounceBack");
     }
-    if Helper.IsHealthBooster(id) {
+    if Generic.IsHealthBooster(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-HealthBooster");
     }
-    if Helper.IsBlackLace(id) {
+    if Generic.IsBlackLace(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BlackLace");
     }
-    if Helper.IsStaminaBooster(id) {
+    if Generic.IsStaminaBooster(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-StaminaBooster");
     }
-    if Helper.IsCapacityBooster(id) {
+    if Generic.IsCapacityBooster(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-CarryCapacityBooster");
     }
-    if Helper.IsMemoryBooster(id) {
+    if Generic.IsMemoryBooster(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MemoryBooster");
     }
     return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Unknown");
