@@ -220,6 +220,20 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-MemoryBooster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "SERIOUS ADDICTION SYMPTOMS",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Biomonitor-Status-Threshold-Severely"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "NOTABLE ADDICTION SYMPTOMS",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Biomonitor-Status-Threshold-Notably"
             }
           ]
         }
