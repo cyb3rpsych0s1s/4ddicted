@@ -71,27 +71,51 @@ public class BiomonitorController extends inkGameController {
     private let topRightChemicalLabel: ref<inkText>;
     private let topRightChemicalRatio: ref<inkText>;
 
+    private let middleLeftChemicalLabel: ref<inkText>;
+    private let middleLeftChemicalRatio: ref<inkText>;
+    private let middleMiddleChemicalLabel: ref<inkText>;
+    private let middleMiddleChemicalRatio: ref<inkText>;
+    private let middleRightChemicalLabel: ref<inkText>;
+    private let middleRightChemicalRatio: ref<inkText>;
+
+    private let bottomLeftChemicalLabel: ref<inkText>;
+    private let bottomLeftChemicalRatio: ref<inkText>;
+
     protected cb func OnInitialize() {
+        E(s"on initialize controller");
         this.playing = false;
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
         this.root.SetVisible(false);
         
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
-        let infos = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
+        let infos       = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
+        E(s"\(ToString(infos))");
         this.firstname  = infos.GetWidget(n"SANDRA_HPanel/Info_SANDRA_Text") as inkText;
         this.lastname   = infos.GetWidget(n"DORSET_HPanel/Info_DORSETT_Text") as inkText;
-        let main        = infos.GetWidget(n"Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
-        this.age        = main.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
-        this.blood      = main.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
-        this.insurance  = main.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
-        let top = main.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkCompoundWidget;
+        this.age        = infos.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
+        this.blood      = infos.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
+        this.insurance  = infos.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
+        let top         = infos.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkHorizontalPanel;
+        let middle      = infos.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line2") as inkHorizontalPanel;
+        let bottom      = infos.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line3") as inkHorizontalPanel;
+        E(s"\(ToString(top))");
         this.topLeftChemicalLabel   = top.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
         this.topLeftChemicalRatio   = top.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
         this.topMiddleChemicalLabel = top.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
         this.topMiddleChemicalRatio = top.GetWidget(n"inkHorizontalPanelWidget3/720/Info_TR2_TRAMADOL_Text") as inkText;
         this.topRightChemicalLabel  = top.GetWidget(n"Info_DESVENLAFAXINE_Text") as inkText;
         this.topRightChemicalRatio  = top.GetWidget(n"inkHorizontalPanelWidget4/300/Info_DESVENLAFAXINE_Text") as inkText;
+        E(s"\(ToString(middle))");
+        this.middleLeftChemicalLabel   = middle.GetWidget(n"Info_AMOXAPINE_Text") as inkText;
+        this.middleLeftChemicalRatio   = middle.GetWidget(n"inkHorizontalPanelWidget5/220/Info_AMOXAPINE_Text") as inkText;
+        this.middleMiddleChemicalLabel = middle.GetWidget(n"Info_R7_LACTOBACILLIUS_Text") as inkText;
+        this.middleMiddleChemicalRatio = middle.GetWidget(n"inkHorizontalPanelWidget6/400/Info_R7_LACTOBACILLIUS_Text") as inkText;
+        this.middleRightChemicalLabel  = middle.GetWidget(n"Info_ACETAMINOFEN_Text") as inkText;
+        this.middleRightChemicalRatio  = middle.GetWidget(n"inkHorizontalPanelWidget7/250/Info_ACETAMINOFEN_Text") as inkText;
+        E(s"\(ToString(bottom))");
+        this.bottomLeftChemicalLabel   = bottom.GetWidget(n"Info_BUPROPION_Text") as inkText;
+        this.bottomLeftChemicalRatio   = bottom.GetWidget(n"inkHorizontalPanelWidget5/Info_BUPROPION_Text") as inkText;
         
         this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
     }
@@ -106,12 +130,22 @@ public class BiomonitorController extends inkGameController {
             this.blood.SetText(evt.Customer.BloodGroup);
             this.insurance.SetText(evt.Customer.Insurance);
 
-            this.topLeftChemicalLabel.SetText("HELLO WORLD");
-            this.topLeftChemicalRatio.SetText("HELLO WORLD");
-            this.topMiddleChemicalLabel.SetText("HELLO WORLD");
-            this.topMiddleChemicalRatio.SetText("HELLO WORLD");
-            this.topRightChemicalLabel.SetText("HELLO WORLD");
-            this.topRightChemicalRatio.SetText("HELLO WORLD");
+            // this.topLeftChemicalLabel.SetText("HELLO WORLD");
+            // this.topLeftChemicalRatio.SetText("HELLO WORLD");
+            // this.topMiddleChemicalLabel.SetText("HELLO WORLD");
+            // this.topMiddleChemicalRatio.SetText("HELLO WORLD");
+            // this.topRightChemicalLabel.SetText("HELLO WORLD");
+            // this.topRightChemicalRatio.SetText("HELLO WORLD");
+
+            // this.middleLeftChemicalLabel.SetText("HELLO WORLD");
+            // this.middleLeftChemicalRatio.SetText("HELLO WORLD");
+            // this.middleMiddleChemicalLabel.SetText("HELLO WORLD");
+            // this.middleMiddleChemicalRatio.SetText("HELLO WORLD");
+            // this.middleRightChemicalLabel.SetText("HELLO WORLD");
+            // this.middleRightChemicalRatio.SetText("HELLO WORLD");
+
+            // this.bottomLeftChemicalLabel.SetText("HELLO WORLD");
+            // this.bottomLeftChemicalRatio.SetText("HELLO WORLD");
 
             this.PlayNext(evt.boot);
         }

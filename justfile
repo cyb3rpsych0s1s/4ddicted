@@ -83,7 +83,7 @@ logs:
 
 # 🧹 clear current cache
 clear:
-    @if [[ -f "{{ join(red_cache_dir, 'modded') }}" ]]; then \
+    @if [[ -d "{{ join(red_cache_dir, 'modded') }}" ]]; then \
         rm -rf '{{ join(red_cache_dir, "modded") }}'; \
     else \
         echo "missing {{ join(red_cache_dir, 'modded') }}"; \
