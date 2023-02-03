@@ -8,12 +8,22 @@ native let parentWidget: wref<inkWidget>;
 @addField(NameplateVisualsLogicController)
 private let biomonitorWidget: wref<inkWidget>;
 
+@addField(NameplateVisualsLogicController)
+private let biomonitorSpawn: wref<inkAsyncSpawnRequest>;
+
 @wrapMethod(NameplateVisualsLogicController)
 protected cb func OnInitialize() -> Bool {
     wrappedMethod();
     let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget;
-    this.biomonitorWidget = this.SpawnFromExternal(root, r"base\\gameplay\\gui\\quests\\q001\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController");
+    // required because .inkwidget packageData was edited
+    this.biomonitorSpawn = this.AsyncSpawnFromExternal(root, r"base\\gameplay\\gui\\quests\\q001\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController", this, n"OnBiomonitorSpawned");
+}
+
+@addMethod(NameplateVisualsLogicController)
+protected cb func OnBiomonitorSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
+    this.biomonitorWidget = widget;
     this.biomonitorWidget.SetVisible(false);
+    this.biomonitorSpawn = null;
 }
 
 enum BiomonitorState {
