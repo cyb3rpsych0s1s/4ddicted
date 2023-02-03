@@ -211,7 +211,7 @@ public class Consumptions {
         if Helper.IsSerious(threshold) {
             symptom = new Symptom();
             symptom.Title = Translations.Appellation(key);
-            symptom.Status = Translations.Threshold(threshold);
+            symptom.Status = Translations.BiomonitorStatus(threshold);
             ArrayPush(symptoms, symptom);
         }
       }

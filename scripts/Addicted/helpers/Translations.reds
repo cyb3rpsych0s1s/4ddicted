@@ -19,6 +19,16 @@ public class Translations {
     }
   }
 
+  public static func BiomonitorStatus(threshold: Threshold) -> String {
+    switch (threshold) {
+      case Threshold.Severely:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Biomonitor-Status-Threshold-Severely");
+      default:
+        break;
+    }
+    return GetLocalizedTextByKey(n"Mod-Addicted-Biomonitor-Status-Threshold-Notably");
+  }
+
   public static func Appellation(id: TweakDBID) -> String {
     if Generic.IsMaxDOC(id) {
       return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
