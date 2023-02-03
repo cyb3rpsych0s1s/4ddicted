@@ -216,6 +216,7 @@ public class BiomonitorController extends inkGameController {
             this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             this.animation.RegisterToCallback(inkanimEventType.OnStart, this, n"OnAnimationStarted");
+            GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
             return true;
         }
         if EnumInt(this.state) == EnumInt(BiomonitorState.Booting) || EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
