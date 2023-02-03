@@ -89,7 +89,7 @@ public class BiomonitorController extends inkGameController {
         this.lastname   = infos.GetWidget(n"DORSET_HPanel/Info_DORSETT_Text") as inkText;
         this.age        = infos.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
         this.blood      = infos.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
-        this.insurance  = infos.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
+        this.insurance  = (infos.GetWidgetByIndex(5) as inkHorizontalPanel).GetWidget(n"Info_NC570442_Text") as inkText;
 
         let row: array<ref<inkWidget>>;
         
@@ -131,7 +131,6 @@ public class BiomonitorController extends inkGameController {
         ArrayPush(row, rightmost.GetWidgetByIndex(2));
         ArrayPush(this.vitals, row);
 
-        ///
         row = [];
         ArrayPush(row, leftmost.GetWidget(n"Critical_ESR_text"));
         ArrayPush(row, center.GetWidget(n"Critical_CRITICAL_text"));
