@@ -85,7 +85,7 @@ public class BiomonitorController extends inkGameController {
         this.age        = main.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
         this.blood      = main.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
         this.insurance  = main.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
-        let top = main.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1");
+        let top = main.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkCompoundWidget;
         this.topLeftChemicalLabel   = top.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
         this.topLeftChemicalRatio   = top.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
         this.topMiddleChemicalLabel = top.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
