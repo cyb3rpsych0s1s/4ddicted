@@ -42,6 +42,7 @@ public class Customer {
     public let LastName: String;
     public let Age: String;
     public let BloodGroup: String;
+    public let Insurance: String;
 }
 
 public class BiomonitorEvent extends Event {
@@ -61,16 +62,37 @@ public class BiomonitorController extends inkGameController {
     private let lastname: ref<inkText>;
     private let age: ref<inkText>;
     private let blood: ref<inkText>;
+    private let insurance: ref<inkText>;
+
+    private let topLeftChemicalLabel: ref<inkText>;
+    private let topLeftChemicalRatio: ref<inkText>;
+    private let topMiddleChemicalLabel: ref<inkText>;
+    private let topMiddleChemicalRatio: ref<inkText>;
+    private let topRightChemicalLabel: ref<inkText>;
+    private let topRightChemicalRatio: ref<inkText>;
 
     protected cb func OnInitialize() {
         this.playing = false;
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
         this.root.SetVisible(false);
-        this.firstname = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas/SANDRA_HPanel/Info_SANDRA_Text") as inkText;
-        this.lastname = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas/DORSET_HPanel/Info_DORSETT_Text") as inkText;
-        this.age = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas/AGE_HPanel/Info_29_Text") as inkText;
+        
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
+        let infos = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
+        this.firstname  = infos.GetWidget(n"SANDRA_HPanel/Info_SANDRA_Text") as inkText;
+        this.lastname   = infos.GetWidget(n"DORSET_HPanel/Info_DORSETT_Text") as inkText;
+        let main        = infos.GetWidget(n"Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
+        this.age        = main.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
+        this.blood      = main.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
+        this.insurance  = main.GetWidget(n"BLOOD_HPanel/Info_NC570442_Text") as inkText;
+        let top = main.GetWidget(n"Info_Chemical_Information_Canvas/Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1");
+        this.topLeftChemicalLabel   = top.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
+        this.topLeftChemicalRatio   = top.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
+        this.topMiddleChemicalLabel = top.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
+        this.topMiddleChemicalRatio = top.GetWidget(n"inkHorizontalPanelWidget3/720/Info_TR2_TRAMADOL_Text") as inkText;
+        this.topRightChemicalLabel  = top.GetWidget(n"Info_DESVENLAFAXINE_Text") as inkText;
+        this.topRightChemicalRatio  = top.GetWidget(n"inkHorizontalPanelWidget4/300/Info_DESVENLAFAXINE_Text") as inkText;
+        
         this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
     }
 
@@ -82,6 +104,14 @@ public class BiomonitorController extends inkGameController {
             this.lastname.SetText(evt.Customer.LastName);
             this.age.SetText(evt.Customer.Age);
             this.blood.SetText(evt.Customer.BloodGroup);
+            this.insurance.SetText(evt.Customer.Insurance);
+
+            this.topLeftChemicalLabel.SetText("HELLO WORLD");
+            this.topLeftChemicalRatio.SetText("HELLO WORLD");
+            this.topMiddleChemicalLabel.SetText("HELLO WORLD");
+            this.topMiddleChemicalRatio.SetText("HELLO WORLD");
+            this.topRightChemicalLabel.SetText("HELLO WORLD");
+            this.topRightChemicalRatio.SetText("HELLO WORLD");
 
             this.PlayNext(evt.boot);
         }

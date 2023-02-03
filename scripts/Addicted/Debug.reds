@@ -102,8 +102,9 @@ public func DebugBiomon() -> Void {
   let customer: ref<Customer> = new Customer();
   customer.FirstName = "V";
   customer.LastName = "UNKNOWN";
-  customer.Age = "UNKNOWN";
+  customer.Age = "27";
   customer.BloodGroup = ToString(BloodGroup.AB);
+  customer.Insurance = "-";
   event.Customer = customer;
   event.boot = true;
   GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
