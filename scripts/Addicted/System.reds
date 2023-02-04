@@ -321,7 +321,7 @@ public class AddictedSystem extends ScriptableSystem {
     // avoids meaningless notifications
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
 
-    let customer: ref<Customer>;
+    let customer: ref<Customer> = new Customer();
     customer.FirstName = "V";
     customer.LastName = "UNKNOWN";
     customer.Age = "27";
@@ -330,7 +330,7 @@ public class AddictedSystem extends ScriptableSystem {
 
     let symptoms = this.Symptoms();
 
-    let event: ref<BiomonitorEvent>;
+    let event: ref<BiomonitorEvent> = new BiomonitorEvent();
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.boot = true;
