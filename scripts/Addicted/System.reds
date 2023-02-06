@@ -28,6 +28,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
 
+  private let updateSymtomsID: DelayID;
+
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -38,7 +40,7 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
-      this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+      this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
 
       this.stimulantManager = new StimulantManager();
       this.stimulantManager.Register(this.player);
@@ -127,7 +129,10 @@ public class AddictedSystem extends ScriptableSystem {
       blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
     }
 
-    this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600.);
+    if NotEquals(this.updateSymtomsID, GetInvalidDelayID()) {
+      this.delaySystem.CancelDelay(this.updateSymtomsID);
+    }
+    this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
@@ -217,6 +222,8 @@ public class AddictedSystem extends ScriptableSystem {
         E(s"clean again from \(TDBID.ToStringDEBUG(id))");
       }
     }
+
+    this.delaySystem.DelayScriptableSystemRequestNextFrame(this.GetClassName(), new UpdateWithdrawalSymptomsRequest());
   }
 
   public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
