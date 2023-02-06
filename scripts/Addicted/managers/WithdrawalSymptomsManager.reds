@@ -13,6 +13,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   protected func InvalidateState() -> Void;
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
+    E(s"register withdrawal symptoms manager");
     let board: ref<IBlackboard>;
     if player != null {
       this.owner = player;
@@ -29,6 +30,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
+    E(s"unregister withdrawal symptoms manager");
     let board: ref<IBlackboard>;
     if player != null {
       board = player.GetPlayerStateMachineBlackboard();
