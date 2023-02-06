@@ -3,6 +3,7 @@ module Addicted.Manager
 import Addicted.System.AddictedSystem
 import Addicted.*
 import Addicted.Utils.*
+import Addicted.Helpers.{Generic, Items}
 
 public class HealerManager extends IScriptable {
 
@@ -19,20 +20,17 @@ public class HealerManager extends IScriptable {
     let action: TweakDBID;
     let threshold: Threshold;
     let consumable: Consumable;
-    let average: Int32;
     let id: TweakDBID;
-    let groupAverage = this.system.AverageAddiction(Addiction.Healers);
-    let groupThreshold = Helper.Threshold(groupAverage);
+    let groupThreshold = this.system.Threshold(Addiction.Healers);
     for effect in actionEffects {
       id = effect.GetID();
-      consumable = Helper.Consumable(id);
-      average = this.system.AverageConsumption(consumable);
-      threshold = Helper.Threshold(average);
+      consumable = Generic.Consumable(id);
+      threshold = this.system.Threshold(consumable);
       if EnumInt(threshold) < EnumInt(groupThreshold) {
         threshold = groupThreshold;
       }
-      action = Helper.ActionEffect(id, threshold);
-      if !Equals(action, id) {
+      action = Items.ActionEffect(id, threshold);
+      if NotEquals(action, id) {
         EI(id, s"replace with \(TDBID.ToStringDEBUG(action))");
         let weakened = TweakDBInterface.GetObjectActionEffectRecord(action);
         actionEffects[idx] = weakened;
@@ -44,7 +42,7 @@ public class HealerManager extends IScriptable {
 
   public func ContainsHealerStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
     for record in actionEffects {
-      if Helper.IsHealer(record.GetID()) {
+      if Generic.IsHealer(record.GetID()) {
         return true;
       }
     }

@@ -11,5 +11,7 @@ archive/install_log.xml
 archive/Addicted.zip
 archive/packed/
 .VSCodeCounter
-Addicted/
+./Addicted/
 .installation/
+dump.redscripts
+*.env

@@ -95,6 +95,24 @@ public func DebugTime() -> Void {
   system.DebugTime();
 }
 
+// use like: Game.GetPlayer():DebugBiomon();
+@addMethod(PlayerPuppet)
+public func DebugBiomon() -> Void {
+  let event: ref<BiomonitorEvent> = new BiomonitorEvent();
+  let customer: ref<Customer> = new Customer();
+  customer.FirstName = "V";
+  customer.LastName = "UNKNOWN";
+  customer.Age = "27";
+  customer.BloodGroup = "UNKNOWN";
+  customer.Insurance = "-";
+  let system: ref<AddictedSystem> = AddictedSystem.GetInstance(this.GetGame());
+  let symptoms = system.Symptoms();
+  event.Symptoms = symptoms;
+  event.Customer = customer;
+  event.boot = true;
+  GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
+}
+
 // use like: Game.GetPlayer():Checkup();
 @addMethod(PlayerPuppet)
 public func Checkup() -> Void {

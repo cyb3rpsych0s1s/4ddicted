@@ -1,6 +1,5 @@
 module Addicted.Manager
 
-import Addicted.System.AddictedSystem
 import Addicted.Utils.E
 import Addicted.*
 
@@ -324,7 +323,7 @@ public class AudioManager extends IScriptable {
   }
 
   private func Scheduled() -> Bool {
-    return !Equals(this.callbackID, GetInvalidDelayID());
+    return NotEquals(this.callbackID, GetInvalidDelayID());
   }
 
   private func Interrupt() -> Void {
@@ -362,7 +361,7 @@ public class AudioManager extends IScriptable {
   }
 
   protected cb func OnDivingChanged(value: Int32) -> Bool {
-    if !Equals(this.swimming, value) {
+    if NotEquals(this.swimming, value) {
       let state: gamePSMSwimming = IntEnum(value);
       E(s"swimming status changed: \(ToString(state))");
       this.swimming = value;
@@ -371,7 +370,7 @@ public class AudioManager extends IScriptable {
   }
 
   protected cb func OnConsumingChanged(value: Bool) -> Bool {
-    if !Equals(this.consuming, value) {
+    if NotEquals(this.consuming, value) {
       E(s"consuming status changed: \(ToString(value))");
       this.consuming = value;
       this.InvalidateState();
@@ -379,7 +378,7 @@ public class AudioManager extends IScriptable {
   }
 
   protected cb func OnTierChanged(value: Int32) -> Bool {
-    if !Equals(this.tier, value) {
+    if NotEquals(this.tier, value) {
       E(s"chatting status changed: \(ToString(value))");
       this.tier = value;
       this.InvalidateState();

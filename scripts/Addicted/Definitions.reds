@@ -1,6 +1,7 @@
 module Addicted
 
 import Addicted.Helper
+import Addicted.Helpers.{Generic,Translations}
 
 public abstract class HintRequest extends ScriptableSystemRequest {
   // game timestamp where to stop at
@@ -98,13 +99,14 @@ public class Consumptions {
   private persistent let keys: array<TweakDBID>;
   private persistent let values: array<ref<Consumption>>;
 
-  public func Insert(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let base = Helper.ItemBaseName(key);
-    if this.KeyExist(base) { return; }
+  public func Insert(id: TweakDBID, value: ref<Consumption>) -> Void {
+    let key = Generic.Designation(id);
+    if this.KeyExist(key) { return; }
     ArrayPush(this.values, value);
-    ArrayPush(this.keys, base);
+    ArrayPush(this.keys, key);
   }
-  private func Index(key: TweakDBID) -> Int32 {
+  private func Index(id: TweakDBID) -> Int32 {
+    let key = Generic.Designation(id);
     let idx = 0;
     let found = false;
     for existing in this.keys {
@@ -119,30 +121,22 @@ public class Consumptions {
     }
     return -1;
   }
-  public func Get(key: TweakDBID) -> ref<Consumption> {
-    let base = Helper.ItemBaseName(key);
-    let idx = this.Index(base);
+  public func Get(id: TweakDBID) -> ref<Consumption> {
+    let idx = this.Index(id);
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(key: TweakDBID, value: ref<Consumption>) -> Void {
-    let base = Helper.ItemBaseName(key);
-    let idx = this.Index(base);
+  public func Set(id: TweakDBID, value: ref<Consumption>) -> Void {
+    let idx = this.Index(id);
     if idx == -1 { return; }
     this.values[idx] = value;
   }
-  public func KeyExist(key: TweakDBID) -> Bool {
-    let base = Helper.ItemBaseName(key);
-    for existing in this.keys {
-      if existing == base {
-        return true;
-      }
-    }
-    return false;
+  public func KeyExist(id: TweakDBID) -> Bool {
+    let idx = this.Index(id);
+    return idx != -1;
   }
-  public func Remove(key: TweakDBID) -> Void {
-    let base = Helper.ItemBaseName(key);
-    let idx = this.Index(base);
+  public func Remove(id: TweakDBID) -> Void {
+    let idx = this.Index(id);
     if idx == -1 { return; }
     ArrayErase(this.keys, idx);
     ArrayErase(this.values, idx);
@@ -158,6 +152,72 @@ public class Consumptions {
   public func Keys() -> array<TweakDBID> {
     return this.keys;
   }
+  public func Threshold(id: TweakDBID) -> Threshold {
+    let consumption = this.Get(id);
+    if IsDefined(consumption) {
+      return consumption.Threshold();
+    }
+    return Threshold.Clean;
+  }
+  public func Threshold(consumable: Consumable) -> Threshold {
+    let average = this.AverageConsumption(consumable);
+    return Helper.Threshold(average);
+  }
+  public func Threshold(addiction: Addiction) -> Threshold {
+    let average = this.AverageConsumption(addiction);
+    return Helper.Threshold(average);
+  }
+  /// average consumption for a given consumable
+  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
+  public func AverageConsumption(consumable: Consumable) -> Int32 {
+    let ids = Helper.Effects(consumable);
+    let total = 0;
+    let found = 0;
+    let consumption: wref<Consumption>;
+    for id in ids {
+      consumption = this.Get(id) as Consumption;
+      if IsDefined(consumption) {
+        total += consumption.current;
+        found += 1;
+      }
+    }
+    if found == 0 {
+      return 0;
+    }
+    return total / found;
+  }
+  /// average consumption for an addiction
+  /// a single addiction can be shared by multiple consumables
+  public func AverageConsumption(addiction: Addiction) -> Int32 {
+    let consumables = Helper.Consumables(addiction);
+    let size = ArraySize(consumables);
+    let total = 0;
+    for consumable in consumables {
+      total += this.AverageConsumption(consumable);
+    }
+    return total / size;
+  }
+  /// symptoms for biomonitor
+  public func Symptoms() -> array<ref<Symptom>> {
+    let symptoms: array<ref<Symptom>> = [];
+    let symptom: ref<Symptom>;
+    let consumption: ref<Consumption>;
+    let threshold: Threshold;
+    let keys = this.Keys();
+    for key in keys {
+      consumption = this.Get(key);
+      if IsDefined(consumption) {
+        threshold = consumption.Threshold();
+        if Helper.IsSerious(threshold) {
+            symptom = new Symptom();
+            symptom.Title = Translations.Appellation(key);
+            symptom.Status = Translations.BiomonitorStatus(threshold);
+            ArrayPush(symptoms, symptom);
+        }
+      }
+    }
+    return symptoms;
+  }
 }
 
 public class Consumption {
@@ -169,6 +229,10 @@ public class Consumption {
     consumption.current = amount;
     consumption.doses = [when];
     return consumption;
+  }
+
+  public func Threshold() -> Threshold {
+    return Helper.Threshold(this.current);
   }
 }
 
@@ -204,6 +268,7 @@ enum Consumable {
   OxyBooster = 5,
   StaminaBooster = 6,
   BlackLace = 7,
+  CarryCapacityBooster = 8,
 }
 
 enum Kind {
@@ -214,6 +279,8 @@ enum Kind {
 
 enum Addiction {
   Healers = 0,
+  Anabolics = 1,
+  Neuros = 2,
 }
 
 enum PlaySoundPolicy {

@@ -1,5 +1,12 @@
+set dotenv-load
+
+# default to steam default game dir
+DEFAULT_GAME_DIR := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+# default to CI RED cli path
+DEFAULT_RED_CLI := join(".", "redscript-cli.exe")
+
 # installation dir for Cyberpunk 2077, e.g. Steam
-game_dir := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+game_dir := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
 bundle_dir := 'Addicted'
 alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
 
@@ -22,18 +29,35 @@ red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
 archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
 
-latest_release := "untagged-9789ada54a0e8ff606d0"
-latest_artifact_windows := "Addicted-windows-latest-alpha-0.3.0.zip"
-latest_artifact_linux := "Addicted-ubuntu-latest-alpha-0.3.0.zip"
+latest_release := env_var_or_default("LATEST_RELEASE", "")
+latest_version := env_var_or_default("LATEST_VERSION", "")
+latest_artifact_windows := 'Addicted-windows-latest-{{latest_version}}.zip'
+latest_artifact_linux := "Addicted-ubuntu-latest-{{latest_version}}.zip"
+
+# path to REDscript CLI
+red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
+
+# path to RED cache bundle file in game files
+red_cache_bundle := join(red_cache_dir, "final.redscripts")
 
 # list all commands
 default:
   @just --list --unsorted
+  @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
+  @echo 'e.g. RED_CLI=C:\\\\somewhere\\\\on\\\\my\\\\computer\\\\redscript-cli.exe'
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
     mkdir -p '{{cet_output_dir}}'
     mkdir -p '{{red_output_dir}}'
+
+# 🎨 lint code
+lint:
+    '{{red_cli}}' lint -s 'scripts' -b '{{red_cache_bundle}}'
+
+# 🔛 just compile to check (without building)
+compile:
+    '{{red_cli}}' compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
 
 # ➡️  copy codebase files to game files, including archive
 build: rebuild
@@ -59,9 +83,17 @@ logs:
 
 # 🧹 clear current cache
 clear:
-    rm -rf '{{ join(red_cache_dir, "modded") }}'/.
-    cp -f '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'
-    rm -f '{{ join(red_cache_dir, "final.redscripts.bk") }}'
+    @if [[ -d "{{ join(red_cache_dir, 'modded') }}" ]]; then \
+        rm -rf '{{ join(red_cache_dir, "modded") }}'; \
+    else \
+        echo "missing {{ join(red_cache_dir, 'modded') }}"; \
+    fi
+    @if [[ -f "{{ join(red_cache_dir, 'final.redscripts.bk') }}" ]]; then \
+        cp -f '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'; \
+        rm -f '{{ join(red_cache_dir, "final.redscripts.bk") }}'; \
+    else \
+        echo "missing {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
+    fi
 
 # 💾 store (or overwrite) logs in latest.log
 store:
@@ -76,10 +108,13 @@ erase: clear
     '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
 
-alias install := install-on-windows
+# check if given env vars exists
+check-env NAME:
+    [[ "{{ env_var_or_default(NAME, '') }}" != "" ]] || {{ error('please set env var: ' + NAME) }};
 
 # 💠 direct install on Windows from repository (use `just --shell powershell.exe --shell-arg -c install`)
-install-on-windows:
+[windows]
+install: (check-env 'LATEST_RELEASE') (check-env 'LATEST_VERSION')
     New-Item -ItemType Directory -Force -Path ".installation"
     C:\msys64\usr\bin\wget.exe "https://github.com/cyb3rpsych0s1s/4ddicted/releases/download/{{latest_release}}/{{latest_artifact_windows}}" -P ".installation"
     7z x '${{ join(".installation", latest_artifact_windows) }}' -o ".installation"
@@ -89,7 +124,8 @@ install-on-windows:
     start "${{game_dir}}"
 
 # 🐧 direct install on Linux from repository (use `just install`)
-install-on-linux:
+[linux]
+install: (check-env 'LATEST_RELEASE') (check-env 'LATEST_VERSION')
     mkdir -p ".installation"
     wget "https://github.com/cyb3rpsych0s1s/4ddicted/releases/download/{{latest_release}}/{{latest_artifact_linux}}" -P ".installation"
     7z x '${{ join(".installation", latest_artifact_linux) }}' -o ".installation"
@@ -97,6 +133,11 @@ install-on-linux:
     mv ".installation"/. "${{game_dir}}"
     rm -rf ".installation"
     open "${{game_dir}}"
+
+#  Cyberpunk 2077 is not available on MacOS
+[macos]
+install:
+    @echo '🚫 Cyberpunk 2077 is not available on MacOS'
 
 # 📖 read book directly
 read:
@@ -144,3 +185,14 @@ uninstall-red:
 # 🗑️🗜️   clear out mod tweaks files in game files
 uninstall-tweak:
     rm -rf '{{tweak_output_dir}}'
+
+alias nuke := nuclear
+
+# 🧨 nuke your game files as a last resort (vanilla reset)
+nuclear:
+    rm -rf '{{ join(game_dir, "mods") }}'
+    rm -rf '{{ join(game_dir, "plugins") }}'
+    rm -rf '{{ join(game_dir, "engine") }}'
+    rm -rf '{{ join(game_dir, "r6") }}'
+    rm -rf '{{ join(game_dir, "red4ext") }}'
+    rm -rf '{{ join(game_dir, "archive", "pc", "mod") }}'

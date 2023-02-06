@@ -12,6 +12,7 @@ Relevant documentation: [YAML Tweaks](https://github.com/psiberx/cp2077-tweak-xl
 - sometimes SFX is directly included in VFX
   > e.g. with `BaseStatusEffect.InhalerBuff` there's a slight sound effect played altogether with the VFX (see Tweak Browser for reference, there's no SFX)
 - sometimes there's no `SFX` field declared at the top, but there can be `packages` defined with a `PlaySFXEffector`, or both.
+
  > `PlaySFXEffector`: see `BaseStatusEffect.JohnnySicknessHeavy`
  >
  > `SFX`: see `BaseStatusEffect.Madness`
@@ -25,6 +26,7 @@ Relevant documentation: [YAML Tweaks](https://github.com/psiberx/cp2077-tweak-xl
 Visual effects applied.
 
 e.g.
+
 - `BaseStatusEffect.Blind_inline0`
 - `BaseStatusEffect.InhalerBuff_inline0`
 - `BaseStatusEffect.SandstormAbstract_inline0`
@@ -37,6 +39,7 @@ e.g.
 Sound effects applied.
 
 e.g.
+
 - `BaseStatusEffect.Bleeding_inline4`
 - `BaseStatusEffect.Madness_inline22`
 - `BaseStatusEffect.Stun_inline7`
