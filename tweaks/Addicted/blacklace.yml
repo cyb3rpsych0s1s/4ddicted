@@ -1,5 +1,5 @@
 BaseStatusEffect.NotablyWithdrawnFromBlackLace:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -9,7 +9,7 @@ BaseStatusEffect.NotablyWithdrawnFromBlackLace:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:

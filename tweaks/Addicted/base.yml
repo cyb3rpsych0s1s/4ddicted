@@ -1,4 +1,4 @@
-BaseStatusEffect.BoosterWithdrawalSymptom:
+BaseStatusEffect.WithdrawalSymptom:
   $type: StatusEffect_Record
   duration: Items.ShortLastingAddictionDuration
   gameplayTags: [Debuff, WithdrawalSymptom]

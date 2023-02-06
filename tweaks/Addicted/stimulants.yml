@@ -1,5 +1,5 @@
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -9,7 +9,7 @@ BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -19,7 +19,7 @@ BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
           value: 0.7
 
 BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -29,7 +29,7 @@ BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -39,7 +39,7 @@ BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
           value: 0.7
 
 BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -49,7 +49,7 @@ BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
