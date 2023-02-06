@@ -1,8 +1,3 @@
-BaseStatusEffect.BoosterWithdrawalSymptom:
-  $type: StatusEffect_Record
-  duration: Items.ShortLastingAddictionDuration
-  gameplayTags: [Debuff, WithdrawalSymptom]
-
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.BoosterWithdrawalSymptom
   packages:
@@ -62,14 +57,3 @@ BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
           modifierType: Multiplier
           statType: BaseStats.Memory
           value: 0.7
-
-Items.ShortLastingAddictionDuration:
-  $type: StatModifierGroup_Record
-  drawBasedOnStatType: false
-  statModifiers:
-    - $type: ConstantStatModifier_Record
-      modifierType: Additive
-      statType: BaseStats.MaxDuration
-      value: 900
-  statModsLimit: -1
-  statModsLimitModifier: None
