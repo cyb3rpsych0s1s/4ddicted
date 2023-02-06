@@ -10,32 +10,34 @@ public class StimulantManager extends WithdrawalSymptomsManager {
   private let withdrawingFromCarryCapacityBooster: Bool;
   private let withdrawingFromMemoryBooster: Bool;
 
-  protected func UpdateSymptoms(symptoms: Int32) -> Bool {
-    let stamina: Bool = Bits.Has(symptoms, EnumInt(Consumable.StaminaBooster));
-    let capacity: Bool = Bits.Has(symptoms, EnumInt(Consumable.CarryCapacityBooster));
-    let memory: Bool = Bits.Has(symptoms, EnumInt(Consumable.MemoryBooster));
-    let invalidate: Bool = false;
-    if this.withdrawingFromStaminaBooster != stamina {
-      this.withdrawingFromStaminaBooster = stamina;
-      invalidate = true;
-    }
-    if this.withdrawingFromCarryCapacityBooster != capacity {
-      this.withdrawingFromCarryCapacityBooster = capacity;
-      invalidate = true;
-    }
-    if this.withdrawingFromMemoryBooster != memory {
-      this.withdrawingFromMemoryBooster = memory;
-      invalidate = true;
-    }
-    return invalidate;
-  }
-
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register stimulant manager");
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
     E(s"unregister stimulant manager");
+  }
+
+  protected func UpdateSymptoms(symptoms: Int32) -> Bool {
+    let stamina: Bool = Bits.Has(symptoms, EnumInt(Consumable.StaminaBooster));
+    let capacity: Bool = Bits.Has(symptoms, EnumInt(Consumable.CarryCapacityBooster));
+    let memory: Bool = Bits.Has(symptoms, EnumInt(Consumable.MemoryBooster));
+    let invalidate: Bool = false;
+
+    if NotEquals(this.withdrawingFromStaminaBooster, stamina) {
+      this.withdrawingFromStaminaBooster = stamina;
+      invalidate = true;
+    }
+    if NotEquals(this.withdrawingFromCarryCapacityBooster, capacity) {
+      this.withdrawingFromCarryCapacityBooster = capacity;
+      invalidate = true;
+    }
+    if NotEquals(this.withdrawingFromMemoryBooster, memory) {
+      this.withdrawingFromMemoryBooster = memory;
+      invalidate = true;
+    }
+
+    return invalidate;
   }
 
   protected func InvalidateState() -> Void {
