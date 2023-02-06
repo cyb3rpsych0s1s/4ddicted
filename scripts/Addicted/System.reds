@@ -347,7 +347,7 @@ public class AddictedSystem extends ScriptableSystem {
 
     let symptoms = this.Symptoms();
 
-    let event: ref<BiomonitorEvent> = new BiomonitorEvent();
+    let event: ref<CrossThresholdEvent> = new CrossThresholdEvent();
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.boot = true;

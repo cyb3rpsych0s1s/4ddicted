@@ -98,7 +98,7 @@ public func DebugTime() -> Void {
 // use like: Game.GetPlayer():DebugBiomon();
 @addMethod(PlayerPuppet)
 public func DebugBiomon() -> Void {
-  let event: ref<BiomonitorEvent> = new BiomonitorEvent();
+  let event: ref<CrossThresholdEvent> = new CrossThresholdEvent();
   let customer: ref<Customer> = new Customer();
   customer.FirstName = "V";
   customer.LastName = "UNKNOWN";

@@ -55,7 +55,7 @@ public class Customer {
     public let Insurance: String;
 }
 
-public class BiomonitorEvent extends Event {
+public class CrossThresholdEvent extends Event {
     public let Customer: ref<Customer>;
     public let Symptoms: array<ref<Symptom>>;
     public let boot: Bool;
@@ -164,7 +164,7 @@ public class BiomonitorController extends inkGameController {
         this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
     }
 
-    protected cb func OnBiomonitorEvent(evt: ref<BiomonitorEvent>) -> Bool {
+    protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
         E(s"on biomonitor event (is already playing ? \(this.playing))");
         if !this.playing {
             this.playing = true;
