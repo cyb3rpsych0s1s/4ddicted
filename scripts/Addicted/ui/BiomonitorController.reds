@@ -61,11 +61,15 @@ public class CrossThresholdEvent extends Event {
     public let boot: Bool;
 }
 
+public class SkipTimeEvent extends Event {}
+public class ScreenInteractionEvent extends Event {
+    public let Active: Bool;
+}
+
 public class BiomonitorController extends inkGameController {
     private let animation: ref<inkAnimProxy>;
     private let root: ref<inkCompoundWidget>;
     private let state: BiomonitorState;
-    private let playing: Bool;
 
     private let booting: ref<inkText>;
     private let firstname: ref<inkText>;
@@ -77,7 +81,6 @@ public class BiomonitorController extends inkGameController {
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
-        this.playing = false;
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
         this.root.SetVisible(false);
@@ -165,9 +168,8 @@ public class BiomonitorController extends inkGameController {
     }
 
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
-        E(s"on biomonitor event (is already playing ? \(this.playing))");
-        if !this.playing {
-            this.playing = true;
+        E(s"on biomonitor event (is already playing ? \(this.animation))");
+        if !this.Playing() {
             this.firstname.SetText(evt.Customer.FirstName);
             this.lastname.SetText(evt.Customer.LastName);
             this.age.SetText(evt.Customer.Age);
@@ -203,6 +205,21 @@ public class BiomonitorController extends inkGameController {
             E(s"");
 
             this.PlayNext(evt.boot);
+        }
+    }
+
+    protected cb func OnSkipTimeEvent(evt: ref<SkipTimeEvent>) -> Bool {
+        if this.Playing() {
+            this.Reset();
+        }
+    }
+
+    protected cb func OnScreenInteractionEvent(evt: ref<ScreenInteractionEvent>) -> Bool {
+        if evt.Active && this.Playing() {
+            this.animation.Pause();
+        }
+        if !evt.Active && this.Paused() {
+            this.animation.Resume();
         }
     }
 
@@ -267,20 +284,31 @@ public class BiomonitorController extends inkGameController {
 
     protected cb func OnAnimationStarted(anim: ref<inkAnimProxy>) -> Bool {
         this.root.SetVisible(true);
-        this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnStart);
+        anim.UnregisterFromAllCallbacks(inkanimEventType.OnStart);
     }
 
     protected cb func OnAnimationFinished(anim: ref<inkAnimProxy>) -> Bool {
         let hasNext = this.PlayNext();
         if !hasNext {
-            this.root.SetOpacity(1.0);
-            this.root.SetScale(new Vector2(1.0, 1.0));
-            this.root.SetVisible(false);
-            this.animation.Stop(true);
-            this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
-            this.state = BiomonitorState.Idle;
-            this.playing = false;
+            this.Reset();
             E(s"finished all");
         }
+    }
+
+    private func Reset() -> Void {
+        this.root.SetOpacity(1.0);
+        this.root.SetScale(new Vector2(1.0, 1.0));
+        this.root.SetVisible(false);
+        this.animation.Stop(true);
+        this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
+        this.state = BiomonitorState.Idle;
+    }
+
+    public func Playing() -> Bool {
+        return IsDefined(this.animation) && this.animation.IsPlaying();
+    }
+
+    public func Paused() -> Bool {
+        return IsDefined(this.animation) && this.animation.IsPaused();
     }
 }
