@@ -84,6 +84,7 @@ logs:
 # 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
 clear:
     @if [[ -f "{{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}" ]]; then \
+        echo "replacing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
         cp -f '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}' '{{ join(red_cache_dir, "modded", "final.redscripts") }}'; \
         rm -f '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}'; \
     else \
