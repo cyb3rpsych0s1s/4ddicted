@@ -55,7 +55,7 @@ public class BlackLaceManager extends IScriptable {
  }
 
   protected func InvalidateState() -> Void {
-    E(s"invalidate state");
+    E(s"invalidate black lace manager state");
     
     let blacklace = [
      t"BaseStatusEffect.NotablyWithdrawnFromBlackLace",

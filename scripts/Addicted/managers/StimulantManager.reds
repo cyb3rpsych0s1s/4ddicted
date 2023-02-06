@@ -69,7 +69,7 @@ public class StimulantManager extends IScriptable {
  }
 
   protected func InvalidateState() -> Void {
-    E(s"invalidate state");
+    E(s"invalidate stimulants manager state");
     
     let stamina = [
      t"BaseStatusEffect.NotablyWithdrawnFromStaminaBooster",
