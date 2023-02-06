@@ -207,7 +207,7 @@ public class BiomonitorController extends inkGameController {
     }
 
     private func PlayNext(opt boot: Bool) -> Bool {
-        let options: inkAnimOptions;
+        let options: inkAnimOptions = new inkAnimOptions();
         if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.fromMarker = n"booting_start";
             options.toMarker = n"booting_end";
