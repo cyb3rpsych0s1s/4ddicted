@@ -1,3 +1,9 @@
+module Addicted.Manager
+
+import Addicted.*
+import Addicted.Utils.*
+import Addicted.Helpers.{Effect}
+
 public abstract class WithdrawalSymptomsManager extends IScriptable {
 
   private let owner: wref<PlayerPuppet>;
