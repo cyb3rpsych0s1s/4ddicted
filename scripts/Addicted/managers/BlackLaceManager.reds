@@ -17,7 +17,7 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
   }
 
   protected func UpdateSymptoms(symptoms: Int32) -> Bool {
-    let blacklace = Bits.Has(value, EnumInt(Consumable.BlackLace));
+    let blacklace = Bits.Has(symptoms, EnumInt(Consumable.BlackLace));
     let invalidate: Bool = false;
 
     if NotEquals(blacklace, this.withdrawing) {
