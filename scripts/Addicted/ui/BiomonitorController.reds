@@ -67,10 +67,20 @@ public class ScreenInteractionEvent extends Event {
     public let Active: Bool;
 }
 
+public class CrossThresholdCallback extends DelayCallback {
+  private let controller: wref<BiomonitorController>;
+  private let event: ref<CrossThresholdEvent>;
+  public func Call() -> Void {
+    E(s"attempt at warning again");
+    controller.OnCrossThresholdEvent(event);
+  }
+}
+
 public class BiomonitorController extends inkGameController {
     private let animation: ref<inkAnimProxy>;
     private let root: ref<inkCompoundWidget>;
     private let state: BiomonitorState;
+    private let waiting: Bool;
 
     private let booting: ref<inkText>;
     private let firstname: ref<inkText>;
@@ -80,11 +90,14 @@ public class BiomonitorController extends inkGameController {
     private let insurance: ref<inkText>;
     private let vitals: array<array<ref<inkWidget>>>;
 
+    private let postpone: DelayID;
+
     protected cb func OnInitialize() {
         E(s"on initialize controller");
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
         this.root.SetVisible(false);
+        this.waiting = false;
         
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
         let infos       = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
@@ -170,7 +183,31 @@ public class BiomonitorController extends inkGameController {
 
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
         E(s"on biomonitor event (is already playing ? \(this.animation))");
-        if !this.Playing() {
+        if !this.Playing() && this.CanPlay() {
+            if this.ShouldWait() {
+              if !this.waiting {
+                E(s"postponing, there's already another UI ongoing...");
+                this.waiting = true;
+
+                let callback: ref<CrossThresholdCallback> = new CrossThresholdCallback();
+                callback.controller = this;
+                callback.event = evt;
+
+                this.postpone = GameInstance
+                .GetDelaySystem(this.GetPlayerControllerObject().GetGame())
+                .DelayCallback(callback, 5.);
+
+                return;
+              }
+            } else {
+              if this.waiting {
+                GameInstance
+                .GetDelaySystem(this.GetPlayerControllerObject().GetGame())
+                .CancelCallback(this.postpone);
+                this.postpone = GetInvalidDelayID();
+              }
+            }
+
             this.firstname.SetText(evt.Customer.FirstName);
             this.lastname.SetText(evt.Customer.LastName);
             this.age.SetText(evt.Customer.Age);
@@ -206,7 +243,10 @@ public class BiomonitorController extends inkGameController {
             E(s"");
 
             this.PlayNext(evt.boot);
+            return;
         }
+
+        if !this.CanPlay() && this.waiting { this.Reset(); }
     }
 
     protected cb func OnSkipTimeEvent(evt: ref<SkipTimeEvent>) -> Bool {
@@ -218,10 +258,63 @@ public class BiomonitorController extends inkGameController {
     protected cb func OnScreenInteractionEvent(evt: ref<ScreenInteractionEvent>) -> Bool {
         if evt.Active && this.Playing() {
             this.animation.Pause();
+            this.waiting = true;
         }
         if !evt.Active && this.Paused() {
             this.animation.Resume();
+            this.waiting = false;
         }
+    }
+
+    public func ShouldWait() -> Bool {
+      let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
+
+      let ui: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().UI_System);
+      if IsDefined(ui) {
+        let menu: Bool = ui.GetBool(GetAllBlackboardDefs().UI_System.IsInMenu);
+        if menu { return false; }
+      }
+
+      let player: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().PlayerStateMachine);
+      if IsDefined(player) {
+        let lore: Bool = player.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInLoreAnimationScene);
+        if lore { return false; }
+        let interacting: Bool = player.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInteractingWithDevice);
+        if interacting { return false; }
+      }
+
+      let data: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().UI_GameData);
+      if IsDefined(data) {
+        let briefing: Bool = data.GetBool(GetAllBlackboardDefs().UI_GameData.IsBriefingActive);
+        if briefing { return false; }
+      }
+
+      let photo: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().PhotoMode);
+      if IsDefined(photo) {
+        let posing: Bool = photo.GetBool(GetAllBlackboardDefs().PhotoMode.Active);
+        if posing { return false; }
+      }
+
+      return true;
+    }
+
+    public func CanPlay() -> Bool {
+      let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
+
+      let player: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().PlayerStateMachine);
+      if IsDefined(player) {
+        let dead: Bool = player.GetBool(GetAllBlackboardDefs().PlayerStateMachine.DisplayDeathMenu);
+        if dead { return false; }
+      }
+
+      // maybe already handled by the game ?
+      let travel: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().FastTRavelSystem);
+      if IsDefined(travel) {
+        let transiting: Bool = travel.GetBool(GetAllBlackboardDefs().FastTRavelSystem.FastTravelStarted);
+        if transiting { return false; }
+      }
+
+      return true;
     }
 
     private func PlayNext(opt boot: Bool) -> Bool {
@@ -297,12 +390,17 @@ public class BiomonitorController extends inkGameController {
     }
 
     private func Reset() -> Void {
+        if NotEquals(this.postpone, GetInvalidDelayID()) {
+          GetDelaySystem(this.GetPlayerControlledObject().GetGame()).CancelCallback(this.postpone);
+          this.postpone = GetInvalidDelayID();
+        }
         this.root.SetOpacity(1.0);
         this.root.SetScale(new Vector2(1.0, 1.0));
         this.root.SetVisible(false);
         this.animation.Stop(true);
         this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
         this.state = BiomonitorState.Idle;
+        this.waiting = false;
     }
 
     public func Playing() -> Bool {
