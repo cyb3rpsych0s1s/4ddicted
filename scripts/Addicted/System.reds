@@ -438,6 +438,13 @@ public class AddictedSystem extends ScriptableSystem {
     return false;
   }
 
+  public func OnSkipTime() -> Void {
+    this.restingSince = this.timeSystem.GetGameTimeStamp();
+
+    let event: ref<SkipTimeEvent> = new SkipTimeEvent();
+    GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
+  }
+
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {
     let amount = EnumInt(threshold);
     // always get back clean

@@ -62,6 +62,7 @@ public class CrossThresholdEvent extends Event {
 }
 
 public class SkipTimeEvent extends Event {}
+
 public class ScreenInteractionEvent extends Event {
     public let Active: Bool;
 }
