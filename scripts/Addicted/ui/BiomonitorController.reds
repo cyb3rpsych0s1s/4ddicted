@@ -64,10 +64,6 @@ public class CrossThresholdEvent extends Event {
 
 public class SkipTimeEvent extends Event {}
 
-public class ScreenInteractionEvent extends Event {
-    public let Active: Bool;
-}
-
 public class CrossThresholdCallback extends DelayCallback {
   private let controller: wref<BiomonitorController>;
   private let event: ref<CrossThresholdEvent>;
