@@ -79,6 +79,8 @@ public class CrossThresholdCallback extends DelayCallback {
 
 enum BiomonitorRestrictions {
     InMenu = 0,
+    InRadialWheel = 1,
+    InQuickHackPanel = 2,
 }
 
 public class BiomonitorController extends inkGameController {
@@ -96,23 +98,17 @@ public class BiomonitorController extends inkGameController {
     private let vitals: array<array<ref<inkWidget>>>;
 
     private let postpone: DelayID;
+    private let flags: Int32;
+
     private let menuListener: ref<CallbackHandle>;
     private let replacerListener: ref<CallbackHandle>;
-    private let flags: Int32;
+    private let wheelListener: ref<CallbackHandle>;
+    private let hackListener: ref<CallbackHandle>;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
-        this.flags = 0;
 
-        let ui: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
-        if IsDefined(ui) {
-            this.menuListener = ui.RegisterListenerBool(GetAllBlackboardDefs().UI_System.IsInMenu, this, n"OnInMenu", true);
-        }
-
-        let stats: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_PlayerStats);
-        if IsDefined(stats) {
-            this.replacerListener = stats.RegisterListenerBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer, this, n"OnIsReplacer", true);
-        }
+        this.RegisterListeners();
 
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
@@ -121,7 +117,7 @@ public class BiomonitorController extends inkGameController {
         
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
         let infos       = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Info_Screen/Info_MainScreen_Mask_Canvas/Info_MainScreen_Canvas") as inkCompoundWidget;
-        E(s"\(ToString(infos))");
+        // E(s"\(ToString(infos))");
         this.firstname  = infos.GetWidget(n"SANDRA_HPanel/Info_SANDRA_Text") as inkText;
         this.lastname   = infos.GetWidget(n"DORSET_HPanel/Info_DORSETT_Text") as inkText;
         this.age        = infos.GetWidget(n"AGE_HPanel/Info_29_Text") as inkText;
@@ -136,19 +132,19 @@ public class BiomonitorController extends inkGameController {
         let rightmost   = summary.GetWidget(n"Critical_Vertical_Warning") as inkVerticalPanel;
 
 
-        E(s"summary: \(ToString(summary))");
-        E(s"leftmost: \(ToString(leftmost))");
-        E(s"center: \(ToString(center))");
-        E(s"rightmost: \(ToString(rightmost))");
+        // E(s"summary: \(ToString(summary))");
+        // E(s"leftmost: \(ToString(leftmost))");
+        // E(s"center: \(ToString(center))");
+        // E(s"rightmost: \(ToString(rightmost))");
 
-        let size = center.GetNumChildren();
-        let j = 0;
-        let child: ref<inkWidget>;
-        while j < size {
-            child = center.GetWidgetByIndex(j);
-            E(s"name: \(child.GetName()), type: \(ToString(child))");
-            j += 1;
-        }
+        // let size = center.GetNumChildren();
+        // let j = 0;
+        // let child: ref<inkWidget>;
+        // while j < size {
+        //     child = center.GetWidgetByIndex(j);
+        //     E(s"name: \(child.GetName()), type: \(ToString(child))");
+        //     j += 1;
+        // }
 
         row = [];
         ArrayPush(row, leftmost.GetWidget(n"Critical_BLOOD_PRESSURE_text"));
@@ -203,11 +199,52 @@ public class BiomonitorController extends inkGameController {
 
     protected cb func OnUninitialize() {
         E(s"on uninitialize controller");
+        this.UnregisterListeners();
+    }
 
+    protected func RegisterListeners() -> Void {
+        this.flags = 0;
+
+        let ui: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
+        if IsDefined(ui) {
+            this.menuListener = ui.RegisterListenerBool(GetAllBlackboardDefs().UI_System.IsInMenu, this, n"OnInMenu");
+            let value: Bool = ui.GetBool(GetAllBlackboardDefs().UI_System.IsInMenu);
+            Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InMenu), value);
+        }
+
+        let quick: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_QuickSlotsData);
+        if IsDefined(quick) {
+            this.hackListener = quick.RegisterListenerBool(GetAllBlackboardDefs().UI_QuickSlotsData.quickhackPanelOpen, this, n"OnQuickHackPanel");
+            let value: Bool = quick.GetBool(GetAllBlackboardDefs().UI_QuickSlotsData.quickhackPanelOpen);
+            Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InQuickHackPanel), value);
+
+            this.wheelListener = quick.RegisterListenerBool(GetAllBlackboardDefs().UI_QuickSlotsData.UIRadialContextRequest, this, n"OnRadialWheel");
+            let value: Bool = quick.GetBool(GetAllBlackboardDefs().UI_QuickSlotsData.UIRadialContextRequest);
+            Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InRadialWheel), value);
+        }
+
+        let stats: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_PlayerStats);
+        if IsDefined(stats) {
+            this.replacerListener = stats.RegisterListenerBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer, this, n"OnIsReplacer");
+        }
+    }
+    protected func UnregisterListeners() -> Void {
         let ui: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
         if IsDefined(ui) && IsDefined(this.menuListener) {
             ui.UnregisterListenerBool(GetAllBlackboardDefs().UI_System.IsInMenu, this.menuListener);
             this.menuListener = null;
+        }
+
+        let quick: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_QuickSlotsData);
+        if IsDefined(quick) {
+            if IsDefined(this.hackListener) {
+                quick.UnregisterListenerBool(GetAllBlackboardDefs().UI_QuickSlotsData.quickhackPanelOpen, this.hackListener);
+                this.hackListener = null;
+            }
+            if IsDefined(this.wheelListener) {
+                quick.UnregisterListenerBool(GetAllBlackboardDefs().UI_QuickSlotsData.UIRadialContextRequest, this.wheelListener);
+                this.wheelListener = null;
+            }
         }
 
         let stats: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_PlayerStats);
@@ -223,24 +260,13 @@ public class BiomonitorController extends inkGameController {
             if this.ShouldWait() {
               if !this.waiting {
                 E(s"postponing, there's already another UI ongoing...");
-                this.waiting = true;
-
-                let callback: ref<CrossThresholdCallback> = new CrossThresholdCallback();
-                callback.controller = this;
-                callback.event = evt;
-
-                this.postpone = GameInstance
-                .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
-                .DelayCallback(callback, 5.);
+                this.Reschedule(evt);
 
                 return false;
               }
             } else {
               if this.waiting {
-                GameInstance
-                .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
-                .CancelCallback(this.postpone);
-                this.postpone = GetInvalidDelayID();
+                this.Unschedule();
               }
             }
 
@@ -285,13 +311,58 @@ public class BiomonitorController extends inkGameController {
         if !this.CanPlay() && this.waiting { this.Reset(); }
     }
 
+    private func Reschedule(event: ref<CrossThresholdEvent>) -> Void {
+        E(s"reschedule, there's already another UI ongoing...");
+        this.waiting = true;
+
+        let callback: ref<CrossThresholdCallback> = new CrossThresholdCallback();
+        callback.controller = this;
+        callback.event = event;
+
+        this.postpone = GameInstance
+        .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
+        .DelayCallback(callback, 5.);
+    }
+
+    private func Unschedule() -> Void {
+        E(s"unschedule");
+        if NotEquals(this.postpone, GetInvalidDelayID()) {
+            GameInstance
+            .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
+            .CancelCallback(this.postpone);
+            this.postpone = GetInvalidDelayID();
+        }
+    }
+
     protected cb func OnSkipTimeEvent(evt: ref<SkipTimeEvent>) -> Bool {
+        E(s"on skip time");
         if this.Playing() {
             this.Reset();
         }
     }
 
+    protected cb func OnQuickHackPanel(value: Bool) -> Bool {
+        if value { E(s"open quick hack panel"); }
+        else { E(s"close quick hack panel"); }
+        let current : Bool = Bits.Has(this.flags, EnumInt(BiomonitorRestrictions.InQuickHackPanel));
+        if NotEquals(current, value) {
+            Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InQuickHackPanel), value);
+            this.InvalidateState();
+        }
+    }
+    protected cb func OnRadialWheel(value: Bool) -> Bool {
+        if value { E(s"open radial wheel"); }
+        else { E(s"close radial wheel"); }
+        let current : Bool = Bits.Has(this.flags, EnumInt(BiomonitorRestrictions.InRadialWheel));
+        if NotEquals(current, value) {
+            Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InRadialWheel), value);
+            this.InvalidateState();
+        }
+    }
+
     protected cb func OnInMenu(value: Bool) -> Bool {
+        if value { E(s"enter menu"); }
+        else { E(s"left menu"); }
         let current : Bool = Bits.Has(this.flags, EnumInt(BiomonitorRestrictions.InMenu));
         if NotEquals(current, value) {
             Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InMenu), value);
@@ -300,19 +371,26 @@ public class BiomonitorController extends inkGameController {
     }
 
     protected cb func OnIsReplacer(value: Bool) -> Bool {
+        if value { E(s"is replacer"); }
+        else { E(s"is not a replacer"); }
         if value {
             this.Reset();
         }
     }
 
     protected func InvalidateState() -> Void {
+        E(s"invalidate state");
         if this.Playing() && Cast<Bool>(this.flags) {
+            E(s"pausing animation");
             this.animation.Pause();
             this.waiting = true;
+            return;
         }
         if this.Paused() && !Cast<Bool>(this.flags) {
+            E(s"resuming animation");
             this.animation.Resume();
             this.waiting = false;
+            return;
         }
     }
 
