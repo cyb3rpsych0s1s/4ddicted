@@ -1,5 +1,6 @@
 import Addicted.Utils.E
 import Addicted.System.AddictedSystem
+import Addicted.Helpers.Bits
 
 // or use cp2077-codeware
 @addField(inkWidget)
@@ -72,8 +73,12 @@ public class CrossThresholdCallback extends DelayCallback {
   private let event: ref<CrossThresholdEvent>;
   public func Call() -> Void {
     E(s"attempt at warning again");
-    controller.OnCrossThresholdEvent(event);
+    this.controller.OnCrossThresholdEvent(this.event);
   }
+}
+
+enum BiomonitorRestrictions {
+    InMenu = 0,
 }
 
 public class BiomonitorController extends inkGameController {
@@ -91,9 +96,24 @@ public class BiomonitorController extends inkGameController {
     private let vitals: array<array<ref<inkWidget>>>;
 
     private let postpone: DelayID;
+    private let menuListener: ref<CallbackHandle>;
+    private let replacerListener: ref<CallbackHandle>;
+    private let flags: Int32;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
+        this.flags = 0;
+
+        let ui: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
+        if IsDefined(ui) {
+            this.menuListener = ui.RegisterListenerBool(GetAllBlackboardDefs().UI_System.IsInMenu, this, n"OnInMenu", true);
+        }
+
+        let stats: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_PlayerStats);
+        if IsDefined(stats) {
+            this.replacerListener = stats.RegisterListenerBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer, this, n"OnIsReplacer", true);
+        }
+
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
         this.root.SetVisible(false);
@@ -181,6 +201,22 @@ public class BiomonitorController extends inkGameController {
         this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
     }
 
+    protected cb func OnUninitialize() {
+        E(s"on uninitialize controller");
+
+        let ui: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
+        if IsDefined(ui) && IsDefined(this.menuListener) {
+            ui.UnregisterListenerBool(GetAllBlackboardDefs().UI_System.IsInMenu, this.menuListener);
+            this.menuListener = null;
+        }
+
+        let stats: ref<IBlackboard> = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_PlayerStats);
+        if IsDefined(stats) && IsDefined(this.replacerListener) {
+            stats.UnregisterListenerBool(GetAllBlackboardDefs().UI_PlayerStats.isReplacer, this.replacerListener);
+            this.replacerListener = null;
+        }
+    }
+
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
         E(s"on biomonitor event (is already playing ? \(this.animation))");
         if !this.Playing() && this.CanPlay() {
@@ -194,15 +230,15 @@ public class BiomonitorController extends inkGameController {
                 callback.event = evt;
 
                 this.postpone = GameInstance
-                .GetDelaySystem(this.GetPlayerControllerObject().GetGame())
+                .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
                 .DelayCallback(callback, 5.);
 
-                return;
+                return false;
               }
             } else {
               if this.waiting {
                 GameInstance
-                .GetDelaySystem(this.GetPlayerControllerObject().GetGame())
+                .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
                 .CancelCallback(this.postpone);
                 this.postpone = GetInvalidDelayID();
               }
@@ -243,7 +279,7 @@ public class BiomonitorController extends inkGameController {
             E(s"");
 
             this.PlayNext(evt.boot);
-            return;
+            return false;
         }
 
         if !this.CanPlay() && this.waiting { this.Reset(); }
@@ -255,12 +291,26 @@ public class BiomonitorController extends inkGameController {
         }
     }
 
-    protected cb func OnScreenInteractionEvent(evt: ref<ScreenInteractionEvent>) -> Bool {
-        if evt.Active && this.Playing() {
+    protected cb func OnInMenu(value: Bool) -> Bool {
+        let current : Bool = Bits.Has(this.flags, EnumInt(BiomonitorRestrictions.InMenu));
+        if NotEquals(current, value) {
+            Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InMenu), value);
+            this.InvalidateState();
+        }
+    }
+
+    protected cb func OnIsReplacer(value: Bool) -> Bool {
+        if value {
+            this.Reset();
+        }
+    }
+
+    protected func InvalidateState() -> Void {
+        if this.Playing() && Cast<Bool>(this.flags) {
             this.animation.Pause();
             this.waiting = true;
         }
-        if !evt.Active && this.Paused() {
+        if this.Paused() && !Cast<Bool>(this.flags) {
             this.animation.Resume();
             this.waiting = false;
         }
@@ -283,15 +333,15 @@ public class BiomonitorController extends inkGameController {
         if interacting { return false; }
       }
 
-      let data: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().UI_GameData);
+      let data: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().UIGameData);
       if IsDefined(data) {
-        let briefing: Bool = data.GetBool(GetAllBlackboardDefs().UI_GameData.IsBriefingActive);
+        let briefing: Bool = data.GetBool(GetAllBlackboardDefs().UIGameData.IsBriefingActive);
         if briefing { return false; }
       }
 
       let photo: ref<IBlackboard> = system.Get(GetAllBlackboardDefs().PhotoMode);
       if IsDefined(photo) {
-        let posing: Bool = photo.GetBool(GetAllBlackboardDefs().PhotoMode.Active);
+        let posing: Bool = photo.GetBool(GetAllBlackboardDefs().PhotoMode.IsActive);
         if posing { return false; }
       }
 
@@ -391,7 +441,7 @@ public class BiomonitorController extends inkGameController {
 
     private func Reset() -> Void {
         if NotEquals(this.postpone, GetInvalidDelayID()) {
-          GetDelaySystem(this.GetPlayerControlledObject().GetGame()).CancelCallback(this.postpone);
+          GameInstance.GetDelaySystem(this.GetPlayerControlledObject().GetGame()).CancelCallback(this.postpone);
           this.postpone = GetInvalidDelayID();
         }
         this.root.SetOpacity(1.0);
