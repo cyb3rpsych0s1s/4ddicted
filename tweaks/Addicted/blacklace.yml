@@ -1,0 +1,19 @@
+BaseStatusEffect.NotablyWithdrawnFromBlackLace:
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Reflexes
+          value: 0.9
+
+BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Reflexes
+          value: 0.7

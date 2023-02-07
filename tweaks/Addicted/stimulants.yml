@@ -1,10 +1,5 @@
-BaseStatusEffect.BoosterWithdrawalSymptom:
-  $type: StatusEffect_Record
-  duration: Items.ShortLastingAddictionDuration
-  gameplayTags: [Debuff, WithdrawalSymptom]
-
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -14,7 +9,7 @@ BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -24,7 +19,7 @@ BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
           value: 0.7
 
 BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -34,7 +29,7 @@ BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -44,7 +39,7 @@ BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
           value: 0.7
 
 BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -54,7 +49,7 @@ BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
           value: 0.9
 
 BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.BoosterWithdrawalSymptom
+  $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
       stats:
@@ -62,14 +57,3 @@ BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
           modifierType: Multiplier
           statType: BaseStats.Memory
           value: 0.7
-
-Items.ShortLastingAddictionDuration:
-  $type: StatModifierGroup_Record
-  drawBasedOnStatType: false
-  statModifiers:
-    - $type: ConstantStatModifier_Record
-      modifierType: Additive
-      statType: BaseStats.MaxDuration
-      value: 900
-  statModsLimit: -1
-  statModsLimitModifier: None

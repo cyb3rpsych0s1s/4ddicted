@@ -81,18 +81,14 @@ logs:
     echo "\n=== Toxicity ===\n" && \
     cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
 
-# 🧹 clear current cache
+# 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
 clear:
-    @if [[ -d "{{ join(red_cache_dir, 'modded') }}" ]]; then \
-        rm -rf '{{ join(red_cache_dir, "modded") }}'; \
+    @if [[ -f "{{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}" ]]; then \
+        echo "replacing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
+        cp -f '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}' '{{ join(red_cache_dir, "modded", "final.redscripts") }}'; \
+        rm -f '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}'; \
     else \
-        echo "missing {{ join(red_cache_dir, 'modded') }}"; \
-    fi
-    @if [[ -f "{{ join(red_cache_dir, 'final.redscripts.bk') }}" ]]; then \
-        cp -f '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'; \
-        rm -f '{{ join(red_cache_dir, "final.redscripts.bk") }}'; \
-    else \
-        echo "missing {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
+        echo "missing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
     fi
 
 # 💾 store (or overwrite) logs in latest.log

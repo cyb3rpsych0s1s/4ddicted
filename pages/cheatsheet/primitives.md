@@ -30,5 +30,5 @@ let v: Int32 = system.GetCIDByRecord(t"BaseStatusEffect.HealthBooster");
 
 ```swift
 let delay: DelayID = GameInstance.GetDelaySystem(player.GetGame()).DelayCallback();
-let defined: Bool = Equals(delay, GetInvalidDelayID());
+let defined: Bool = NotEquals(delay, GetInvalidDelayID());
 ```

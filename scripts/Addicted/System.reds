@@ -16,6 +16,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let healerManager: ref<HealerManager>;
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
+  private let blacklaceManager: ref<BlackLaceManager>;
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
@@ -27,6 +28,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
 
+  private let updateSymtomsID: DelayID;
+
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -37,10 +40,13 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
-      this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+      this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
 
       this.stimulantManager = new StimulantManager();
       this.stimulantManager.Register(this.player);
+
+      this.blacklaceManager = new BlackLaceManager();
+      this.blacklaceManager.Register(this.player);
 
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
@@ -69,6 +75,9 @@ public class AddictedSystem extends ScriptableSystem {
     
     this.stimulantManager.Unregister(this.player);
     this.stimulantManager = null;
+    
+    this.blacklaceManager.Unregister(this.player);
+    this.blacklaceManager = null;
 
     this.healerManager = null;
 
@@ -82,6 +91,9 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.stimulantManager = new StimulantManager();
     this.stimulantManager.Register(this.player);
+
+    this.blacklaceManager = new BlackLaceManager();
+    this.blacklaceManager.Register(this.player);
 
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);
@@ -117,7 +129,10 @@ public class AddictedSystem extends ScriptableSystem {
       blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
     }
 
-    this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600.);
+    if NotEquals(this.updateSymtomsID, GetInvalidDelayID()) {
+      this.delaySystem.CancelDelay(this.updateSymtomsID);
+    }
+    this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
@@ -207,6 +222,8 @@ public class AddictedSystem extends ScriptableSystem {
         E(s"clean again from \(TDBID.ToStringDEBUG(id))");
       }
     }
+
+    this.delaySystem.DelayScriptableSystemRequestNextFrame(this.GetClassName(), new UpdateWithdrawalSymptomsRequest());
   }
 
   public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
@@ -330,7 +347,7 @@ public class AddictedSystem extends ScriptableSystem {
 
     let symptoms = this.Symptoms();
 
-    let event: ref<BiomonitorEvent> = new BiomonitorEvent();
+    let event: ref<CrossThresholdEvent> = new CrossThresholdEvent();
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.boot = true;
@@ -419,6 +436,13 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
     return false;
+  }
+
+  public func OnSkipTime() -> Void {
+    this.restingSince = this.timeSystem.GetGameTimeStamp();
+
+    let event: ref<SkipTimeEvent> = new SkipTimeEvent();
+    GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
   }
 
   public func DebugSwitchThreshold(id: TweakDBID, threshold: Threshold) -> Void {

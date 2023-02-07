@@ -1,0 +1,15 @@
+BaseStatusEffect.WithdrawalSymptom:
+  $type: StatusEffect_Record
+  duration: Items.ShortLastingAddictionDuration
+  gameplayTags: [Debuff, WithdrawalSymptom]
+
+Items.ShortLastingAddictionDuration:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  statModifiers:
+    - $type: ConstantStatModifier_Record
+      modifierType: Additive
+      statType: BaseStats.MaxDuration
+      value: 900
+  statModsLimit: -1
+  statModsLimitModifier: None

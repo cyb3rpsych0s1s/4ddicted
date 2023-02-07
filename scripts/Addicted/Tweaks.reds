@@ -234,7 +234,7 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
 private final func Apply() -> Void {
   if this.m_hoursToSkip > 0 {
     let system = AddictedSystem.GetInstance(this.m_gameInstance);
-    system.restingSince = this.m_timeSystem.GetGameTimeStamp();
+    system.OnSkipTime();
   }
   wrappedMethod();
 }
