@@ -3,32 +3,32 @@
 UIIcon.NotablyWeakenedFirstAidWhiff:
   $type: UIIcon_Record
   atlasPartName: notably_first_aid_whiff
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedFirstAidWhiff:
   $type: UIIcon_Record
   atlasPartName: severely_first_aid_whiff
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.NotablyWeakenedBonesMcCoy70:
   $type: UIIcon_Record
   atlasPartName: notably_regeneration_icon
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedBonesMcCoy70:
   $type: UIIcon_Record
   atlasPartName: severely_regeneration_icon
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.NotablyWeakenedHealthBooster:
   $type: UIIcon_Record
   atlasPartName: notably_health_booster_regen
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedHealthBooster:
   $type: UIIcon_Record
   atlasPartName: severely_health_booster_regen
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 # status effect
 
