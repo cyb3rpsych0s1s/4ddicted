@@ -1,3 +1,13 @@
+UIIcon.WithdrawnFromBlackLace:
+  $type: UIIcon_Record
+  atlasPartName: craving_for_drugs_icon
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+UIData.WithdrawnFromBlackLace:
+  $base: BaseStatusEffect.BlackLaceV0_inline2
+  description: Mod-Addicted-Withdrawn-BlackLace-Desc
+  iconPath: WithdrawnFromBlackLace
+
 BaseStatusEffect.NotablyWithdrawnFromBlackLace:
   $base: BaseStatusEffect.WithdrawalSymptom
   packages:
@@ -7,6 +17,9 @@ BaseStatusEffect.NotablyWithdrawnFromBlackLace:
           modifierType: Multiplier
           statType: BaseStats.Reflexes
           value: 0.9
+  uiData:
+    $base: UIData.WithdrawnFromBlackLace
+    intValues: [90]
 
 BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
   $base: BaseStatusEffect.WithdrawalSymptom
@@ -17,3 +30,6 @@ BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
           modifierType: Multiplier
           statType: BaseStats.Reflexes
           value: 0.7
+  uiData:
+    $base: UIData.WithdrawnFromBlackLace
+    intValues: [70]

@@ -7,6 +7,7 @@
 - [Cheatsheet](./cheatsheet/summary.md)
   - [primitives](./cheatsheet/primitives.md)
   - [sounds](./cheatsheet/sounds.md)
+  - [custom icons](./cheatsheet/icons.md)
 - [Patterns](./patterns/summary.md)
   - [Systems](./patterns/systems.md)
   - [Callbacks](./patterns/callbacks.md)

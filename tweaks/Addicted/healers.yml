@@ -3,32 +3,32 @@
 UIIcon.NotablyWeakenedFirstAidWhiff:
   $type: UIIcon_Record
   atlasPartName: notably_first_aid_whiff
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedFirstAidWhiff:
   $type: UIIcon_Record
   atlasPartName: severely_first_aid_whiff
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.NotablyWeakenedBonesMcCoy70:
   $type: UIIcon_Record
   atlasPartName: notably_regeneration_icon
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedBonesMcCoy70:
   $type: UIIcon_Record
   atlasPartName: severely_regeneration_icon
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.NotablyWeakenedHealthBooster:
   $type: UIIcon_Record
   atlasPartName: notably_health_booster_regen
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIIcon.SeverelyWeakenedHealthBooster:
   $type: UIIcon_Record
   atlasPartName: severely_health_booster_regen
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 # status effect
 
@@ -88,6 +88,9 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1:
     - $type: StatusEffectFX_Record
       name: mildly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: NotablyWeakenedFirstAidWhiff
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
   $base: BaseStatusEffect.FirstAidWhiffV1
@@ -103,6 +106,9 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
     - $type: StatusEffectFX_Record
       name: piddly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: SeverelyWeakenedFirstAidWhiff
 
 ### v2
 
@@ -120,6 +126,9 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2:
     - $type: StatusEffectFX_Record
       name: mildly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: NotablyWeakenedFirstAidWhiff
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
   $base: BaseStatusEffect.FirstAidWhiffV2
@@ -135,6 +144,9 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
     - $type: StatusEffectFX_Record
       name: piddly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: SeverelyWeakenedFirstAidWhiff
 
 ## bounce back (a.k.a bones mccoy)
 
@@ -161,6 +173,7 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
   uiData:
     $base: BaseStatusEffect.BonesMcCoy70V0_inline7
     iconPath: NotablyWeakenedBonesMcCoy70
+    intValues: [2]
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   $base: BaseStatusEffect.BonesMcCoy70V0
@@ -183,6 +196,7 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   uiData:
     $base: BaseStatusEffect.BonesMcCoy70V0_inline7
     iconPath: SeverelyWeakenedBonesMcCoy70
+    intValues: [1]
 
 ### v1
 
@@ -204,6 +218,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1:
     - $type: StatusEffectFX_Record
       name: mildly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V1_inline7
+    iconPath: NotablyWeakenedBonesMcCoy70
+    intValues: [3]
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
   $base: BaseStatusEffect.BonesMcCoy70V1
@@ -223,6 +241,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
     - $type: StatusEffectFX_Record
       name: piddly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V1_inline7
+    iconPath: SeverelyWeakenedBonesMcCoy70
+    intValues: [2]
 
 ### v2
 
@@ -244,6 +266,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2:
     - $type: StatusEffectFX_Record
       name: mildly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V2_inline7
+    iconPath: NotablyWeakenedBonesMcCoy70
+    intValues: [4]
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
   $base: BaseStatusEffect.BonesMcCoy70V1
@@ -263,6 +289,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
     - $type: StatusEffectFX_Record
       name: piddly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V2_inline7
+    iconPath: SeverelyWeakenedBonesMcCoy70
+    intValues: [3]
 
 ## health booster
 
@@ -278,6 +308,7 @@ BaseStatusEffect.NotablyWeakenedHealthBooster:
   uiData:
     $base: BaseStatusEffect.HealthBooster_inline2
     iconPath: NotablyWeakenedHealthBooster
+    intValues: [15]
 
 BaseStatusEffect.SeverelyWeakenedHealthBooster:
   $base: BaseStatusEffect.HealthBooster
@@ -291,5 +322,6 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
   uiData:
     $base: BaseStatusEffect.HealthBooster_inline2
     iconPath: SeverelyWeakenedHealthBooster
+    intValues: [10]
 
 # object action effect: see scriptable tweaks

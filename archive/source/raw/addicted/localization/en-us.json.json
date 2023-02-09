@@ -234,6 +234,34 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Biomonitor-Status-Threshold-Notably"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Reflexes",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-BlackLace-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Stamina",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-Stamina-Booster-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Carry Capacity",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-Capacity-Booster-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Memory",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-Memory-Booster-Desc"
             }
           ]
         }
