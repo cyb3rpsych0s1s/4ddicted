@@ -308,6 +308,7 @@ BaseStatusEffect.NotablyWeakenedHealthBooster:
   uiData:
     $base: BaseStatusEffect.HealthBooster_inline2
     iconPath: NotablyWeakenedHealthBooster
+    intValues: [15]
 
 BaseStatusEffect.SeverelyWeakenedHealthBooster:
   $base: BaseStatusEffect.HealthBooster
@@ -321,5 +322,6 @@ BaseStatusEffect.SeverelyWeakenedHealthBooster:
   uiData:
     $base: BaseStatusEffect.HealthBooster_inline2
     iconPath: SeverelyWeakenedHealthBooster
+    intValues: [10]
 
 # object action effect: see scriptable tweaks
