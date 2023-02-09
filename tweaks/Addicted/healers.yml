@@ -88,6 +88,9 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1:
     - $type: StatusEffectFX_Record
       name: mildly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: NotablyWeakenedFirstAidWhiff
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
   $base: BaseStatusEffect.FirstAidWhiffV1
@@ -103,6 +106,9 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
     - $type: StatusEffectFX_Record
       name: piddly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: SeverelyWeakenedFirstAidWhiff
 
 ### v2
 
@@ -120,6 +126,9 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2:
     - $type: StatusEffectFX_Record
       name: mildly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: NotablyWeakenedFirstAidWhiff
 
 BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
   $base: BaseStatusEffect.FirstAidWhiffV2
@@ -135,6 +144,9 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
     - $type: StatusEffectFX_Record
       name: piddly_splinter_buff
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: SeverelyWeakenedFirstAidWhiff
 
 ## bounce back (a.k.a bones mccoy)
 
