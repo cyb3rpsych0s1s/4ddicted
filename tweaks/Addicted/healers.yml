@@ -173,6 +173,7 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
   uiData:
     $base: BaseStatusEffect.BonesMcCoy70V0_inline7
     iconPath: NotablyWeakenedBonesMcCoy70
+    intValues: [2]
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   $base: BaseStatusEffect.BonesMcCoy70V0
@@ -195,6 +196,7 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
   uiData:
     $base: BaseStatusEffect.BonesMcCoy70V0_inline7
     iconPath: SeverelyWeakenedBonesMcCoy70
+    intValues: [1]
 
 ### v1
 
@@ -216,6 +218,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1:
     - $type: StatusEffectFX_Record
       name: mildly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V1_inline7
+    iconPath: NotablyWeakenedBonesMcCoy70
+    intValues: [3]
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
   $base: BaseStatusEffect.BonesMcCoy70V1
@@ -235,6 +241,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
     - $type: StatusEffectFX_Record
       name: piddly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V1_inline7
+    iconPath: SeverelyWeakenedBonesMcCoy70
+    intValues: [2]
 
 ### v2
 
@@ -256,6 +266,10 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2:
     - $type: StatusEffectFX_Record
       name: mildly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V2_inline7
+    iconPath: NotablyWeakenedBonesMcCoy70
+    intValues: [4]
 
 BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
   $base: BaseStatusEffect.BonesMcCoy70V1
@@ -275,6 +289,10 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
     - $type: StatusEffectFX_Record
       name: piddly_reflex_buster
       shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70V2_inline7
+    iconPath: SeverelyWeakenedBonesMcCoy70
+    intValues: [3]
 
 ## health booster
 
