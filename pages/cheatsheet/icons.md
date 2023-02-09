@@ -45,11 +45,13 @@ If you chose to design on Illustrator:
 - group all your icons layers together, and below all the placeholders together
 
 ![.ps document structure](pictures/ps-document-structure.png)
+
 ## export from Photoshop
 
 ⚠️ if you use a Cloud document
-  - File > Save as Copy > On your computer
-  - then do the following steps **from your local copy**, because sometimes cloud sync will leave your document in a wrong state after playing batch actions with the plugin
+
+- File > Save as Copy > On your computer
+- then do the following steps **from your local copy**, because sometimes cloud sync will leave your document in a wrong state after playing batch actions with the plugin
 
 Then proceed:
 
@@ -61,7 +63,6 @@ Then proceed:
   - InkAtlas filename: *atlas_addicted*
   - XBM Depot Path: *addicted\gameplay\gui\widgets\healthbar\atlas_addicted.xbm*
   - XBM Depot Path (1080p): *addicted\gameplay\gui\widgets\healthbar\atlas_addicted_1080p.xbm*
-
 
 ## import in WolvenKit
 
@@ -79,13 +80,16 @@ Then proceed:
 
 - open your IDE
   - edit your YAML Tweak, e.g.
+
     ```swift
     UIIcon.NotablyWeakenedFirstAidWhiff:
      $type: UIIcon_Record
      atlasPartName: notably_first_aid_whiff
      atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
     ```
+
   - use in your tweaks, e.g.
+
     ```swift
     BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
      $base: BaseStatusEffect.FirstAidWhiffV0
