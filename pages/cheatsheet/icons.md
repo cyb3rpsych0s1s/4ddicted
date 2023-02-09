@@ -70,6 +70,8 @@ Then proceed:
   - *Tools* > *Import Tool*
     - import both .tga as follow
 
+      credits to IslandDancer on Discord
+
       ![WolvenKit .xbm import settings](./pictures/wk-import-xbm-solution.png)
   - right click on *raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas.json* then *Convert from JSON*
   - double-check your *.inkatlas* to make sure everything looks as expected
