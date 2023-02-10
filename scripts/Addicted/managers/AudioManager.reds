@@ -125,6 +125,7 @@ public class AudioManager extends IScriptable {
         if ArraySize(this.oneshotSFX) > 0 {
           let flow: ESoundStatusEffects;
           if this.inVehicle { flow = ESoundStatusEffects.DEAFENED; } else { flow = ESoundStatusEffects.NONE; }
+          E(s"sound flow: \(flow)");
           for sfx in this.oneshotSFX {
             sfx.SetStatusEffect(flow);
           }
