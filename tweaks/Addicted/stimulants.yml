@@ -3,23 +3,28 @@ Effectors.Grunt:
   activationSFXName: ono_v_effort
 
 Effectors.MigraineStart:
-  $base: Effectors.PlaySFXEffector
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
   activationSFXName: q101_sc_03_heart_loop
 
 Effectors.MigraineDecrease:
-  $base: Effectors.StopAndPlaySFXEffector
+  $type: Effector_Record
+  effectorClassName: StopAndPlaySFXEffector
   sfxToStop: q101_sc_03_heart_loop
   sfxToStart: q004_sc_04a_heartbeat_rev
   prereqRecord:
-    $type: TemporalPrereq_Record
+    $base: Prereqs.DurationPrereq
     duration: 10
+    randRange: 0
 
 Effectors.MigraineEnd:
-  $base: Effectors.StopSFXEffector
+  $type: Effector_Record
+  effectorClassName: StopSFXEffector
   sfxName: q004_sc_04a_heartbeat_rev
   prereqRecord:
-    $type: TemporalPrereq_Record
+    $base: Prereqs.DurationPrereq
     duration: 25
+    randRange: 0
 
 UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
@@ -111,7 +116,7 @@ BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
           statType: BaseStats.Memory
           value: 0.9
     - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.MigraineStart, Effectors.MigraineEnd]
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
     intValues: [90]
