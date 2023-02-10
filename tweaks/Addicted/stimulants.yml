@@ -1,3 +1,31 @@
+Effectors.Grunt:
+  $base: Effectors.PlaySFXEffector
+  activationSFXName: ono_v_effort
+
+Effectors.MigraineStart:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  activationSFXName: q101_sc_03_heart_loop
+
+Effectors.MigraineDecrease:
+  $type: Effector_Record
+  effectorClassName: StopAndPlaySFXEffector
+  sfxToStop: q101_sc_03_heart_loop
+  sfxToStart: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 10
+    randRange: 0
+
+Effectors.MigraineEnd:
+  $type: Effector_Record
+  effectorClassName: StopSFXEffector
+  sfxName: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 25
+    randRange: 0
+
 UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
   atlasPartName: craving_for_pills
@@ -6,17 +34,17 @@ UIIcon.WithdrawnFromPill:
 UIData.WithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.StaminaBooster_inline2
   description: Mod-Addicted-Withdrawn-Stamina-Booster-Desc
-  iconPath: UIIcon.WithdrawnFromPill
+  iconPath: WithdrawnFromPill
 
 UIData.WithdrawnFromCarryCapacityBooster:
   $base: BaseStatusEffect.CarryCapacityBooster_inline2
   description: Mod-Addicted-Withdrawn-Capacity-Booster-Desc
-  iconPath: UIIcon.WithdrawnFromPill
+  iconPath: WithdrawnFromPill
 
 UIData.WithdrawnFromMemoryBooster:
   $base: BaseStatusEffect.MemoryBooster_inline2
   description: Mod-Addicted-Withdrawn-Memory-Booster-Desc
-  iconPath: UIIcon.WithdrawnFromPill
+  iconPath: WithdrawnFromPill
 
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.WithdrawalSymptom
@@ -27,6 +55,8 @@ BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
           modifierType: Multiplier
           statType: BaseStats.Stamina
           value: 0.9
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Grunt]
   uiData:
     $base: UIData.WithdrawnFromStaminaBooster
     intValues: [90]
@@ -40,6 +70,8 @@ BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
           modifierType: Multiplier
           statType: BaseStats.Stamina
           value: 0.7
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Grunt]
   uiData:
     $base: UIData.WithdrawnFromStaminaBooster
     intValues: [70]
@@ -53,6 +85,8 @@ BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
           modifierType: Multiplier
           statType: BaseStats.CarryCapacity
           value: 0.9
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Grunt]
   uiData:
     $base: UIData.WithdrawnFromCarryCapacityBooster
     intValues: [90]
@@ -66,6 +100,8 @@ BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
           modifierType: Multiplier
           statType: BaseStats.CarryCapacity
           value: 0.7
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Grunt]
   uiData:
     $base: UIData.WithdrawnFromCarryCapacityBooster
     intValues: [70]
@@ -79,6 +115,8 @@ BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
           modifierType: Multiplier
           statType: BaseStats.Memory
           value: 0.9
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
     intValues: [90]
@@ -92,6 +130,8 @@ BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
           modifierType: Multiplier
           statType: BaseStats.Memory
           value: 0.7
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
     intValues: [70]

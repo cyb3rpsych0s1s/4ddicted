@@ -51,6 +51,21 @@ public func TestVFX(version: String) -> Void {
 }
 
 // use like:
+// Game.GetPlayer():DebugEffect("NotablyWithdrawnFromMemoryBooster")
+@addMethod(PlayerPuppet)
+public func DebugEffect(name: String) -> Void {
+  let c_name = "BaseStatusEffect." + name;
+  let id = TDBID.Create(c_name);
+  let callback: ref<TestVFXThresholdCallback> = new TestVFXThresholdCallback();
+  callback.id = id;
+  callback.player = this;
+
+  GameInstance
+    .GetDelaySystem(this.GetGame())
+    .DelayCallback(callback, 0.1);
+}
+
+// use like:
 // Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("Items.FirstAidWhiffV0"), 40);
 // Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("Items.BonesMcCoy70V0"), 40);
 // Game.GetPlayer():DebugSwitchThreshold(TweakDBID.new("Items.MemoryBooster"), 40);
