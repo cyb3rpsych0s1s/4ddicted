@@ -1,5 +1,6 @@
 Effectors.Grunt:
-  $base: Effectors.PlaySFXEffector
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
   activationSFXName: ono_v_effort
 
 Effectors.MigraineStart:
