@@ -481,7 +481,16 @@ public class BiomonitorController extends inkGameController {
             this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             this.animation.RegisterToCallback(inkanimEventType.OnStart, this, n"OnAnimationStarted");
-            GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
+            if (this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
+                let gender: CName = (this.GetPlayerControlledObject() as ScriptedPuppet).GetResolvedGenderName();
+                let ono: CName;
+                if Equals(gender, n"Male") {
+                    ono = n"ono_freak_m_bump_set_05";
+                } else {
+                    ono = n"ono_freak_f_bump_set";
+                }
+                GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
+            }
             return true;
         }
         if EnumInt(this.state) == EnumInt(BiomonitorState.Booting) || EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
@@ -523,6 +532,11 @@ public class BiomonitorController extends inkGameController {
             def.AddInterpolator(fade);
             options.executionDelay = 4.0;
             options.oneSegment = true;
+            if !(this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
+                let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
+                let ono: CName = onos[RandRange(0,1)];
+                GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
+            }
             this.animation = this.root.PlayAnimationWithOptions(def, options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             return true;
