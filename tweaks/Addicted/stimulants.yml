@@ -29,17 +29,17 @@ UIIcon.WithdrawnFromPill:
 UIData.WithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.StaminaBooster_inline2
   description: Mod-Addicted-Withdrawn-Stamina-Booster-Desc
-  iconPath: UIIcon.WithdrawnFromPill
+  iconPath: WithdrawnFromPill
 
 UIData.WithdrawnFromCarryCapacityBooster:
   $base: BaseStatusEffect.CarryCapacityBooster_inline2
   description: Mod-Addicted-Withdrawn-Capacity-Booster-Desc
-  iconPath: UIIcon.WithdrawnFromPill
+  iconPath: WithdrawnFromPill
 
 UIData.WithdrawnFromMemoryBooster:
   $base: BaseStatusEffect.MemoryBooster_inline2
   description: Mod-Addicted-Withdrawn-Memory-Booster-Desc
-  iconPath: UIIcon.WithdrawnFromPill
+  iconPath: WithdrawnFromPill
 
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.WithdrawalSymptom
