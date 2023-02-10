@@ -2,6 +2,25 @@ Effectors.Grunt:
   $base: Effectors.PlaySFXEffector
   activationSFXName: ono_v_effort
 
+Effectors.MigraineStart:
+  $base: Effectors.PlaySFXEffector
+  activationSFXName: q101_sc_03_heart_loop
+
+Effectors.MigraineDecrease:
+  $base: Effectors.StopAndPlaySFXEffector
+  sfxToStop: q101_sc_03_heart_loop
+  sfxToStart: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $type: TemporalPrereq_Record
+    duration: 10
+
+Effectors.MigraineEnd:
+  $base: Effectors.StopSFXEffector
+  sfxName: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $type: TemporalPrereq_Record
+    duration: 25
+
 UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
   atlasPartName: craving_for_pills
@@ -91,6 +110,8 @@ BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
           modifierType: Multiplier
           statType: BaseStats.Memory
           value: 0.9
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineEnd]
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
     intValues: [90]
@@ -104,6 +125,8 @@ BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
           modifierType: Multiplier
           statType: BaseStats.Memory
           value: 0.7
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
     intValues: [70]
