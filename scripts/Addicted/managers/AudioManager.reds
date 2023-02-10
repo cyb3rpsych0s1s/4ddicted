@@ -42,10 +42,12 @@ public class AudioManager extends IScriptable {
 
   private let swimming: Int32;
   private let consuming: Bool;
+  private let inVehicle: Bool;
   private let tier: Int32;
   private let onDiving: ref<CallbackHandle>;
   private let onConsuming: ref<CallbackHandle>;
   private let onTierChanged: ref<CallbackHandle>;
+  private let onEnteredOrLeftVehicle: ref<CallbackHandle>;
 
   private let ambient: ref<TrackedHintRequest>;
   private let oneshot: array<ref<TrackedHintRequest>>;
@@ -74,8 +76,12 @@ public class AudioManager extends IScriptable {
         if !IsDefined(this.onTierChanged) {
           this.onTierChanged = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.SceneTier, this, n"OnSceneTierChanged", true);
         }
+        this.inVehicle = board.GetBool(GetAllBlackboardDefs().PlayerStateMachine.MountedToVehicle);
+        if !IsDefined(this.onEnteredOrLeftVehicle) {
+          this.onEnteredOrLeftVehicle = board.RegisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.MountedToVehicle, this, n"OnEnteredOrLeftVehicle", true);
+        }
       }
-      E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onTierChanged))");
+      E(s"listeners defined ? \(IsDefined(this.onDiving)) \(IsDefined(this.onConsuming)) \(IsDefined(this.onTierChanged)) \(IsDefined(this.onEnteredOrLeftVehicle))");
     }
     this.InvalidateState();
   }
@@ -91,10 +97,12 @@ public class AudioManager extends IScriptable {
         if IsDefined(this.onDiving)     { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Swimming, this.onDiving); }
         if IsDefined(this.onConsuming)  { board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, this.onConsuming); }
         if IsDefined(this.onTierChanged)   { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.SceneTier, this.onTierChanged); }
+        if IsDefined(this.onEnteredOrLeftVehicle)   { board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.MountedToVehicle, this.onEnteredOrLeftVehicle); }
       }
       this.onDiving = null;
       this.onConsuming = null;
       this.onTierChanged = null;
+      this.onEnteredOrLeftVehicle = null;
     }
     this.owner = null;
   }
@@ -115,8 +123,10 @@ public class AudioManager extends IScriptable {
       default:
         E(s"policy to ALL");
         if ArraySize(this.oneshotSFX) > 0 {
+          let flow: ESoundStatusEffects;
+          if this.inVehicle { flow = ESoundStatusEffects.DEAFENED; } else { flow = ESoundStatusEffects.NONE; }
           for sfx in this.oneshotSFX {
-            sfx.SetStatusEffect(ESoundStatusEffects.NONE);
+            sfx.SetStatusEffect(flow);
           }
         }
         break;
@@ -381,6 +391,14 @@ public class AudioManager extends IScriptable {
     if NotEquals(this.tier, value) {
       E(s"chatting status changed: \(ToString(value))");
       this.tier = value;
+      this.InvalidateState();
+    }
+  }
+
+  protected cb func OnEnteredOrLeftVehicle(value: Bool) -> Bool {
+    if NotEquals(this.inVehicle, value) {
+      E(s"inside vehicle status changed: \(ToString(value))");
+      this.inVehicle = value;
       this.InvalidateState();
     }
   }
