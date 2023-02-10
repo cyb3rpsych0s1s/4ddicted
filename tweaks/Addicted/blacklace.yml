@@ -1,3 +1,9 @@
+Effectors.Fibromyalgia:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  activationSFXName: ono_v_pain_short
+  unique: false
+
 UIIcon.WithdrawnFromBlackLace:
   $type: UIIcon_Record
   atlasPartName: craving_for_drugs_icon
@@ -17,6 +23,8 @@ BaseStatusEffect.NotablyWithdrawnFromBlackLace:
           modifierType: Multiplier
           statType: BaseStats.Reflexes
           value: 0.9
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Fibromyalgia]
   uiData:
     $base: UIData.WithdrawnFromBlackLace
     intValues: [90]
@@ -30,6 +38,22 @@ BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
           modifierType: Multiplier
           statType: BaseStats.Reflexes
           value: 0.7
+      effectors:
+        - $base: Effectors.Fibromyalgia
+          prereqRecord:
+            $base: Prereqs.DurationPrereq
+            duration: 0
+            randRange: 2
+        - $base: Effectors.Fibromyalgia
+          prereqRecord:
+            $base: Prereqs.DurationPrereq
+            duration: 3
+            randRange: 5
+        - $base: Effectors.Fibromyalgia
+          prereqRecord:
+            $base: Prereqs.DurationPrereq
+            duration: 9
+            randRange: 3
   uiData:
     $base: UIData.WithdrawnFromBlackLace
     intValues: [70]
