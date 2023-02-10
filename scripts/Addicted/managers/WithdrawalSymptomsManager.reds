@@ -6,7 +6,7 @@ import Addicted.Helpers.{Effect}
 
 public abstract class WithdrawalSymptomsManager extends IScriptable {
 
-  private let owner: wref<PlayerPuppet>;
+  protected let owner: wref<PlayerPuppet>;
   private let onWithdrawing: ref<CallbackHandle>;
 
   protected abstract func UpdateSymptoms(symptoms: Int32) -> Bool;
