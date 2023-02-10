@@ -15,7 +15,7 @@ Effectors.MigraineDecrease:
   sfxToStart: q004_sc_04a_heartbeat_rev
   prereqRecord:
     $base: Prereqs.DurationPrereq
-    duration: 10
+    duration: 20
     randRange: 0
 
 Effectors.MigraineEnd:
@@ -24,7 +24,7 @@ Effectors.MigraineEnd:
   sfxName: q004_sc_04a_heartbeat_rev
   prereqRecord:
     $base: Prereqs.DurationPrereq
-    duration: 25
+    duration: 30
     randRange: 0
 
 UIIcon.WithdrawnFromPill:
