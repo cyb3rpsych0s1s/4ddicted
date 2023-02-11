@@ -157,6 +157,13 @@ public class AddictedSystem extends ScriptableSystem {
         after = Helper.Threshold(amount);
         hint = this.Consume(id, amount);
       }
+
+      let consumable: Consumable = Generic.Consumable(id);
+      let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
+      let current = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+      let next = Bits.Set(current, EnumInt(consumable), false);
+      blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
+
       E(s"consumption hint: \(ToString(hint))");
       if hint {
         this.Hint(id);
