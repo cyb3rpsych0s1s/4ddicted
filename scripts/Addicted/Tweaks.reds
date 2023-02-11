@@ -239,6 +239,63 @@ private final func Apply() -> Void {
   wrappedMethod();
 }
 
+@wrapMethod(ScriptedPuppet)
+protected cb func OnDamageReceived(evt: ref<gameDamageReceivedEvent>) -> Bool {
+  wrappedMethod(evt);
+  let instigator: ref<GameObject> = evt.hitEvent.attackData.GetInstigator();
+  let npcPuppetInstig: wref<NPCPuppet>;
+  let playerPuppetID: EntityID;
+
+  if instigator != null {
+    if this.IsPlayer() {
+      npcPuppetInstig = instigator as NPCPuppet;
+      if npcPuppetInstig != null {
+        let board: ref<IBlackboard> = (this as PlayerPuppet).GetPlayerStateMachineBlackboard();
+        let symptoms: Int32 = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+        let withdrawing: Bool = Bits.Has(symptoms, Consumable.BlackLace);
+        if !withdrawing { return; }
+        
+        let duration = Max(10. + (Bits.Count(symptoms) * 5.), 30.);
+
+        playerPuppetID = playerPuppet.GetEntityID();
+        statPoolSys = GameInstance.GetStatPoolsSystem(this.GetGame());
+        damageInflictedPercent = 100.00 * damageInflicted / statPoolSys.GetStatPoolMaxPointValue(Cast<StatsObjectID>(playerPuppetID), gamedataStatPoolType.Health);
+        playerCurrentHealthPercent = statPoolSys.GetStatPoolValue(Cast<StatsObjectID>(playerPuppetID), gamedataStatPoolType.Health);
+        if damageInflictedPercent >= 10.00 || playerCurrentHealthPercent <= 50.00 {
+          StatusEffectHelper.ApplyStatusEffect(this, n"BaseStatusEffect.RabidPlayerBuff", 0.5);
+        }
+      }
+    }
+  }
+}
+
+@wrapMethod(DamageManager)
+public final static func CalculateSourceModifiers(hitEvent: ref<gameHitEvent>) -> Void {
+  wrappedMethod(hitEvent);
+  let tempStat: Float;
+  let targetPuppet: ref<ScriptedPuppet> = hitEvent.target as ScriptedPuppet;
+  if hitEvent.attackData.GetInstigator().IsPlayer() {
+    if AttackData.IsMelee(hitEvent.attackData.GetAttackType()) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
+      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), gamedataStatType.RabidMeleeDamageBonus);
+      if !FloatIsEqual(tempStat, 0.00) {
+        hitEvent.attackComputed.MultAttackValue(1.00 + tempStat * 0.01);
+      }
+    }
+    if Equals(hitEvent.attackData.GetAttackType(), gamedataAttackType.WhipAttack) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
+      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), gamedataStatType.RabidWhipDamageBonus);
+      if !FloatIsEqual(tempStat, 0.00) {
+        hitEvent.attackComputed.MultAttackValue(1.00 + tempStat * 0.01);
+      }
+    }
+    if WeaponObject.IsFists(hitEvent.attackData.GetWeapon()) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
+      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), gamedataStatType.RabidFistsDamageBonus);
+      if !FloatIsEqual(tempStat, 0.00) {
+        hitEvent.attackComputed.MultAttackValue(1.00 + tempStat * 0.01);
+      }
+    }
+  }
+}
+
 // object action effects
 //
 // reduce boilerplate in YAML Tweaks
