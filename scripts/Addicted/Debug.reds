@@ -3,6 +3,7 @@ module Addicted
 import Addicted.Threshold
 import Addicted.System.AddictedSystem
 import Addicted.Utils.{E,EI}
+import Addicted.Helpers.Generic
 
 public class TestVFXThresholdCallback extends DelayCallback {
   public let player: wref<PlayerPuppet>;
@@ -48,6 +49,26 @@ public func TestVFX(version: String) -> Void {
   GameInstance
     .GetDelaySystem(this.GetGame())
     .DelayCallback(severe, 12);
+}
+
+@wrapMethod(SingleCooldownManager)
+public final func ActivateCooldown(buffData: UIBuffInfo) -> Void {
+  wrappedMethod(buffData);
+  let effectUIData: wref<StatusEffectUIData_Record>;
+  let i: Int32;
+  let effect: wref<StatusEffect_Record> = TweakDBInterface.GetStatusEffectRecord(this.m_buffData.buffID);
+  if IsDefined(effect) {
+    effectUIData = effect.UiData();
+    if IsDefined(effectUIData) {
+      if effectUIData.GetNameValuesCount() > 0 {
+          i = 0;
+          while i < effectUIData.GetNameValuesCount() {
+            E(s"name_\(i) => \(effectUIData.GetNameValuesItem(i)) = \(GetLocalizedText(NameToString(effectUIData.GetNameValuesItem(i))))");
+            i += 1;
+          };
+      }
+    }
+  }
 }
 
 // use like:
