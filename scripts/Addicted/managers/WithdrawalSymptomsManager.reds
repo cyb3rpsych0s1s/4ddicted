@@ -59,7 +59,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
       let i = 0;
       while i < sizeApplicable {
         id = applicables[i];
-        if !withdrawing && Effect.IsApplied(applied, id) {
+        if Effect.IsApplied(applied, id) {
           StatusEffectHelper.RemoveStatusEffect(this.owner, id);
         } 
         i += 1;
