@@ -160,10 +160,12 @@ public class AddictedSystem extends ScriptableSystem {
       }
 
       let consumable: Consumable = Generic.Consumable(id);
-      let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
-      let current = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-      let next = Bits.Set(current, EnumInt(consumable), false);
-      blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
+      if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
+        let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
+        let current = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+        let next = Bits.Set(current, EnumInt(consumable), false);
+        blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
+      } else { F(s"invalid consumable: \(TDBID.ToStringDEBUG(id))"); }
 
       E(s"consumption hint: \(ToString(hint))");
       if hint {
