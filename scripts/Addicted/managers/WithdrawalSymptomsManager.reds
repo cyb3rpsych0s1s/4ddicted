@@ -10,7 +10,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   private let onWithdrawing: ref<CallbackHandle>;
 
   protected abstract func UpdateSymptoms(symptoms: Int32) -> Bool;
-  protected func InvalidateState() -> Void;
+  protected abstract func InvalidateState() -> Void;
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register withdrawal symptoms manager");
