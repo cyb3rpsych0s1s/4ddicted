@@ -14,12 +14,13 @@ public class Bits {
   }
 
   public static func Invert(num: Int32) -> Int32 {
-    let i = 0;
+    let after = num;
+    let i: Int32 = 0;
     while i < 32 {
-      num = Bits.PowI(num, Bits.ShiftLeft(1, i));
+      after = after ^ Bits.ShiftLeft(1, i);
       i += 1;
     }
-    return num;
+    return after;
   }
 
   public static func Has(num: Int32, n: Int32) -> Bool {
@@ -33,7 +34,9 @@ public class Bits {
       after |= Bits.ShiftLeft(1, n);
     } else {
       // set bit to 0
-      after &= Bits.Invert(Bits.ShiftLeft(1, n));
+      let shifted = Bits.ShiftLeft(1, n);
+      let inversed = Bits.Invert(shifted);
+      after &= inversed;
     }
     return after;
   }
