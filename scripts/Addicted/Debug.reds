@@ -103,6 +103,16 @@ public func DebugWithdrawing() -> Void {
   system.DebugWithdrawing();
 }
 
+// use like: Game.GetPlayer():DebugSetWithdrawing("BlackLaceV0", true);
+@addMethod(PlayerPuppet)
+public func DebugSetWithdrawing(consumable: String, value: Bool) -> Void {
+  let system = AddictedSystem.GetInstance(this.GetGame());
+  let c_name = "BaseStatusEffect." + consumable;
+  let id = TDBID.Create(c_name);
+  let c = Generic.Consumable(id);
+  system.DebugSetWithdrawing(c, value);
+}
+
 // use like: Game.GetPlayer():DebugTime();
 @addMethod(PlayerPuppet)
 public func DebugTime() -> Void {
