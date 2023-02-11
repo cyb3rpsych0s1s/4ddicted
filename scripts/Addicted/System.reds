@@ -514,6 +514,14 @@ public class AddictedSystem extends ScriptableSystem {
     }
   }
 
+  public func DebugSetWithdrawing(consumable: Consumable, withdrawing: Bool) -> Void {
+    E(s"debug set withdrawing \(ToString(consumable)) -> \(withdrawing)");
+    let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
+    let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+    let after = Bits.Set(before, EnumInt(consumable), withdrawing);
+    blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, after);
+  }
+
   public func DebugTime() -> Void {
     let timestamp = this.timeSystem.GetGameTimeStamp();
 
