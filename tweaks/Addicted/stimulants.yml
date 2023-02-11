@@ -29,7 +29,7 @@ Effectors.MigraineEnd:
 
 UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
-  atlasPartName: craving_for_pills
+  atlasPartName: craving_for_pill
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 UIData.WithdrawnFromStaminaBooster:
