@@ -11,11 +11,13 @@ public class StimulantManager extends WithdrawalSymptomsManager {
   private let withdrawingFromMemoryBooster: Bool;
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
-    E(s"register stimulant manager");
+    E(s"register stimulants manager");
+    super.Register(player);
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
-    E(s"unregister stimulant manager");
+    E(s"unregister stimulants manager");
+    super.Unregister(player);
   }
 
   protected func UpdateSymptoms(symptoms: Int32) -> Bool {
