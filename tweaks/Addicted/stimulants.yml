@@ -34,17 +34,20 @@ UIIcon.WithdrawnFromPill:
 
 UIData.WithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.StaminaBooster_inline2
-  description: Mod-Addicted-Withdrawn-Stamina-Booster-Desc
+  description: LocKey#Mod-Addicted-Withdrawn-Stamina-Booster-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-Stamina-Booster
   iconPath: WithdrawnFromPill
 
 UIData.WithdrawnFromCarryCapacityBooster:
   $base: BaseStatusEffect.CarryCapacityBooster_inline2
-  description: Mod-Addicted-Withdrawn-Capacity-Booster-Desc
+  description: LocKey#Mod-Addicted-Withdrawn-Capacity-Booster-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-Capacity-Booster
   iconPath: WithdrawnFromPill
 
 UIData.WithdrawnFromMemoryBooster:
   $base: BaseStatusEffect.MemoryBooster_inline2
-  description: Mod-Addicted-Withdrawn-Memory-Booster-Desc
+  description: LocKey#Mod-Addicted-Withdrawn-Memory-Booster-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-Memory-Booster
   iconPath: WithdrawnFromPill
 
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
