@@ -27,6 +27,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
       }
     }
     this.InvalidateState();
+    E(s"listener: \(ToString(IsDefined(this.onWithdrawing)))");
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
