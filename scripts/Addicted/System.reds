@@ -119,10 +119,8 @@ public class AddictedSystem extends ScriptableSystem {
     let now: Int32 = 0;
     let consumables = Helper.Consumables();
     let withdrawing: Bool = false;
-    let threshold: Threshold;
     for consumable in consumables {
       withdrawing = this.IsWithdrawing(consumable);
-      threshold = this.consumptions.Threshold(consumable);
       now = Bits.Set(now, EnumInt(consumable), withdrawing);
     }
     if NotEquals(before, now) {
