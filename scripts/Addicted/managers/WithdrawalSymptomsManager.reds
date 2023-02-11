@@ -43,6 +43,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   }
 
   protected cb func OnWithdrawalSymptomsChanged(value: Int32) -> Bool {
+    E(s"on withdrawal symptoms changed: \(ToString(value))");
     let invalidate: Bool = this.UpdateSymptoms(value);
     if invalidate {
       this.InvalidateState();
