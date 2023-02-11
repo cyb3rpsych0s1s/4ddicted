@@ -114,7 +114,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
-    E(s"on update withdrawal symptoms");
+    E(s"on update withdrawal symptoms request");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let now: Int32 = 0;
@@ -164,6 +164,7 @@ public class AddictedSystem extends ScriptableSystem {
         let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
         let current = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
         let next = Bits.Set(current, EnumInt(consumable), false);
+        E(s"set \(ToString(consumable)) to false, consumable flags: \(current) -> \(next)");
         blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
       } else { F(s"invalid consumable: \(TDBID.ToStringDEBUG(id))"); }
 
