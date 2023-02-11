@@ -45,11 +45,12 @@ public class Generic {
 
   public static func IsAddictive(id: TweakDBID) -> Bool {
     // t"BaseStatusEffect.CombatStim" double-check
-    return Generic.IsAlcohol(id) ||
+    return !Generic.IsOxyBooster(id) &&
+    (Generic.IsLiquid(id) ||
     Generic.IsInhaler(id) ||
-    Generic.IsBooster(id) ||
     Generic.IsInjector(id) ||
-    Generic.IsHealthBooster(id);
+    Generic.IsPill(id) ||
+    Generic.IsKit(id));
   }
 
   public static func IsInstant(id: TweakDBID) -> Bool {
@@ -61,10 +62,36 @@ public class Generic {
     return false;
   }
 
+  public static func IsLiquid(id: TweakDBID) -> Bool {
+    return Generic.IsAlcohol(id);
+  }
+
   public static func IsPill(id: TweakDBID) -> Bool {
     return Generic.IsCapacityBooster(id) ||
     Generic.IsStaminaBooster(id) ||
     Generic.IsMemoryBooster(id);
+  }
+
+  public static func IsInhaler(id: TweakDBID) -> Bool {
+    return Generic.IsMaxDOC(id) || Generic.IsBlackLace(id) || Generic.IsOxyBooster(id);
+  }
+
+  public static func IsInjector(id: TweakDBID) -> Bool {
+    return Generic.IsBounceBack(id);
+  }
+
+  public static func IsKit(id: TweakDBID) -> Bool {
+    return Generic.IsHealthBooster(id);
+  }
+
+  public static func IsBooster(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "Booster");
+  }
+
+  public static func IsHealer(id: TweakDBID) -> Bool {
+    return Generic.IsMaxDOC(id) || Generic.IsBounceBack(id) || Generic.IsHealthBooster(id);
   }
 
   public static func IsAnabolic(id: TweakDBID) -> Bool {
@@ -73,24 +100,6 @@ public class Generic {
 
   public static func IsNeurotransmitter(id: TweakDBID) -> Bool {
     return Generic.IsMemoryBooster(id);
-  }
-
-  public static func IsHealer(id: TweakDBID) -> Bool {
-    return Generic.IsMaxDOC(id) || Generic.IsBounceBack(id) || Generic.IsHealthBooster(id);
-  }
-
-  public static func IsInhaler(id: TweakDBID) -> Bool {
-    return Generic.IsMaxDOC(id) || Generic.IsBlackLace(id);
-  }
-
-  public static func IsInjector(id: TweakDBID) -> Bool {
-    return Generic.IsBounceBack(id);
-  }
-
-  public static func IsBooster(id: TweakDBID) -> Bool {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    return StrContains(suffix, "Booster");
   }
 
   public static func IsAlcohol(id: TweakDBID) -> Bool {

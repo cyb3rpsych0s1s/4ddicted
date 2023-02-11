@@ -11,7 +11,8 @@ UIIcon.WithdrawnFromBlackLace:
 
 UIData.WithdrawnFromBlackLace:
   $base: BaseStatusEffect.BlackLaceV0_inline2
-  description: Mod-Addicted-Withdrawn-BlackLace-Desc
+  description: LocKey#Mod-Addicted-Withdrawn-BlackLace-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-BlackLace
   iconPath: WithdrawnFromBlackLace
 
 BaseStatusEffect.NotablyWithdrawnFromBlackLace:

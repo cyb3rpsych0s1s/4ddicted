@@ -114,15 +114,14 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
+    E(s"on update withdrawal symptoms request");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let now: Int32 = 0;
     let consumables = Helper.Consumables();
     let withdrawing: Bool = false;
-    let threshold: Threshold;
     for consumable in consumables {
       withdrawing = this.IsWithdrawing(consumable);
-      threshold = this.consumptions.Threshold(consumable);
       now = Bits.Set(now, EnumInt(consumable), withdrawing);
     }
     if NotEquals(before, now) {
@@ -159,6 +158,16 @@ public class AddictedSystem extends ScriptableSystem {
         after = Helper.Threshold(amount);
         hint = this.Consume(id, amount);
       }
+
+      let consumable: Consumable = Generic.Consumable(id);
+      if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
+        let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
+        let current = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+        let next = Bits.Set(current, EnumInt(consumable), false);
+        E(s"set \(ToString(consumable)) to false, consumable flags: \(current) -> \(next)");
+        blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
+      } else { F(s"invalid consumable: \(TDBID.ToStringDEBUG(id))"); }
+
       E(s"consumption hint: \(ToString(hint))");
       if hint {
         this.Hint(id);
@@ -507,6 +516,14 @@ public class AddictedSystem extends ScriptableSystem {
       withdrawing = this.IsWithdrawing(id);
       EI(id, s"withdrawing ? \(withdrawing)");
     }
+  }
+
+  public func DebugSetWithdrawing(consumable: Consumable, withdrawing: Bool) -> Void {
+    E(s"debug set withdrawing \(ToString(consumable)) -> \(withdrawing)");
+    let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
+    let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+    let after = Bits.Set(before, EnumInt(consumable), withdrawing);
+    blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, after);
   }
 
   public func DebugTime() -> Void {

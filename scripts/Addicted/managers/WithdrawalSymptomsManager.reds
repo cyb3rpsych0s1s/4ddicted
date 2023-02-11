@@ -10,7 +10,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   private let onWithdrawing: ref<CallbackHandle>;
 
   protected abstract func UpdateSymptoms(symptoms: Int32) -> Bool;
-  protected func InvalidateState() -> Void;
+  protected abstract func InvalidateState() -> Void;
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register withdrawal symptoms manager");
@@ -27,6 +27,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
       }
     }
     this.InvalidateState();
+    E(s"listener: \(ToString(IsDefined(this.onWithdrawing)))");
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
@@ -43,6 +44,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   }
 
   protected cb func OnWithdrawalSymptomsChanged(value: Int32) -> Bool {
+    E(s"on withdrawal symptoms changed: \(ToString(value))");
     let invalidate: Bool = this.UpdateSymptoms(value);
     if invalidate {
       this.InvalidateState();
@@ -59,7 +61,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
       let i = 0;
       while i < sizeApplicable {
         id = applicables[i];
-        if !withdrawing && Effect.IsApplied(applied, id) {
+        if Effect.IsApplied(applied, id) {
           StatusEffectHelper.RemoveStatusEffect(this.owner, id);
         } 
         i += 1;

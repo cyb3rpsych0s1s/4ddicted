@@ -10,14 +10,17 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register black lace manager");
+    super.Register(player);
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
     E(s"unregister black lace manager");
+    super.Unregister(player);
   }
 
   protected func UpdateSymptoms(symptoms: Int32) -> Bool {
     let blacklace = Bits.Has(symptoms, EnumInt(Consumable.BlackLace));
+    E(s"update black lace symptom: current (\(this.withdrawing)) incoming (\(blacklace))");
     let invalidate: Bool = false;
 
     if NotEquals(blacklace, this.withdrawing) {

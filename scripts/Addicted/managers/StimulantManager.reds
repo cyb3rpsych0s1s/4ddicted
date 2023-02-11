@@ -11,11 +11,13 @@ public class StimulantManager extends WithdrawalSymptomsManager {
   private let withdrawingFromMemoryBooster: Bool;
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
-    E(s"register stimulant manager");
+    E(s"register stimulants manager");
+    super.Register(player);
   }
 
   public func Unregister(player: ref<PlayerPuppet>) -> Void {
-    E(s"unregister stimulant manager");
+    E(s"unregister stimulants manager");
+    super.Unregister(player);
   }
 
   protected func UpdateSymptoms(symptoms: Int32) -> Bool {
@@ -23,6 +25,9 @@ public class StimulantManager extends WithdrawalSymptomsManager {
     let capacity: Bool = Bits.Has(symptoms, EnumInt(Consumable.CarryCapacityBooster));
     let memory: Bool = Bits.Has(symptoms, EnumInt(Consumable.MemoryBooster));
     let invalidate: Bool = false;
+    E(s"update stimulants symptom: stamina booster  (current \(this.withdrawingFromStaminaBooster), incoming (\(stamina))");
+    E(s"update stimulants symptom: capacity booster (current \(this.withdrawingFromCarryCapacityBooster), incoming (\(capacity))");
+    E(s"update stimulants symptom: memory booster   (current \(this.withdrawingFromMemoryBooster), incoming (\(memory))");
 
     if NotEquals(this.withdrawingFromStaminaBooster, stamina) {
       this.withdrawingFromStaminaBooster = stamina;
