@@ -40,4 +40,13 @@ public class Bits {
     }
     return after;
   }
+
+  public static func Count(num: Int32) -> Int32 {
+    let i: Int32 = 0;
+    let found: Int32 = 0;
+    while i < 32 {
+      if Bits.Has(num, i) { found += 1; }
+    }
+    return found;
+  }
 }
