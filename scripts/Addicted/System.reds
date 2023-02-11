@@ -114,6 +114,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
+    E(s"on update withdrawal symptoms");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let now: Int32 = 0;
