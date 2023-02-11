@@ -260,15 +260,15 @@ enum Threshold {
 
 enum Consumable {
   Invalid = -1,
-  Alcohol = 0,
-  MaxDOC = 1, // FirstAidWhiff
-  BounceBack = 2, // BonesMcCoy
-  HealthBooster = 3,
-  MemoryBooster = 4,
-  OxyBooster = 5,
-  StaminaBooster = 6,
-  BlackLace = 7,
-  CarryCapacityBooster = 8,
+  Alcohol = 1,
+  MaxDOC = 2, // FirstAidWhiff
+  BounceBack = 3, // BonesMcCoy
+  HealthBooster = 4,
+  MemoryBooster = 5,
+  OxyBooster = 6,
+  StaminaBooster = 7,
+  BlackLace = 8,
+  CarryCapacityBooster = 9,
 }
 
 enum Kind {
