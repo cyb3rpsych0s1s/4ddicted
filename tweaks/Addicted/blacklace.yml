@@ -58,3 +58,146 @@ BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
   uiData:
     $base: UIData.WithdrawnFromBlackLace
     intValues: [70]
+
+BaseStats.RabidCooldownBase:
+  $type: Stat_Record
+  enumName: RabidCooldownBase
+  flags: [EquipOnPlayer]
+  improvementRelation: ImprovementRelation.None
+  max: 4000
+  min: 1800
+
+BaseStats.RabidDurationBase:
+  $type: Stat_Record
+  enumName: RabidDurationBase
+  flags: [EquipOnPlayer]
+  improvementRelation: ImprovementRelation.Direct
+  max: 30
+  min: 10
+
+BaseStats.RabidMeleeDamageBonus:
+  $type: Stat_Record
+  enumName: RabidMeleeDamageBonus
+  flags: [EquipOnPlayer]
+  improvementRelation: ImprovementRelation.None
+  max: 15
+  min: 0
+
+BaseStats.RabidWhipDamageBonus:
+  $type: Stat_Record
+  enumName: RabidWhipDamageBonus
+  flags: [EquipOnPlayer]
+  improvementRelation: ImprovementRelation.None
+  max: 15
+  min: 0
+
+BaseStats.RabidFistsDamageBonus:
+  $type: Stat_Record
+  enumName: RabidFistsDamageBonus
+  flags: [EquipOnPlayer]
+  improvementRelation: ImprovementRelation.None
+  max: 15
+  min: 0
+
+BaseStatusEffect.RabidCooldown:
+  $type: StatusEffect_Record
+  duration:
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.MaxDuration
+        value: 0
+      - $type: CombinedStatModifier_Record
+        modifierType: Additive
+        opSymbol: "*"
+        refObject: Player
+        refStat: BaseStats.RabidCooldownBase
+        statType: BaseStats.MaxDuration
+        value: 1
+  packages:
+    - $type: GameplayLogicPackage_Record
+      effectors:
+        - $type: Effector_Record
+          effectorClassName: RemoveStatusEffectsEffector
+          prereqRecord: Prereqs.AlwaysTruePrereq
+          statusEffects: [BaseStatusEffect.RabidCooldown]
+          stackable: false
+  replicated: true
+  savable: true
+  stopActiveSfxOnDeactivate: true
+
+BaseStatusEffect.RabidPlayerBuff:
+  $type: StatusEffect_Record
+  duration:
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.MaxDuration
+        value: 1
+      - $type: CombinedStatModifier_Record
+        modifierType: Additive
+        opSymbol: "*"
+        refObject: Player
+        refStat: BaseStats.RabidDurationBase
+        statType: BaseStats.MaxDuration
+        value: 1
+  gameplayTags: [Buff, WithdrawalSymptom]
+  isAffectedByTimeDilationNPC: true
+  isAffectedByTimeDilationPlayer: true
+  packages:
+    - $type: GameplayLogicPackage_Record
+      effectors:
+        - $type: ApplyStatusEffectEffector_Record
+          count: 1
+          effectorClassName: ApplyStatusEffectEffector
+          inverted: true
+          prereqRecord: Prereqs.AlwaysTruePrereq
+          removeAfterActionCall: false
+          removeWithEffector: true
+          statusEffect: BaseStatusEffect.RabidCooldown
+    - $type: GameplayLogicPackage_Record
+      effectors: [BaseStatusEffect.BerserkPlayerSFXEffector]
+    - $type: GameplayLogicPackage_Record
+      effectors:
+        - $type: ApplyStatGroupEffector_Record
+          applicationTarget: Weapon
+          effectorClassName: ApplyStatGroupEffector
+          prereqRecord: Prereqs.MeleeWeaponHeldPrereq
+          removeAfterActionCall: false
+          statGroup:
+            $type: StatModifierGroup_Record
+            statModifiers:
+              - $type: ConstantStatModifier_Record
+                modifierType: AdditiveMultiplier
+                statType: BaseStats.KnockdownImpulse
+                value: 1.5
+                blockTransitionTime: 3.5
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: AdditiveMultiplier
+          statType: BaseStats.StaminaCostReduction
+          value: 0.9
+        - $type: ConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.RabidMeleeDamageBonus
+          value: 5
+        - $type: ConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.RabidWhipDamageBonus
+          value: 5
+        - $type: ConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.RabidFistsDamageBonus
+          value: 10
+  statusEffectType: BaseStatusEffectTypes.Berserk
+  stopActiveSfxOnDeactivate: true
+  replicated: true
+  savable: true
+  uiData:
+    description: LocKey#Mod-Addicted-Rabid-Desc
+    displayName: LocKey#Mod-Addicted-Rabid
+    iconPath: second_wind
+    priority: -9
+  VFX: [BaseStatusEffect.BerserkPlayerBuff_inline0]
