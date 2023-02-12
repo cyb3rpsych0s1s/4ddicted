@@ -252,43 +252,109 @@ protected cb func OnDamageReceived(evt: ref<gameDamageReceivedEvent>) -> Bool {
       if npcPuppetInstig != null {
         let board: ref<IBlackboard> = (this as PlayerPuppet).GetPlayerStateMachineBlackboard();
         let symptoms: Int32 = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-        let withdrawing: Bool = Bits.Has(symptoms, Consumable.BlackLace);
-        if !withdrawing { return; }
+        let withdrawing: Bool = Bits.Has(symptoms, EnumInt(Consumable.BlackLace));
+        if !withdrawing { return false; }
         
-        let duration = Max(10. + (Bits.Count(symptoms) * 5.), 30.);
-
-        playerPuppetID = playerPuppet.GetEntityID();
-        statPoolSys = GameInstance.GetStatPoolsSystem(this.GetGame());
-        damageInflictedPercent = 100.00 * damageInflicted / statPoolSys.GetStatPoolMaxPointValue(Cast<StatsObjectID>(playerPuppetID), gamedataStatPoolType.Health);
-        playerCurrentHealthPercent = statPoolSys.GetStatPoolValue(Cast<StatsObjectID>(playerPuppetID), gamedataStatPoolType.Health);
+        playerPuppetID = this.GetEntityID();
+        let statPoolSys: ref<StatPoolsSystem> = GameInstance.GetStatPoolsSystem(this.GetGame());
+        let damageInflictedPercent = 100.00 * evt.totalDamageReceived / statPoolSys.GetStatPoolMaxPointValue(Cast<StatsObjectID>(playerPuppetID), gamedataStatPoolType.Health);
+        let playerCurrentHealthPercent = statPoolSys.GetStatPoolValue(Cast<StatsObjectID>(playerPuppetID), gamedataStatPoolType.Health);
         if damageInflictedPercent >= 10.00 || playerCurrentHealthPercent <= 50.00 {
-          StatusEffectHelper.ApplyStatusEffect(this, n"BaseStatusEffect.RabidPlayerBuff", 0.5);
+          StatusEffectHelper.ApplyStatusEffect(this, t"BaseStatusEffect.RabidPlayerBuff", 0.5);
         }
       }
     }
   }
 }
 
+enum AddictionStatType {
+  Invalid = -1,
+  RabidDurationBase = 0,
+  RabidCooldownBase = 1,
+  RabidMeleeDamageBonus = 2,
+  RabidWhipDamageBonus = 3,
+  RabidFistsDamageBonus = 4,
+}
+
+public class AddictionStateViewData {
+  public let type: AddictionStatType;
+  public let statName: String;
+  public let value: Float;
+}
+
+@addField(StatsMainGameController)
+public let addictionStatsData: array<AddictionStateViewData>;
+
+@wrapMethod(StatsMainGameController)
+public final func PopulateStats() -> Void {
+  wrappedMethod();
+  this.AddStat(AddictionStatType.RabidMeleeDamageBonus, this.addictionStatsData);
+  this.AddStat(AddictionStatType.RabidWhipDamageBonus, this.addictionStatsData);
+  this.AddStat(AddictionStatType.RabidFistsDamageBonus, this.addictionStatsData);
+}
+
+@addMethod(StatsMainGameController)
+private final func RequestStat(stat: AddictionStatType, datalist: array<AddictionStateViewData>) -> AddictionStateViewData {
+  let data: AddictionStateViewData;
+  let i: Int32 = 0;
+  while i < ArraySize(datalist) {
+    if Equals(datalist[i].type, stat) {
+      return datalist[i];
+    };
+    i += 1;
+  };
+  return data;
+}
+
+@addField(StatsSystem)
+public let addictionStats: array<ref<AddictionStateViewData>>;
+
+@addMethod(StatsSystem)
+public final func GetStatValue(objID: StatsObjectID, statType: AddictionStatType) -> Float {
+  let stat: ref<AddictionStateViewData> = this.addictionStats[EnumInt(statType)];
+  return stat.value;
+}
+
+@addMethod(StatsViewController)
+public final func Setup(stat: AddictionStateViewData) -> Void {
+  let other: StatViewData;
+  other.type = gamedataStatType.Invalid;
+  other.statName = stat.statName;
+  this.Setup(other);
+}
+
+@addMethod(StatsMainGameController)
+private final func AddStat(statType: AddictionStatType, datalist: array<AddictionStateViewData>) -> Void {
+  let statData: AddictionStateViewData;
+  let statView: wref<StatsViewController> = this.SpawnFromLocal(inkWidgetRef.Get(this.m_statsList), n"statView").GetControllerByType(n"StatsViewController") as StatsViewController;
+  if NotEquals(statType, AddictionStatType.Invalid) {
+    statData = this.RequestStat(statType, datalist);
+  } else {
+    statData.type = AddictionStatType.Invalid;
+    statData.statName = "LocKey#49347";
+  };
+  statView.Setup(statData);
+}
+
 @wrapMethod(DamageManager)
 public final static func CalculateSourceModifiers(hitEvent: ref<gameHitEvent>) -> Void {
   wrappedMethod(hitEvent);
   let tempStat: Float;
-  let targetPuppet: ref<ScriptedPuppet> = hitEvent.target as ScriptedPuppet;
   if hitEvent.attackData.GetInstigator().IsPlayer() {
     if AttackData.IsMelee(hitEvent.attackData.GetAttackType()) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
-      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), gamedataStatType.RabidMeleeDamageBonus);
+      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), AddictionStatType.RabidMeleeDamageBonus);
       if !FloatIsEqual(tempStat, 0.00) {
         hitEvent.attackComputed.MultAttackValue(1.00 + tempStat * 0.01);
       }
     }
     if Equals(hitEvent.attackData.GetAttackType(), gamedataAttackType.WhipAttack) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
-      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), gamedataStatType.RabidWhipDamageBonus);
+      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), AddictionStatType.RabidWhipDamageBonus);
       if !FloatIsEqual(tempStat, 0.00) {
         hitEvent.attackComputed.MultAttackValue(1.00 + tempStat * 0.01);
       }
     }
-    if WeaponObject.IsFists(hitEvent.attackData.GetWeapon()) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
-      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), gamedataStatType.RabidFistsDamageBonus);
+    if WeaponObject.IsFists(hitEvent.attackData.GetWeapon().GetItemID()) && StatusEffectSystem.ObjectHasStatusEffect(hitEvent.attackData.GetInstigator(), t"BaseStatusEffect.RabidPlayerBuff") {
+      tempStat = GameInstance.GetStatsSystem(hitEvent.target.GetGame()).GetStatValue(Cast<StatsObjectID>(hitEvent.attackData.GetInstigator().GetEntityID()), AddictionStatType.RabidFistsDamageBonus);
       if !FloatIsEqual(tempStat, 0.00) {
         hitEvent.attackComputed.MultAttackValue(1.00 + tempStat * 0.01);
       }
