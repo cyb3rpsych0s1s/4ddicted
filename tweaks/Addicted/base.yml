@@ -2,6 +2,7 @@ BaseStatusEffect.WithdrawalSymptom:
   $type: StatusEffect_Record
   duration: Items.ShortLastingAddictionDuration
   gameplayTags: [Debuff, WithdrawalSymptom]
+  statusEffectType: BaseStatusEffectTypes.Misc
 
 Items.ShortLastingAddictionDuration:
   $type: StatModifierGroup_Record
