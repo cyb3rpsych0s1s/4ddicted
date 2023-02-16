@@ -53,4 +53,28 @@ public class Translations {
     }
     return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Unknown");
   }
+
+  public static func ChemicalKey(consumable: Consumable) -> array<CName> {
+    if Equals(EnumInt(consumable), EnumInt(Consumable.Invalid)) { return []; }
+    switch(consumable) {
+      case Consumable.Alcohol:
+        return [n"Mod-Addicted-Chemical-Ethanol"];
+      case Consumable.MaxDOC:
+        return [];
+      case Consumable.BounceBack:
+        return [];
+      case Consumable.HealthBooster:
+        return [];
+      case Consumable.MemoryBooster:
+        return [n"Mod-Addicted-Chemical-Noradrenalin"];
+      case Consumable.OxyBooster:
+        return [n"Mod-Addicted-Chemical-Oxygen"];
+      case Consumable.StaminaBooster:
+        return [];
+      case Consumable.BlackLace:
+        return [n"Mod-Addicted-Chemical-Dynorphin"];
+      case Consumable.CarryCapacityBooster:
+        return [];
+    }
+  }
 }

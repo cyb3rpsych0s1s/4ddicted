@@ -355,10 +355,12 @@ public class AddictedSystem extends ScriptableSystem {
     customer.Insurance = "-";
 
     let symptoms = this.Symptoms();
+    let chemicals = this.Chemicals();
 
     let event: ref<CrossThresholdEvent> = new CrossThresholdEvent();
     event.Customer = customer;
     event.Symptoms = symptoms;
+    event.Chemicals = chemicals;
     event.boot = true;
 
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
@@ -423,6 +425,11 @@ public class AddictedSystem extends ScriptableSystem {
   public func Symptoms() -> array<ref<Symptom>> {
     let symptoms = this.consumptions.Symptoms();
     return symptoms;
+  }
+
+  public func Chemicals() -> array<ref<Chemical>> {
+    let chemicals = this.consumptions.Chemicals();
+    return chemicals;
   }
 
   public func IsWithdrawing(addiction: Addiction) -> Bool {

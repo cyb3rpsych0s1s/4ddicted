@@ -153,7 +153,9 @@ public func DebugBiomon() -> Void {
   customer.Insurance = "-";
   let system: ref<AddictedSystem> = AddictedSystem.GetInstance(this.GetGame());
   let symptoms = system.Symptoms();
+  let chemicals = system.Chemicals();
   event.Symptoms = symptoms;
+  event.Chemicals = chemicals;
   event.Customer = customer;
   event.boot = true;
   GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
