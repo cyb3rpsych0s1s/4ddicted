@@ -290,6 +290,13 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Craving-For-BlackLace"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Dynorphin",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Dynorphin"
             }
           ]
         }

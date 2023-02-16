@@ -124,6 +124,16 @@ public class BiomonitorController extends inkGameController {
         this.blood      = infos.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
         this.insurance  = (infos.GetWidgetByIndex(5) as inkHorizontalPanel).GetWidget(n"Info_NC570442_Text") as inkText;
 
+        let report      = infos.GetWidget(n"Info_Chemical_Information_Canvas") as inkCanvas;
+        let topLine     = report.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkHorizontalPanel;
+
+        let firstSubstance = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
+        firstSubstance.SetLocalizationKey(n"Mod-Addicted-Dynorphin");
+        let firstValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
+        let firstValueController = firstValue.GetController() as inkTextValueProgressController;
+        firstValueController.SetBaseValue(22.0);
+        firstValueController.SetTargetValue(35.0);
+
         let row: array<ref<inkWidget>>;
         
         let summary     = infos.GetWidget(n"Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2") as inkHorizontalPanel;
