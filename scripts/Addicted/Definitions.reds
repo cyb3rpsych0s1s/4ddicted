@@ -218,6 +218,36 @@ public class Consumptions {
     }
     return symptoms;
   }
+  /// chemicals for biomonitor
+  public func Chemicals() -> array<ref<Chemical>> {
+    let chemicals: array<ref<Chemical>> = [];
+    let chemical: ref<Chemical>;
+    let consumption: ref<Consumption>;
+    let keys = this.Keys();
+    let translations: array<CName>;
+    let threshold: Threshold;
+    let max: Int32 = 7;
+    let found: Int32 = 0;
+    for key in keys {
+      consumption = this.Get(key);
+      if IsDefined(consumption) {
+        threshold = consumption.Threshold();
+        if Helper.IsSerious(threshold) {
+          translations = Translations.ChemicalKey(Generic.Consumable(key));
+          for translation in translations {
+            chemical = new Chemical();
+            chemical.Key = translation;
+            chemical.From = Cast<Float>(EnumInt(threshold)) / 2.0;
+            chemical.To = Cast<Float>(EnumInt(threshold));
+            ArrayPush(chemicals, chemical);
+            found += 1;
+            if found == max { return chemicals; }
+          }
+        }
+      }
+    }
+    return chemicals;
+  }
 }
 
 public class Consumption {

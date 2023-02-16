@@ -43,6 +43,12 @@ enum BloodGroup {
     AB = 4,
 }
 
+public class Chemical {
+    public let Key: CName;
+    public let From: Float;
+    public let To: Float;
+}
+
 public class Symptom {
     public let Title: String;
     public let Status: String;
@@ -59,6 +65,7 @@ public class Customer {
 public class CrossThresholdEvent extends Event {
     public let Customer: ref<Customer>;
     public let Symptoms: array<ref<Symptom>>;
+    public let Chemicals: array<ref<Chemical>>;
     public let boot: Bool;
 }
 
@@ -92,7 +99,23 @@ public class BiomonitorController extends inkGameController {
     private let age: ref<inkText>;
     private let blood: ref<inkText>;
     private let insurance: ref<inkText>;
+    private let chemicals: array<ref<inkText>>;
     private let vitals: array<array<ref<inkWidget>>>;
+
+    private let hydroxyzine: ref<inkText>;
+    private let hydroxyzineValue: ref<inkText>;
+    private let tramadol: ref<inkText>;
+    private let tramadolValue: ref<inkText>;
+    private let desvenlafaxine: ref<inkText>;
+    private let desvenlafaxineValue: ref<inkText>;
+    private let amoxapine: ref<inkText>;
+    private let amoxapineValue: ref<inkText>;
+    private let lactobacillius: ref<inkText>;
+    private let lactobacilliusValue: ref<inkText>;
+    private let acetaminofen: ref<inkText>;
+    private let acetaminofenValue: ref<inkText>;
+    private let bupropion: ref<inkText>;
+    private let bupropionValue: ref<inkText>;
 
     private let postpone: DelayID;
     private let flags: Int32;
@@ -124,15 +147,41 @@ public class BiomonitorController extends inkGameController {
         this.blood      = infos.GetWidget(n"BLOOD_HPanel/Info_ABRHD_Text") as inkText;
         this.insurance  = (infos.GetWidgetByIndex(5) as inkHorizontalPanel).GetWidget(n"Info_NC570442_Text") as inkText;
 
-        let report      = infos.GetWidget(n"Info_Chemical_Information_Canvas") as inkCanvas;
-        let topLine     = report.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkHorizontalPanel;
+        let chemicals   = infos.GetWidget(n"Info_Chemical_Information_Canvas") as inkCanvas;
+        let topLine     = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line1") as inkHorizontalPanel;
+        let middleLine  = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line2") as inkHorizontalPanel;
+        let bottomLine  = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line3") as inkHorizontalPanel;
 
-        let firstSubstance = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
-        firstSubstance.SetLocalizationKey(n"Mod-Addicted-Dynorphin");
-        let firstValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
-        let firstValueController = firstValue.GetController() as inkTextValueProgressController;
-        firstValueController.SetBaseValue(22.0);
-        firstValueController.SetTargetValue(35.0);
+        this.hydroxyzine = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
+        this.hydroxyzineValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
+        this.tramadol = topLine.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
+        this.tramadolValue = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_TR2_TRAMADOL_Text") as inkText;
+        this.desvenlafaxine = topLine.GetWidget(n"Info_DESVENLAFAXINE_Text") as inkText;
+        this.desvenlafaxineValue = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_DESVENLAFAXINE_Text") as inkText;
+        this.amoxapine = middleLine.GetWidget(n"Info_AMOXAPINE_Text") as inkText;
+        this.amoxapineValue = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_AMOXAPINE_Text") as inkText;
+        this.lactobacillius = middleLine.GetWidget(n"Info_R7_LACTOBACILLIUS_Text") as inkText;
+        this.lactobacilliusValue = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_R7_LACTOBACILLIUS_Text") as inkText;
+        this.acetaminofen = middleLine.GetWidget(n"Info_ACETAMINOFEN_Text") as inkText;
+        this.acetaminofenValue = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_ACETAMINOFEN_Text") as inkText;
+        this.bupropion = bottomLine.GetWidget(n"Info_BUPROPION_Text") as inkText;
+        this.bupropionValue = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_BUPROPION_Text") as inkText;
+
+        this.chemicals = [];
+        ArrayPush(this.chemicals, this.hydroxyzine);
+        ArrayPush(this.chemicals, this.hydroxyzineValue);
+        ArrayPush(this.chemicals, this.tramadol);
+        ArrayPush(this.chemicals, this.tramadolValue);
+        ArrayPush(this.chemicals, this.desvenlafaxine);
+        ArrayPush(this.chemicals, this.desvenlafaxineValue);
+        ArrayPush(this.chemicals, this.amoxapine);
+        ArrayPush(this.chemicals, this.amoxapineValue);
+        ArrayPush(this.chemicals, this.lactobacillius);
+        ArrayPush(this.chemicals, this.lactobacilliusValue);
+        ArrayPush(this.chemicals, this.acetaminofen);
+        ArrayPush(this.chemicals, this.acetaminofenValue);
+        ArrayPush(this.chemicals, this.bupropion);
+        ArrayPush(this.chemicals, this.bupropionValue);
 
         let row: array<ref<inkWidget>>;
         
@@ -322,6 +371,35 @@ public class BiomonitorController extends inkGameController {
             this.age.SetText(evt.Customer.Age);
             this.blood.SetText(evt.Customer.BloodGroup);
             this.insurance.SetText(evt.Customer.Insurance);
+
+            let chemicals = evt.Chemicals;
+            let chemical: ref<Chemical>;
+
+            let found: Int32 = ArraySize(chemicals);
+            let current: Int32 = 0;
+
+            let substance: ref<inkText>;
+            let value: ref<inkText>;
+            let controller: ref<inkTextValueProgressController>;
+
+            while current < 7 {
+                substance = this.chemicals[current*2];
+                value = this.chemicals[current*2+1];
+                controller = value.GetController() as inkTextValueProgressController;
+
+                if current < found {
+                    chemical = chemicals[current];
+                    substance.SetLocalizationKey(chemical.Key);
+                    controller.SetBaseValue(chemical.From);
+                    controller.SetTargetValue(chemical.To);
+                } else {
+                    substance.SetLocalizationKey(n"Mod-Addicted-Chemical-Irrelevant");
+                    controller.SetBaseValue(0.0);
+                    controller.SetTargetValue(0.0);
+                }
+
+                current += 1;
+            }
 
             let i = 0;
             let total = ArraySize(this.vitals);
