@@ -293,10 +293,17 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Ethanol",
+              "femaleVariant": "Benzedrine",
               "maleVariant": "",
               "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Chemical-Ethanol"
+              "secondaryKey": "Mod-Addicted-Chemical-Benzedrine"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Cortisone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Cortisone"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
@@ -307,17 +314,59 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Noradrenalin",
+              "femaleVariant": "Ethanol",
               "maleVariant": "",
               "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Chemical-Noradrenalin"
+              "secondaryKey": "Mod-Addicted-Chemical-Ethanol"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Oxygen",
+              "femaleVariant": "Hydrocortisone",
               "maleVariant": "",
               "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Chemical-Oxygen"
+              "secondaryKey": "Mod-Addicted-Chemical-Hydrocortisone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Methadone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Methadone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Modafinil",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Modafinil"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Oxandrin",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Oxandrin"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Prednisone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Prednisone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Testosterone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Testosterone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Trimix",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Trimix"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",

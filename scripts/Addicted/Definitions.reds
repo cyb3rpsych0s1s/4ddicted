@@ -237,8 +237,8 @@ public class Consumptions {
           for translation in translations {
             chemical = new Chemical();
             chemical.Key = translation;
-            chemical.From = Cast<Float>(EnumInt(threshold)) / 2.0;
-            chemical.To = Cast<Float>(EnumInt(threshold));
+            chemical.From = (Cast<Float>(EnumInt(threshold)) / 2.0) + RandRangeF(-10.0, 10.0);
+            chemical.To = Cast<Float>(EnumInt(threshold)) + RandRangeF(-10.0, 10.0);
             ArrayPush(chemicals, chemical);
             found += 1;
             if found == max { return chemicals; }

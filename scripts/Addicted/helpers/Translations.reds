@@ -66,15 +66,15 @@ public class Translations {
       case Consumable.HealthBooster:
         return [];
       case Consumable.MemoryBooster:
-        return [n"Mod-Addicted-Chemical-Noradrenalin"];
+        return [n"Mod-Addicted-Chemical-Benzedrine", n"Mod-Addicted-Chemical-Modafinil"];
       case Consumable.OxyBooster:
-        return [n"Mod-Addicted-Chemical-Oxygen"];
+        return [n"Mod-Addicted-Chemical-Trimix"];
       case Consumable.StaminaBooster:
-        return [];
+        return [n"Mod-Addicted-Chemical-Cortisone", n"Mod-Addicted-Chemical-Hydrocortisone", n"Mod-Addicted-Chemical-Prednisone"];
       case Consumable.BlackLace:
-        return [n"Mod-Addicted-Chemical-Dynorphin"];
+        return [n"Mod-Addicted-Chemical-Dynorphin", n"Mod-Addicted-Chemical-Methadone"];
       case Consumable.CarryCapacityBooster:
-        return [];
+        return [n"Mod-Addicted-Chemical-Testosterone", n"Mod-Addicted-Chemical-Oxandrin"];
     }
   }
 }
