@@ -158,6 +158,7 @@ public func DebugBiomon() -> Void {
   event.Chemicals = chemicals;
   event.Customer = customer;
   event.boot = true;
+  event.Dismissable = true;
   GameInstance.GetUISystem(this.GetGame()).QueueEvent(event);
 }
 

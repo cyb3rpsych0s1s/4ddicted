@@ -66,6 +66,7 @@ public class CrossThresholdEvent extends Event {
     public let Customer: ref<Customer>;
     public let Symptoms: array<ref<Symptom>>;
     public let Chemicals: array<ref<Chemical>>;
+    public let Dismissable: Bool;
     public let boot: Bool;
 }
 
@@ -127,6 +128,7 @@ public class BiomonitorController extends inkGameController {
     private let photoListener: ref<CallbackHandle>;
     private let travelListener: ref<CallbackHandle>;
     private let deathListener: ref<CallbackHandle>;
+    private let dismissListener: ref<CallbackHandle>;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
@@ -429,11 +431,52 @@ public class BiomonitorController extends inkGameController {
             }
             E(s"");
 
+            if evt.Dismissable {
+                E(s"create dismissable hub");
+                let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+                this.dismissListener = interactions.RegisterListenerVariant(GetAllBlackboardDefs().UIInteractions.LastAttemptedChoice, this, n"OnDismiss");
+                let hub = this.CreateInteractionHub();
+                let visualizer = this.PrepareVisualizer(hub);
+                interactions.SetVariant(GetAllBlackboardDefs().UIInteractions.InteractionChoiceHub, ToVariant(hub), true);
+                interactions.SetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo, ToVariant(visualizer), true);
+            }
+
             this.PlayNext(evt.boot);
             return false;
         }
 
         if !this.CanPlay() && this.waiting { this.Reset(); }
+    }
+
+    protected cb func OnDismiss(value: Variant) -> Bool {
+        let choice: InteractionAttemptedChoice = FromVariant<InteractionAttemptedChoice>(value);
+        E(s"on dismiss: \(ToString(choice.choiceIdx))");
+        this.Miss();
+    }
+
+    private func CreateInteractionHub() -> InteractionChoiceHubData {
+        let wrapper = new ChoiceTypeWrapper();
+        ChoiceTypeWrapper.SetType(wrapper, gameinteractionsChoiceType.InnerDialog);
+        let dismiss: InteractionChoiceData;
+        dismiss.rawInputKey = EInputKey.IK_F;
+        dismiss.isHoldAction = false;
+        dismiss.localizedName = GetLocalizedTextByKey(n"Mod-Addicted-Dismiss-Biomonitor");
+        dismiss.inputAction = n"Choice1";
+        dismiss.type = wrapper;
+        let hub: InteractionChoiceHubData;
+        hub.id = -1001;
+        hub.active = true;
+        hub.flags = EVisualizerDefinitionFlags.None;
+        hub.title =  GetLocalizedTextByKey(n"Mod-Addicted-Dismiss-Biomonitor");
+        hub.choices = [dismiss];
+        return hub;
+    }
+
+    private func PrepareVisualizer(hub: InteractionChoiceHubData) -> VisualizersInfo {
+        let visualizer: VisualizersInfo;
+        visualizer.activeVisId = hub.id;
+        visualizer.visIds = [hub.id];
+        return visualizer;
     }
 
     private func Reschedule(event: ref<CrossThresholdEvent>) -> Void {
@@ -456,6 +499,15 @@ public class BiomonitorController extends inkGameController {
             .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
             .CancelCallback(this.postpone);
             this.postpone = GetInvalidDelayID();
+        }
+    }
+
+    private func Miss() -> Void {
+        if IsDefined(this.dismissListener) {
+            let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+            // interactions.UnregisterListenerVariant(GetAllBlackboardDefs().UIInteractions.LastAttemptedChoice, this.dismissListener);
+            interactions.UnregisterListenerInt(GetAllBlackboardDefs().UIInteractions.SelectedIndex, this.dismissListener);
+            this.dismissListener = null;
         }
     }
 
@@ -647,6 +699,7 @@ public class BiomonitorController extends inkGameController {
 
     private func Reset() -> Void {
         this.Unschedule();
+        this.Miss();
         GameObject.StopSound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
         this.root.SetOpacity(1.0);
         this.root.SetScale(new Vector2(1.0, 1.0));
