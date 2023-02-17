@@ -52,8 +52,45 @@ public class AddictedSystem extends ScriptableSystem {
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
 
+      let interactions = GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().UIInteractions);
+      interactions.RegisterListenerVariant(GetAllBlackboardDefs().UIInteractions.DialogChoiceHubs, this, n"OnDialogChoiceHubsChanged", true);
+      interactions.RegisterListenerVariant(GetAllBlackboardDefs().UIInteractions.ActiveInteractions, this, n"OnActiveInteractionsChanged", true);
+      interactions.RegisterListenerVariant(GetAllBlackboardDefs().UIInteractions.InteractionChoiceHub, this, n"OnInteractionChoiceHubChanged", true);
+      interactions.RegisterListenerVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo, this, n"OnVisualizersInfoChanged", true);
+      interactions.RegisterListenerInt(GetAllBlackboardDefs().UIInteractions.ActiveChoiceHubID, this, n"OnActiveChoiceHubIDChanged", true);
+
       this.RefreshConfig();
     } else { F(s"no player found!"); }
+  }
+
+  protected cb func OnDialogChoiceHubsChanged(value: Variant) -> Bool {
+    let into = FromVariant<DialogChoiceHubs>(value);
+    let hubs = into.choiceHubs;
+    E(s"on dialog choice hubs changed");
+    for hub in hubs {
+      E(s"choice hub: ID (\(hub.id)), state \(ToString(hub.activityState)), flags \(ToString(hub.flags)), phone lock \(hub.isPhoneLockActive), title \(hub.title)");
+    }
+  }
+
+  protected cb func OnActiveInteractionsChanged(value: Variant) -> Bool {
+    E(s"on active interactions changed \(ToString(value))");
+  }
+
+  protected cb func OnInteractionChoiceHubChanged(value: Variant) -> Bool {
+    E(s"on interaction choice hub changed \(ToString(value))");
+  }
+
+  protected cb func OnVisualizersInfoChanged(value: Variant) -> Bool {
+    let into = FromVariant<VisualizersInfo>(value);
+    E(s"on visualizers info changed: active \(into.activeVisId)");
+    let ids = into.visIds;
+    for id in ids {
+      E(s"visible ID \(id)");
+    }
+  }
+
+  protected cb func OnActiveChoiceHubIDChanged(value: Int32) -> Bool {
+    E(s"on active choice hub ID changed \(value)");
   }
 
   private func OnAttach() -> Void {
