@@ -370,6 +370,11 @@ public class AddictedSystem extends ScriptableSystem {
     if !this.warned { this.warned = true; }
   }
 
+  public func DismissBiomonitor() -> Void {
+    let event: ref<DismissBiomonitorEvent> = new DismissBiomonitorEvent();
+    GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
+  }
+
   /// play an onomatopea as a hint to the player when reaching notably or severely addicted
   /// also randomly reschedule if in timeframe
   private func ProcessHintRequest(request: ref<HintRequest>) -> Void {

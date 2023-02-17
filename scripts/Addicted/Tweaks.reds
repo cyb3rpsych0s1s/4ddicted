@@ -57,6 +57,19 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
     return wrappedMethod(evt);
 }
 
+@wrapMethod(PlayerPuppet)
+protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
+  wrappedMethod(action, consumer);
+  E(s"on action: name \(ToString(ListenerAction.GetName(action))), type \(ToString(ListenerAction.GetType(action))), key \(ToString(ListenerAction.GetKey(action))), consumer \(ToString(consumer))");
+  let pressed = Equals(EnumInt(ListenerAction.GetType(action)), EnumInt(gameinputActionType.BUTTON_PRESSED));
+  let chosen = Equals(ListenerAction.GetName(action), n"Choice1_Release");
+  if pressed && chosen {
+    E(s"pressed F to dismiss biomonitor");
+    let system = AddictedSystem.GetInstance(this.GetGame());
+    system.DismissBiomonitor();
+  }
+}
+
 @addMethod(PlayerPuppet)
 public func HasBiomonitor() -> Bool {
   let system = EquipmentSystem.GetInstance(this);
