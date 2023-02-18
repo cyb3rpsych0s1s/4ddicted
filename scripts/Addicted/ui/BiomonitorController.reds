@@ -165,6 +165,7 @@ public class BiomonitorController extends inkGameController {
         let middleLine  = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line2") as inkHorizontalPanel;
         let bottomLine  = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line3") as inkHorizontalPanel;
 
+        // defined individually because widgets path are kind of a mess
         this.hydroxyzine = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
         this.hydroxyzineValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
         this.tramadol = topLine.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
