@@ -17,7 +17,7 @@ protected cb func OnInitialize() -> Bool {
     wrappedMethod();
     let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget;
     // required because .inkwidget packageData was edited
-    this.biomonitorSpawn = this.AsyncSpawnFromExternal(root, r"base\\gameplay\\gui\\quests\\q001\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController", this, n"OnBiomonitorSpawned");
+    this.biomonitorSpawn = this.AsyncSpawnFromExternal(root, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController", this, n"OnBiomonitorSpawned");
 }
 
 @addMethod(NameplateVisualsLogicController)
