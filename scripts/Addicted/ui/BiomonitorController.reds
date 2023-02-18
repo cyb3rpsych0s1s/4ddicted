@@ -2,29 +2,23 @@ import Addicted.Utils.E
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
 
-// or use cp2077-codeware
+@if(!ModuleExists("Codeware.UI"))
 @addField(inkWidget)
 native let parentWidget: wref<inkWidget>;
 
 @addField(NameplateVisualsLogicController)
 private let biomonitorWidget: wref<inkWidget>;
 
-@addField(NameplateVisualsLogicController)
-private let biomonitorSpawn: wref<inkAsyncSpawnRequest>;
-
 @wrapMethod(NameplateVisualsLogicController)
 protected cb func OnInitialize() -> Bool {
     wrappedMethod();
-    let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget;
-    // required because .inkwidget packageData was edited
-    this.biomonitorSpawn = this.AsyncSpawnFromExternal(root, r"base\\gameplay\\gui\\quests\\q001\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController", this, n"OnBiomonitorSpawned");
-}
-
-@addMethod(NameplateVisualsLogicController)
-protected cb func OnBiomonitorSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
-    this.biomonitorWidget = widget;
-    this.biomonitorWidget.SetVisible(false);
-    this.biomonitorSpawn = null;
+    let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget as inkCompoundWidget;
+    let container = new inkCanvas();
+    container.SetName(n"Addicted_Biomon_Canvas");
+    container.SetAnchor(inkEAnchor.Fill);
+    container.SetVisible(false);
+    root.AddChildWidget(container);
+    this.biomonitorWidget = this.SpawnFromExternal(container, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController");
 }
 
 enum BiomonitorState {
@@ -156,7 +150,7 @@ public class BiomonitorController extends inkGameController {
 
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
-        this.root.SetVisible(false);
+        this.root.parentWidget.SetVisible(false);
         this.waiting = false;
         
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
@@ -773,6 +767,9 @@ public class BiomonitorController extends inkGameController {
             this.state = BiomonitorState.Dismissing;
             return this.Close(0.1);
         }
+        if Equals(EnumInt(this.state), EnumInt(BiomonitorState.Idle)) {
+            GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
+        }
         if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.fromMarker = n"booting_start";
             options.toMarker = n"booting_end";
@@ -827,7 +824,7 @@ public class BiomonitorController extends inkGameController {
     }
 
     protected cb func OnAnimationStarted(anim: ref<inkAnimProxy>) -> Bool {
-        this.root.SetVisible(true);
+        this.root.parentWidget.SetVisible(true);
         anim.UnregisterFromAllCallbacks(inkanimEventType.OnStart);
     }
 
@@ -843,9 +840,9 @@ public class BiomonitorController extends inkGameController {
         this.RequestHideInteractionHub();
         this.Unschedule();
         GameObject.StopSound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
+        this.root.parentWidget.SetVisible(false);
         this.root.SetOpacity(1.0);
         this.root.SetScale(new Vector2(1.0, 1.0));
-        this.root.SetVisible(false);
         this.animation.Stop(true);
         this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
         this.waiting = false;

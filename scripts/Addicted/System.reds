@@ -344,7 +344,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   /// warn a player with a biomonitor
   public func Warn(id: TweakDBID, before: Threshold, after: Threshold) -> Void {
-    // if !this.player.HasBiomonitor() { return; }
+    if !this.player.HasBiomonitor() { return; }
     // avoids meaningless notifications
     if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
 

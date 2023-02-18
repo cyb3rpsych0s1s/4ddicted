@@ -11,16 +11,6 @@ function addicted:new()
     registerForEvent("onInit", function()
         print("[Addicted]:onInit")
 
-        Observe('PlayerPuppet', 'OnStatusEffectApplied', function(self, evt)
-            print("[Addicted]:OnStatusEffectApplied")
-            print(GameDump(evt))
-        end)
-
-        Observe('PlayerPuppet', 'OnStatusEffectRemoved', function (self, evt)
-            print("[Addicted]:OnStatusEffectRemoved")
-            print(GameDump(evt))
-        end)
-
         GameUI.OnSessionStart(function()
             print("[Addicted]:OnSessionStart")
             Cron.After(0.25, function ()
@@ -52,10 +42,10 @@ function addicted:new()
 
     function CreateVFXs()
         local vfxs = {}
-        local mildly_splinter_buff  = CreateVFX("mildly_splinter_buff", "base\\fx\\camera\\splinter_buff\\mildly_splinter_buff_fx.effect")
-        local piddly_splinter_buff  = CreateVFX("piddly_splinter_buff", "base\\fx\\camera\\splinter_buff\\piddly_splinter_buff_fx.effect")
-        local mildly_reflex_buster  = CreateVFX("mildly_reflex_buster", "base\\fx\\camera\\reflex_buster\\mildly_reflex_buster.effect")
-        local piddly_reflex_buster  = CreateVFX("piddly_reflex_buster", "base\\fx\\camera\\reflex_buster\\piddly_reflex_buster.effect")
+        local mildly_splinter_buff  = CreateVFX("mildly_splinter_buff", "addicted\\fx\\camera\\splinter_buff\\mildly_splinter_buff_fx.effect")
+        local piddly_splinter_buff  = CreateVFX("piddly_splinter_buff", "addicted\\fx\\camera\\splinter_buff\\piddly_splinter_buff_fx.effect")
+        local mildly_reflex_buster  = CreateVFX("mildly_reflex_buster", "addicted\\fx\\camera\\reflex_buster\\mildly_reflex_buster.effect")
+        local piddly_reflex_buster  = CreateVFX("piddly_reflex_buster", "addicted\\fx\\camera\\reflex_buster\\piddly_reflex_buster.effect")
         table.insert(vfxs, mildly_splinter_buff)
         table.insert(vfxs, piddly_splinter_buff)
         table.insert(vfxs, mildly_reflex_buster)
@@ -77,19 +67,6 @@ function addicted:new()
             end
         end
         GetPlayer():FindComponentByName("fx_player").effectDescs = effects
-    end
-
-    function StrLocKey(key)
-        if type(key) == "string" then
-            return "LocKey#" .. tostring(LocKey(key).hash):gsub("ULL$", "")
-        end
-        if type(key) == "cdata" then
-            return "LocKey#" .. tostring(key):gsub("ULL$", "")
-        end
-        if type(key) == "number" then
-            return "LocKey#" .. tostring(key)
-        end
-        return ""
     end
 end
 
