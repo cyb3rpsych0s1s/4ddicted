@@ -374,6 +374,13 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Chemical-Irrelevant"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Dismiss biomonitor",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Dismiss-Biomonitor"
             }
           ]
         }

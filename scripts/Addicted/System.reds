@@ -27,6 +27,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
+  private persistent let warned: Bool = false;
 
   private let updateSymtomsID: DelayID;
 
@@ -361,8 +362,16 @@ public class AddictedSystem extends ScriptableSystem {
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.Chemicals = chemicals;
+    event.Dismissable = this.warned;
     event.boot = true;
 
+    GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
+
+    if !this.warned { this.warned = true; }
+  }
+
+  public func DismissBiomonitor() -> Void {
+    let event: ref<DismissBiomonitorEvent> = new DismissBiomonitorEvent();
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
   }
 
