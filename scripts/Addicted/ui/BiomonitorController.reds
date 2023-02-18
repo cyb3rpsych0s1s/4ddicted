@@ -12,10 +12,13 @@ private let biomonitorWidget: wref<inkWidget>;
 @wrapMethod(NameplateVisualsLogicController)
 protected cb func OnInitialize() -> Bool {
     wrappedMethod();
-    let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget;
-    // required because .inkwidget packageData was edited
-    this.biomonitorWidget = this.SpawnFromExternal(root, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController");
-    this.biomonitorWidget.SetVisible(false);
+    let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget as inkCompoundWidget;
+    let container = new inkCanvas();
+    container.SetName(n"Addicted_Biomon_Canvas");
+    container.SetAnchor(inkEAnchor.Fill);
+    container.SetVisible(false);
+    root.AddChildWidget(container);
+    this.biomonitorWidget = this.SpawnFromExternal(container, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController");
 }
 
 enum BiomonitorState {
@@ -147,7 +150,7 @@ public class BiomonitorController extends inkGameController {
 
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
-        this.root.SetVisible(false);
+        this.root.parentWidget.SetVisible(false);
         this.waiting = false;
         
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
@@ -818,7 +821,7 @@ public class BiomonitorController extends inkGameController {
     }
 
     protected cb func OnAnimationStarted(anim: ref<inkAnimProxy>) -> Bool {
-        this.root.SetVisible(true);
+        this.root.parentWidget.SetVisible(true);
         anim.UnregisterFromAllCallbacks(inkanimEventType.OnStart);
     }
 
@@ -834,9 +837,9 @@ public class BiomonitorController extends inkGameController {
         this.RequestHideInteractionHub();
         this.Unschedule();
         GameObject.StopSound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
+        this.root.parentWidget.SetVisible(false);
         this.root.SetOpacity(1.0);
         this.root.SetScale(new Vector2(1.0, 1.0));
-        this.root.SetVisible(false);
         this.animation.Stop(true);
         this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
         this.waiting = false;
