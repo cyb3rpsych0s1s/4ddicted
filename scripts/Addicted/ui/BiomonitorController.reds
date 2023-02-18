@@ -767,6 +767,9 @@ public class BiomonitorController extends inkGameController {
             this.state = BiomonitorState.Dismissing;
             return this.Close(0.1);
         }
+        if Equals(EnumInt(this.state), EnumInt(BiomonitorState.Idle)) {
+            GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
+        }
         if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.fromMarker = n"booting_start";
             options.toMarker = n"booting_end";
