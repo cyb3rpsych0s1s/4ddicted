@@ -61,9 +61,12 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
 protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
   wrappedMethod(action, consumer);
   let pressed = Equals(EnumInt(ListenerAction.GetType(action)), EnumInt(gameinputActionType.BUTTON_PRESSED));
-  let chosen = Equals(ListenerAction.GetName(action), n"Choice1_Release");
-  if pressed && chosen {
-    E(s"pressed F to interact");
+  let chosen = Equals(ListenerAction.GetName(action), n"UI_Apply");
+  let interactions = GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UIInteractions);
+  let choice = interactions.GetInt(GetAllBlackboardDefs().UIInteractions.ActiveChoiceHubID);
+  let dismiss = Equals(choice, -1001);
+  if pressed && chosen && dismiss {
+    E(s"pressed F to dismiss biomonitor");
     let system = AddictedSystem.GetInstance(this.GetGame());
     system.DismissBiomonitor();
   }
