@@ -2,29 +2,20 @@ import Addicted.Utils.E
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
 
-// or use cp2077-codeware
+@if(!ModuleExists("Codeware.UI"))
 @addField(inkWidget)
 native let parentWidget: wref<inkWidget>;
 
 @addField(NameplateVisualsLogicController)
 private let biomonitorWidget: wref<inkWidget>;
 
-@addField(NameplateVisualsLogicController)
-private let biomonitorSpawn: wref<inkAsyncSpawnRequest>;
-
 @wrapMethod(NameplateVisualsLogicController)
 protected cb func OnInitialize() -> Bool {
     wrappedMethod();
     let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget;
     // required because .inkwidget packageData was edited
-    this.biomonitorSpawn = this.AsyncSpawnFromExternal(root, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController", this, n"OnBiomonitorSpawned");
-}
-
-@addMethod(NameplateVisualsLogicController)
-protected cb func OnBiomonitorSpawned(widget: ref<inkWidget>, userData: ref<IScriptable>) -> Bool {
-    this.biomonitorWidget = widget;
+    this.biomonitorWidget = this.SpawnFromExternal(root, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController");
     this.biomonitorWidget.SetVisible(false);
-    this.biomonitorSpawn = null;
 }
 
 enum BiomonitorState {
