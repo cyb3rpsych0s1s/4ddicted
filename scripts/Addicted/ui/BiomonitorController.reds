@@ -33,6 +33,7 @@ enum BiomonitorState {
     Analyzing = 2,
     Summarizing = 3,
     Closing = 4,
+    Dismissing = 5,
 }
 
 enum BloodGroup {
@@ -66,7 +67,14 @@ public class CrossThresholdEvent extends Event {
     public let Customer: ref<Customer>;
     public let Symptoms: array<ref<Symptom>>;
     public let Chemicals: array<ref<Chemical>>;
+    public let Dismissable: Bool;
     public let boot: Bool;
+}
+
+public class DismissBiomonitorEvent extends Event {}
+
+public class InteractionHubEvent extends Event {
+    public let Show: Bool;
 }
 
 public class SkipTimeEvent extends Event {}
@@ -78,6 +86,14 @@ public class CrossThresholdCallback extends DelayCallback {
     E(s"attempt at warning again");
     this.controller.OnCrossThresholdEvent(this.event);
   }
+}
+
+public class ClosingBeepCallback extends DelayCallback {
+    private let controller: wref<BiomonitorController>;
+    public func Call() -> Void {
+        E(s"beep on close");
+        this.controller.Beep();
+    }            
 }
 
 enum BiomonitorRestrictions {
@@ -118,7 +134,11 @@ public class BiomonitorController extends inkGameController {
     private let bupropionValue: ref<inkText>;
 
     private let postpone: DelayID;
+    private let beep: DelayID;
     private let flags: Int32;
+    private let dismissable: Bool = false;
+    private let dismissed: Bool = false;
+    private let shown: Bool = false;
 
     private let menuListener: ref<CallbackHandle>;
     private let replacerListener: ref<CallbackHandle>;
@@ -127,6 +147,7 @@ public class BiomonitorController extends inkGameController {
     private let photoListener: ref<CallbackHandle>;
     private let travelListener: ref<CallbackHandle>;
     private let deathListener: ref<CallbackHandle>;
+    private let interactionsListener: ref<CallbackHandle>;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
@@ -152,6 +173,7 @@ public class BiomonitorController extends inkGameController {
         let middleLine  = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line2") as inkHorizontalPanel;
         let bottomLine  = chemicals.GetWidget(n"Info_Chemical_Info_Vertical/Info_Chemical_Info_H_Line3") as inkHorizontalPanel;
 
+        // defined individually because widgets path are kind of a mess
         this.hydroxyzine = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
         this.hydroxyzineValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
         this.tramadol = topLine.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
@@ -302,6 +324,11 @@ public class BiomonitorController extends inkGameController {
         if IsDefined(photo) {
             this.photoListener = photo.RegisterListenerBool(definitions.PhotoMode.IsActive, this, n"OnPhotoMode");
         }
+
+        let interactions: ref<IBlackboard> = system.Get(definitions.UIInteractions);
+        if IsDefined(interactions) {
+            this.interactionsListener = interactions.RegisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this, n"OnVisualizersInfo");
+        }
     }
     protected func UnregisterListeners() -> Void {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
@@ -347,6 +374,12 @@ public class BiomonitorController extends inkGameController {
         if IsDefined(photo) {
             photo.UnregisterListenerBool(definitions.PhotoMode.IsActive, this.photoListener);
             this.photoListener = null;
+        }
+
+        let interactions: ref<IBlackboard> = system.Get(definitions.UIInteractions);
+        if IsDefined(interactions) {
+            interactions.UnregisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this.interactionsListener);
+            this.interactionsListener = null;
         }
     }
 
@@ -429,11 +462,116 @@ public class BiomonitorController extends inkGameController {
             }
             E(s"");
 
+            if evt.Dismissable {
+                E(s"set hub as dismissable");
+                this.dismissable = true;
+                let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+                let visualizer: VisualizersInfo = FromVariant<VisualizersInfo>(interactions.GetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo));
+                let id: Int32 = visualizer.activeVisId;
+                if Equals(id, -1) {
+                    this.RequestShowInteractionHub();
+                }
+            }
+
             this.PlayNext(evt.boot);
             return false;
         }
 
         if !this.CanPlay() && this.waiting { this.Reset(); }
+    }
+
+    protected cb func OnInteractionHubEvent(evt: ref<InteractionHubEvent>) -> Bool {
+        E(s"on interaction hub event");
+        if evt.Show {
+            this.ShowInteractionHub();
+            return true;
+        }
+        if !evt.Show && this.shown {
+            this.HideInteractionHub();
+            return true;
+        }
+    }
+
+    protected cb func OnDismissBiomonitorEvent(evt: ref<DismissBiomonitorEvent>) -> Bool {
+        E(s"on dismiss biomonitor");
+        let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+        let visualizer = FromVariant<VisualizersInfo>(interactions.GetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo));
+        // there's no way to differentiate if player clicks "F" to dismiss biomon or e.g. to open a door
+        // so only request hide if currently shown on screen
+        if visualizer.activeVisId == -1001 {
+            this.dismissed = true;
+            this.HideInteractionHub();
+            this.PlayNext(false, true);
+        }
+
+    }
+
+    public func Beep() -> Void {
+        GameObject.PlaySound(this.GetPlayerControlledObject(), n"test_beep_03");
+    }
+
+    private func RequestShowInteractionHub() -> Void {
+        let event: ref<InteractionHubEvent> = new InteractionHubEvent();
+        event.Show = true;
+        GameInstance.GetUISystem(this.GetPlayerControlledObject().GetGame()).QueueEvent(event);
+    }
+
+    private func RequestHideInteractionHub() -> Void {
+        let event: ref<InteractionHubEvent> = new InteractionHubEvent();
+        event.Show = false;
+        GameInstance.GetUISystem(this.GetPlayerControlledObject().GetGame()).QueueEvent(event);
+    }
+
+    private func ShowInteractionHub() -> Void {
+        E(s"show interaction hub");
+        let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+        let hub = this.CreateInteractionHub();
+        let visualizer = this.PrepareVisualizer(hub);
+        interactions.SetVariant(GetAllBlackboardDefs().UIInteractions.InteractionChoiceHub, ToVariant(hub), true);
+        interactions.SetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo, ToVariant(visualizer), true);
+        this.shown = true;
+    }
+
+    private func HideInteractionHub() -> Void {
+        E(s"hide interaction hub");
+        let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+        let hub = FromVariant<InteractionChoiceHubData>(interactions.GetVariant(GetAllBlackboardDefs().UIInteractions.InteractionChoiceHub));
+        if hub.id == -1001 {
+            hub.active = false;
+            interactions.SetVariant(GetAllBlackboardDefs().UIInteractions.InteractionChoiceHub, ToVariant(hub), true);
+        }
+        let visualizer = FromVariant<VisualizersInfo>(interactions.GetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo));
+        if visualizer.activeVisId == -1001 && ArrayContains(visualizer.visIds, -1001) {
+            visualizer.activeVisId = -1;
+            visualizer.visIds = [];
+            interactions.SetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo, ToVariant(visualizer), true);
+        }
+        this.shown = false;
+    }
+
+    private func CreateInteractionHub() -> InteractionChoiceHubData {
+        let wrapper = new ChoiceTypeWrapper();
+        ChoiceTypeWrapper.SetType(wrapper, gameinteractionsChoiceType.InnerDialog);
+        let dismiss: InteractionChoiceData;
+        dismiss.rawInputKey = EInputKey.IK_F;
+        dismiss.isHoldAction = false;
+        dismiss.localizedName = GetLocalizedTextByKey(n"Mod-Addicted-Dismiss-Biomonitor");
+        dismiss.inputAction = n"Choice1";
+        dismiss.type = wrapper;
+        let hub: InteractionChoiceHubData;
+        hub.id = -1001;
+        hub.active = true;
+        hub.flags = EVisualizerDefinitionFlags.None;
+        hub.title =  GetLocalizedTextByKey(n"Mod-Addicted-Dismiss-Biomonitor");
+        hub.choices = [dismiss];
+        return hub;
+    }
+
+    private func PrepareVisualizer(hub: InteractionChoiceHubData) -> VisualizersInfo {
+        let visualizer: VisualizersInfo;
+        visualizer.activeVisId = hub.id;
+        visualizer.visIds = [hub.id];
+        return visualizer;
     }
 
     private func Reschedule(event: ref<CrossThresholdEvent>) -> Void {
@@ -456,6 +594,12 @@ public class BiomonitorController extends inkGameController {
             .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
             .CancelCallback(this.postpone);
             this.postpone = GetInvalidDelayID();
+        }
+        if NotEquals(this.beep, GetInvalidDelayID()) {
+            GameInstance
+            .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
+            .CancelCallback(this.beep);
+            this.beep = GetInvalidDelayID();
         }
     }
 
@@ -491,24 +635,41 @@ public class BiomonitorController extends inkGameController {
         if value { E(s"open quick hack panel"); }
         else { E(s"close quick hack panel"); }
         this.UpdateFlag(value, BiomonitorRestrictions.InQuickHackPanel);
+        if value { this.RequestHideInteractionHub(); }
     }
 
     protected cb func OnRadialWheel(value: Bool) -> Bool {
         if value { E(s"open radial wheel"); }
         else { E(s"close radial wheel"); }
         this.UpdateFlag(value, BiomonitorRestrictions.InRadialWheel);
+        if value { this.RequestHideInteractionHub(); }
     }
 
     protected cb func OnInMenu(value: Bool) -> Bool {
         if value { E(s"enter menu"); }
         else { E(s"left menu"); }
         this.UpdateFlag(value, BiomonitorRestrictions.InMenu);
+        if value { this.RequestHideInteractionHub(); }
     }
 
     protected cb func OnPhotoMode(value: Bool) -> Bool {
         if value { E(s"enter photo mode"); }
         else { E(s"left photo mode"); }
         this.UpdateFlag(value, BiomonitorRestrictions.InPhotoMode);
+        if value { this.RequestHideInteractionHub(); }
+    }
+
+    protected cb func OnVisualizersInfo(value: Variant) -> Bool {
+        if !this.Playing() || !this.dismissable || this.dismissed { return true; }
+        let into: VisualizersInfo = FromVariant<VisualizersInfo>(value);
+        let requested: Int32 = into.activeVisId;
+        E(s"on visualizers info: active visible ID \(requested), shown \(this.shown)");
+        if requested != -1 && requested != -1001 && this.shown {
+            this.RequestHideInteractionHub();
+        }
+        if requested == -1 {
+            this.RequestShowInteractionHub();
+        }
     }
 
     private func UpdateFlag(value: Bool, flag: BiomonitorRestrictions) -> Void {
@@ -559,8 +720,59 @@ public class BiomonitorController extends inkGameController {
         return true;
     }
 
-    private func PlayNext(opt boot: Bool) -> Bool {
+    private func Close(delay: Float) -> Bool {
+        this.dismissable = false;
+        this.RequestHideInteractionHub();
+
         let options: inkAnimOptions;
+        let minimize: ref<inkAnimScale> = new inkAnimScale();
+        minimize.SetStartScale(new Vector2(1.0, 1.0));
+        minimize.SetEndScale(new Vector2(0.01, 0.01));
+        minimize.SetType(inkanimInterpolationType.Linear);
+        minimize.SetMode(inkanimInterpolationMode.EasyOut);
+        minimize.SetDuration(0.2);
+        let fade: ref<inkAnimTransparency> = new inkAnimTransparency();
+        fade.SetStartTransparency(1.0);
+        fade.SetEndTransparency(0.0);
+        fade.SetType(inkanimInterpolationType.Qubic);
+        fade.SetMode(inkanimInterpolationMode.EasyOut);
+        fade.SetDuration(0.3);
+        let def: ref<inkAnimDef> = new inkAnimDef();
+        def.AddInterpolator(minimize);
+        def.AddInterpolator(fade);
+        options.executionDelay = delay;
+        options.oneSegment = true;
+
+        if delay > 0.1 {
+            if NotEquals(this.beep, GetInvalidDelayID()) {
+                GameInstance
+                .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
+                .CancelCallback(this.beep);
+            }
+            let callback: ref<ClosingBeepCallback> = new ClosingBeepCallback();
+            callback.controller = this;
+
+            this.beep = GameInstance
+            .GetDelaySystem(this.GetPlayerControlledObject().GetGame())
+            .DelayCallback(callback, delay - 0.1);
+        } else {
+            this.Beep();
+        }
+        
+        if IsDefined(this.animation) {
+            this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
+        }
+        this.animation = this.root.PlayAnimationWithOptions(def, options);
+        this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
+        return true;
+    }
+
+    private func PlayNext(opt boot: Bool, opt dismiss: Bool) -> Bool {
+        let options: inkAnimOptions;
+        if dismiss && NotEquals(EnumInt(this.state), EnumInt(BiomonitorState.Closing)) {
+            this.state = BiomonitorState.Dismissing;
+            return this.Close(0.1);
+        }
         if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.fromMarker = n"booting_start";
             options.toMarker = n"booting_end";
@@ -603,31 +815,13 @@ public class BiomonitorController extends inkGameController {
         }
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             this.state = BiomonitorState.Closing;
-            let minimize: ref<inkAnimScale> = new inkAnimScale();
-            minimize.SetStartScale(new Vector2(1.0, 1.0));
-            minimize.SetEndScale(new Vector2(0.01, 0.01));
-            minimize.SetType(inkanimInterpolationType.Linear);
-            minimize.SetMode(inkanimInterpolationMode.EasyOut);
-            minimize.SetDuration(0.2);
-            let fade: ref<inkAnimTransparency> = new inkAnimTransparency();
-            fade.SetStartTransparency(1.0);
-            fade.SetEndTransparency(0.0);
-            fade.SetType(inkanimInterpolationType.Linear);
-            fade.SetMode(inkanimInterpolationMode.EasyOut);
-            fade.SetDuration(0.3);
-            let def: ref<inkAnimDef> = new inkAnimDef();
-            def.AddInterpolator(minimize);
-            def.AddInterpolator(fade);
-            options.executionDelay = 4.0;
-            options.oneSegment = true;
+            let closed = this.Close(4.0);
             if !(this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
                 let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
                 let ono: CName = onos[RandRange(0,1)];
                 GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
             }
-            this.animation = this.root.PlayAnimationWithOptions(def, options);
-            this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
-            return true;
+            return closed;
         }
         return false;
     }
@@ -646,6 +840,7 @@ public class BiomonitorController extends inkGameController {
     }
 
     private func Reset() -> Void {
+        this.RequestHideInteractionHub();
         this.Unschedule();
         GameObject.StopSound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
         this.root.SetOpacity(1.0);
@@ -653,8 +848,10 @@ public class BiomonitorController extends inkGameController {
         this.root.SetVisible(false);
         this.animation.Stop(true);
         this.animation.UnregisterFromAllCallbacks(inkanimEventType.OnFinish);
-        this.state = BiomonitorState.Idle;
         this.waiting = false;
+        this.dismissed = false;
+        this.dismissable = false;
+        this.state = BiomonitorState.Idle;
     }
 
     public func Playing() -> Bool {
