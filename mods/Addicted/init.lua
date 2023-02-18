@@ -11,16 +11,6 @@ function addicted:new()
     registerForEvent("onInit", function()
         print("[Addicted]:onInit")
 
-        Observe('PlayerPuppet', 'OnStatusEffectApplied', function(self, evt)
-            print("[Addicted]:OnStatusEffectApplied")
-            print(GameDump(evt))
-        end)
-
-        Observe('PlayerPuppet', 'OnStatusEffectRemoved', function (self, evt)
-            print("[Addicted]:OnStatusEffectRemoved")
-            print(GameDump(evt))
-        end)
-
         GameUI.OnSessionStart(function()
             print("[Addicted]:OnSessionStart")
             Cron.After(0.25, function ()
