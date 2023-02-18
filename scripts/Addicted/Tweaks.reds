@@ -63,7 +63,7 @@ protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsu
   let pressed = Equals(EnumInt(ListenerAction.GetType(action)), EnumInt(gameinputActionType.BUTTON_PRESSED));
   let chosen = Equals(ListenerAction.GetName(action), n"Choice1_Release");
   if pressed && chosen {
-    E(s"pressed F to dismiss biomonitor");
+    E(s"pressed F to interact");
     let system = AddictedSystem.GetInstance(this.GetGame());
     system.DismissBiomonitor();
   }

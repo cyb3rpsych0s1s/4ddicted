@@ -494,9 +494,16 @@ public class BiomonitorController extends inkGameController {
 
     protected cb func OnDismissBiomonitorEvent(evt: ref<DismissBiomonitorEvent>) -> Bool {
         E(s"on dismiss biomonitor");
-        this.dismissed = true;
-        this.HideInteractionHub();
-        this.PlayNext(false, true);
+        let interactions = this.GetBlackboardSystem().Get(GetAllBlackboardDefs().UIInteractions);
+        let visualizer = FromVariant<VisualizersInfo>(interactions.GetVariant(GetAllBlackboardDefs().UIInteractions.VisualizersInfo));
+        // there's no way to differentiate if player clicks "F" to dismiss biomon or e.g. to open a door
+        // so only request hide if currently shown on screen
+        if visualizer.activeVisId == -1001 {
+            this.dismissed = true;
+            this.HideInteractionHub();
+            this.PlayNext(false, true);
+        }
+
     }
 
     public func Beep() -> Void {
