@@ -68,19 +68,6 @@ function addicted:new()
         end
         GetPlayer():FindComponentByName("fx_player").effectDescs = effects
     end
-
-    function StrLocKey(key)
-        if type(key) == "string" then
-            return "LocKey#" .. tostring(LocKey(key).hash):gsub("ULL$", "")
-        end
-        if type(key) == "cdata" then
-            return "LocKey#" .. tostring(key):gsub("ULL$", "")
-        end
-        if type(key) == "number" then
-            return "LocKey#" .. tostring(key)
-        end
-        return ""
-    end
 end
 
 return addicted:new()
