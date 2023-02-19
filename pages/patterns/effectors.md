@@ -2,12 +2,12 @@
 
 Or simply put, adding custom logic at runtime to statically defined status effects.
 
-Looking at `BaseStatusEffect.BerserkPlayer` in its 2nd `packages`,
-then down in its `effectors` first entry,
-there's `BaseStatusEffect.BerserkPlayerSFXEffector` which `effectorClassName` is `PlaySFXEffector`.
+Looking at `BaseStatusEffect.BerserkPlayer` in WolvenKit,
+in its 2nd `packages` then down in its `effectors`'' first entry,
+there's a `BaseStatusEffect.BerserkPlayerSFXEffector` whose `effectorClassName` is `PlaySFXEffector`.
 
-If searching in game sources, there's indeed a `PlaySFXEffector` (which extends `Effector`/`IScriptable`),
-which seems to allow for tweaking e.g. the effect at runtime based on conditions:
+Looking into game sources, there's indeed a `PlaySFXEffector` (which extends `Effector`/`IScriptable`),
+which allows for tweaking e.g. the effect at runtime based on conditions:
 
 ```swift
 public class PlaySFXEffector extends Effector {
@@ -24,3 +24,7 @@ public class PlaySFXEffector extends Effector {
   }
 }
 ```
+
+Here's another example with similarly designed status effect, `ElectrocutedSFX`, in WolvenKit:
+
+![Electrocuted PlaySFXEffector](./pictures/RED-SFX-effectors.png)

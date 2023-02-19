@@ -1,11 +1,17 @@
-# Stats listeners
+# Listeners
 
-Detoxifier (a.k.a `ToxinCleanser`) grants:
+A listener, as its name suggests, allows to listen for changes.
 
-`gamedataStatType.PoisonImmunity`
-`gamedataStatType.HasPoisonImmunity`
+There's different kinds of listeners, for example a `ScriptStatsListener` allows to listen for changes on stats, namely `BaseStats` in the code. The game contains numerous stats, let's look at an example.
 
-example from the sources for `gamedataStatType.AutoReveal`:
+[Detoxifier](https://cyberpunk.fandom.com/wiki/Detoxifier) (a.k.a `ToxinCleanser`) grants the following stats:
+
+- `gamedataStatType.PoisonImmunity`
+- `gamedataStatType.HasPoisonImmunity`
+
+Note: `gamedataStatType` is used in TweakDB with `BaseStats`, this can be observed in `RPGManager` in the sources.
+
+Another example from the sources with `gamedataStatType.AutoReveal`:
 
 ```swift
 public class AutoRevealStatListener extends ScriptStatsListener {
@@ -46,6 +52,8 @@ public class PlayerPuppet extends ScriptedPuppet {
   }
 }
 ```
+
+There are different kinds of listeners:
 
 - `ScriptStatsListener`     ➡️ `BaseStats`
 - `ScriptStatPoolsListener` ➡️ `BaseStatPools`

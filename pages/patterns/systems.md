@@ -7,7 +7,7 @@ useful to coordinate whole gameplay.
 Persistence allow to persist values on game saves.
 
 ```swift
-public enum Case {
+enum Case {
   On,
   Off,
 }
@@ -36,13 +36,12 @@ public class System extends ScriptableSystem {
 
 ## Requests
 
-Requests are an asynchronous mechanism.
+Requests are systems' asynchronous mechanism.
 It's more often than not used to convey an action.
-> *something is **requested***
 
 ### Delayed requests
 
-Requests can be delayed asynchronously.
+Requests can also be delayed asynchronously.
 
 ```swift
 public class DoSomethingRequest extends ScriptableSystemRequest {

@@ -5,6 +5,8 @@ Welcome to Addicted notebook !
 ## Contribute / Learn
 
 - [Install](./install.md)
+- [Manifest](./manifest.md)
+- [CLI](./cli.md)
 - [Wiki](./wiki.md)
   - [Cheatsheet](./cheatsheet/summary.md)
     - [primitives](./cheatsheet/primitives.md)
@@ -15,7 +17,7 @@ Welcome to Addicted notebook !
     - [Callbacks](./patterns/callbacks.md)
     - [Events](./patterns/events.md)
     - [Blackboards](./patterns/blackboards.md)
-    - [StatListeners](./patterns/statlisteners.md)
+    - [Listeners](./patterns/listeners.md)
     - [Effectors](./patterns/effectors.md)
   - [Troubleshooting](./troubleshooting.md)
 

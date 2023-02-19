@@ -2,7 +2,6 @@
 
 Events are another asynchronous mechanism.
 It's more often than not used to notify other parts of the code.
-> *something is **happening***
 
 ## Tickable events
 
@@ -10,7 +9,7 @@ Tickable events are events whose progression can be tracked.
 Only work on `Entity`, so usually `PlayerPuppet`.
 The benefit of `TickableEvent` is that you get its state and progress available.
 
-> During my own experiments, I wasn't able to call it on a custom class which extends Entity.
+> During my own experiments, I wasn't able to call it on a custom class which extends `Entity`.
 
 ```swift
 // define your event
@@ -22,14 +21,13 @@ public class System extends ScriptableSystem {
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
-      E(s"initialize system on player attach");
+      LogChannel(n"DEBUG", s"initialize system on player attach");
       this.player = player;
       let evt: ref<ProgressionEvent> = new ProgressionEvent();
       // tick repeatedly for 3 seconds
       GameInstance.GetDelaySystem(this.player.GetGame()).TickOnEvent(this.player, evt, 3.);
 
-      this.RefreshConfig();
-    } else { F(s"no player found!"); }
+    } else { LogError(s"no player found!"); }
   }
 }
 
@@ -46,7 +44,7 @@ protected cb func OnProgressionEvent(evt: ref<ProgressionEvent>) -> Bool {
 
 Regular events can be delayed asynchronously too.
 
-> credits to Lyralei on Discord.
+> credits to `Lyralei` on Discord.
 
 ```swift
 @addField(PlayerPuppet)
@@ -86,7 +84,7 @@ protected cb func OnHandlingEvent(evt: ref<YourEventClassName >) -> Void {
 
 ## Regular events
 
-> credits to Lyralei on Discord.
+> credits to `Lyralei` on Discord.
 
 Here `QueueEvent` generally means *it's gonna be played as soon as possible*.
 

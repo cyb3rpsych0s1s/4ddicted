@@ -2,7 +2,7 @@
 
 Callbacks are another asynchronous mechanism.
 
-> credits to DJ_Kovrik
+> credits to `DJ_Kovrik`
 
 ```swift
 public class EdgerunningSystem extends ScriptableSystem {
@@ -24,7 +24,7 @@ public class PlaySFXCallback extends DelayCallback {
   // its method Call will automatically get called
   public func Call() -> Void {
     GameObject.PlaySoundEvent(this.player, this.sfxName);
-    E(s"Run \(this.sfxName) sfx");
+    LogChannel(n"DEBUG", s"Run \(this.sfxName) sfx");
   }
 }
 ```
