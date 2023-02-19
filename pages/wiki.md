@@ -1,12 +1,13 @@
 # wiki
 
-## browse packages and classes
-
-[Cyberpunk Tweaks](https://cdpr-modding-documentation.github.io/Cyberpunk-Tweaks/)
+First, a handful of reminders / tips.
 
 ## lua VS reds
 
 Cyber Engine Tweaks (CET) and REDscript both offer access to the game API.
+
+- CET uses .lua files.
+- REDscript uses .reds files.
 
 ```lua
 ---@param self PlayerPuppet
@@ -25,40 +26,30 @@ protected cb func OnGameAttached() -> Bool {
 }
 ```
 
-## callbacks
+## debug
 
-credits: @psiberx - discord — 08/23/2022
-there are 3 kinds of events / callbacks
+Since:
 
-1. based on method name
-to handle the event you just have to define function with the right signature and name
-it's called by name just like any other function
-for example, OnInitialize() in widgets controllers
-2. based on event classes inherited from redEvent
-to listen for this event you have to define function that has event flag and takes exactly one argument of the type of the event class
-it's auto wired during some initialization step (don't remember exact moment)
-it can be triggered using methods like QueueEvent()
-for example, OnHit(evt : handle:gameeventsHitEvent)
-(there's also gameScriptableSystem with gameScriptableSystemRequest working in similar way)
-3. callback managers
-different types have their own functions to register and unregister listeners
-the signature of the listener is always fixed, and you have to know it
-you have to define a listener function and register it providing target object and name of the listener method
-I think this is the type based on native callbacks, they store `Callback<T>` instances (wrapping target object with the method name) and invoke them
-for example, blackboards `RegisterListenerBool(id : gamebbScriptID_Bool, object : handle:IScriptable, func : CName, fireIfValueExist : Bool)`
+- any CET method can be called from in-game CET console
+- CET can call any REDscript method
 
-## events
+This is how to debug own's code, e.g. :
 
-- event has to be created in the class that owns it (e.g. player)
-- use `QueueEvent` for normal event, use `DelayEvent` for delayed one (see `DelaySystem`)
+- create a method on PlayerPuppet in .reds
+- launch a game session
+- open CET console
 
-more info on discord in #redscript-snippet (thanks @Lyralei)
+### quickly call methods
 
-## in-game time vs IRL
+from in-game CET console, e.g.:
 
-1 min in-game is 10 real seconds.
+```lua
+GameObject.PlaySoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.StopSoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.BreakReplicatedEffectLoopEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+```
 
-## quickly seed inventory with items
+### quickly seed inventory with items
 
 ```lua
 Game.AddToInventory("Items.FR3SH", 1)
@@ -67,41 +58,29 @@ Game.AddToInventory("Items.FirstAidWhiffV0", 10)
 Game.AddToInventory("Items.BlackLaceV0", 10)
 ```
 
-## quickly call methods
-
-```lua
-GameObject.PlaySoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
-GameObject.StopSoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
-GameObject.BreakReplicatedEffectLoopEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
-```
-
-### autocompletion
-
-REDscripts functions annotated with `@if` conditional compilation macros won't be evaluated.
-Quickest way to check if it works is to trigger autocompletion on `this` inside any function.
-
 ### hot reload
 
 Requires latest CET from Discord, at the moment.
 Beware of start-up only scripts in your tests: needs to load or start a new game of course.
 Red Hot Tools can also watch for changes: beware of autosave.
 
-## create status/settings for mod
+### REDscript
 
-```lua
-  -- reuse existing entry to create one's status effect
-  TweakDB:CloneRecord("BaseStatusEffect.Toxicity", "BaseStatusEffect.Drugged")
-  -- ...
-  TweakDB:SetFlat("Items.HealingToxicityObjectActionEffect.statusEffect", "BaseStatusEffect.Toxicity")
+#### default method return values
+
+credits to `psiberx` on discord.
+
+```swift
+public static func NoRetInt() -> Int32 {} // returns 0
+public static func NoRetCName() -> CName {} // returns n"None"
+public static func NoRetStruct() -> SimpleScreenMessage {} // returns empty instance
+public static func NoRetArray() -> array<String> {} // returns empty array
 ```
 
-```lua
-  -- reuse existing icon to create one's
-  TweakDB:CloneRecord("UIIcon.acid_doused", "UIIcon.regeneration_icon")
-  TweakDB:SetFlat("UIIcon.acid_doused.atlasPartName", "acid_doused")
-```
+#### conditional compilation
 
-but actually the truth is that it's far more convenient and maintainable with [YAML Tweaks](https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks).
+REDscripts functions annotated with `@if` conditional compilation macros won't be evaluated.
+Quickest way to check if it works is to trigger autocompletion on `this` inside any function.
 
 ## native status effects
 
@@ -110,18 +89,14 @@ All the status effects can be found [there](https://cyberpunk.fandom.com/wiki/Cy
 ## native animations
 
 Animations can be handled with [WolvenKit](https://wiki.redmodding.org/cyberpunk-2077-modding/modding/redmod/quick-guide#animation-modding).
+
 [Change and potentially replace animations](https://wiki.redmodding.org/cyberpunk-2077-modding/developers/guides/quest/how-to-remove-an-animation-and-potentially-replace-it).
 
-## default method return values
+## in-game time vs IRL
 
-credits to psiberx on discord.
+1 min in-game is 10 real seconds.
 
-```swift
-public static func NoRetInt() -> Int32 {} // returns 0
-public static func NoRetCName() -> CName {} // returns n"None"
-public static func NoRetStruct() -> SimpleScreenMessage {} // returns empty instance
-public static func NoRetArray() -> array<String> {} // returns empty array
-```
+credits to `Lyralei` on discord.
 
 ## glossary
 
