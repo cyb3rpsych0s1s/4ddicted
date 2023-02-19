@@ -1,6 +1,6 @@
 # Install
 
-Here are the steps required to get you a decent working devlopment environment for this mod.
+Here are the steps required to get you a decent working development environment for this mod.
 
 Mandatory steps, in order:
 
