@@ -1,25 +1,28 @@
 # Summary
 
+Welcome to Addicted notebook !
+
 ## Contribute / Learn
 
 - [Install](./install.md)
+- [Manifest](./manifest.md)
+- [CLI](./cli.md)
 - [Wiki](./wiki.md)
-- [Cheatsheet](./cheatsheet/summary.md)
-  - [primitives](./cheatsheet/primitives.md)
-  - [sounds](./cheatsheet/sounds.md)
-  - [custom icons](./cheatsheet/icons.md)
-- [Patterns](./patterns/summary.md)
-  - [Systems](./patterns/systems.md)
-  - [Callbacks](./patterns/callbacks.md)
-  - [Events](./patterns/events.md)
-  - [Blackboards](./patterns/blackboards.md)
-  - [StatListeners](./patterns/statlisteners.md)
-  - [Effectors](./patterns/effectors.md)
-- [Troubleshooting](./troubleshooting.md)
+  - [Cheatsheet](./cheatsheet/summary.md)
+    - [primitives](./cheatsheet/primitives.md)
+    - [sounds](./cheatsheet/sounds.md)
+    - [custom icons](./cheatsheet/icons.md)
+  - [Patterns](./patterns/summary.md)
+    - [Systems](./patterns/systems.md)
+    - [Callbacks](./patterns/callbacks.md)
+    - [Events](./patterns/events.md)
+    - [Blackboards](./patterns/blackboards.md)
+    - [Listeners](./patterns/listeners.md)
+    - [Effectors](./patterns/effectors.md)
+  - [Troubleshooting](./troubleshooting.md)
 
 ## Archives
 
-- [Game infos](./info.md)
 - [Travelog](./travelog/summary.md)
   - [2023-01-21](./travelog/2023-01-21.md)
   - [2023-01-22](./travelog/2023-01-22.md)
@@ -28,5 +31,9 @@
   - [2023-01-27](./travelog/2023-01-27.md)
   - [2023-01-29](./travelog/2023-01-29.md)
   - [2023-01-30](./travelog/2023-01-30.md)
-- [Initial concept](./concept.md)
-- [Handbook notes](./notes.md)
+  - [2023-01-31](./travelog/2023-01-31.md)
+  - [2023-02-03](./travelog/2023-02-03.md)
+  - [2023-02-04](./travelog/2023-02-04.md)
+  - [2023-02-06](./travelog/2023-02-06.md)
+  - [2023-02-07](./travelog/2023-02-07.md)
+  - [2023-02-10](./travelog/2023-02-10.md)

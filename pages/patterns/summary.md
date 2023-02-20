@@ -6,5 +6,5 @@ The core game system already contains mechanics that can be leveraged to impleme
 - [Callbacks](./callbacks.md)
 - [Events](./events.md)
 - [Blackboards](./blackboards.md)
-- [StatListeners](./statlisteners.md)
+- [Listeners](./listeners.md)
 - [Effectors](./effectors.md)

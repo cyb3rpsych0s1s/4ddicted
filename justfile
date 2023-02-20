@@ -141,7 +141,7 @@ read:
 
 # 🖊️  book with live hot reload
 draft:
-    mdbook watch
+    mdbook watch --open
 
 # 📕 assemble book (for release in CI)
 assemble:

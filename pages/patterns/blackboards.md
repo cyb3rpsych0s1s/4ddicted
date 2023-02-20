@@ -1,9 +1,7 @@
 # Blackboards
 
-// TODO: DOUBLE CHECK
-
-Blackboards act as a global storage for variables.
-Other parts of the code can get, set or listen to blackboard entries to be notified of changes.
+Blackboards act as global variables.
+Other parts of the code can get, set or listen to blackboard definitions to be notified of changes.
 
 *used in: effectors, components, prereq state, systems, ink game controllers, managers..*
 
