@@ -1,0 +1,49 @@
+ADDICTED - BETA 0.7.0
+
+Basically adds a chance to become addicted to consumables too frequently consumed, like MAXdoc and the likes, offering additional debuffs and effects in an immersive way.
+
+:: REQUIREMENTS ::
+
+• Cyberpunk up to date
+• CET
+• REDscript
+
+:: FEATURES ::
+
+• consuming increases addiction
+• resting decreases addiction
+• different consumables have different side-effects and gameplay mechanics
+• refraining from consumption when already addicted can lead to withdrawal symptoms
+• some cyberwares have an impact on addiction
+
+:: RECOMMENDED MODS ::
+
+- Static Bar Bug Fixes - https://www.nexusmods.com/cyberpunk2077/mods/4316
+- Toxicity - https://www.nexusmods.com/cyberpunk2077/mods/4317
+
+These are not necessary, but they will make this mod even better
+
+::  KNOWN ISSUES ::
+
+This mod is **NOT** yet compatible with:
+
+- WE3D Drugs of Night City - https://www.nexusmods.com/cyberpunk2077/mods/4407
+
+::  CREDITS ::
+
+♦ psiberx
+♦ jekky
+♦ DJ_Kovrik
+♦ RMK Soundsystem
+♦ keanuWheeze
+♦ Technic235
+♦ Lyralei
+♦ IslandDancer
+♦ Toolchain Optimizer (mana)
+♦ Hróbjartur Fóðarsson
+♦ Sürr
+♦ Auska
+♦ deadlymustard
+♦ Simarilius
+♦ Paperclip
+♦ dddzzzkkk
