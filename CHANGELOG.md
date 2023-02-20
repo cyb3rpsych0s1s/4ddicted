@@ -1,5 +1,124 @@
 # Changelog
 
+
+
+<a name="beta-0.7.0" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.7.0
+
+### Added
+- ✨  implement biomonitor dismissal
+- ✨  improve chemicals report
+
+### Changed
+- 🔨  open preview on mdbook watch
+- ♻️  improve dismiss detection
+- ⏪  reintroduce biomon equipped condition
+- 🚚  move .effect files to addicted folder
+- ♻️  wrap biomon in its own container
+- ♻️  spawn .inkwidget synchronously
+- 🚚  move .inkwidget and .inkanim to addicted foder
+- ♻️  consumables use positive indexes
+- ♻️  improve generic condition checks
+- 🔧  change memory booster withdrawal symptoms sfx duration
+- 🚨  lint custom icons book entry
+- ♻️  use new icons
+- 💄  redesign icons
+- 💄  redesign icons
+
+### Removed
+- 🔇  remove status effects logs in lua
+- 🔇  remove experiments logs
+- 🔥  delete unused png
+- 🔥  delete png
+- 🔥  remove old icons and inkatlas
+- 🔥  delete old archive icons and atlas
+- 🔥  remove dump.redscripts
+
+### Fixed
+- ✏️  fix typos
+- 🐛  fix travelog summary
+- ✏️  fix typos
+- 🐛  missing biomon sfx
+- 🐛  ignore interaction pressed when dismissal hidden
+- 🐛  fix biomon dismissal
+- 🐛  fix unset bit flag
+- 🐛  make parent method abstract
+- 🐛  fix withdrawal symptoms translations
+- 🐛  call parent class registration methods
+- 🐛  fix stimulants atlas part name
+- 🐛  fix grunt effector
+- 🐛  fix stimulants effectors
+- 🐛  fix stimulants ui icon
+- 🐛  fix class member visibility
+- 🐛  fix import issue
+
+### Miscellaneous
+- 📝  add changelog
+- 📝  update badges and description
+- 📝  update readme and book links
+- 📝  add contributing guideline
+- 📄  add license
+- broom  additional changes to the book
+- broom  remove irrelevant docs, reorganize and correct
+- 🙈  ignore local folder
+- coffin  remove unused method in lua
+- 📝  add comment on biomon init
+- 🔊  add logging for dialog interactions
+- 🚧  work in progress add hub
+- 🚧  add base biomonitor chemicals report logic
+- ⚗  POC for modifying chemicals report on biomonitor info screen
+- dizzy  improve migraine effect
+- 🔊  log withdrawal symptom flags on consumption
+- 🚧  add condition check for invalid consumable
+- 🔊  log on withdrawal symptoms request
+- 🔊  add withdrawal symptom listener status on register
+- 🚧  add withdrawing debug setter method to system
+- 🚧  update withdrawal symptoms on consumption
+- 🚧  add activate cooldown debug wrapper
+- 🚧  add withdrawing debug setter method
+- 🔊  add logs in update symptoms
+- coffin  remove redundant condition check
+- coffin  remove unused code
+- 📦  update translations
+- 🚧  add black lace withdrawal symptoms sfx
+- 📝  add travelog entry
+- 🚧  add debug effect method
+- 🚧  play sound on memory booster withdrawal symptoms
+- 🔊  log sound flow
+- 🚧  adjust sound status
+- 🚧  play sound on anabolics withdrawal symptoms
+- 🚧  add ono V react to biomonitor
+- 📝  add credits for tga import
+- 📝  add links to custom icons cheatsheet
+- 📝  achieve notes on custom icons
+- 🚧  add missing ui data for health booster
+- 📝  add cheatsheet entry
+- 🚧  add missing ui data for bounceback
+- 🚧  add missing ui data for maxdoc
+- 📦  update translations
+- 🚧  update boosters ui data
+- 🚧  update black lace ui data
+- 📦  regenerate inkatlas
+- 📦  regenerate tga and inkatlas
+- 📦  regenerate inkatlas
+- 📦  regenerate inkatlas
+- 📦  new icons
+- ⚗  regenerate icons
+- 📦  fix typo in inkatlas xbm paths
+- 📦  regenerate icons and inkatlas
+- 📦  regenerate inkatlas
+- ⚗  export tga 72dpi
+- ⚗  export png manually
+- ⚗  export tga manually
+- ⚗  regenerate tga thrice bigger
+- 📦  regenerate as png
+- 🚧  fix icons alpha issue
+- 📦  regenerate tga without background
+- 📦  regenerate tga
+- 📦  package icons and inkatlas
+- 📦  regenerate inkatlas
+- 📝  add travelog entry
+
 <a name="alpha-0.6.9" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version alpha-0.6.9
 
