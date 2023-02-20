@@ -16,7 +16,7 @@ I'm welcome to suggestions as long as they match with my own vision of the mod: 
 
 ## 🧑‍💻 Contribute
 
-If you want to contribute: everything from setting up your dev environment and more is already described in the book! See *Installation*, *Manifest* and *CLI* sections.
+If you want to contribute: everything from setting up your dev environment and more is already described in the [book](https://cyb3rpsych0s1s.github.io/4ddicted/)! See *Installation*, *Manifest* and *CLI* sections.
 
 The contribution process is the same as for any other repositories:
 
