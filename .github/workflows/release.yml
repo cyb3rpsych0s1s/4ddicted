@@ -72,10 +72,32 @@ jobs:
           name: ${{ matrix.os }}-${{ github.ref_name }}-artifact
           path: Addicted/Addicted-${{ matrix.os }}-${{ github.ref_name }}.zip
           if-no-files-found: error
-  release:
+  changelog:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
     runs-on: ubuntu-latest
     needs: bundle
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Regenerate CHANGELOG.md
+        run: |
+          cargo install gitmoji-changelog@0.3.0
+          rm -f CHANGELOG.md
+          gitmoji-changelog . -o CHANGELOG.md
+          git config user.name "Update from CI"
+          git config user.email ""
+          git add CHANGELOG.md
+          git commit -m ":rocket: update changelog" CHANGELOG.md
+          git push origin main
+  release:
+    if: ${{ startsWith(github.event.ref, 'refs/tags') }}
+    runs-on: ubuntu-latest
+    needs: [bundle, changelog]
     steps:
       - uses: actions/checkout@v3
         with:
