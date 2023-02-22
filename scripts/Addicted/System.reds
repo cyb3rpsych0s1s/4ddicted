@@ -5,6 +5,13 @@ import Addicted.*
 import Addicted.Helpers.*
 import Addicted.Manager.*
 
+public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
+  public let system: wref<AddictedSystem>;
+  public func Call() -> Void {
+    this.system.OnUpdateWithdrawalSymptoms();
+  }
+}
+
 public class AddictedSystem extends ScriptableSystem {
   
   private let player: wref<PlayerPuppet>;
@@ -41,7 +48,9 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
-      this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+      let callback = new UpdateWithdrawalSymptomsCallback();
+      callback.system = this;
+      this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
 
       this.stimulantManager = new StimulantManager();
       this.stimulantManager.Register(this.player);
@@ -114,8 +123,8 @@ public class AddictedSystem extends ScriptableSystem {
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
   }
 
-  public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
-    E(s"on update withdrawal symptoms request");
+  public func OnUpdateWithdrawalSymptoms() -> Void {
+    E(s"on update withdrawal symptoms");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let now: Int32 = 0;
@@ -130,9 +139,11 @@ public class AddictedSystem extends ScriptableSystem {
     }
 
     if NotEquals(this.updateSymtomsID, GetInvalidDelayID()) {
-      this.delaySystem.CancelDelay(this.updateSymtomsID);
+      this.delaySystem.CancelCallback(this.updateSymtomsID);
     }
-    this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+    let callback = new UpdateWithdrawalSymptomsCallback();
+    callback.system = this;
+    this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
@@ -233,7 +244,9 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
 
-    this.delaySystem.DelayScriptableSystemRequestNextFrame(this.GetClassName(), new UpdateWithdrawalSymptomsRequest());
+    let callback = new UpdateWithdrawalSymptomsCallback();
+    callback.system = this;
+    this.delaySystem.DelayCallbackNextFrame(callback);
   }
 
   public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {

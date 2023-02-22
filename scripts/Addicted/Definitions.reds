@@ -93,8 +93,6 @@ public class HeadAchingHint extends Hint {
   }
 }
 
-public class UpdateWithdrawalSymptomsRequest extends ScriptableSystemRequest {}
-
 public class Consumptions {
   private persistent let keys: array<TweakDBID>;
   private persistent let values: array<ref<Consumption>>;
