@@ -93,7 +93,7 @@ jobs:
           git config user.email ""
           git add CHANGELOG.md
           git commit -m ":rocket: update changelog" CHANGELOG.md
-          git push origin main
+          git push
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
     runs-on: ubuntu-latest
