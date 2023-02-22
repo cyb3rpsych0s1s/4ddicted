@@ -95,7 +95,7 @@ jobs:
           gitmoji-changelog . -o CHANGELOG.md
           git add CHANGELOG.md
           git commit -m ":rocket: update changelog [no ci]" CHANGELOG.md
-          git push origin HEAD:main
+          git push --force origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.KROMS_BOT_TOKEN }}
   release:
