@@ -188,7 +188,7 @@ public class Helper {
       }
       request.threshold = threshold;
       let randtime = request.RandTime();
-      request.until = now + request.RandTime();
+      request.until = now + randtime;
       request.times = request.InitialTimes();
       E(s"packing appropriate request: until \(ToString(request.until)) (randtime \(ToString(randtime))), \(ToString(request.times)) time(s), threshold \(ToString(request.threshold)) (\(TDBID.ToStringDEBUG(id)))");
       return request;
