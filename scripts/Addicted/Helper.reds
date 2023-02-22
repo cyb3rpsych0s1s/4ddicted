@@ -156,9 +156,9 @@ public class Helper {
 
   public static func AppropriateHint(id: TweakDBID, threshold: Threshold, now: Float) -> ref<Hint> {
     if Helper.IsSerious(threshold) {
-      let request: ref<Hint>;
+      let hint: ref<Hint>;
       if Generic.IsInhaler(id) {
-        request = new CoughingHint();
+        hint = new CoughingHint();
       }
       // anabolic are also pills, but the opposite isn't true
       let anabolic = Generic.IsAnabolic(id);
@@ -173,25 +173,25 @@ public class Helper {
         }
         if anabolic {
           if above {
-            request = new VomitingHint();
+            hint = new VomitingHint();
           }
-          request = new BreatheringHint();
+          hint = new BreatheringHint();
         } else {
           if above {
-            request = new VomitingHint();
+            hint = new VomitingHint();
           }
-          request = new HeadAchingHint();
+          hint = new HeadAchingHint();
         }
       }
       if Generic.IsInjector(id) {
-        request = new AchingHint();
+        hint = new AchingHint();
       }
-      request.threshold = threshold;
-      let randtime = request.RandTime();
-      request.until = now + randtime;
-      request.times = request.InitialTimes();
-      E(s"packing appropriate request: until \(ToString(request.until)) (randtime \(ToString(randtime))), \(ToString(request.times)) time(s), threshold \(ToString(request.threshold)) (\(TDBID.ToStringDEBUG(id)))");
-      return request;
+      hint.threshold = threshold;
+      let randtime = hint.RandTime();
+      hint.until = now + randtime;
+      hint.times = hint.InitialTimes();
+      E(s"packing appropriate hint: until \(ToString(hint.until)) (randtime \(ToString(randtime))), \(ToString(hint.times)) time(s), threshold \(ToString(hint.threshold)) (\(TDBID.ToStringDEBUG(id)))");
+      return hint;
     }
     return null;
   }
