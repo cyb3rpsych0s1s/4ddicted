@@ -2,6 +2,34 @@
 
 
 
+
+
+
+
+<a name="beta-0.7.1" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.7.1
+
+### Added
+- 👷  automate changelog update
+
+### Changed
+- ⏪  rewind ci changelog
+
+### Fixed
+- 💚  try force push
+- 💚  try skip ci on changelog instead
+- 💚  fix ci push permission
+- 💚  follow ci suggestion
+- 💚  fix ci push
+
+### Miscellaneous
+- adhesive_bandage  fix interaction not recognized
+- 📝  add nexus badge
+- 📝  update changelog
+- 📝  add bug report template
+- 📝  improve CLI section
+- 📝  add nexus template
+
 <a name="beta-0.7.0" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version beta-0.7.0
 
