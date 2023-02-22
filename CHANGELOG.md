@@ -6,6 +6,23 @@
 
 
 
+
+
+<a name="beta-0.7.2" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.7.2
+
+### Changed
+- ♻️  rename variable
+- ♻️  refactor update withdrawal symptoms
+- ♻️  refactor hint requests
+
+### Fixed
+- ✏️  fix typo
+
+### Miscellaneous
+- coffin  remove unecessary import
+- 🚀  update changelog [no ci]
+
 <a name="beta-0.7.1" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version beta-0.7.1
 
