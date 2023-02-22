@@ -86,14 +86,14 @@ jobs:
           toolchain: stable
       - name: Regenerate CHANGELOG.md
         run: |
+          git config user.name "Update from CI"
+          git config user.email ""
           cargo install gitmoji-changelog@0.3.0
           rm -f CHANGELOG.md
           gitmoji-changelog . -o CHANGELOG.md
-          git config user.name "Update from CI"
-          git config user.email ""
           git add CHANGELOG.md
           git commit -m ":rocket: update changelog" CHANGELOG.md
-          git push
+          git push origin HEAD:main
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
     runs-on: ubuntu-latest
