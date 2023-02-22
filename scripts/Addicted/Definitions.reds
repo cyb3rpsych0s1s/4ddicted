@@ -2,7 +2,6 @@ module Addicted
 
 import Addicted.Helper
 import Addicted.Helpers.{Generic,Translations}
-import Addicted.Manager.AudioManager
 
 public abstract class Hint {
   // game timestamp where to stop at
