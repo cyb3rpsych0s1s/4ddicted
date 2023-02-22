@@ -154,11 +154,11 @@ public class Helper {
     ];
   }
 
-  public static func AppropriateHintRequest(id: TweakDBID, threshold: Threshold, now: Float) -> ref<HintRequest> {
+  public static func AppropriateHint(id: TweakDBID, threshold: Threshold, now: Float) -> ref<Hint> {
     if Helper.IsSerious(threshold) {
-      let request: ref<HintRequest>;
+      let request: ref<Hint>;
       if Generic.IsInhaler(id) {
-        request = new CoughingRequest();
+        request = new CoughingHint();
       }
       // anabolic are also pills, but the opposite isn't true
       let anabolic = Generic.IsAnabolic(id);
@@ -173,18 +173,18 @@ public class Helper {
         }
         if anabolic {
           if above {
-            request = new VomitingRequest();
+            request = new VomitingHint();
           }
-          request = new BreatheringRequest();
+          request = new BreatheringHint();
         } else {
           if above {
-            request = new VomitingRequest();
+            request = new VomitingHint();
           }
-          request = new HeadAchingRequest();
+          request = new HeadAchingHint();
         }
       }
       if Generic.IsInjector(id) {
-        request = new AchingRequest();
+        request = new AchingHint();
       }
       request.threshold = threshold;
       let randtime = request.RandTime();

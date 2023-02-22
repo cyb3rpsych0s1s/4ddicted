@@ -2,8 +2,9 @@ module Addicted
 
 import Addicted.Helper
 import Addicted.Helpers.{Generic,Translations}
+import Addicted.Manager.AudioManager
 
-public abstract class HintRequest extends ScriptableSystemRequest {
+public abstract class Hint {
   // game timestamp where to stop at
   protected let until: Float;
   protected let times: Int32;
@@ -39,7 +40,7 @@ public abstract class HintRequest extends ScriptableSystemRequest {
 }
 
 // hint for inhalers
-public class CoughingRequest extends HintRequest {
+public class CoughingHint extends Hint {
   public func Onomatopea() -> Onomatopea { return Onomatopea.Cough; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
@@ -49,7 +50,7 @@ public class CoughingRequest extends HintRequest {
   }
 }
 // hint for pills
-public class VomitingRequest extends HintRequest {
+public class VomitingHint extends Hint {
   public func Onomatopea() -> Onomatopea { return Onomatopea.Vomit; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
@@ -59,7 +60,7 @@ public class VomitingRequest extends HintRequest {
   }
 }
 // hint for injectors
-public class AchingRequest extends HintRequest {
+public class AchingHint extends Hint {
   public func Onomatopea() -> Onomatopea { return Onomatopea.Ache; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
@@ -69,7 +70,7 @@ public class AchingRequest extends HintRequest {
   }
 }
 // hint for anabolics
-public class BreatheringRequest extends HintRequest {
+public class BreatheringHint extends Hint {
   public func Onomatopea() -> Onomatopea { return Onomatopea.Breather; }
   public func Sound() -> CName {
     if EnumInt(this.threshold) == EnumInt(Threshold.Severely) {
@@ -79,7 +80,7 @@ public class BreatheringRequest extends HintRequest {
   }
 }
 // hint for memory booster
-public class HeadAchingRequest extends HintRequest {
+public class HeadAchingHint extends Hint {
   public func Onomatopea() -> Onomatopea { return Onomatopea.Headache; }
   public func Sound() -> CName {
     return n"q101_sc_03_heart_loop";

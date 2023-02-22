@@ -272,31 +272,6 @@ public class AddictedSystem extends ScriptableSystem {
     this.hasMetabolicEditorEquipped = hasMetabolicEditor;
   }
 
-  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
-    E(s"on coughing request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
-    E(s"on vomiting request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
-    E(s"on aching request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnBreatheringRequest(request: ref<BreatheringRequest>) -> Void {
-    E(s"on breathering request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnHeadAchingRequest(request: ref<HeadAchingRequest>) -> Void {
-    E(s"on headaching request");
-    this.ProcessHintRequest(request);
-  }
-
   private func Consume(id: TweakDBID, amount: Int32) -> Bool {
     E(s"consume");
     let now = this.timeSystem.GetGameTimeStamp();
@@ -336,9 +311,9 @@ public class AddictedSystem extends ScriptableSystem {
       s"\(ToString(averageThreshold)) addicted (consumable threshold)"
     );
     let now = this.timeSystem.GetGameTimeStamp();
-    let request = Helper.AppropriateHintRequest(id, threshold, now);
-    if IsDefined(request) {
-      this.ProcessHintRequest(request);
+    let hint = Helper.AppropriateHint(id, threshold, now);
+    if IsDefined(hint) {
+      this.onoManager.Hint(hint);
     }
   }
 
@@ -373,12 +348,6 @@ public class AddictedSystem extends ScriptableSystem {
   public func DismissBiomonitor() -> Void {
     let event: ref<DismissBiomonitorEvent> = new DismissBiomonitorEvent();
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
-  }
-
-  /// play an onomatopea as a hint to the player when reaching notably or severely addicted
-  /// also randomly reschedule if in timeframe
-  private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    this.onoManager.Hint(request);
   }
 
   public func IsHard() -> Bool { return Equals(EnumInt(this.config.mode), EnumInt(AddictedMode.Hard)); }

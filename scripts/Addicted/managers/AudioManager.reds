@@ -12,7 +12,7 @@ public class HintProgressCallback extends DelayCallback {
     }
     if ArraySize(this.manager.oneshot) > 0 {
       let size = ArraySize(this.manager.oneshot);
-      let tracked: ref<TrackedHintRequest>;
+      let tracked: ref<TrackedHint>;
       if size == 1 || this.manager.oneshot[0].played == 0 { tracked = this.manager.oneshot[0]; }
       else {
         let random = RandRangeF(0, 1);
@@ -24,13 +24,13 @@ public class HintProgressCallback extends DelayCallback {
   }
 }
 
-public class TrackedHintRequest {
-  public let got: ref<HintRequest>;
+public class TrackedHint {
+  public let got: ref<Hint>;
   public let played: Int32 = 0;
   public let playing: Bool = false;
-  public static func Wrap(request: ref<HintRequest>) -> ref<TrackedHintRequest> {
-    let track = new TrackedHintRequest();
-    track.got = request;
+  public static func Wrap(hint: ref<Hint>) -> ref<TrackedHint> {
+    let track = new TrackedHint();
+    track.got = hint;
     return track;
   }
 }
@@ -49,8 +49,8 @@ public class AudioManager extends IScriptable {
   private let onTierChanged: ref<CallbackHandle>;
   private let onEnteredOrLeftVehicle: ref<CallbackHandle>;
 
-  private let ambient: ref<TrackedHintRequest>;
-  private let oneshot: array<ref<TrackedHintRequest>>;
+  private let ambient: ref<TrackedHint>;
+  private let oneshot: array<ref<TrackedHint>>;
   private let ambientSFX: ref<PlaySoundEvent>;
   private let oneshotSFX: array<ref<PlaySoundEvent>>;
 
@@ -134,32 +134,32 @@ public class AudioManager extends IScriptable {
     }
   }
 
-  public func Hint(request: ref<HintRequest>) -> Void {
+  public func Hint(hint: ref<Hint>) -> Void {
     E(s"hint");
-    if request.IsLoop() {
+    if hint.IsLoop() {
       E(s"loopin...");
-      this.Loop(request);
+      this.Loop(hint);
     }
     else
     {
       if ArraySize(this.oneshot) == 0 {
         E(s"no ono, addin...");
-        this.Add(request);
+        this.Add(hint);
       }
       if ArraySize(this.oneshot) == 1 {
         E(s"single ono found");
-        let matches = this.Augment(request);
+        let matches = this.Augment(hint);
         if !matches {
           E(s"a different ono, so addin...");
-          this.Add(request);
+          this.Add(hint);
         }
       }
       if ArraySize(this.oneshot) == 2 {
         E(s"2 onos found");
-        let matches = this.Augment(request);
+        let matches = this.Augment(hint);
         if !matches {
           E(s"a brand new ono, so swapin' last...");
-          this.SwapLast(request);
+          this.SwapLast(hint);
         }
       }
     }
@@ -167,7 +167,7 @@ public class AudioManager extends IScriptable {
     this.Schedule();
   }
 
-  public func Play(tracked: ref<TrackedHintRequest>) -> Void {
+  public func Play(tracked: ref<TrackedHint>) -> Void {
     let policy = this.ToPolicy();
     E(s"-----------------------------------------------");
     E(s"play");
@@ -245,22 +245,22 @@ public class AudioManager extends IScriptable {
     }
   }
 
-  private func Loop(request: ref<HintRequest>) -> Void {
+  private func Loop(hint: ref<Hint>) -> Void {
     if IsDefined(this.ambient)
     {
-      if Equals(this.ambient.got.Sound(), request.Sound())
+      if Equals(this.ambient.got.Sound(), hint.Sound())
       {
-        if request.until > this.ambient.got.until {
-          this.ambient.got.until = request.until;
+        if hint.until > this.ambient.got.until {
+          this.ambient.got.until = hint.until;
         }
         return;
       }
       if !this.ambient.playing
       {
         let sfx = new PlaySoundEvent();
-        sfx.SetSoundName(request.Sound());
+        sfx.SetSoundName(hint.Sound());
         let lastSFX = this.ambientSFX;
-        this.ambient = TrackedHintRequest.Wrap(request);
+        this.ambient = TrackedHint.Wrap(hint);
         this.ambientSFX = sfx;
         GameInstance.GetAudioSystem(this.owner.GetGame())
           .Switch(lastSFX.GetSoundName(), sfx.GetSoundName(), this.owner.GetEntityID(), n"Addicted");
@@ -269,30 +269,30 @@ public class AudioManager extends IScriptable {
     else
     {
       let sfx = new PlaySoundEvent();
-      sfx.SetSoundName(request.Sound());
-      this.ambient = TrackedHintRequest.Wrap(request);
+      sfx.SetSoundName(hint.Sound());
+      this.ambient = TrackedHint.Wrap(hint);
       this.ambientSFX = sfx;
     }
   }
 
-  private func Add(request: ref<HintRequest>) -> Void {
+  private func Add(hint: ref<Hint>) -> Void {
     let sfx = new PlaySoundEvent();
-    sfx.SetSoundName(request.Sound());
-    let tracked = TrackedHintRequest.Wrap(request);
+    sfx.SetSoundName(hint.Sound());
+    let tracked = TrackedHint.Wrap(hint);
     ArrayPush(this.oneshot, tracked);
     ArrayPush(this.oneshotSFX, sfx);
   }
 
-  private func Augment(request: ref<HintRequest>) -> Bool {
+  private func Augment(hint: ref<Hint>) -> Bool {
     let matches = false;
     for shot in this.oneshot {
-      if Equals(shot.got.Sound(), request.Sound()) {
-        E(s"same ono, augmenting initial request...");
-        if request.until > shot.got.until {
-          E(s"will last to \(ToString(request.until)) instead of \(ToString(shot.got.until))");
-          shot.got.until = request.until;
+      if Equals(shot.got.Sound(), hint.Sound()) {
+        E(s"same ono, augmenting initial hint...");
+        if hint.until > shot.got.until {
+          E(s"will last to \(ToString(hint.until)) instead of \(ToString(shot.got.until))");
+          shot.got.until = hint.until;
         }
-        if shot.got.times < Cast<Int32>(request.AtMost()) {
+        if shot.got.times < Cast<Int32>(hint.AtMost()) {
           E(s"times increased: \(ToString(shot.got.times)) -> \(ToString(shot.got.times+1))");
           shot.got.times += 1;
         }
@@ -303,10 +303,10 @@ public class AudioManager extends IScriptable {
     return matches;
   }
 
-  private func SwapLast(request: ref<HintRequest>) -> Void {
+  private func SwapLast(hint: ref<Hint>) -> Void {
     let sfx = new PlaySoundEvent();
-    sfx.SetSoundName(request.Sound());
-    let tracked = TrackedHintRequest.Wrap(request);
+    sfx.SetSoundName(hint.Sound());
+    let tracked = TrackedHint.Wrap(hint);
     ArrayPop(this.oneshot);
     ArrayPush(this.oneshot, tracked);
     let lastSFX = ArrayPop(this.oneshotSFX);
@@ -320,17 +320,17 @@ public class AudioManager extends IScriptable {
     ArrayPop(this.oneshotSFX);
   }
 
-  private func Finished(request: ref<TrackedHintRequest>) -> Bool {
-    return request.played == request.got.times;
+  private func Finished(hint: ref<TrackedHint>) -> Bool {
+    return hint.played == hint.got.times;
   }
 
-  private func Outdated(request: ref<HintRequest>, now: Float) -> Bool {
-    return request.until <= now;
+  private func Outdated(hint: ref<Hint>, now: Float) -> Bool {
+    return hint.until <= now;
   }
 
-  private func Done(request: ref<TrackedHintRequest>, now: Float) -> Bool {
-    if request.got.IsLoop() { return this.Outdated(request.got, now); }
-    return this.Finished(request) || this.Outdated(request.got, now);
+  private func Done(hint: ref<TrackedHint>, now: Float) -> Bool {
+    if hint.got.IsLoop() { return this.Outdated(hint.got, now); }
+    return this.Finished(hint) || this.Outdated(hint.got, now);
   }
 
   private func Scheduled() -> Bool {
