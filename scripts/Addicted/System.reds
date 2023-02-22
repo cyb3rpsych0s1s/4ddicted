@@ -5,6 +5,13 @@ import Addicted.*
 import Addicted.Helpers.*
 import Addicted.Manager.*
 
+public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
+  public let system: wref<AddictedSystem>;
+  public func Call() -> Void {
+    this.system.OnUpdateWithdrawalSymptoms();
+  }
+}
+
 public class AddictedSystem extends ScriptableSystem {
   
   private let player: wref<PlayerPuppet>;
@@ -41,7 +48,9 @@ public class AddictedSystem extends ScriptableSystem {
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
       this.board = GameInstance.GetBlackboardSystem(this.player.GetGame()).Get(GetAllBlackboardDefs().PlayerStateMachine);
 
-      this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+      let callback = new UpdateWithdrawalSymptomsCallback();
+      callback.system = this;
+      this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
 
       this.stimulantManager = new StimulantManager();
       this.stimulantManager.Register(this.player);
@@ -114,8 +123,8 @@ public class AddictedSystem extends ScriptableSystem {
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
   }
 
-  public func OnUpdateWithdrawalSymptomsRequest(request: ref<UpdateWithdrawalSymptomsRequest>) -> Void {
-    E(s"on update withdrawal symptoms request");
+  public func OnUpdateWithdrawalSymptoms() -> Void {
+    E(s"on update withdrawal symptoms");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let now: Int32 = 0;
@@ -130,9 +139,11 @@ public class AddictedSystem extends ScriptableSystem {
     }
 
     if NotEquals(this.updateSymtomsID, GetInvalidDelayID()) {
-      this.delaySystem.CancelDelay(this.updateSymtomsID);
+      this.delaySystem.CancelCallback(this.updateSymtomsID);
     }
-    this.updateSymtomsID = this.delaySystem.DelayScriptableSystemRequest(this.GetClassName(), new UpdateWithdrawalSymptomsRequest(), 600., true);
+    let callback = new UpdateWithdrawalSymptomsCallback();
+    callback.system = this;
+    this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
   public func OnConsumeItem(itemID: ItemID) -> Void {
@@ -233,7 +244,9 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
 
-    this.delaySystem.DelayScriptableSystemRequestNextFrame(this.GetClassName(), new UpdateWithdrawalSymptomsRequest());
+    let callback = new UpdateWithdrawalSymptomsCallback();
+    callback.system = this;
+    this.delaySystem.DelayCallbackNextFrame(callback);
   }
 
   public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
@@ -270,31 +283,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnMetabolicEditorChanged(hasMetabolicEditor: Bool) -> Void {
     this.hasMetabolicEditorEquipped = hasMetabolicEditor;
-  }
-
-  protected final func OnCoughingRequest(request: ref<CoughingRequest>) -> Void {
-    E(s"on coughing request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnVomitingRequest(request: ref<VomitingRequest>) -> Void {
-    E(s"on vomiting request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnAchingRequest(request: ref<AchingRequest>) -> Void {
-    E(s"on aching request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnBreatheringRequest(request: ref<BreatheringRequest>) -> Void {
-    E(s"on breathering request");
-    this.ProcessHintRequest(request);
-  }
-
-  protected final func OnHeadAchingRequest(request: ref<HeadAchingRequest>) -> Void {
-    E(s"on headaching request");
-    this.ProcessHintRequest(request);
   }
 
   private func Consume(id: TweakDBID, amount: Int32) -> Bool {
@@ -336,9 +324,9 @@ public class AddictedSystem extends ScriptableSystem {
       s"\(ToString(averageThreshold)) addicted (consumable threshold)"
     );
     let now = this.timeSystem.GetGameTimeStamp();
-    let request = Helper.AppropriateHintRequest(id, threshold, now);
-    if IsDefined(request) {
-      this.ProcessHintRequest(request);
+    let hint = Helper.AppropriateHint(id, threshold, now);
+    if IsDefined(hint) {
+      this.onoManager.Hint(hint);
     }
   }
 
@@ -373,12 +361,6 @@ public class AddictedSystem extends ScriptableSystem {
   public func DismissBiomonitor() -> Void {
     let event: ref<DismissBiomonitorEvent> = new DismissBiomonitorEvent();
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
-  }
-
-  /// play an onomatopea as a hint to the player when reaching notably or severely addicted
-  /// also randomly reschedule if in timeframe
-  private func ProcessHintRequest(request: ref<HintRequest>) -> Void {
-    this.onoManager.Hint(request);
   }
 
   public func IsHard() -> Bool { return Equals(EnumInt(this.config.mode), EnumInt(AddictedMode.Hard)); }
