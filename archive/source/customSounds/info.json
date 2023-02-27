@@ -1,0 +1,13 @@
+{
+ "name": "Addicted",
+ "version": "0.7.0",
+ "customSounds": [
+   {
+     "name": "test_custom_sound_male",
+     "type": "mod_sfx_2d",
+     "file": "male_test.wav",
+     "gain": 1.0,
+     "pitch": 0.1
+   }
+ ]
+}

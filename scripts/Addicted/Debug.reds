@@ -168,3 +168,9 @@ public func Checkup() -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame());
   system.Checkup();
 }
+
+// use like: Game.GetPlayer():DebugSound("test_custom_sound_male");
+@addMethod(PlayerPuppet)
+public func DebugSound(sound: String) -> Void {
+  GameObject.PlaySound(this, StringToName(sound));
+}
