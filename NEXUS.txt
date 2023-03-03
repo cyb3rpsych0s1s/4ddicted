@@ -16,6 +16,10 @@ Basically adds a chance to become addicted to consumables too frequently consume
 • refraining from consumption when already addicted can lead to withdrawal symptoms
 • some cyberwares have an impact on addiction
 
+A complete description of the mod's gameplay mechanics can be found in the book - https://cyb3rpsych0s1s.github.io/4ddicted/mod.html
+but let me warn you that it will ruin any surprise that this mod has for you.
+People who want an immersive playthrough and discover its subtleties should refrain from reading it.
+
 :: RECOMMENDED MODS ::
 
 - Static Bar Bug Fixes - https://www.nexusmods.com/cyberpunk2077/mods/4316
