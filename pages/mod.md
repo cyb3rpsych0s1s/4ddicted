@@ -63,6 +63,8 @@ Whenever V becomes notably addict to any healer, the benefits of the consumables
 
 The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.
 
+![screenshot status effect BounceBack icon](./cheatsheet/pictures/ingame-custom-icons.png)
+
 ##### Stimulants
 
 - consumables: RAM Jolt, Stamina Booster and Carry Capacity Booster.
@@ -117,3 +119,6 @@ This item will warn V whenever crossing a serious thresholds.
 > e.g. a little animation will play on-screen with the Biomonitor warning V about his/her current condition.
 
 The UI is also dismissable, and automatically hides whenever interacting with another interaction UI in the game.
+
+![screenshot biomonitor loading](./pictures/ingame-biomonitor-loading.png)
+![screenshot biomonitor diagnosis](./pictures/ingame-biomonitor-diagnosis.png)
