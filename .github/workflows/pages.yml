@@ -6,7 +6,7 @@ on:
     paths:
       - '.github'
       - 'book.toml'
-      - 'pages'
+      - 'pages/**'
       - '**.md'
 
 jobs:
