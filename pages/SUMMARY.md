@@ -21,6 +21,10 @@ Welcome to Addicted notebook !
     - [Effectors](./patterns/effectors.md)
   - [Troubleshooting](./troubleshooting.md)
 
+## ⚠️ Spoiler
+
+- [Mod mechanics](./mod.md)
+
 ## Archives
 
 - [Travelog](./travelog/summary.md)
