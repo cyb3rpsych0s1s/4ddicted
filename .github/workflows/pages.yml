@@ -7,7 +7,7 @@ on:
       - '.github'
       - 'book.toml'
       - 'pages'
-      - '*.md'
+      - '**.md'
 
 jobs:
   deploy:
