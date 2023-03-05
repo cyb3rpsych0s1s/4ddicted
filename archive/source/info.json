@@ -1,0 +1,34 @@
+{
+  "name": "Addicted",
+  "version": "0.7.3",
+  "customSounds": [
+     {
+       "name": "test_custom_sound_female",
+       "type": "mod_sfx_2d",
+       "file": "femv_myway.wav",
+       "gain": 1.0,
+       "pitch": 0.1
+     },
+     {
+       "name": "test_custom_sound_female2",
+       "type": "mod_sfx_2d",
+       "file": "femaletest.wav",
+       "gain": 1.0,
+       "pitch": 0.1
+     },
+     {
+      "name": "test_custom_sound_male",
+      "type": "mod_sfx_2d",
+      "file": "malev_heregoesnothin.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+     {
+      "name": "test_custom_sound_male2",
+      "type": "mod_sfx_2d",
+      "file": "maletest.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    }
+  ]
+ }
