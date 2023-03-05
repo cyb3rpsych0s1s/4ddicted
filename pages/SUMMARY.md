@@ -18,7 +18,9 @@ Welcome to Addicted notebook !
     - [Events](./patterns/events.md)
     - [Blackboards](./patterns/blackboards.md)
     - [Listeners](./patterns/listeners.md)
+    - [Tasks](./patterns/tasks.md)
     - [Effectors](./patterns/effectors.md)
+    - [Scriptables](./patterns/scriptables.md)
   - [Troubleshooting](./troubleshooting.md)
 
 ## ⚠️ Spoiler

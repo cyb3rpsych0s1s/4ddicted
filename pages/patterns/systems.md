@@ -39,6 +39,11 @@ public class System extends ScriptableSystem {
 Requests are systems' asynchronous mechanism.
 It's more often than not used to convey an action.
 
+⚠️ be careful that there can only be up to ~128 system requests **game-wide**,
+so prefer [DelayCallback](./callbacks.md) whenever possible.
+
+> credits to psiberx and jekky on discord for finding out about this limitation in memory.
+
 ### Delayed requests
 
 Requests can also be delayed asynchronously.

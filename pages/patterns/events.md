@@ -111,3 +111,20 @@ protected cb func OnGameAttached() -> Bool {
   }
 }
 ```
+
+### event inherited from RED Event
+
+see [cyberdoc](https://jac3km4.github.io/cyberdoc/#27273)
+
+```swift
+public native class GameObject extends GameEntity {
+  // certain event will automatically trigger a method with this exact signature
+  //                               vvvvvvvvvvvv
+  protected cb func OnHit(evt: ref<gameHitEvent>) -> Bool {
+    this.SetScannerDirty(true);
+    this.ProcessDamagePipeline(evt);
+  }
+}
+```
+
+> credits to psiberx
