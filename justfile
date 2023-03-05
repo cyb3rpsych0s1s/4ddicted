@@ -12,12 +12,14 @@ alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2
 
 # codebase (outside of game files)
 cet_input_dir := join("mods", "Addicted")
+redmod_input_dir := join("redmod", "Addicted")
 red_input_dir := join("scripts", "Addicted")
 tweak_input_dir := join("tweaks", "Addicted")
 archive_input_dir := join("archive", "packed")
 
 # game files
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
+redmod_output_dir := join(game_dir, "mods", "Addicted")
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
 archive_output_dir := join(game_dir, "archive", "pc", "mod")
@@ -63,12 +65,17 @@ compile:
 build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
 
+deploy: build
+    cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
+    ./redMod.exe deploy -root="{{game_dir}}"
+
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
+    cp -r '{{redmod_input_dir}}'/. '{{redmod_output_dir}}'
 
 # 🧾 show logs from CET and RED
 logs:
