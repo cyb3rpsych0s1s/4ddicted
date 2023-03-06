@@ -8,7 +8,11 @@ Mandatory steps, in order:
    > this doc assumes you installed it on Steam
    > but you can easily modify it for whichever game launcher
 
-2. ⚙️ CET
+2. ⚙️ REDmod
+   >  modding tools
+   install DLC from your launcher, e.g. Steam
+
+3. ⚙️ CET
    > scripting engine, based on .lua
    1. download [latest CET release](https://github.com/yamashi/CyberEngineTweaks/releases/latest)
    2. download [latest Cybercmd release](https://github.com/jac3km4/cybercmd/releases/latest)
