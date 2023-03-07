@@ -196,6 +196,36 @@ public class Helper {
     return null;
   }
 
+  public static func AppropriateMood(gender: CName, threshold: Threshold, warned: Bool) -> CName {
+    let ono: CName;
+    let odds: Float = 1.0;
+    if warned { odds -= 0.3; }
+    if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) { odds -= 0.3; }
+    let random = RandF();
+    let choice: Int32;
+    let last: Int32;
+    let females = [n"femv_dang_this_thing_will_never_stop", n"femv_yeah_I_know"];
+    let males = [n"malev_come_on_again", n"malev_just_leave_me_alone"];
+    let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
+    if random > odds {
+      if Equals(gender, n"Male") {
+        last = ArraySize(males) -1;
+        choice = RandRange(0, last);
+        ono = males[choice];
+      }
+      else {
+        last = ArraySize(females) -1;
+        choice = RandRange(0, last);
+        ono = females[choice];
+      }
+    } else {
+        last = ArraySize(onos) -1;
+        choice = RandRange(0, last);
+        ono = onos[choice];
+    }
+    return ono;
+  }
+
   public static func Lower(threshold: Threshold) -> Threshold {
     switch(threshold) {
       case Threshold.Severely:

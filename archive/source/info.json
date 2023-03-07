@@ -3,6 +3,20 @@
   "version": "0.7.3",
   "customSounds": [
      {
+       "name": "femv_dang_this_thing_will_never_stop",
+       "type": "mod_sfx_2d",
+       "file": "femv_dang_this_thing_will_never_stop.wav",
+       "gain": 1.0,
+       "pitch": 0.1
+     },
+     {
+       "name": "femv_yeah_I_know",
+       "type": "mod_sfx_2d",
+       "file": "femv_yeah_I_know.wav",
+       "gain": 1.0,
+       "pitch": 0.1
+     },
+     {
        "name": "femv_cannot_stand_it_really_could_use_some_ram_right_now",
        "type": "mod_sfx_2d",
        "file": "femv_cannot_stand_it_really_could_use_some_ram_right_now.wav",

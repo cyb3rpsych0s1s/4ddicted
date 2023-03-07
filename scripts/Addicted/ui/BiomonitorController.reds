@@ -1,6 +1,8 @@
 import Addicted.Utils.E
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
+import Addicted.Helper
+import Addicted.Threshold
 
 @if(!ModuleExists("Codeware.UI"))
 @addField(inkWidget)
@@ -814,9 +816,13 @@ public class BiomonitorController extends inkGameController {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
             if !(this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
-                let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
-                let ono: CName = onos[RandRange(0,1)];
-                GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
+                let system = AddictedSystem.GetInstance((this.GetPlayerControlledObject() as PlayerPuppet).GetGame()) as AddictedSystem;
+                let gender: CName = (this.GetPlayerControlledObject() as ScriptedPuppet).GetResolvedGenderName();
+                let threshold: Threshold = system.HighestThreshold();
+                let warned: Bool = system.AlreadyWarned();
+                let mood: CName = Helper.AppropriateMood(gender, threshold, warned);
+                E(s"warned: \(ToString(warned)), highest threshold: \(ToString(threshold)), mood: \(NameToString(mood))");
+                GameObject.PlaySound(this.GetPlayerControlledObject(), mood);
             }
             return closed;
         }
