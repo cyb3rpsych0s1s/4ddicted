@@ -4,10 +4,10 @@ on:
     branches:
       - main
     paths:
-      - '.github'
+      - '.github/**'
       - 'book.toml'
-      - 'pages'
-      - '*.md'
+      - 'pages/**'
+      - '**.md'
 
 jobs:
   deploy:
