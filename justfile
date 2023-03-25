@@ -23,6 +23,7 @@ cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks",
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
 archive_output_dir := join(game_dir, "archive", "pc", "mod")
+redmod_output_dir := join(game_dir, "mods", "Addicted")
 red_cache_dir := join(game_dir, "r6", "cache")
 
 # bundle files for release
@@ -172,7 +173,7 @@ bundle:
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
-uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak
+uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
 
 # 🗑️🎭  clear out mod archive files in game files
 uninstall-archive:
@@ -190,6 +191,10 @@ uninstall-red:
 # 🗑️🗜️   clear out mod tweaks files in game files
 uninstall-tweak:
     rm -rf '{{tweak_output_dir}}'
+
+# 🗑️⚙️   clear out mod REDmod files in game files
+uninstall-redmod:
+    rm -rf '{{redmod_output_dir}}'
 
 alias nuke := nuclear
 
