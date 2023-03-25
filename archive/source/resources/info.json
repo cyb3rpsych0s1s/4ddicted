@@ -15,6 +15,20 @@
       "file": "fem_v_yik.wav",
       "gain": 1.0,
       "pitch": 0.1
+    },
+    {
+      "name": "fem_v_fuck_this_biomon_just_not_right_now",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_ftbnrn.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "fem_v_get_this_damn_ui_out_of_my_face",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_gtduioomf_YjLBLTJrz1AHKsMqvHvY.wav",
+      "gain": 1.0,
+      "pitch": 0.1
     }
   ]
  }
