@@ -4,6 +4,8 @@ set dotenv-load
 DEFAULT_GAME_DIR := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 # default to CI RED cli path
 DEFAULT_RED_CLI := join(".", "redscript-cli.exe")
+# default to local WolvenKit cli path
+DEFAULT_WK_CLI := join(".", "WolvenKit.CLI.exe")
 
 # installation dir for Cyberpunk 2077, e.g. Steam
 game_dir := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
@@ -39,6 +41,9 @@ red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
 
 # path to RED cache bundle file in game files
 red_cache_bundle := join(red_cache_dir, "final.redscripts")
+
+# path to WolvenKit CLI
+wk_cli := env_var_or_default("WK_CLI", DEFAULT_WK_CLI)
 
 # list all commands
 default:
@@ -202,3 +207,8 @@ nuclear:
     rm -rf '{{ join(game_dir, "r6") }}'
     rm -rf '{{ join(game_dir, "red4ext") }}'
     rm -rf '{{ join(game_dir, "archive", "pc", "mod") }}'
+
+# ↘️  extract audios (add .wem to WolvenKit project, then point to this directory and specify where to export)
+extract IN OUT:
+    mkdir -p '{{OUT}}'
+    '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
