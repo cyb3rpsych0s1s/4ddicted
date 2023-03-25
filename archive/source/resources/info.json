@@ -29,6 +29,34 @@
       "file": "fem_v_gtduioomf_YjLBLTJrz1AHKsMqvHvY.wav",
       "gain": 1.0,
       "pitch": 0.1
+    },
+    {
+      "name": "male_v_as_if_I_didnt_know_already",
+      "type": "mod_sfx_2d",
+      "file": "male_v_aiidka.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "male_v_yeah_I_know",
+      "type": "mod_sfx_2d",
+      "file": "male_v_yik_05.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "male_v_fuck_this_biomon_just_not_right_now",
+      "type": "mod_sfx_2d",
+      "file": "male_v_ftbjnrn.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "male_v_get_this_damn_ui_out_of_my_face",
+      "type": "mod_sfx_2d",
+      "file": "male_v_gtduioomf_02.wav",
+      "gain": 1.0,
+      "pitch": 0.1
     }
   ]
  }
