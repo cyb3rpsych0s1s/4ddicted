@@ -211,3 +211,10 @@ nuclear:
 extract IN OUT:
     mkdir -p '{{OUT}}'
     '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
+
+encode:
+  for file in `ls ./archive/source/customSounds`; do \
+    if [[ $file == *.mp3 ]]; then \
+        ffmpeg -i $file -ar 44100 -sample_fmt s16 -y ${file%.mp3}.wav; \
+    fi \
+  done
