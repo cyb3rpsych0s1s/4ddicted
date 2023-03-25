@@ -1,55 +1,5 @@
 {
   "name": "Addicted",
   "version": "0.7.3",
-  "customSounds": [
-     {
-       "name": "femv_dang_this_thing_will_never_stop",
-       "type": "mod_sfx_2d",
-       "file": "femv_dang_this_thing_will_never_stop.wav",
-       "gain": 1.0,
-       "pitch": 0.1
-     },
-     {
-       "name": "femv_yeah_I_know",
-       "type": "mod_sfx_2d",
-       "file": "femv_yeah_I_know.wav",
-       "gain": 1.0,
-       "pitch": 0.1
-     },
-     {
-       "name": "femv_cannot_stand_it_really_could_use_some_ram_right_now",
-       "type": "mod_sfx_2d",
-       "file": "femv_cannot_stand_it_really_could_use_some_ram_right_now.wav",
-       "gain": 1.0,
-       "pitch": 0.1
-     },
-     {
-       "name": "femv_feel_like_could_use_some_ram_right_now",
-       "type": "mod_sfx_2d",
-       "file": "femv_feel_like_could_use_some_ram_right_now.wav",
-       "gain": 1.0,
-       "pitch": 0.1
-     },
-     {
-      "name": "malev_come_on_again",
-      "type": "mod_sfx_2d",
-      "file": "malev_come_on_again.wav",
-      "gain": 0.5,
-      "pitch": 0.1
-    },
-    {
-     "name": "malev_gotta_get_some_more_jolt_soon",
-     "type": "mod_sfx_2d",
-     "file": "malev_gotta_get_some_more_jolt_soon.wav",
-     "gain": 0.5,
-     "pitch": 0.1
-    },
-    {
-     "name": "malev_just_leave_me_alone",
-     "type": "mod_sfx_2d",
-     "file": "malev_just_leave_me_alone.wav",
-     "gain": 1.0,
-     "pitch": 0.1
-    }
-  ]
+  "customSounds": []
  }
