@@ -204,8 +204,22 @@ public class Helper {
     let random = RandF();
     let choice: Int32;
     let last: Int32;
-    let females = [n"femv_dang_this_thing_will_never_stop", n"femv_yeah_I_know"];
-    let males = [n"malev_come_on_again", n"malev_just_leave_me_alone"];
+    let females: array<CName> = [
+      n"fem_v_as_if_I_didnt_know_already",
+      n"fem_v_come_on_again",
+      n"fem_v_come_on_biomon_cant_you_give_me_a_break",
+      n"fem_v_damn_cant_you_just_leave_me_alone",
+      n"fem_v_damn_thats_fucked_up",
+      n"fem_v_yeah_I_know"
+    ];
+    let males: array<CName> = [
+      n"male_v_as_if_I_didnt_know_already",
+      n"male_v_come_on_again",
+      n"male_v_come_on_biomon_cant_you_give_me_a_break",
+      n"male_v_damn_cant_you_just_leave_me_alone",
+      n"male_v_damn_thats_fucked_up",
+      n"male_v_yeah_I_know"
+    ];
     let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
     if random > odds {
       if Equals(gender, n"Male") {
