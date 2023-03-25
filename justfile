@@ -78,13 +78,6 @@ rebuild:
     cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
-    @just wolvenkit_hotfix
-
-# WolvenKit hotfix : copy custom sounds related files to packed folder
-wolvenkit_hotfix:
-    mkdir -p '{{ join(archive_input_dir, "mods", "Addicted", "customSounds") }}'
-    cp -R './archive/source/customSounds'/*.wav '{{ join(archive_input_dir, "mods", "Addicted", "customSounds") }}'
-    cp './archive/source/info.json' '{{ join(archive_input_dir, "mods", "Addicted", "info.json") }}'
 
 # 🧾 show logs from CET and RED
 logs:
