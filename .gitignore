@@ -14,5 +14,5 @@ archive/packed/
 ./Addicted/
 .installation/
 dump.redscripts
-*.env
+**/*.env
 medium/
