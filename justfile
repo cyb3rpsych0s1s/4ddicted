@@ -215,6 +215,6 @@ extract IN OUT:
 encode:
   for file in `ls ./archive/source/customSounds`; do \
     if [[ $file == *.mp3 ]]; then \
-        ffmpeg -i $file -ar 44100 -sample_fmt s16 -y ${file%.mp3}.wav; \
+        ffmpeg -i ./archive/source/customSounds/$file -ar 44100 -sample_fmt s16 -y ./archive/source/customSounds/${file%.mp3}.wav; \
     fi \
   done
