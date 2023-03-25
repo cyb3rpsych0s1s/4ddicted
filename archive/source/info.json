@@ -1,5 +1,20 @@
 {
   "name": "Addicted",
   "version": "0.7.3",
-  "customSounds": []
+  "customSounds": [
+    {
+      "name": "fem_v_as_if_I_didnt_know_already",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_aiidka.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "fem_v_yeah_I_know",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_yik.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    }
+  ]
  }
