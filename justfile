@@ -82,7 +82,8 @@ rebuild:
 
 # WolvenKit hotfix : copy custom sounds related files to packed folder
 wolvenkit_hotfix:
-    cp -R './archive/source/customSounds' '{{ join(archive_input_dir, "mods", "Addicted", "customSounds") }}'
+    mkdir -p '{{ join(archive_input_dir, "mods", "Addicted", "customSounds") }}'
+    cp -R './archive/source/customSounds'/*.wav '{{ join(archive_input_dir, "mods", "Addicted", "customSounds") }}'
     cp './archive/source/info.json' '{{ join(archive_input_dir, "mods", "Addicted", "info.json") }}'
 
 # 🧾 show logs from CET and RED
