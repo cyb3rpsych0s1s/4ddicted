@@ -17,6 +17,8 @@ cet_input_dir := join("mods", "Addicted")
 red_input_dir := join("scripts", "Addicted")
 tweak_input_dir := join("tweaks", "Addicted")
 archive_input_dir := join("archive", "packed")
+sounds_input_dir := join("archive", "source", "customSounds")
+info_input_file := join("archive", "source", "resources", "info.json")
 
 # game files
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
@@ -68,8 +70,11 @@ compile:
 # ➡️  copy codebase files to game files, including archive
 build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
+    mkdir -p '{{redmod_output_dir}}'/customSounds
+    cp -r '{{sounds_input_dir}}'/*.wav '{{redmod_output_dir}}'/customSounds/
+    cp '{{info_input_file}}' '{{redmod_output_dir}}'/info.json
 
-deploy: build
+deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
     ./redMod.exe deploy -root="{{game_dir}}"
 
