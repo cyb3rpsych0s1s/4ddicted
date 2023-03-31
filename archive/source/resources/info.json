@@ -38,6 +38,13 @@
       "pitch": 0.1
     },
     {
+      "name": "fem_v_dont_you_see_im_in_trouble",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_dysiit.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
       "name": "fem_v_fuck_this_biomon_just_not_right_now",
       "type": "mod_sfx_2d",
       "file": "fem_v_ftbnrn.wav",
@@ -52,9 +59,37 @@
       "pitch": 0.1
     },
     {
+      "name": "fem_v_so_frustrating",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_sf_03.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
       "name": "fem_v_yeah_I_know",
       "type": "mod_sfx_2d",
       "file": "fem_v_yik.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "fem_v_yeah_yeah_yeah_alright",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_yya_04.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "fem_v_yeah_yeah_yeah_who_cares",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_yyywc.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "fem_v_you_tell_me_biomon",
+      "type": "mod_sfx_2d",
+      "file": "fem_v_ytmb.wav",
       "gain": 1.0,
       "pitch": 0.1
     },
@@ -94,6 +129,13 @@
       "pitch": 0.1
     },
     {
+      "name": "male_v_dont_you_see_im_in_trouble",
+      "type": "mod_sfx_2d",
+      "file": "male_v_dysiit.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
       "name": "male_v_fuck_this_biomon_just_not_right_now",
       "type": "mod_sfx_2d",
       "file": "male_v_ftbjnrn.wav",
@@ -108,9 +150,37 @@
       "pitch": 0.1
     },
     {
+      "name": "male_v_so_frustrating",
+      "type": "mod_sfx_2d",
+      "file": "male_v_sf_03.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
       "name": "male_v_yeah_I_know",
       "type": "mod_sfx_2d",
       "file": "male_v_yik_05.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "male_v_yeah_yeah_yeah_alright",
+      "type": "mod_sfx_2d",
+      "file": "male_v_yyya.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "male_v_yeah_yeah_yeah_who_cares",
+      "type": "mod_sfx_2d",
+      "file": "male_v_yyywc.wav",
+      "gain": 1.0,
+      "pitch": 0.1
+    },
+    {
+      "name": "male_v_you_tell_me_biomon",
+      "type": "mod_sfx_2d",
+      "file": "male_v_ytmb.wav",
       "gain": 1.0,
       "pitch": 0.1
     }
