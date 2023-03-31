@@ -223,3 +223,9 @@ encode OVERWRITE='false':
         ffmpeg -i ./archive/source/customSounds/$file -ar 44100 -sample_fmt s16 -y ./archive/source/customSounds/${file%.mp3}.wav; \
     fi \
   done
+
+# analyze given file audio settings
+analyze FILE:
+  ww2ogg '{{FILE}}' -o vanilla.ogg
+  ffprobe -i vanilla.ogg -show_format
+  rm -f vanilla.ogg
