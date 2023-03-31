@@ -2,6 +2,8 @@
 
 Here are the steps required to get you a decent working development environment for this mod.
 
+## For players
+
 Mandatory steps, in order:
 
 1. 🎮 Cyberpunk
@@ -9,7 +11,7 @@ Mandatory steps, in order:
    > but you can easily modify it for whichever game launcher
 
 2. ⚙️ REDmod
-   >  modding tools
+   >  modding tools (used to load custom souds)
    install DLC from your launcher, e.g. Steam
 
 3. ⚙️ CET
@@ -38,11 +40,6 @@ Then, in any order:
    2. download [latest RED4ext release](https://github.com/WopsS/RED4ext/releases/latest)
    3. unzip at the root of your game folder
 
-3. 🔺 RED Hot Tools
-   > allows for archive, scripts and tweaks hot-reloading
-   1. download [latest RED Hot Tools release](https://github.com/psiberx/cp2077-red-hot-tools/releases/latest)
-   2. unzip at the root of your game folder
-
 4. 🔺 TweakXL
    > useful to create custom tweaks (modify TweakDB, REDengine 4 proprietary database)
    1. download [latest TweakXL release](https://github.com/psiberx/cp2077-tweak-xl/releases/latest)
@@ -53,7 +50,25 @@ Then, in any order:
    1. download [latest ArchiveXL release](https://github.com/psiberx/cp2077-archive-xl/releases/latest)
    2. unzip at the root of your game folder
 
-6. 🔺 clipTester or SoundClipTester
+6. 🔺 Codeware
+   > redscript dependency
+   1. download [latest Codeware release](https://github.com/psiberx/cp2077-codeware/releases/latest)
+   2. unzip at the root of your game folder
+
+## Only for developers
+
+If you would like to contribute to this repo,
+I would strongly recommend:
+
+1. 🔺 Redscript IDE VSCode plugin
+   > provides autocompletion in Visual Studio Code
+   1. download [latest Redscript IDE VSCode plugin release](https://github.com/jac3km4/redscript-ide-vscode/releases/latest)
+   2. install manually in VSCode
+2. 🔺 RED Hot Tools
+   > allows for archive, scripts and tweaks hot-reloading in-game
+   1. download [latest RED Hot Tools release](https://github.com/psiberx/cp2077-red-hot-tools/releases/latest)
+   2. unzip at the root of your game folder
+3. 🔺 clipTester or SoundClipTester
    > useful to listen to all sounds in-game via CET console
    1. download [from Nexus](https://www.nexusmods.com/cyberpunk2077/mods/1977?tab=files)
    2. unzip at the root of your game folder
