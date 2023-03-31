@@ -33,6 +33,7 @@ cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweak
 red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
 archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
+redmod_release_dir := join(bundle_dir, "mods", "Addicted")
 
 latest_release := env_var_or_default("LATEST_RELEASE", "")
 latest_version := env_var_or_default("LATEST_VERSION", "")
@@ -172,10 +173,13 @@ bundle:
     mkdir -p '{{cet_release_dir}}'
     mkdir -p '{{red_release_dir}}'
     mkdir -p '{{tweak_release_dir}}'
+    mkdir -p '{{redmod_release_dir}}'/customSounds
     cp -r '{{archive_input_dir}}'/. '{{archive_release_dir}}'
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
+    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_release_dir}}'/customSounds
+    cp '{{info_input_file}}' '{{redmod_release_dir}}'/info.json
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
