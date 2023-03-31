@@ -225,8 +225,6 @@ encode OVERWRITE='false':
     fi \
   done
 
-# analyze given file audio settings
+# analyze given file audio settings (please install ffprobe manually)
 analyze FILE:
-  ww2ogg '{{FILE}}' -o vanilla.ogg
-  ffprobe -i vanilla.ogg -show_format
-  rm -f vanilla.ogg
+  ffprobe -i '{{FILE}}' -show_format -probesize 50000000 -analyzeduration 500
