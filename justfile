@@ -217,9 +217,9 @@ extract IN OUT:
     mkdir -p '{{OUT}}'
     '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
 
-encode:
+encode OVERWRITE='false':
   for file in `ls ./archive/source/customSounds`; do \
-    if [[ $file == *.mp3 ]]; then \
+    if [[ ('{{OVERWRITE}}' != 'false' || ! -f ./archive/source/customSounds/${file%.mp3}.wav) && $file == *.mp3 ]]; then \
         ffmpeg -i ./archive/source/customSounds/$file -ar 44100 -sample_fmt s16 -y ./archive/source/customSounds/${file%.mp3}.wav; \
     fi \
   done
