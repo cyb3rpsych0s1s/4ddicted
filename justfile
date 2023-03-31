@@ -71,7 +71,7 @@ compile:
 build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
     mkdir -p '{{redmod_output_dir}}'/customSounds
-    cp -r '{{sounds_input_dir}}'/*.wav '{{redmod_output_dir}}'/customSounds/
+    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_output_dir}}'/customSounds
     cp '{{info_input_file}}' '{{redmod_output_dir}}'/info.json
 
 deploy:
