@@ -87,6 +87,15 @@ public class Helper {
           t"Items.BonesMcCoy70V2",
           t"Items.HealthBooster"
         ];
+      case Addiction.Anabolics:
+        return [
+          t"Items.StaminaBooster",
+          t"Items.CarryCapacityBooster"
+        ];
+      case Addiction.Neuros:
+        return [
+          t"Items.MemoryBooster"
+        ];
       default:
         break;
     }
