@@ -217,6 +217,7 @@ extract IN OUT:
     mkdir -p '{{OUT}}'
     '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
 
+# encode .mp3 back into .wav
 encode OVERWRITE='false':
   for file in `ls ./archive/source/customSounds`; do \
     if [[ ('{{OVERWRITE}}' != 'false' || ! -f ./archive/source/customSounds/${file%.mp3}.wav) && $file == *.mp3 ]]; then \
