@@ -180,7 +180,7 @@
     {
       "name": "male_v_you_tell_me_biomon",
       "type": "mod_sfx_2d",
-      "file": "en-us/disheartened/male_v_ytmb.wav",
+      "file": "en-us/offhanded/male_v_ytmb.wav",
       "gain": 1.0,
       "pitch": 0.0
     }
