@@ -316,3 +316,12 @@ public class HealerTweaks extends ScriptableTweak {
     }
   }
 }
+
+// // this method is overriden in CET
+// @addMethod(PlayerPuppet)
+// private func CreateSubtitle(text: String) -> ref<scnDialogLineData> { return null; }
+
+@addMethod(SubtitlesGameController)
+public func ExternalCleanup() -> Void {
+  this.Cleanup();
+}

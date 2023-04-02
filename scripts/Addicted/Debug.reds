@@ -4,6 +4,7 @@ import Addicted.Threshold
 import Addicted.System.AddictedSystem
 import Addicted.Utils.{E,EI}
 import Addicted.Helpers.Generic
+import Codeware.Localization.*
 
 public class TestVFXThresholdCallback extends DelayCallback {
   public let player: wref<PlayerPuppet>;
@@ -169,8 +170,20 @@ public func Checkup() -> Void {
   system.Checkup();
 }
 
-// use like: Game.GetPlayer():DebugSound("test_custom_sound_male");
+// use like: Game.GetPlayer():DebugSound("v_scene_rogue_default_m_1af69f1db32d2000"); // vanilla
+// use like: Game.GetPlayer():DebugSound("fem_v_as_if_I_didnt_know_already"); // custom sounds
 @addMethod(PlayerPuppet)
 public func DebugSound(sound: String) -> Void {
   GameObject.PlaySound(this, StringToName(sound));
 }
+
+// use like: Game.GetPlayer():DebugSubtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already");
+// @addMethod(PlayerPuppet)
+// public func DebugSubtitle(key: String) -> Void {
+//   let localization = LocalizationSystem.GetInstance(this.GetGame()) as LocalizationSystem;
+//   let text = localization.GetSubtitle(key);
+//   // let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UIGameData);
+//   let line = this.CreateSubtitle(text);
+//   // board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+//   E(s"subtitle: \(line.text)");
+// }

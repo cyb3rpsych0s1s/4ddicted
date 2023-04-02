@@ -77,4 +77,17 @@ public class Translations {
         return [n"Mod-Addicted-Chemical-Testosterone", n"Mod-Addicted-Chemical-Oxandrin"];
     }
   }
+
+  public static func SubtitleKey(mood: String) -> String {
+    let suffix: String;
+    if StrBeginsWith(mood, "fem_v_") {
+      suffix = StrAfterFirst(mood, "fem_v_");
+      return "Addicted-Voice-Subtitle-" + suffix;
+    }
+    if StrBeginsWith(mood, "male_v_") {
+      suffix = StrAfterFirst(mood, "male_v_");
+      return "Addicted-Voice-Subtitle-" + suffix;
+    }
+    return "";
+  }
 }

@@ -1,6 +1,8 @@
+import Codeware.Localization.*
 import Addicted.Utils.E
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
+import Addicted.Helpers.Translations
 import Addicted.Helper
 import Addicted.Threshold
 
@@ -90,6 +92,14 @@ public class ClosingBeepCallback extends DelayCallback {
         E(s"beep on close");
         this.controller.Beep();
     }            
+}
+
+public class HideSubtitleCallback extends DelayCallback {
+    private let controller: wref<BiomonitorController>;
+    public func Call() -> Void {
+        E(s"hide subtitle");
+        this.controller.HideSubtitle();
+    }
 }
 
 enum BiomonitorRestrictions {
@@ -469,6 +479,8 @@ public class BiomonitorController extends inkGameController {
                 }
             }
 
+            let system: ref<AddictedSystem> = AddictedSystem.GetInstance(this.GetPlayerControlledObject().GetGame()) as AddictedSystem;
+            system.NotifyWarning();
             this.PlayNext(evt.boot);
             return false;
         }
@@ -815,18 +827,50 @@ public class BiomonitorController extends inkGameController {
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
-            if !(this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
-                let system = AddictedSystem.GetInstance((this.GetPlayerControlledObject() as PlayerPuppet).GetGame()) as AddictedSystem;
-                let gender: CName = (this.GetPlayerControlledObject() as ScriptedPuppet).GetResolvedGenderName();
+            let player = this.GetPlayerControlledObject() as PlayerPuppet;
+            if !player.IsInCombat() {
+                let game = player.GetGame();
+                let system = AddictedSystem.GetInstance(game) as AddictedSystem;
+                let localization = LocalizationSystem.GetInstance(game) as LocalizationSystem;
+                let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
+                let gender: CName = player.GetResolvedGenderName();
                 let threshold: Threshold = system.HighestThreshold();
-                let warned: Bool = system.AlreadyWarned();
-                let mood: CName = Helper.AppropriateMood(gender, threshold, warned);
-                E(s"warned: \(ToString(warned)), highest threshold: \(ToString(threshold)), mood: \(NameToString(mood))");
-                GameObject.PlaySound(this.GetPlayerControlledObject(), mood);
+                let warnings: Uint32 = system.Warnings();
+                let mood: CName = Helper.AppropriateMood(gender, threshold, warnings);
+                let key: String = Translations.SubtitleKey(NameToString(mood));
+                let subtitle: String;
+                let line: scnDialogLineData;
+                E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), mood: \(NameToString(mood))");
+                GameObject.PlaySound(player, mood);
+                if StrLen(key) > 0 {
+                    subtitle = localization.GetSubtitle(key);
+                    if StrLen(subtitle) > 0 {
+                        line.duration = 0.3;
+                        line.id = CreateCRUID(12345ul);
+                        line.isPersistent = false;
+                        line.speaker = player;
+                        line.speakerName = "V";
+                        line.text = subtitle;
+                        line.type = scnDialogLineType.AlwaysCinematicNoSpeaker;
+                        board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+                        let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
+                        callback.controller = this;
+
+                        GameInstance
+                        .GetDelaySystem(game)
+                        .DelayCallback(callback, 3.);
+                    }
+                }
             }
             return closed;
         }
         return false;
+    }
+
+    public func HideSubtitle() -> Void {
+        let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem((this.GetPlayerControlledObject() as PlayerPuppet).GetGame()).Get(GetAllBlackboardDefs().UIGameData);
+        let cruids: array<CRUID> = [CreateCRUID(12345ul)];
+        board.SetVariant(GetAllBlackboardDefs().UIGameData.HideDialogLine, cruids, true);
     }
 
     protected cb func OnAnimationStarted(anim: ref<inkAnimProxy>) -> Bool {

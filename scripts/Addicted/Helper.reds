@@ -206,10 +206,15 @@ public class Helper {
   }
 
   public static func AppropriateMood(gender: CName, threshold: Threshold, warned: Bool) -> CName {
+    return Helper.AppropriateMood(gender, threshold, warned ? 1u : 0u);
+  }
+
+  public static func AppropriateMood(gender: CName, threshold: Threshold, warnings: Uint32) -> CName {
     let ono: CName;
     let odds: Float = 1.0;
-    if warned { odds -= 0.3; }
-    if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) { odds -= 0.3; }
+    if warnings >= 5u { odds -= 0.1; } // cumulative
+    if warnings >= 3u { odds -= 0.3; } // cumulative
+    if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) { odds -= 0.3; } // cumulative
     let random = RandF();
     let choice: Int32;
     let last: Int32;
@@ -219,7 +224,14 @@ public class Helper {
       n"fem_v_come_on_biomon_cant_you_give_me_a_break",
       n"fem_v_damn_cant_you_just_leave_me_alone",
       n"fem_v_damn_thats_fucked_up",
-      n"fem_v_yeah_I_know"
+      n"fem_v_dont_you_see_im_in_trouble",
+      n"fem_v_fuck_this_biomon_just_not_right_now",
+      n"fem_v_get_this_damn_ui_out_of_my_face",
+      n"fem_v_so_frustrating",
+      n"fem_v_yeah_I_know",
+      n"fem_v_yeah_yeah_yeah_alright",
+      n"fem_v_yeah_yeah_yeah_who_cares",
+      n"fem_v_you_tell_me_biomon"
     ];
     let males: array<CName> = [
       n"male_v_as_if_I_didnt_know_already",
@@ -227,7 +239,14 @@ public class Helper {
       n"male_v_come_on_biomon_cant_you_give_me_a_break",
       n"male_v_damn_cant_you_just_leave_me_alone",
       n"male_v_damn_thats_fucked_up",
-      n"male_v_yeah_I_know"
+      n"male_v_dont_you_see_im_in_trouble",
+      n"male_v_fuck_this_biomon_just_not_right_now",
+      n"male_v_get_this_damn_ui_out_of_my_face",
+      n"male_v_so_frustrating",
+      n"male_v_yeah_I_know",
+      n"male_v_yeah_yeah_yeah_alright",
+      n"male_v_yeah_yeah_yeah_who_cares",
+      n"male_v_you_tell_me_biomon"
     ];
     let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
     if random > odds {

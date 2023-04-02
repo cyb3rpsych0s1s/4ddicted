@@ -35,6 +35,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
   private persistent let warned: Bool = false;
+  private persistent let warnings: Uint32 = 0u;
 
   private let updateSymtomsID: DelayID;
 
@@ -355,8 +356,16 @@ public class AddictedSystem extends ScriptableSystem {
 
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
 
-    if !this.warned { this.warned = true; }
+    if this.warnings == 0u && this.warned { this.warnings = 1u; } // retro-compatibility
   }
+
+  public func NotifyWarning() -> Void {
+    if this.warnings < 10u {
+      this.warnings += 1u;
+    }
+  }
+
+  public func Warnings() -> Uint32 { return this.warnings; }
 
   public func DismissBiomonitor() -> Void {
     let event: ref<DismissBiomonitorEvent> = new DismissBiomonitorEvent();
@@ -446,6 +455,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func AlreadyWarned() -> Bool { return this.warned; }
+  public func AlreadyWarned(min: Uint32) -> Bool { return this.warnings >= min; }
 
   public func HighestThreshold() -> Threshold { return this.consumptions.HighestThreshold(); }
 
