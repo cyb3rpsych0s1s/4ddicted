@@ -5,6 +5,7 @@ import Addicted.Helpers.Bits
 import Addicted.Helpers.Translations
 import Addicted.Helper
 import Addicted.Threshold
+import Addicted.Mood
 
 @if(!ModuleExists("Codeware.UI"))
 @addField(inkWidget)
@@ -777,14 +778,26 @@ public class BiomonitorController extends inkGameController {
 
     private func PlayNext(opt boot: Bool, opt dismiss: Bool) -> Bool {
         let options: inkAnimOptions;
+        let player: ref<PlayerPuppet>;
+        let gender: gamedataGender;
+        let reaction: CName;
         if dismiss && NotEquals(EnumInt(this.state), EnumInt(BiomonitorState.Closing)) {
+            player = this.GetPlayerControlledObject() as PlayerPuppet;
             this.state = BiomonitorState.Dismissing;
+            if player.IsInCombat() {
+                gender = Equals(player.GetResolvedGenderName(), n"Female")
+                    ? gamedataGender.Female
+                    : gamedataGender.Male;
+                reaction = Translations.Reaction(Mood.Pestered, gender);
+                GameObject.PlaySound(player, reaction);
+            }
             return this.Close(0.1);
         }
         if Equals(EnumInt(this.state), EnumInt(BiomonitorState.Idle)) {
             GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
         }
         if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
+            player = this.GetPlayerControlledObject() as PlayerPuppet;
             options.fromMarker = n"booting_start";
             options.toMarker = n"booting_end";
             options.oneSegment = true;
@@ -792,15 +805,16 @@ public class BiomonitorController extends inkGameController {
             this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             this.animation.RegisterToCallback(inkanimEventType.OnStart, this, n"OnAnimationStarted");
-            if (this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
-                let gender: CName = (this.GetPlayerControlledObject() as ScriptedPuppet).GetResolvedGenderName();
-                let ono: CName;
-                if Equals(gender, n"Male") {
-                    ono = n"ono_freak_m_bump_set_05";
+            if player.IsInCombat() {
+                gender = Equals(player.GetResolvedGenderName(), n"Female")
+                    ? gamedataGender.Female
+                    : gamedataGender.Male;
+                if Equals(gender, gamedataGender.Female) {
+                    reaction = n"ono_freak_f_bump_set";
                 } else {
-                    ono = n"ono_freak_f_bump_set";
+                    reaction = n"ono_freak_m_bump_set_05";
                 }
-                GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
+                GameObject.PlaySound(player, reaction);
             }
             return true;
         }
@@ -825,18 +839,20 @@ public class BiomonitorController extends inkGameController {
             return true;
         }
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
+            player = this.GetPlayerControlledObject() as PlayerPuppet;
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
-            let player = this.GetPlayerControlledObject() as PlayerPuppet;
             if !player.IsInCombat() {
                 let game = player.GetGame();
                 let system = AddictedSystem.GetInstance(game) as AddictedSystem;
                 let localization = LocalizationSystem.GetInstance(game) as LocalizationSystem;
                 let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-                let gender: CName = player.GetResolvedGenderName();
+                let gender: gamedataGender = Equals(player.GetResolvedGenderName(), n"Female")
+                    ? gamedataGender.Female
+                    : gamedataGender.Male;
                 let threshold: Threshold = system.HighestThreshold();
                 let warnings: Uint32 = system.Warnings();
-                let mood: CName = Helper.AppropriateMood(gender, threshold, warnings);
+                let mood: CName = Helper.OnceWarned(gender, threshold, warnings);
                 let key: String = Translations.SubtitleKey(NameToString(mood));
                 let subtitle: String;
                 let line: scnDialogLineData;
@@ -844,8 +860,9 @@ public class BiomonitorController extends inkGameController {
                 GameObject.PlaySound(player, mood);
                 if StrLen(key) > 0 {
                     subtitle = localization.GetSubtitle(key);
+                    let duration: Float = 3.;
                     if StrLen(subtitle) > 0 {
-                        line.duration = 0.3;
+                        line.duration = duration;
                         line.id = CreateCRUID(12345ul);
                         line.isPersistent = false;
                         line.speaker = player;
@@ -858,7 +875,7 @@ public class BiomonitorController extends inkGameController {
 
                         GameInstance
                         .GetDelaySystem(game)
-                        .DelayCallback(callback, 3.);
+                        .DelayCallback(callback, duration);
                     }
                 }
             }

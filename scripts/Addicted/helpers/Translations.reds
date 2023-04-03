@@ -90,4 +90,35 @@ public class Translations {
     }
     return "";
   }
+
+  public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
+    if Equals(mood, Mood.Any) { return n""; }
+
+    let choices: array<String>;
+    let which: Int32;
+    let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
+    if StrLen(language) == 0 { language = "en-us"; }
+
+    switch(mood) {
+      case Mood.Disheartened:
+        choices = Feeling.Disheartened();
+        break;
+      case Mood.Offhanded:
+        choices = Feeling.Offhanded();
+        break;
+      case Mood.Pestered:
+        choices = Feeling.Pestered();
+        break;
+      case Mood.Surprised:
+        choices = Feeling.Surprised();
+        break;
+    }
+
+    if ArraySize(choices) > 1 {
+      which = RandRange(0, ArraySize(choices) -1);
+      return StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
+    }
+
+    return n"";
+  }
 }

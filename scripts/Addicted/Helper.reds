@@ -205,67 +205,23 @@ public class Helper {
     return null;
   }
 
-  public static func AppropriateMood(gender: CName, threshold: Threshold, warned: Bool) -> CName {
-    return Helper.AppropriateMood(gender, threshold, warned ? 1u : 0u);
-  }
-
-  public static func AppropriateMood(gender: CName, threshold: Threshold, warnings: Uint32) -> CName {
-    let ono: CName;
+  public static func OnceWarned(gender: gamedataGender, threshold: Threshold, warnings: Uint32) -> CName {
+    let reaction: CName;
     let odds: Float = 1.0;
+    let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
+    let random = RandF();
     if warnings >= 5u { odds -= 0.1; } // cumulative
     if warnings >= 3u { odds -= 0.3; } // cumulative
-    if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) { odds -= 0.3; } // cumulative
-    let random = RandF();
-    let choice: Int32;
-    let last: Int32;
-    let females: array<CName> = [
-      n"fem_v_as_if_I_didnt_know_already",
-      n"fem_v_come_on_again",
-      n"fem_v_come_on_biomon_cant_you_give_me_a_break",
-      n"fem_v_damn_cant_you_just_leave_me_alone",
-      n"fem_v_damn_thats_fucked_up",
-      n"fem_v_dont_you_see_im_in_trouble",
-      n"fem_v_fuck_this_biomon_just_not_right_now",
-      n"fem_v_get_this_damn_ui_out_of_my_face",
-      n"fem_v_so_frustrating",
-      n"fem_v_yeah_I_know",
-      n"fem_v_yeah_yeah_yeah_alright",
-      n"fem_v_yeah_yeah_yeah_who_cares",
-      n"fem_v_you_tell_me_biomon"
-    ];
-    let males: array<CName> = [
-      n"male_v_as_if_I_didnt_know_already",
-      n"male_v_come_on_again",
-      n"male_v_come_on_biomon_cant_you_give_me_a_break",
-      n"male_v_damn_cant_you_just_leave_me_alone",
-      n"male_v_damn_thats_fucked_up",
-      n"male_v_dont_you_see_im_in_trouble",
-      n"male_v_fuck_this_biomon_just_not_right_now",
-      n"male_v_get_this_damn_ui_out_of_my_face",
-      n"male_v_so_frustrating",
-      n"male_v_yeah_I_know",
-      n"male_v_yeah_yeah_yeah_alright",
-      n"male_v_yeah_yeah_yeah_who_cares",
-      n"male_v_you_tell_me_biomon"
-    ];
-    let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
+    if EnumInt(threshold) >= EnumInt(Threshold.Notably) { odds -= 0.1; } // cumulative
+    if EnumInt(threshold) >= EnumInt(Threshold.Severely) { odds -= 0.3; } // cumulative
     if random > odds {
-      if Equals(gender, n"Male") {
-        last = ArraySize(males) -1;
-        choice = RandRange(0, last);
-        ono = males[choice];
-      }
-      else {
-        last = ArraySize(females) -1;
-        choice = RandRange(0, last);
-        ono = females[choice];
-      }
+      let mood: Mood = Feeling.OnceWarned(threshold, warnings);
+      reaction = Translations.Reaction(mood, gender);
     } else {
-        last = ArraySize(onos) -1;
-        choice = RandRange(0, last);
-        ono = onos[choice];
+      let choice: Int32 = RandRange(0, ArraySize(onos) -1);
+      reaction = onos[choice];
     }
-    return ono;
+    return reaction;
   }
 
   public static func Lower(threshold: Threshold) -> Threshold {

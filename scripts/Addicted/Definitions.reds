@@ -289,11 +289,6 @@ enum Onomatopea {
   Vomit = 4,
 }
 
-enum Mood {
-  Freak = 0,
-  Grump = 1,
-}
-
 enum Category {
   Mild = 0,
   Hard = 1,
@@ -336,4 +331,12 @@ enum Addiction {
 enum PlaySoundPolicy {
   All = 0,
   AmbientOnly = 1,
+}
+
+enum Mood {
+  Any = 0,
+  Disheartened = 1,
+  Offhanded = 2,
+  Pestered = 3,
+  Surprised = 4,
 }
