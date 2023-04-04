@@ -3,6 +3,13 @@
   "version": "0.7.3",
   "customSounds": [
     {
+      "name": "addicted.en-us.fem_v_ono_hhuh",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q113_f_1956c7fde04e1000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
       "name": "addicted.en-us.fem_v_ono_huh",
       "type": "mod_sfx_2d",
       "file": "vanilla/en-us/v_q004_f_168ac1406f29f000.Wav",
@@ -125,6 +132,13 @@
       "name": "addicted.en-us.fem_v_you_tell_me_biomon",
       "type": "mod_sfx_2d",
       "file": "en-us/offhanded/fem_v_ytmb.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.male_v_ono_hhuh",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q113_m_1956c7fde04e1000.Wav",
       "gain": 1.0,
       "pitch": 0.0
     },
