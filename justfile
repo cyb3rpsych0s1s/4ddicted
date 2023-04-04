@@ -72,7 +72,7 @@ compile:
 build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
     mkdir -p '{{redmod_output_dir}}'/customSounds
-    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_output_dir}}'/customSounds
+    cd '{{sounds_input_dir}}' && cp -r --parents {en-us,vanilla}/**/*.wav '{{redmod_output_dir}}'/customSounds
     cp '{{info_input_file}}' '{{redmod_output_dir}}'/info.json
 
 deploy:
@@ -178,7 +178,7 @@ bundle:
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
-    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_release_dir}}'/customSounds
+    cd '{{sounds_input_dir}}' && cp -r --parents {en-us,vanilla}/**/*.wav '{{redmod_release_dir}}'/customSounds
     cp '{{info_input_file}}' '{{redmod_release_dir}}'/info.json
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
