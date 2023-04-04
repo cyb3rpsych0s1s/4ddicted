@@ -4,9 +4,14 @@ import Addicted.Threshold
 
 public class Feeling {
   public static func OnceWarned(threshold: Threshold, warnings: Uint32) -> Mood {
-    if warnings <= 3u { return Mood.Surprised; }
-    if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) {
-     return Mood.Disheartened;
+    let random = RandF();
+    let likeliness = MaxF(Cast<Float>(warnings / 10u), 0.9);
+    if random < likeliness {
+      return Mood.Surprised;
+    }
+    random = RandF();
+    if Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) && random >= likeliness {
+      return Mood.Disheartened;
     }
     return Mood.Offhanded;
   }

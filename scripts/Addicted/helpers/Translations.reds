@@ -1,6 +1,7 @@
 module Addicted.Helpers
 
 import Addicted.*
+import Addicted.Utils.E
 
 public class Translations {
 
@@ -78,14 +79,14 @@ public class Translations {
     }
   }
 
-  public static func SubtitleKey(mood: String) -> String {
+  public static func SubtitleKey(mood: String, language: String) -> String {
     let suffix: String;
-    if StrBeginsWith(mood, "fem_v_") {
-      suffix = StrAfterFirst(mood, "fem_v_");
+    if StrBeginsWith(mood, "addicted." + language + ".fem_v_") {
+      suffix = StrAfterFirst(mood, "addicted." + language + ".male_v_");
       return "Addicted-Voice-Subtitle-" + suffix;
     }
-    if StrBeginsWith(mood, "male_v_") {
-      suffix = StrAfterFirst(mood, "male_v_");
+    if StrBeginsWith(mood, "addicted." + language + ".male_v_") {
+      suffix = StrAfterFirst(mood, "addicted." + language + ".male_v_");
       return "Addicted-Voice-Subtitle-" + suffix;
     }
     return "";
@@ -94,7 +95,9 @@ public class Translations {
   public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
     if Equals(mood, Mood.Any) { return n""; }
 
+    let output: CName;
     let choices: array<String>;
+    let size: Int32;
     let which: Int32;
     let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
     if StrLen(language) == 0 { language = "en-us"; }
@@ -112,11 +115,17 @@ public class Translations {
       case Mood.Surprised:
         choices = Feeling.Surprised();
         break;
+      default:
+        choices = [];
+        break;
     }
 
-    if ArraySize(choices) > 1 {
-      which = RandRange(0, ArraySize(choices) -1);
-      return StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
+    size = ArraySize(choices);
+    if size > 0 {
+      which = size > 1 ? RandRange(0, size -1) : 0;
+      output = StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
+      E(s"picked \(NameToString(output)) (\(which))");
+      return IsNameValid(output) ? output : n"";
     }
 
     return n"";

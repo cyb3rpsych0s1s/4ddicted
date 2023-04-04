@@ -171,10 +171,16 @@ public func Checkup() -> Void {
 }
 
 // use like: Game.GetPlayer():DebugSound("v_scene_rogue_default_m_1af69f1db32d2000"); // vanilla
-// use like: Game.GetPlayer():DebugSound("fem_v_as_if_I_didnt_know_already"); // custom sounds
+// use like: Game.GetPlayer():DebugSound("addicted.en-us.fem_v_as_if_I_didnt_know_already"); // custom sounds
 @addMethod(PlayerPuppet)
 public func DebugSound(sound: String) -> Void {
   GameObject.PlaySound(this, StringToName(sound));
+}
+
+// use like: Game.GetPlayer():DebugVoiceOver("addicted.en-us.fem_v_as_if_I_didnt_know_already"); // custom sounds
+@addMethod(PlayerPuppet)
+public func DebugVoiceOver(sound: String) -> Void {
+  GameObject.PlayVoiceOver(this, StringToName(sound), n"Scripts:AddictedDebugVoiceOver");
 }
 
 // use like: Game.GetPlayer():DebugSubtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already");

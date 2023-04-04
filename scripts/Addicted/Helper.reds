@@ -210,10 +210,11 @@ public class Helper {
     let odds: Float = 1.0;
     let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
     let random = RandF();
-    if warnings >= 5u { odds -= 0.1; } // cumulative
+    if warnings >= 5u { odds -= 0.2; } // cumulative
     if warnings >= 3u { odds -= 0.3; } // cumulative
-    if EnumInt(threshold) >= EnumInt(Threshold.Notably) { odds -= 0.1; } // cumulative
-    if EnumInt(threshold) >= EnumInt(Threshold.Severely) { odds -= 0.3; } // cumulative
+    if EnumInt(threshold) >= EnumInt(Threshold.Severely) { odds -= 0.1; } // cumulative
+    if EnumInt(threshold) >= EnumInt(Threshold.Notably) { odds -= 0.3; } // cumulative
+    E(s"once warned => random: \(random) > odds: \(odds)");
     if random > odds {
       let mood: Mood = Feeling.OnceWarned(threshold, warnings);
       reaction = Translations.Reaction(mood, gender);
@@ -221,6 +222,7 @@ public class Helper {
       let choice: Int32 = RandRange(0, ArraySize(onos) -1);
       reaction = onos[choice];
     }
+    E(s"picked reaction: \(NameToString(reaction))");
     return reaction;
   }
 

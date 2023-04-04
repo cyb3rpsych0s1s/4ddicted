@@ -852,30 +852,33 @@ public class BiomonitorController extends inkGameController {
                     : gamedataGender.Male;
                 let threshold: Threshold = system.HighestThreshold();
                 let warnings: Uint32 = system.Warnings();
-                let mood: CName = Helper.OnceWarned(gender, threshold, warnings);
-                let key: String = Translations.SubtitleKey(NameToString(mood));
-                let subtitle: String;
-                let line: scnDialogLineData;
-                E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), mood: \(NameToString(mood))");
-                GameObject.PlaySound(player, mood);
-                if StrLen(key) > 0 {
-                    subtitle = localization.GetSubtitle(key);
-                    let duration: Float = 3.;
-                    if StrLen(subtitle) > 0 {
-                        line.duration = duration;
-                        line.id = CreateCRUID(12345ul);
-                        line.isPersistent = false;
-                        line.speaker = player;
-                        line.speakerName = "V";
-                        line.text = subtitle;
-                        line.type = scnDialogLineType.AlwaysCinematicNoSpeaker;
-                        board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-                        let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-                        callback.controller = this;
+                let language = localization.GetVoiceLanguage();
+                let reaction: CName = Helper.OnceWarned(gender, threshold, warnings);
+                E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
+                if IsNameValid(reaction) {
+                    let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
+                    let subtitle: String;
+                    let line: scnDialogLineData;
+                    GameObject.PlaySound(player, reaction);
+                    if StrLen(key) > 0 {
+                        subtitle = localization.GetSubtitle(key);
+                        let duration: Float = 3.;
+                        if StrLen(subtitle) > 0 {
+                            line.duration = duration;
+                            line.id = CreateCRUID(12345ul);
+                            line.isPersistent = false;
+                            line.speaker = player;
+                            line.speakerName = "V";
+                            line.text = subtitle;
+                            line.type = scnDialogLineType.Regular;
+                            board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+                            let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
+                            callback.controller = this;
 
-                        GameInstance
-                        .GetDelaySystem(game)
-                        .DelayCallback(callback, duration);
+                            GameInstance
+                            .GetDelaySystem(game)
+                            .DelayCallback(callback, duration);
+                        }
                     }
                 }
             }
