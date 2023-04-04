@@ -16,6 +16,7 @@ public class English extends ModLocalizationPackage {
    this.Subtitle("Addicted-Voice-Subtitle-get_this_damn_ui_out_of_my_face", "Get this damn UI outta my face!");
    this.Subtitle("Addicted-Voice-Subtitle-oh_shit", "Oh, sh*t...");
    this.Subtitle("Addicted-Voice-Subtitle-so_frustrating", "SO frustrating!");
+   this.Subtitle("Addicted-Voice-Subtitle-what", "What..");
    this.Subtitle("Addicted-Voice-Subtitle-yeah_I_know", "Yeah... I know.");
    this.Subtitle("Addicted-Voice-Subtitle-yeah_yeah_yeah_alright", "Yeah, yeah, yeah... Alright.");
    this.Subtitle("Addicted-Voice-Subtitle-yeah_yeah_yeah_who_cares", "Yeah, yeah, yeah... Who cares?");
