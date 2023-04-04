@@ -94,6 +94,13 @@
       "pitch": 0.0
     },
     {
+      "name": "addicted.en-us.fem_v_what",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q104_f_18980f710d29f000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
       "name": "addicted.en-us.fem_v_yeah_I_know",
       "type": "mod_sfx_2d",
       "file": "en-us/disheartened/fem_v_yik.wav",
@@ -209,6 +216,13 @@
       "name": "addicted.en-us.male_v_so_frustrating",
       "type": "mod_sfx_2d",
       "file": "en-us/pestered/male_v_sf_03.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.male_v_what",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q104_m_18980f710d29f000.Wav",
       "gain": 1.0,
       "pitch": 0.0
     },
