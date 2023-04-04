@@ -5,6 +5,7 @@ public class English extends ModLocalizationPackage {
 
   protected func DefineSubtitles() -> Void {
    // snake case suffixes must match entries in info.json (custom sounds)
+   this.Subtitle("Addicted-Voice-Subtitle-biomon", "Biomon...");
    this.Subtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already", "As if I didn't know already...");
    this.Subtitle("Addicted-Voice-Subtitle-come_on_again", "Come on... again?!?");
    this.Subtitle("Addicted-Voice-Subtitle-come_on_biomon_cant_you_give_me_a_break", "Come on biomon, can't you just give me a break?");
