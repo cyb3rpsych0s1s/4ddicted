@@ -778,46 +778,17 @@ public class BiomonitorController extends inkGameController {
 
     private func PlayNext(opt boot: Bool, opt dismiss: Bool) -> Bool {
         let options: inkAnimOptions;
+        let system: ref<AddictedSystem>;
+        let localization: ref<LocalizationSystem>;
         let player: ref<PlayerPuppet>;
+        let game: ref<GameInstance>;
         let gender: gamedataGender;
+        let language: CName;
         let reaction: CName;
-        if dismiss && NotEquals(EnumInt(this.state), EnumInt(BiomonitorState.Closing)) {
-            player = this.GetPlayerControlledObject() as PlayerPuppet;
-            this.state = BiomonitorState.Dismissing;
-            if player.IsInCombat() {
-                gender = Equals(player.GetResolvedGenderName(), n"Female")
-                    ? gamedataGender.Female
-                    : gamedataGender.Male;
-                reaction = Translations.Reaction(Mood.Pestered, gender);
-                GameObject.PlaySound(player, reaction);
-            }
-            return this.Close(0.1);
-        }
-        if Equals(EnumInt(this.state), EnumInt(BiomonitorState.Idle)) {
-            GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
-        }
-        if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
-            player = this.GetPlayerControlledObject() as PlayerPuppet;
-            options.fromMarker = n"booting_start";
-            options.toMarker = n"booting_end";
-            options.oneSegment = true;
-            this.state = BiomonitorState.Booting;
-            this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
-            this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
-            this.animation.RegisterToCallback(inkanimEventType.OnStart, this, n"OnAnimationStarted");
-            if player.IsInCombat() {
-                gender = Equals(player.GetResolvedGenderName(), n"Female")
-                    ? gamedataGender.Female
-                    : gamedataGender.Male;
-                if Equals(gender, gamedataGender.Female) {
-                    reaction = n"ono_freak_f_bump_set";
-                } else {
-                    reaction = n"ono_freak_m_bump_set_05";
-                }
-                GameObject.PlaySound(player, reaction);
-            }
-            return true;
-        }
+        let mood: Mood;
+        let threshold: Threshold;
+        let warnings: Uint32;
+
         if EnumInt(this.state) == EnumInt(BiomonitorState.Booting) || EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
             options.executionDelay = RandRangeF(0.1, 0.5);
             options.fromMarker = n"analyzing_start";
@@ -838,22 +809,63 @@ public class BiomonitorController extends inkGameController {
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             return true;
         }
-        if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
+
+        system = AddictedSystem.GetInstance(game) as AddictedSystem;
+        localization = LocalizationSystem.GetInstance(game) as LocalizationSystem;
+        player = this.GetPlayerControlledObject() as PlayerPuppet;
+        game = player.GetGame();
+        gender = Equals(player.GetResolvedGenderName(), n"Female")
+            ? gamedataGender.Female
+            : gamedataGender.Male;
+        language = localization.GetVoiceLanguage();
+        threshold = system.HighestThreshold();
+        warnings = system.GetWarnings();
+
+        if dismiss && NotEquals(EnumInt(this.state), EnumInt(BiomonitorState.Closing)) {
             player = this.GetPlayerControlledObject() as PlayerPuppet;
+            this.state = BiomonitorState.Dismissing;
+            if player.IsInCombat() {
+                mood = Feeling.OnDismissInCombat(threshold, warnings);
+                if NotEquals(EnumInt(mood), EnumInt(Mood.Any)) {
+                    reaction = Feeling.Reaction(mood, gender);
+                    GameObject.PlaySound(player, reaction);
+                }
+            }
+            return this.Close(0.1);
+        }
+        if Equals(EnumInt(this.state), EnumInt(BiomonitorState.Idle)) {
+            GameObject.PlaySound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
+        }
+        if boot && EnumInt(this.state) == EnumInt(BiomonitorState.Idle) {
+            options.fromMarker = n"booting_start";
+            options.toMarker = n"booting_end";
+            options.oneSegment = true;
+            this.state = BiomonitorState.Booting;
+            this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
+            this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
+            this.animation.RegisterToCallback(inkanimEventType.OnStart, this, n"OnAnimationStarted");
+            if player.IsInCombat() {
+                if Equals(gender, gamedataGender.Female) {
+                    reaction = n"ono_freak_f_bump_set";
+                } else {
+                    reaction = n"ono_freak_m_bump_set_05";
+                }
+                GameObject.PlaySound(player, reaction);
+            } else {
+              mood = Feeling.OnBoot(warnings);
+              if NotEquals(EnumInt(mood), EnumInt(Mood.Any)) {
+                  reaction = Feeling.Reaction(mood, gender);
+                  GameObject.PlaySound(player, reaction);
+              }
+            }
+            return true;
+        }
+        if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
             if !player.IsInCombat() {
-                let game = player.GetGame();
-                let system = AddictedSystem.GetInstance(game) as AddictedSystem;
-                let localization = LocalizationSystem.GetInstance(game) as LocalizationSystem;
                 let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-                let gender: gamedataGender = Equals(player.GetResolvedGenderName(), n"Female")
-                    ? gamedataGender.Female
-                    : gamedataGender.Male;
-                let threshold: Threshold = system.HighestThreshold();
-                let warnings: Uint32 = system.Warnings();
-                let language = localization.GetVoiceLanguage();
-                let reaction: CName = Helper.OnceWarned(gender, threshold, warnings);
+                reaction = Helper.OnceWarned(gender, threshold, warnings);
                 E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
                 if IsNameValid(reaction) {
                     let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));

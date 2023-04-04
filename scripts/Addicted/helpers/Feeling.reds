@@ -1,6 +1,7 @@
 module Addicted.Helpers
 import Addicted.Mood
 import Addicted.Threshold
+import Addicted.Utils.E
 
 public class Feeling {
   public static func OnceWarned(threshold: Threshold, warnings: Uint32) -> Mood {
@@ -19,6 +20,11 @@ public class Feeling {
     if warnings >= 3u { return Mood.Surprised; }
     return Mood.Any;
   }
+  public static func OnDismissInCombat(threshold: Threshold, warnings: Uint32) -> Mood {
+    if warnings > 1u && Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) { return Mood.Pestered; }
+    return Mood.Any;
+  }
+
   public static func Disheartened() -> array<String> {
    return [
       "as_if_I_didnt_know_already",
@@ -54,5 +60,44 @@ public class Feeling {
      "oh_shit",
      "what"
    ];
+  }
+
+  public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
+    if Equals(mood, Mood.Any) { return n""; }
+
+    let output: CName;
+    let choices: array<String>;
+    let size: Int32;
+    let which: Int32;
+    let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
+    if StrLen(language) == 0 { language = "en-us"; }
+
+    switch(mood) {
+      case Mood.Disheartened:
+        choices = Feeling.Disheartened();
+        break;
+      case Mood.Offhanded:
+        choices = Feeling.Offhanded();
+        break;
+      case Mood.Pestered:
+        choices = Feeling.Pestered();
+        break;
+      case Mood.Surprised:
+        choices = Feeling.Surprised();
+        break;
+      default:
+        choices = [];
+        break;
+    }
+
+    size = ArraySize(choices);
+    if size > 0 {
+      which = size > 1 ? RandRange(0, size -1) : 0;
+      output = StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
+      E(s"picked \(NameToString(output)) (\(which))");
+      return IsNameValid(output) ? output : n"";
+    }
+
+    return n"";
   }
 }

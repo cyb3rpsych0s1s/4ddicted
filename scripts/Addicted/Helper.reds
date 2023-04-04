@@ -224,13 +224,19 @@ public class Helper {
     E(s"once warned => random: \(random) > odds: \(odds)");
     if random > odds {
       let mood: Mood = Feeling.OnceWarned(threshold, warnings);
-      reaction = Translations.Reaction(mood, gender);
+      reaction = Feeling.Reaction(mood, gender);
     } else {
       let choice: Int32 = RandRange(0, ArraySize(onos) -1);
       reaction = onos[choice];
     }
     E(s"picked reaction: \(NameToString(reaction))");
     return reaction;
+  }
+
+  public static func OnDismissInCombat(gender: gamedataGender, threshold: Threshold) -> CName {
+    let reactions: array<CName> = Feeling.Pestered();
+    let which: Int32 = RangeRange(0, ArraySize(reactions) -1);
+    return reactions[which];
   }
 
   public static func Lower(threshold: Threshold) -> Threshold {
