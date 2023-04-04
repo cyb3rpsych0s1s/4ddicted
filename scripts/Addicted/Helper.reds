@@ -208,7 +208,14 @@ public class Helper {
   public static func OnceWarned(gender: gamedataGender, threshold: Threshold, warnings: Uint32) -> CName {
     let reaction: CName;
     let odds: Float = 1.0;
-    let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
+    let female: Bool = Equals(gender, gamedataGender.Female);
+    let onos: array<CName> = [
+      n"ono_v_greet",
+      n"ono_v_curious",
+      female ? n"addicted.en-us.fem_v_ono_hhuh" : n"addicted.en-us.male_v_ono_hhuh",
+      female ? n"addicted.en-us.fem_v_ono_huh" : n"addicted.en-us.male_v_ono_huh",
+      female ? n"addicted.en-us.fem_v_ono_huhuh" : n"addicted.en-us.male_v_ono_huhuh"
+    ];
     let random = RandF();
     if warnings >= 5u { odds -= 0.2; } // cumulative
     if warnings >= 3u { odds -= 0.3; } // cumulative
