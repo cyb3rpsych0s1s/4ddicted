@@ -12,6 +12,7 @@ public class English extends ModLocalizationPackage {
    this.Subtitle("Addicted-Voice-Subtitle-damn_cant_you_just_leave_me_alone", "Damn.. Can't you just leave me alone?");
    this.Subtitle("Addicted-Voice-Subtitle-damn_thats_fucked_up", "Damn.. That's f*cked up!");
    this.Subtitle("Addicted-Voice-Subtitle-dont_you_see_im_in_trouble", "Don't you see I'm in trouble?!");
+   this.Subtitle("Addicted-Voice-Subtitle-fuck", "F*ck..");
    this.Subtitle("Addicted-Voice-Subtitle-fuck_this_biomon_just_not_right_now", "F*ck this biomon! Just not right now!!");
    this.Subtitle("Addicted-Voice-Subtitle-get_this_damn_ui_out_of_my_face", "Get this damn UI outta my face!");
    this.Subtitle("Addicted-Voice-Subtitle-oh_shit", "Oh, sh*t...");

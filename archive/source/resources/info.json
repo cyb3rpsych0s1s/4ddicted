@@ -73,6 +73,13 @@
       "pitch": 0.0
     },
     {
+      "name": "addicted.en-us.fem_v_fuck",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q115_f_1752ea11b74e1000.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
       "name": "addicted.en-us.fem_v_fuck_this_biomon_just_not_right_now",
       "type": "mod_sfx_2d",
       "file": "en-us/pestered/fem_v_ftbnrn.wav",
@@ -202,6 +209,13 @@
       "name": "addicted.en-us.male_v_dont_you_see_im_in_trouble",
       "type": "mod_sfx_2d",
       "file": "en-us/pestered/male_v_dysiit.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.male_v_fuck",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q115_m_1752ea11b74e1000.wav",
       "gain": 1.0,
       "pitch": 0.0
     },
