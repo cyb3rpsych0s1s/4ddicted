@@ -94,9 +94,30 @@
       "pitch": 0.0
     },
     {
+      "name": "addicted.en-us.fem_v_nah_everything_is_all_good",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_scene_dex_default_f_182ad40c364ea000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.fem_v_noo",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_scene_mitch_default_f_1b1a38325729f000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
       "name": "addicted.en-us.fem_v_oh_shit",
       "type": "mod_sfx_2d",
       "file": "vanilla/en-us/v_q000_f_1927fae1772ef000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.fem_v_shit",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q104_f_18545e4c6a4e6000.Wav",
       "gain": 1.0,
       "pitch": 0.0
     },
@@ -234,9 +255,30 @@
       "pitch": 0.0
     },
     {
+      "name": "addicted.en-us.male_v_nah_everything_is_all_good",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_scene_dex_default_m_182ad40c364ea000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.male_v_noo",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_scene_mitch_default_m_1b1a38325729f000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
       "name": "addicted.en-us.male_v_oh_shit",
       "type": "mod_sfx_2d",
       "file": "vanilla/en-us/v_q000_m_1927fae1772ef000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.male_v_shit",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/en-us/v_q104_m_18545e4c6a4e6000.Wav",
       "gain": 1.0,
       "pitch": 0.0
     },
