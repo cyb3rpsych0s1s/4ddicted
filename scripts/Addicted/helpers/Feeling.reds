@@ -20,9 +20,8 @@ public class Feeling {
     if warnings >= 3u { return Mood.Surprised; }
     return Mood.Any;
   }
-  public static func OnDismissInCombat(threshold: Threshold, warnings: Uint32) -> Mood {
-    if warnings > 1u && Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) { return Mood.Pestered; }
-    return Mood.Any;
+  public static func OnDismissInCombat() -> Mood {
+    return Mood.Pestered;
   }
 
   public static func Disheartened() -> array<String> {

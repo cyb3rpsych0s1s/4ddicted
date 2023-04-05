@@ -133,30 +133,36 @@ public func Threshold(consumable: Consumable) -> Threshold {
 
 @addMethod(PlayerPuppet)
 public func Reacts(reaction: CName) -> Void {
+  E(s"reacts: reaction (\(NameToString(reaction)))");
   if !IsNameValid(reaction) { return; }
   let game = this.GetGame();
   let localization = LocalizationSystem.GetInstance(game);
   let language = localization.GetVoiceLanguage();
+  E(s"reacts: voice language (\(NameToString(language)))");
   if !StrBeginsWith(NameToString(language), "en-") { return; }
   let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
   let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
+  E(s"reacts: subtitle key (\(key))");
   let subtitle: String = localization.GetSubtitle(key);
-  let duration: Float = 3.0;
-  let line: scnDialogLineData;
-  line.duration = duration;
-  line.id = this.ReactionID();
-  line.isPersistent = false;
-  line.speaker = this;
-  line.speakerName = "V";
-  line.text = subtitle;
-  line.type = scnDialogLineType.Regular;
+  E(s"reacts: subtitle (\(subtitle))");
+  if StrLen(key) > 0 && NotEquals(key, subtitle) {
+    let duration: Float = 3.0;
+    let line: scnDialogLineData;
+    line.duration = duration;
+    line.id = this.ReactionID();
+    line.isPersistent = false;
+    line.speaker = this;
+    line.speakerName = "V";
+    line.text = subtitle;
+    line.type = scnDialogLineType.Regular;
+    board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+    let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
+    callback.player = this;
+    this.hideSubtitleCallback = GameInstance
+    .GetDelaySystem(game)
+    .DelayCallback(callback, duration);
+  }
   GameObject.PlaySound(this, reaction);
-  board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-  let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-  callback.player = this;
-  this.hideSubtitleCallback = GameInstance
-  .GetDelaySystem(game)
-  .DelayCallback(callback, duration);
 }
 
 @addMethod(PlayerPuppet)

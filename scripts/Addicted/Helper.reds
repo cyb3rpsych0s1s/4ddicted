@@ -233,10 +233,10 @@ public class Helper {
     return reaction;
   }
 
-  public static func OnDismissInCombat(gender: gamedataGender, threshold: Threshold) -> CName {
-    let reactions: array<String> = Feeling.Pestered();
-    let which: Int32 = RandRange(0, ArraySize(reactions) -1);
-    return StringToName(reactions[which]);
+  public static func OnDismissInCombat(gender: gamedataGender) -> CName {
+    let mood: Mood = Feeling.OnDismissInCombat();
+    let reaction = Feeling.Reaction(mood, gender);
+    return reaction;
   }
 
   public static func Lower(threshold: Threshold) -> Threshold {
