@@ -8,6 +8,26 @@
 
 
 
+
+
+<a name="beta-0.7.3" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.7.3
+
+### Changed
+- 🎨  add pictures to mod mechanics
+
+### Fixed
+- 🐛  fix incorrect stat pool types in healers
+- 💚  fix incorrect filter for ci pages
+- 💚  fix incorrect filter for ci pages
+- 💚  fix incorrect filter for ci pages
+
+### Miscellaneous
+- 📝  add patterns documentation
+- 📝  reorganize badges and add link
+- 📝  update nexus description
+- 📝  describe mod features in details
+
 <a name="beta-0.7.2" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version beta-0.7.2
 
