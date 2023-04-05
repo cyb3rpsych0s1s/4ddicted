@@ -3,13 +3,10 @@ import Addicted.Utils.E
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
 import Addicted.Helpers.Translations
+import Addicted.Helpers.Feeling
 import Addicted.Helper
 import Addicted.Threshold
 import Addicted.Mood
-
-@if(!ModuleExists("Codeware.UI"))
-@addField(inkWidget)
-native let parentWidget: wref<inkWidget>;
 
 @addField(NameplateVisualsLogicController)
 private let biomonitorWidget: wref<inkWidget>;
@@ -93,14 +90,6 @@ public class ClosingBeepCallback extends DelayCallback {
         E(s"beep on close");
         this.controller.Beep();
     }            
-}
-
-public class HideSubtitleCallback extends DelayCallback {
-    private let controller: wref<BiomonitorController>;
-    public func Call() -> Void {
-        E(s"hide subtitle");
-        this.controller.HideSubtitle();
-    }
 }
 
 enum BiomonitorRestrictions {
@@ -781,7 +770,7 @@ public class BiomonitorController extends inkGameController {
         let system: ref<AddictedSystem>;
         let localization: ref<LocalizationSystem>;
         let player: ref<PlayerPuppet>;
-        let game: ref<GameInstance>;
+        let game: GameInstance;
         let gender: gamedataGender;
         let language: CName;
         let reaction: CName;
@@ -819,7 +808,7 @@ public class BiomonitorController extends inkGameController {
             : gamedataGender.Male;
         language = localization.GetVoiceLanguage();
         threshold = system.HighestThreshold();
-        warnings = system.GetWarnings();
+        warnings = system.Warnings();
 
         if dismiss && NotEquals(EnumInt(this.state), EnumInt(BiomonitorState.Closing)) {
             player = this.GetPlayerControlledObject() as PlayerPuppet;
@@ -828,7 +817,7 @@ public class BiomonitorController extends inkGameController {
                 mood = Feeling.OnDismissInCombat(threshold, warnings);
                 if NotEquals(EnumInt(mood), EnumInt(Mood.Any)) {
                     reaction = Feeling.Reaction(mood, gender);
-                    GameObject.PlaySound(player, reaction);
+                    player.Reacts(reaction);
                 }
             }
             return this.Close(0.1);
@@ -850,12 +839,12 @@ public class BiomonitorController extends inkGameController {
                 } else {
                     reaction = n"ono_freak_m_bump_set_05";
                 }
-                GameObject.PlaySound(player, reaction);
+                player.Reacts(reaction);
             } else {
               mood = Feeling.OnBoot(warnings);
               if NotEquals(EnumInt(mood), EnumInt(Mood.Any)) {
                   reaction = Feeling.Reaction(mood, gender);
-                  GameObject.PlaySound(player, reaction);
+                  player.Reacts(reaction);
               }
             }
             return true;
@@ -864,45 +853,13 @@ public class BiomonitorController extends inkGameController {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
             if !player.IsInCombat() {
-                let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
                 reaction = Helper.OnceWarned(gender, threshold, warnings);
                 E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
-                if IsNameValid(reaction) {
-                    let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
-                    let subtitle: String;
-                    let line: scnDialogLineData;
-                    GameObject.PlaySound(player, reaction);
-                    if StrLen(key) > 0 {
-                        subtitle = localization.GetSubtitle(key);
-                        let duration: Float = 3.;
-                        if StrLen(subtitle) > 0 {
-                            line.duration = duration;
-                            line.id = CreateCRUID(12345ul);
-                            line.isPersistent = false;
-                            line.speaker = player;
-                            line.speakerName = "V";
-                            line.text = subtitle;
-                            line.type = scnDialogLineType.Regular;
-                            board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-                            let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-                            callback.controller = this;
-
-                            GameInstance
-                            .GetDelaySystem(game)
-                            .DelayCallback(callback, duration);
-                        }
-                    }
-                }
+                player.Reacts(reaction);
             }
             return closed;
         }
         return false;
-    }
-
-    public func HideSubtitle() -> Void {
-        let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem((this.GetPlayerControlledObject() as PlayerPuppet).GetGame()).Get(GetAllBlackboardDefs().UIGameData);
-        let cruids: array<CRUID> = [CreateCRUID(12345ul)];
-        board.SetVariant(GetAllBlackboardDefs().UIGameData.HideDialogLine, cruids, true);
     }
 
     protected cb func OnAnimationStarted(anim: ref<inkAnimProxy>) -> Bool {

@@ -1,15 +1,32 @@
 module Addicted
 
+import Codeware.Localization.LocalizationSystem
 import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
-import Addicted.Helpers.{Bits,Generic,Items,Effect}
+import Addicted.Helpers.{Bits,Generic,Items,Effect,Translations}
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
 
 @addField(PlayerStateMachineDef)
 public let WithdrawalSymptoms: BlackboardID_Int;
+
+@addField(PlayerPuppet)
+public let hideSubtitleCallback: DelayID;
+
+public class HideSubtitleCallback extends DelayCallback {
+  private let player: wref<PlayerPuppet>;
+  public func Call() -> Void {
+    E(s"hide subtitle");
+    let game = this.player.GetGame();
+    GameInstance
+    .GetDelaySystem(game)
+    .CancelCallback(this.player.hideSubtitleCallback);
+    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
+    board.SetVariant(GetAllBlackboardDefs().UIGameData.HideDialogLine, [this.player.ReactionID()], true);
+  }
+}
 
 @addMethod(PlayerPuppet)
 public func IsPossessed() -> Bool {
@@ -113,6 +130,37 @@ public func Threshold(consumable: Consumable) -> Threshold {
   let system = AddictedSystem.GetInstance(this.GetGame());
   return system.Threshold(consumable);
 }
+
+@addMethod(PlayerPuppet)
+public func Reacts(reaction: CName) -> Void {
+  if !IsNameValid(reaction) { return; }
+  let game = this.GetGame();
+  let localization = LocalizationSystem.GetInstance(game);
+  let language = localization.GetVoiceLanguage();
+  if !StrBeginsWith(NameToString(language), "en-") { return; }
+  let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
+  let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
+  let subtitle: String = localization.GetSubtitle(key);
+  let duration: Float = 3.0;
+  let line: scnDialogLineData;
+  line.duration = duration;
+  line.id = this.ReactionID();
+  line.isPersistent = false;
+  line.speaker = this;
+  line.speakerName = "V";
+  line.text = subtitle;
+  line.type = scnDialogLineType.Regular;
+  GameObject.PlaySound(this, reaction);
+  board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+  let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
+  callback.player = this;
+  this.hideSubtitleCallback = GameInstance
+  .GetDelaySystem(game)
+  .DelayCallback(callback, duration);
+}
+
+@addMethod(PlayerPuppet)
+private func ReactionID() -> CRUID { return CreateCRUID(12345ul); }
 
 // alter some effects based on addiction threshold
 @wrapMethod(ConsumeAction)

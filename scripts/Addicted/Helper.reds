@@ -234,9 +234,9 @@ public class Helper {
   }
 
   public static func OnDismissInCombat(gender: gamedataGender, threshold: Threshold) -> CName {
-    let reactions: array<CName> = Feeling.Pestered();
-    let which: Int32 = RangeRange(0, ArraySize(reactions) -1);
-    return reactions[which];
+    let reactions: array<String> = Feeling.Pestered();
+    let which: Int32 = RandRange(0, ArraySize(reactions) -1);
+    return StringToName(reactions[which]);
   }
 
   public static func Lower(threshold: Threshold) -> Threshold {
