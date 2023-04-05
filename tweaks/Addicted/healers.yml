@@ -44,7 +44,7 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
         - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 30
   VFX:
     - $type: StatusEffectFX_Record
@@ -62,7 +62,7 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
         - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 20
   VFX:
     - $type: StatusEffectFX_Record
@@ -82,7 +82,7 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1:
         - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 45
   VFX:
     - $type: StatusEffectFX_Record
@@ -100,7 +100,7 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
         - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 30
   VFX:
     - $type: StatusEffectFX_Record
@@ -120,7 +120,7 @@ BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2:
         - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 60
   VFX:
     - $type: StatusEffectFX_Record
@@ -138,7 +138,7 @@ BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
         - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 40
   VFX:
     - $type: StatusEffectFX_Record
@@ -164,7 +164,7 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
         - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 10
   VFX:
     - $type: StatusEffectFX_Record
@@ -187,7 +187,7 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
         - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 5
   VFX:
     - $type: StatusEffectFX_Record
@@ -212,7 +212,7 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1:
         - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 15
   VFX:
     - $type: StatusEffectFX_Record
@@ -235,7 +235,7 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
         - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 10
   VFX:
     - $type: StatusEffectFX_Record
@@ -260,7 +260,7 @@ BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2:
         - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 20
   VFX:
     - $type: StatusEffectFX_Record
@@ -283,7 +283,7 @@ BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
         - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
-              statPoolType: BaseStats.Health
+              statPoolType: BaseStatPools.Health
               statPoolValue: 15
   VFX:
     - $type: StatusEffectFX_Record
