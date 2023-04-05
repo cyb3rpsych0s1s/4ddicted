@@ -9,7 +9,7 @@ import Addicted.Helpers.{Bits,Generic,Items,Effect}
 public let IsConsuming: BlackboardID_Bool;
 
 @addField(PlayerStateMachineDef)
-public let WithdrawalSymptoms: BlackboardID_Int;
+public let WithdrawalSymptoms: BlackboardID_Uint;
 
 @addMethod(PlayerPuppet)
 public func IsPossessed() -> Bool {
@@ -104,7 +104,7 @@ public func CyberwareImmunity() -> Int32 {
 @addMethod(PlayerPuppet)
 public func IsWithdrawing(consumable: Consumable) -> Bool {
   let blackboard: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
-  let symptoms = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+  let symptoms = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
   return Bits.Has(symptoms, EnumInt(consumable));
 }
 

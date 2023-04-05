@@ -9,7 +9,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   protected let owner: wref<PlayerPuppet>;
   private let onWithdrawing: ref<CallbackHandle>;
 
-  protected abstract func UpdateSymptoms(symptoms: Int32) -> Bool;
+  protected abstract func UpdateSymptoms(symptoms: Uint32) -> Bool;
   protected abstract func InvalidateState() -> Void;
 
   public func Register(player: ref<PlayerPuppet>) -> Void {
@@ -19,10 +19,10 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
       this.owner = player;
       board = this.owner.GetPlayerStateMachineBlackboard();
       if IsDefined(board) {
-        let symptoms = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+        let symptoms = board.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
         this.UpdateSymptoms(symptoms);
         if !IsDefined(this.onWithdrawing) {
-          this.onWithdrawing = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, this, n"OnWithdrawalSymptomsChanged", true);
+          this.onWithdrawing = board.RegisterListenerUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, this, n"OnWithdrawalSymptomsChanged", true);
         }
       }
     }
@@ -36,14 +36,14 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
     if player != null {
       board = player.GetPlayerStateMachineBlackboard();
       if IsDefined(board) {
-        if IsDefined(this.onWithdrawing) { board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, this.onWithdrawing); }
+        if IsDefined(this.onWithdrawing) { board.UnregisterListenerUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, this.onWithdrawing); }
       }
       this.onWithdrawing = null;
     }
     this.owner = null;
   }
 
-  protected cb func OnWithdrawalSymptomsChanged(value: Int32) -> Bool {
+  protected cb func OnWithdrawalSymptomsChanged(value: Uint32) -> Bool {
     E(s"on withdrawal symptoms changed: \(ToString(value))");
     let invalidate: Bool = this.UpdateSymptoms(value);
     if invalidate {

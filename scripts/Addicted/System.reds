@@ -126,8 +126,8 @@ public class AddictedSystem extends ScriptableSystem {
   public func OnUpdateWithdrawalSymptoms() -> Void {
     E(s"on update withdrawal symptoms");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
-    let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-    let now: Int32 = 0;
+    let before = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+    let now: Uint32 = 0u;
     let consumables = Helper.Consumables();
     let withdrawing: Bool = false;
     for consumable in consumables {
@@ -135,7 +135,7 @@ public class AddictedSystem extends ScriptableSystem {
       now = Bits.Set(now, EnumInt(consumable), withdrawing);
     }
     if NotEquals(before, now) {
-      blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
+      blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
     }
 
     if NotEquals(this.updateSymtomsID, GetInvalidDelayID()) {
@@ -174,10 +174,10 @@ public class AddictedSystem extends ScriptableSystem {
       let consumable: Consumable = Generic.Consumable(id);
       if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
         let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
-        let current = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+        let current = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
         let next = Bits.Set(current, EnumInt(consumable), false);
         E(s"set \(ToString(consumable)) to false, consumable flags: \(current) -> \(next)");
-        blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
+        blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
       } else { F(s"invalid consumable: \(TDBID.ToStringDEBUG(id))"); }
 
       E(s"consumption hint: \(ToString(hint))");
@@ -519,9 +519,9 @@ public class AddictedSystem extends ScriptableSystem {
   public func DebugSetWithdrawing(consumable: Consumable, withdrawing: Bool) -> Void {
     E(s"debug set withdrawing \(ToString(consumable)) -> \(withdrawing)");
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
-    let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+    let before = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let after = Bits.Set(before, EnumInt(consumable), withdrawing);
-    blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, after);
+    blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, after);
   }
 
   public func DebugTime() -> Void {

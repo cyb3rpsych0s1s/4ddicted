@@ -129,7 +129,7 @@ public class BiomonitorController extends inkGameController {
 
     private let postpone: DelayID;
     private let beep: DelayID;
-    private let flags: Int32;
+    private let flags: Uint32;
     private let dismissable: Bool = false;
     private let dismissed: Bool = false;
     private let shown: Bool = false;
