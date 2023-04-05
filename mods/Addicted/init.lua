@@ -7,25 +7,9 @@ addicted = {
     }
 }
 
--- function CreateSubtitle(text)
---     local line = scnDialogLineData.new()
---     line.id = CRUID(12345)
---     line.duration = 3
---     line.isPersistent = false
---     line.speaker = Game.GetPlayer()
---     line.speakerName = "V"
---     line.type = scnDialogLineType.AlwaysCinematicNoSpeaker
---     line.text = text
---     return line
--- end
-
 function addicted:new()
     registerForEvent("onInit", function()
         print("[Addicted]:onInit")
-
-        -- Override("PlayerPuppet", "CreateSubtitle", function(text)
-        --     return CreateSubtitle(text)
-        -- end)
 
         GameUI.OnSessionStart(function()
             print("[Addicted]:OnSessionStart")
