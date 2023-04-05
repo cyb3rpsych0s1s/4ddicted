@@ -176,20 +176,3 @@ public func Checkup() -> Void {
 public func DebugSound(sound: String) -> Void {
   GameObject.PlaySound(this, StringToName(sound));
 }
-
-// use like: Game.GetPlayer():DebugVoiceOver("addicted.en-us.fem_v_as_if_I_didnt_know_already"); // custom sounds
-@addMethod(PlayerPuppet)
-public func DebugVoiceOver(sound: String) -> Void {
-  GameObject.PlayVoiceOver(this, StringToName(sound), n"Scripts:AddictedDebugVoiceOver");
-}
-
-// use like: Game.GetPlayer():DebugSubtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already");
-// @addMethod(PlayerPuppet)
-// public func DebugSubtitle(key: String) -> Void {
-//   let localization = LocalizationSystem.GetInstance(this.GetGame()) as LocalizationSystem;
-//   let text = localization.GetSubtitle(key);
-//   // let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(this.GetGame()).Get(GetAllBlackboardDefs().UIGameData);
-//   let line = this.CreateSubtitle(text);
-//   // board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-//   E(s"subtitle: \(line.text)");
-// }
