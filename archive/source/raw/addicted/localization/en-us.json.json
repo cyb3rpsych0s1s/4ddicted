@@ -381,6 +381,13 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Dismiss-Biomonitor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "BlackLace overdose",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Edgerunning-BlackLace-Penalty"
             }
           ]
         }

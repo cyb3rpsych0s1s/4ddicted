@@ -1,5 +1,8 @@
 module Addicted
 
+@if(ModuleExists("Edgerunning.System"))
+import Edgerunning.System.EdgerunningSystem
+
 import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
@@ -41,7 +44,22 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
       EI(id, s"housing");
       system.OnRested(id);
     }
+
+    if Equals(id, t"BaseStatusEffect.BlackLaceV0") {
+      this.AddPenaltyFromBlackLace(20);
+    }
 }
+
+@if(ModuleExists("Edgerunning.System"))
+@addMethod(PlayerPuppet)
+protected func AddPenaltyFromBlackLace(value: Int32) -> Void {
+  E(s"add humanity penalty");
+  EdgerunningSystem.GetInstance(this.GetGame()).AddHumanityPenalty("Mod-Addicted-Edgerunning-BlackLace-Penalty", value);
+}
+
+@if(!ModuleExists("Edgerunning.System"))
+@addMethod(PlayerPuppet)
+protected func AddPenaltyFromBlackLace(value: Int32) -> Void {}
 
 // play hints on dissipation
 @wrapMethod(PlayerPuppet)
