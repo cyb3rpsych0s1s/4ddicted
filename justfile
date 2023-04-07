@@ -4,6 +4,8 @@ set dotenv-load
 DEFAULT_GAME_DIR := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 # default to CI RED cli path
 DEFAULT_RED_CLI := join(".", "redscript-cli.exe")
+# default to local WolvenKit cli path
+DEFAULT_WK_CLI := join(".", "WolvenKit.CLI.exe")
 
 # installation dir for Cyberpunk 2077, e.g. Steam
 game_dir := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
@@ -15,12 +17,15 @@ cet_input_dir := join("mods", "Addicted")
 red_input_dir := join("scripts", "Addicted")
 tweak_input_dir := join("tweaks", "Addicted")
 archive_input_dir := join("archive", "packed")
+sounds_input_dir := join("archive", "source", "customSounds")
+info_input_file := join("archive", "source", "resources", "info.json")
 
 # game files
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
 red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
 tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
 archive_output_dir := join(game_dir, "archive", "pc", "mod")
+redmod_output_dir := join(game_dir, "mods", "Addicted")
 red_cache_dir := join(game_dir, "r6", "cache")
 
 # bundle files for release
@@ -28,6 +33,7 @@ cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweak
 red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
 tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
 archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
+redmod_release_dir := join(bundle_dir, "mods", "Addicted")
 
 latest_release := env_var_or_default("LATEST_RELEASE", "")
 latest_version := env_var_or_default("LATEST_VERSION", "")
@@ -39,6 +45,9 @@ red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
 
 # path to RED cache bundle file in game files
 red_cache_bundle := join(red_cache_dir, "final.redscripts")
+
+# path to WolvenKit CLI
+wk_cli := env_var_or_default("WK_CLI", DEFAULT_WK_CLI)
 
 # list all commands
 default:
@@ -62,6 +71,14 @@ compile:
 # ➡️  copy codebase files to game files, including archive
 build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
+    mkdir -p '{{redmod_output_dir}}'/customSounds
+    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_output_dir}}'/customSounds
+    cd '{{sounds_input_dir}}' && cp -r --parents vanilla/**/*.Wav '{{redmod_output_dir}}'/customSounds
+    cp '{{info_input_file}}' '{{redmod_output_dir}}'/info.json
+
+deploy:
+    cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
+    ./redMod.exe deploy -root="{{game_dir}}"
 
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
@@ -157,13 +174,17 @@ bundle:
     mkdir -p '{{cet_release_dir}}'
     mkdir -p '{{red_release_dir}}'
     mkdir -p '{{tweak_release_dir}}'
+    mkdir -p '{{redmod_release_dir}}'/customSounds
     cp -r '{{archive_input_dir}}'/. '{{archive_release_dir}}'
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
+    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_release_dir}}'/customSounds
+    cd '{{sounds_input_dir}}' && cp -r --parents vanilla/**/*.Wav '{{redmod_release_dir}}'/customSounds
+    cp '{{info_input_file}}' '{{redmod_release_dir}}'/info.json
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
-uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak
+uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
 
 # 🗑️🎭  clear out mod archive files in game files
 uninstall-archive:
@@ -182,6 +203,10 @@ uninstall-red:
 uninstall-tweak:
     rm -rf '{{tweak_output_dir}}'
 
+# 🗑️⚙️   clear out mod REDmod files in game files
+uninstall-redmod:
+    rm -rf '{{redmod_output_dir}}'
+
 alias nuke := nuclear
 
 # 🧨 nuke your game files as a last resort (vanilla reset)
@@ -192,3 +217,20 @@ nuclear:
     rm -rf '{{ join(game_dir, "r6") }}'
     rm -rf '{{ join(game_dir, "red4ext") }}'
     rm -rf '{{ join(game_dir, "archive", "pc", "mod") }}'
+
+# ↘️  extract audios (add .wem to WolvenKit project, then point to this directory and specify where to export)
+extract IN OUT:
+    mkdir -p '{{OUT}}'
+    '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
+
+# encode .mp3 back into .wav
+encode OVERWRITE='false':
+  for file in `ls ./archive/source/customSounds`; do \
+    if [[ ('{{OVERWRITE}}' != 'false' || ! -f ./archive/source/customSounds/${file%.mp3}.wav) && $file == *.mp3 ]]; then \
+        ffmpeg -i ./archive/source/customSounds/$file -ar 44100 -sample_fmt s16 -y ./archive/source/customSounds/${file%.mp3}.wav; \
+    fi \
+  done
+
+# analyze given file audio settings (please install ffprobe manually)
+analyze FILE:
+  ffprobe -i '{{FILE}}' -show_format -probesize 50000000 -analyzeduration 500
