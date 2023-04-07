@@ -1,10 +1,12 @@
+import Codeware.Localization.*
 import Addicted.Utils.E
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
-
-@if(!ModuleExists("Codeware.UI"))
-@addField(inkWidget)
-native let parentWidget: wref<inkWidget>;
+import Addicted.Helpers.Translations
+import Addicted.Helpers.Feeling
+import Addicted.Helper
+import Addicted.Threshold
+import Addicted.Mood
 
 @addField(NameplateVisualsLogicController)
 private let biomonitorWidget: wref<inkWidget>;
@@ -467,6 +469,8 @@ public class BiomonitorController extends inkGameController {
                 }
             }
 
+            let system: ref<AddictedSystem> = AddictedSystem.GetInstance(this.GetPlayerControlledObject().GetGame()) as AddictedSystem;
+            system.NotifyWarning();
             this.PlayNext(evt.boot);
             return false;
         }
@@ -763,8 +767,24 @@ public class BiomonitorController extends inkGameController {
 
     private func PlayNext(opt boot: Bool, opt dismiss: Bool) -> Bool {
         let options: inkAnimOptions;
+        let reaction: CName;
+        let player: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;
+        let game: GameInstance = player.GetGame();
+        let system: ref<AddictedSystem> = AddictedSystem.GetInstance(game) as AddictedSystem;
+        let gender: gamedataGender = Equals(player.GetResolvedGenderName(), n"Female")
+            ? gamedataGender.Female
+            : gamedataGender.Male;
+        let threshold: Threshold = system.HighestThreshold();
+        let warnings: Uint32 = system.Warnings();
+
         if dismiss && NotEquals(EnumInt(this.state), EnumInt(BiomonitorState.Closing)) {
+            player = this.GetPlayerControlledObject() as PlayerPuppet;
             this.state = BiomonitorState.Dismissing;
+            if player.IsInCombat() {
+                E(s">>> trigger reaction when dismissing in combat");
+                reaction = Helper.OnDismissInCombat(gender);
+                player.Reacts(reaction);
+            }
             return this.Close(0.1);
         }
         if Equals(EnumInt(this.state), EnumInt(BiomonitorState.Idle)) {
@@ -778,15 +798,14 @@ public class BiomonitorController extends inkGameController {
             this.animation = this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
             this.animation.RegisterToCallback(inkanimEventType.OnFinish, this, n"OnAnimationFinished");
             this.animation.RegisterToCallback(inkanimEventType.OnStart, this, n"OnAnimationStarted");
-            if (this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
-                let gender: CName = (this.GetPlayerControlledObject() as ScriptedPuppet).GetResolvedGenderName();
-                let ono: CName;
-                if Equals(gender, n"Male") {
-                    ono = n"ono_freak_m_bump_set_05";
+            if player.IsInCombat() {
+                E(s">>> trigger reaction when booting in combat");
+                if Equals(gender, gamedataGender.Female) {
+                    reaction = n"ono_freak_f_bump_set";
                 } else {
-                    ono = n"ono_freak_f_bump_set";
+                    reaction = n"ono_freak_m_bump_set_05";
                 }
-                GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
+                player.Reacts(reaction);
             }
             return true;
         }
@@ -813,10 +832,11 @@ public class BiomonitorController extends inkGameController {
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
-            if !(this.GetPlayerControlledObject() as PlayerPuppet).IsInCombat() {
-                let onos: array<CName> = [n"ono_v_greet", n"ono_v_curious"];
-                let ono: CName = onos[RandRange(0,1)];
-                GameObject.PlaySound(this.GetPlayerControlledObject(), ono);
+            if !player.IsInCombat() {
+                E(s">>> trigger reaction on symptoms summary when not in combat");
+                reaction = Helper.OnceWarned(gender, threshold, warnings);
+                E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
+                player.Reacts(reaction);
             }
             return closed;
         }
