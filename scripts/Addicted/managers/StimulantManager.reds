@@ -20,7 +20,7 @@ public class StimulantManager extends WithdrawalSymptomsManager {
     super.Unregister(player);
   }
 
-  protected func UpdateSymptoms(symptoms: Int32) -> Bool {
+  protected func UpdateSymptoms(symptoms: Uint32) -> Bool {
     let stamina: Bool = Bits.Has(symptoms, EnumInt(Consumable.StaminaBooster));
     let capacity: Bool = Bits.Has(symptoms, EnumInt(Consumable.CarryCapacityBooster));
     let memory: Bool = Bits.Has(symptoms, EnumInt(Consumable.MemoryBooster));

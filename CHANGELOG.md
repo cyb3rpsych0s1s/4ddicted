@@ -10,6 +10,102 @@
 
 
 
+
+
+<a name="beta-0.8.0" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.8.0
+
+### Added
+- ✨  V will sometimes say something instead of an onomatopea on biomonitor summary
+
+### Changed
+- ⬆️  bump wolvenkit version in ci
+- ♻️  refactor methods
+- ♻️  refactor methods
+- 🔨  update build and bundle commands to include vanilla in custom sounds
+- 🔨  update bundle command for custom sounds
+- ♻️  use ffprobe only to analyze audio files
+- 🔨  add doc to encode command
+- 🔨  add command to analyze audio settings
+- 🔨  copy custom sounds recursively
+- 🔧  switch custom sounds pitch to 0
+- 🔨  add overwrite parameter to encode command
+- 🔨  improve commands
+- 🔨  add encode command from mp3 to wav
+- 🔨  add shortcut command to uninstall redmod-related mod files
+- 🚚  move info json to resources folder
+- 🔨  improve wolvenkit hotfix command
+- 🔨  add shortcut command to extract audios
+- 🚚  move everything under customSounds as created by WK
+
+### Removed
+- 🔥  clear sounds
+- 🔥  remove env
+
+### Fixed
+- 🚑  use absolute path
+- 🚑  remove trailing slash
+- 🚑  fix recursive copy in windows command
+- 🚑  fix recursive copy in commands
+- 🚑  hotfix bundle command paths
+- 🐛  fix incorrect stat pool types in healers
+- 🐛  fix various bugs
+- 🐛  fix cp for vanilla in custom sounds in build and bundle commands
+- ✏️  fix typo in info json
+- 🐛  fix ignored scripts folders and reorganize
+- ✏️  fix typo in info json
+- 🐛  fix encode command
+- 🐛  copy custom sounds files to packed folder
+
+### Miscellaneous
+- 📝  fix missing link in book summary
+- 🚀  update changelog [no ci]
+- 🚀  update changelog [no ci]
+- 🙈  ignore any env + any redscript mod folder except mod folder
+- coffin  remove unused methods
+- coffin  remove unused code
+- 🚧  add more onos to play randomly
+- 📦  add vanilla voices
+- 📦  add vanilla voice
+- 📦  add missing subtitle
+- 📦  add vanilla ono
+- 📦  add vanilla voice
+- 📦  add vanilla ono
+- 📦  add vanilla ono
+- 📦  add vanilla voice
+- 📦  add custom sound
+- 🚧  work around reaction entropy
+- 🚧  add mood and reaction
+- 🚧  add support for subtitles
+- 📝  update notes on audio encoding
+- 📝  add codeware as dependency in manifest infos
+- 📝  update installation infos
+- 📝  update outdated travelog infos
+- 📝  update travelog summary
+- 📝  add more details
+- 📦  prepare custom sounds for translations
+- 🚧  add missing cases
+- 📦  add more sounds
+- 📝  add detail
+- 📝  add entry to travelog
+- 📦  re-encode wav
+- 📦  add more sounds + integrate
+- 📦  add male sound counterparts
+- 📦  add more sounds
+- coffin  remove unused wolvenkit hotfix command
+- 📦  add new sounds
+- 🙈  ignore mp3 custom sounds
+- 🙈  ignore archive layout xml
+- 📝  track updated deps
+- 🙈  ignore any redscript mod folder except mod folder
+- 🙈  ignore any env
+- 📦  edit sounds in WK
+- ⚗  more work on V's exclamations
+- 🚧  add custom sounds
+- 📝  add install notes for redmod
+- 🚧  switch to redmod
+- ⚗  experiments with REDmod
+
 <a name="beta-0.7.3" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version beta-0.7.3
 
