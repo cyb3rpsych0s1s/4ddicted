@@ -174,14 +174,14 @@ bundle:
     mkdir -p '{{cet_release_dir}}'
     mkdir -p '{{red_release_dir}}'
     mkdir -p '{{tweak_release_dir}}'
-    mkdir -p '{{redmod_release_dir}}'/customSounds
+    mkdir -p '{{ join(redmod_release_dir, "customSounds") }}'
     cp -r '{{archive_input_dir}}'/. '{{archive_release_dir}}'
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
-    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_release_dir}}'/customSounds
-    cd '{{sounds_input_dir}}' && cp -r --parents vanilla/**/*.Wav '{{redmod_release_dir}}'/customSounds
-    cp '{{info_input_file}}' '{{redmod_release_dir}}'/info.json
+    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{ join(redmod_release_dir, "customSounds") }}'
+    cd '{{sounds_input_dir}}' && cp -r --parents vanilla/**/*.Wav '{{ join(redmod_release_dir, "customSounds") }}'
+    cp '{{info_input_file}}' '{{ join(redmod_release_dir, "info.json") }}'
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
