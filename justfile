@@ -186,7 +186,7 @@ bundle:
 [private]
 [windows]
 copy_recursive IN SUB EXT OUT:
-    cd '{{IN}}' && cp -r --parents '{{ join(SUB, "**", "*." + EXT) }}' '{{OUT}}'
+    cd '{{IN}}' && cp -r --parents {{SUB}}/**/*.{{EXT}} '{{OUT}}'/
 
 [private]
 [macos]
