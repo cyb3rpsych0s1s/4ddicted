@@ -6,6 +6,10 @@ Hi! I'd love to have your contributions!
 
 Testing game mods is time-consuming so you might not realize it, but a good way to support this mod is simply to report any bug found by simply filing a [Github issue](https://github.com/cyb3rpsych0s1s/4ddicted/issues).
 
+## 💱 Translations
+
+If you want to contribute translating this mod into your own native language, please follow [dedicated blog post here](https://cyb3rpsych0s1s.github.io/4ddicted/travelog/2023-04-07.html).
+
 ## 💡 Suggestions
 
 If you want to suggest a feature, please open a [Github Discussion](https://github.com/cyb3rpsych0s1s/4ddicted/discussions) and let's talk about it!

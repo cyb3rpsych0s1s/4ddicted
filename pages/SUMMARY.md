@@ -45,3 +45,4 @@ Welcome to Addicted notebook !
   - [2023-02-10](./travelog/2023-02-10.md)
   - [2023-03-17](./travelog/2023-03-17.md)
   - [2023-03-31](./travelog/2023-03-31.md)
+  - [2023-04-07](./travelog/2023-04-07.md)

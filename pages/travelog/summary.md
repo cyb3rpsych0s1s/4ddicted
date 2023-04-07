@@ -17,3 +17,4 @@ A little travel blog in modding land.
 - [2023-02-10](./2023-02-10.md): interactions and sounds
 - [2023-03-17](./2023-03-17.md): AI powered dialogs research
 - [2023-03-31](./2023-03-31.md): custom sounds
+- [2023-04-07](./2023-04-07.md): how to translate this mod ?
