@@ -71,10 +71,10 @@ compile:
 # ➡️  copy codebase files to game files, including archive
 build: rebuild
     cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
-    mkdir -p '{{redmod_output_dir}}'/customSounds
-    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{redmod_output_dir}}'/customSounds
-    cd '{{sounds_input_dir}}' && cp -r --parents vanilla/**/*.Wav '{{redmod_output_dir}}'/customSounds
-    cp '{{info_input_file}}' '{{redmod_output_dir}}'/info.json
+    mkdir -p '{{ join(redmod_output_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_input_dir}}' en-us wav '{{ join(redmod_output_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_input_dir}}' vanilla Wav '{{ join(redmod_output_dir, "customSounds") }}'
+    cp '{{info_input_file}}' '{{ join(redmod_output_dir, "info.json") }}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
@@ -179,9 +179,20 @@ bundle:
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
-    cd '{{sounds_input_dir}}' && cp -r --parents en-us/**/*.wav '{{ join(redmod_release_dir, "customSounds") }}'
-    cd '{{sounds_input_dir}}' && cp -r --parents vanilla/**/*.Wav '{{ join(redmod_release_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_input_dir}}' en-us wav '{{ join(redmod_release_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_input_dir}}' vanilla Wav '{{ join(redmod_release_dir, "customSounds") }}'
     cp '{{info_input_file}}' '{{ join(redmod_release_dir, "info.json") }}'
+
+[private]
+[windows]
+copy_recursive IN SUB EXT OUT:
+    cd '{{IN}}' && cp -r --parents '{{ join(SUB, "**", "*." + EXT) }}' '{{OUT}}'
+
+[private]
+[macos]
+[linux]
+copy_recursive IN SUB EXT OUT:
+    rsync -R {{ join(IN, SUB, "**", "*." + EXT) }} {{OUT}}
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
