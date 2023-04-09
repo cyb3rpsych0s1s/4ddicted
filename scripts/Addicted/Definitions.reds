@@ -2,6 +2,7 @@ module Addicted
 
 import Addicted.Helper
 import Addicted.Helpers.{Generic,Translations}
+import Codeware.Localization.LocalizationSystem
 
 public abstract class Hint {
   // game timestamp where to stop at
@@ -213,7 +214,7 @@ public class Consumptions {
     return total / size;
   }
   /// symptoms for biomonitor
-  public func Symptoms() -> array<ref<Symptom>> {
+  public func Symptoms(l8n: ref<LocalizationSystem>) -> array<ref<Symptom>> {
     let symptoms: array<ref<Symptom>> = [];
     let symptom: ref<Symptom>;
     let consumption: ref<Consumption>;
@@ -225,8 +226,8 @@ public class Consumptions {
         threshold = consumption.Threshold();
         if Helper.IsSerious(threshold) {
             symptom = new Symptom();
-            symptom.Title = Translations.Appellation(key);
-            symptom.Status = Translations.BiomonitorStatus(threshold);
+            symptom.Title = Translations.Appellation(key, l8n);
+            symptom.Status = Translations.BiomonitorStatus(threshold, l8n);
             ArrayPush(symptoms, symptom);
         }
       }
@@ -239,7 +240,7 @@ public class Consumptions {
     let chemical: ref<Chemical>;
     let consumption: ref<Consumption>;
     let keys = this.Keys();
-    let translations: array<CName>;
+    let translations: array<String>;
     let threshold: Threshold;
     let max: Int32 = 7;
     let found: Int32 = 0;

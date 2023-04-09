@@ -2,64 +2,65 @@ module Addicted.Helpers
 
 import Addicted.*
 import Addicted.Utils.E
+import Codeware.Localization.LocalizationSystem
 
 public class Translations {
 
-  public static func Threshold(threshold: Threshold) -> String {
+  public static func Threshold(threshold: Threshold, l8n: ref<LocalizationSystem>) -> String {
     switch (threshold) {
       case Threshold.Severely:
-        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Severely");
+        return l8n.GetText("Mod-Addicted-Threshold-Severely");
       case Threshold.Notably:
-        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Notably");
+        return l8n.GetText("Mod-Addicted-Threshold-Notably");
       case Threshold.Mildly:
-        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Mildly");
+        return l8n.GetText("Mod-Addicted-Threshold-Mildly");
       case Threshold.Barely:
-        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Barely");
+        return l8n.GetText("Mod-Addicted-Threshold-Barely");
       case Threshold.Clean:
-        return GetLocalizedTextByKey(n"Mod-Addicted-Threshold-Clean");
+        return l8n.GetText("Mod-Addicted-Threshold-Clean");
     }
   }
 
-  public static func BiomonitorStatus(threshold: Threshold) -> String {
+  public static func BiomonitorStatus(threshold: Threshold, l8n: ref<LocalizationSystem>) -> String {
     switch (threshold) {
       case Threshold.Severely:
-        return GetLocalizedTextByKey(n"Mod-Addicted-Biomonitor-Status-Threshold-Severely");
+        return l8n.GetText("Mod-Addicted-Biomonitor-Status-Threshold-Severely");
       default:
         break;
     }
-    return GetLocalizedTextByKey(n"Mod-Addicted-Biomonitor-Status-Threshold-Notably");
+    return l8n.GetText("Mod-Addicted-Biomonitor-Status-Threshold-Notably");
   }
 
-  public static func Appellation(id: TweakDBID) -> String {
+  public static func Appellation(id: TweakDBID, l8n: ref<LocalizationSystem>) -> String {
     if Generic.IsMaxDOC(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
+      return l8n.GetText("Mod-Addicted-Consumable-MaxDOC");
     }
     if Generic.IsBounceBack(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BounceBack");
+      return l8n.GetText("Mod-Addicted-Consumable-BounceBack");
     }
     if Generic.IsHealthBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-HealthBooster");
+      return l8n.GetText("Mod-Addicted-Consumable-HealthBooster");
     }
     if Generic.IsBlackLace(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BlackLace");
+      return l8n.GetText("Mod-Addicted-Consumable-BlackLace");
     }
     if Generic.IsStaminaBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-StaminaBooster");
+      return l8n.GetText("Mod-Addicted-Consumable-StaminaBooster");
     }
     if Generic.IsCapacityBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-CarryCapacityBooster");
+      return l8n.GetText("Mod-Addicted-Consumable-CarryCapacityBooster");
     }
     if Generic.IsMemoryBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MemoryBooster");
+      return l8n.GetText("Mod-Addicted-Consumable-MemoryBooster");
     }
-    return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Unknown");
+    return l8n.GetText("Mod-Addicted-Consumable-Unknown");
   }
 
-  public static func ChemicalKey(consumable: Consumable) -> array<CName> {
+  public static func ChemicalKey(consumable: Consumable) -> array<String> {
     if Equals(EnumInt(consumable), EnumInt(Consumable.Invalid)) { return []; }
     switch(consumable) {
       case Consumable.Alcohol:
-        return [n"Mod-Addicted-Chemical-Ethanol"];
+        return ["Mod-Addicted-Chemical-Ethanol"];
       case Consumable.MaxDOC:
         return [];
       case Consumable.BounceBack:
@@ -67,15 +68,15 @@ public class Translations {
       case Consumable.HealthBooster:
         return [];
       case Consumable.MemoryBooster:
-        return [n"Mod-Addicted-Chemical-Benzedrine", n"Mod-Addicted-Chemical-Modafinil"];
+        return ["Mod-Addicted-Chemical-Benzedrine", "Mod-Addicted-Chemical-Modafinil"];
       case Consumable.OxyBooster:
-        return [n"Mod-Addicted-Chemical-Trimix"];
+        return ["Mod-Addicted-Chemical-Trimix"];
       case Consumable.StaminaBooster:
-        return [n"Mod-Addicted-Chemical-Cortisone", n"Mod-Addicted-Chemical-Hydrocortisone", n"Mod-Addicted-Chemical-Prednisone"];
+        return ["Mod-Addicted-Chemical-Cortisone", "Mod-Addicted-Chemical-Hydrocortisone", "Mod-Addicted-Chemical-Prednisone"];
       case Consumable.BlackLace:
-        return [n"Mod-Addicted-Chemical-Dynorphin", n"Mod-Addicted-Chemical-Methadone"];
+        return ["Mod-Addicted-Chemical-Dynorphin", "Mod-Addicted-Chemical-Methadone"];
       case Consumable.CarryCapacityBooster:
-        return [n"Mod-Addicted-Chemical-Testosterone", n"Mod-Addicted-Chemical-Oxandrin"];
+        return ["Mod-Addicted-Chemical-Testosterone", "Mod-Addicted-Chemical-Oxandrin"];
     }
   }
 

@@ -41,7 +41,7 @@ enum BloodGroup {
 }
 
 public class Chemical {
-    public let Key: CName;
+    public let Key: String;
     public let From: Float;
     public let To: Float;
 }
@@ -381,6 +381,7 @@ public class BiomonitorController extends inkGameController {
 
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
         E(s"on biomonitor event (is already playing ? \(this.animation))");
+        let l8n: ref<LocalizationSystem> = LocalizationSystem.GetInstance(this.GetPlayerControlledObject().GetGame());
         if !this.Playing() && this.CanPlay() {
             if this.ShouldWait() {
               if !this.waiting {
@@ -418,11 +419,11 @@ public class BiomonitorController extends inkGameController {
 
                 if current < found {
                     chemical = chemicals[current];
-                    substance.SetLocalizationKey(chemical.Key);
+                    substance.SetText(l8n.GetText(chemical.Key));
                     controller.SetBaseValue(chemical.From);
                     controller.SetTargetValue(chemical.To);
                 } else {
-                    substance.SetLocalizationKey(n"Mod-Addicted-Chemical-Irrelevant");
+                    substance.SetText(l8n.GetText("Mod-Addicted-Chemical-Irrelevant"));
                     controller.SetBaseValue(0.0);
                     controller.SetTargetValue(0.0);
                 }
@@ -548,19 +549,20 @@ public class BiomonitorController extends inkGameController {
     }
 
     private func CreateInteractionHub() -> InteractionChoiceHubData {
+        let l8n: ref<LocalizationSystem> = LocalizationSystem.GetInstance(this.GetPlayerControlledObject().GetGame());
         let wrapper = new ChoiceTypeWrapper();
         ChoiceTypeWrapper.SetType(wrapper, gameinteractionsChoiceType.InnerDialog);
         let dismiss: InteractionChoiceData;
         dismiss.rawInputKey = EInputKey.IK_F;
         dismiss.isHoldAction = false;
-        dismiss.localizedName = GetLocalizedTextByKey(n"Mod-Addicted-Dismiss-Biomonitor");
+        dismiss.localizedName = l8n.GetText("Mod-Addicted-Dismiss-Biomonitor");
         dismiss.inputAction = n"Choice1";
         dismiss.type = wrapper;
         let hub: InteractionChoiceHubData;
         hub.id = -1001;
         hub.active = true;
         hub.flags = EVisualizerDefinitionFlags.None;
-        hub.title =  GetLocalizedTextByKey(n"Mod-Addicted-Dismiss-Biomonitor");
+        hub.title =  l8n.GetText("Mod-Addicted-Dismiss-Biomonitor");
         hub.choices = [dismiss];
         return hub;
     }

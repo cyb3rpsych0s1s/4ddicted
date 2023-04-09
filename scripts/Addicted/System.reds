@@ -4,6 +4,7 @@ import Addicted.Utils.*
 import Addicted.*
 import Addicted.Helpers.*
 import Addicted.Manager.*
+import Codeware.Localization.LocalizationSystem
 
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
@@ -423,7 +424,8 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Symptoms() -> array<ref<Symptom>> {
-    let symptoms = this.consumptions.Symptoms();
+    let l8n: ref<LocalizationSystem> = LocalizationSystem.GetInstance(this.player.GetGame());
+    let symptoms = this.consumptions.Symptoms(l8n);
     return symptoms;
   }
 
