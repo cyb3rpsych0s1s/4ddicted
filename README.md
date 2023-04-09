@@ -8,4 +8,12 @@ An amplifier mod for [Cyberpunk 2077](https://www.cyberpunk.net/) based on core 
 
 Basically adds a chance to become addicted to consumables too frequently consumed, like MAXdoc and the likes, offering additional debuffs and effects in an immersive way.
 
-A lot more informations can be found in the [book](https://cyb3rpsych0s1s.github.io/4ddicted/).
+## contributing / learning
+
+Feel free to have a look at the sources and grab whatever you fancy,
+also this repo has a [book](https://cyb3rpsych0s1s.github.io/4ddicted/) which contains tons of useful informations:
+
+- Contributing guide
+- Redscript coding patterns
+- Wolvenkit tutorials
+- Blog notes
