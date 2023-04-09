@@ -187,6 +187,9 @@ public class SmokeCallback extends DelayCallback {
       .GetAudioSystem(this.player.GetGame())
       .Play(n"q101_sc_06c_johnny_flicks_cigarette", this.player.GetEntityID(), n"Addicted:Smoke");
 
+      GameObjectEffectHelper
+      .StartEffectEvent(this.player, n"cigarette_smoke_exhaust");
+
       let callback = new SmokeCallback();
       callback.player = this.player;
       callback.step = this.step + 1;
@@ -198,7 +201,7 @@ public class SmokeCallback extends DelayCallback {
     if this.step == 2 {
       GameInstance
       .GetWorkspotSystem(this.player.GetGame())
-      .SendJumpToAnimEnt(this.player, n"stand_car_lean180__rh_cigarette__01__drop_ash__01", true);
+      .SendJumpToAnimEnt(this.player, n"stand_car_lean180__rh_cigarette__01__drop_ash__01", false);
 
       let callback = new SmokeCallback();
       callback.player = this.player;
@@ -209,21 +212,9 @@ public class SmokeCallback extends DelayCallback {
       .DelayCallback(callback, 1.6);
     }
     if this.step == 3 {
-      GameObjectEffectHelper
-      .StartEffectEvent(this.player, n"cigarette_smoke_exhaust");
-
-      let callback = new SmokeCallback();
-      callback.player = this.player;
-      callback.step = this.step + 1;
-      callback.entityID = this.entityID;
-      GameInstance
-      .GetDelaySystem(this.player.GetGame())
-      .DelayCallback(callback, 0.1);
-    }
-    if this.step == 4 {
       GameInstance
       .GetWorkspotSystem(this.player.GetGame())
-      .SendJumpToAnimEnt(this.player, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_ash__01", true);
+      .SendJumpToAnimEnt(this.player, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_ash__01", false);
 
       let callback = new SmokeCallback();
       callback.player = this.player;
@@ -234,10 +225,10 @@ public class SmokeCallback extends DelayCallback {
       .DelayCallback(callback, 2.0);
       
     }
-    if this.step == 5 {
+    if this.step == 4 {
       GameInstance
       .GetWorkspotSystem(this.player.GetGame())
-      .SendJumpToAnimEnt(this.player, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_idle__01", true);
+      .SendJumpToAnimEnt(this.player, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_idle__01", false);
 
       let callback = new SmokeCallback();
       callback.player = this.player;
@@ -248,17 +239,14 @@ public class SmokeCallback extends DelayCallback {
       .DelayCallback(callback, 6.0);
       
     }
-    if this.step == 6 {
+    if this.step == 5 {
       GameInstance
       .GetWorkspotSystem(this.player.GetGame())
-      .SendJumpToAnimEnt(this.player, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_ash__01", true);
+      .SendJumpToAnimEnt(this.player, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_ash__01", false);
 
       GameInstance
       .GetAudioSystem(this.player.GetGame())
       .Play(n"cmn_generic_work_extinguish_cigarette", this.player.GetEntityID(), n"Addicted:Smoke:End");
-
-      GameObjectEffectHelper
-      .BreakEffectLoopEvent(this.player, n"cigarette_smoke_exhaust");
 
       let callback = new SmokeCallback();
       callback.player = this.player;
@@ -269,8 +257,11 @@ public class SmokeCallback extends DelayCallback {
       .DelayCallback(callback, 1.0);
     }
     if this.step == 6 {
+      GameObjectEffectHelper
+      .BreakEffectLoopEvent(this.player, n"cigarette_smoke_exhaust");
+
       GameInstance.GetTransactionSystem(this.player.GetGame())
-      .RemoveItemFromSlot(this.player, t"AttachmentSlots.WeaponLeft", true);
+      .RemoveItemFromSlot(this.player, t"AttachmentSlots.WeaponLeft");
 
       GameInstance
       .GetDynamicEntitySystem()
@@ -300,17 +291,25 @@ private cb func OnEntityUpdate(event: ref<DynamicEntityEvent>) {
     // workspotSystem.SendJumpToTagCommandEnt(this, n"Animated5005", true, event.GetEntityID());
     // workspotSystem.SendJumpToAnimEnt(this, n"Animated5005", true);
     // workspotSystem.SendJumpToAnimEnt(this, n"Addicted", true);
-    workspotSystem.SendJumpToAnimEnt(this, n"sit_barstool_bar_lean0__2h_on_bar__01__smoke_start__01", true);
+    workspotSystem.SendJumpToAnimEnt(this, n"stand_car_lean180__rh_cigarette__01__smoke__01", true);
 
     GameInstance.GetTransactionSystem(this.GetGame())
     .GiveItem(this, ItemID.FromTDBID(t"Items.crowd_cigarette_i_stick"), 1);
     GameInstance.GetTransactionSystem(this.GetGame())
+    .GiveItem(this, ItemID.FromTDBID(t"Items.apparel_lighter_a"), 1);
+    GameInstance.GetTransactionSystem(this.GetGame())
     .AddItemToSlot(this, t"AttachmentSlots.WeaponLeft", ItemID.FromTDBID(t"Items.crowd_cigarette_i_stick"));
-    let command = new AIEquipCommand();
-    command.slotId = t"AttachmentSlots.WeaponLeft";
-    command.itemId = t"Items.crowd_cigarette_i_stick";
+    GameInstance.GetTransactionSystem(this.GetGame())
+    .AddItemToSlot(this, t"AttachmentSlots.WeaponRight", ItemID.FromTDBID(t"Items.apparel_lighter_a"));
+    let left = new AIEquipCommand();
+    left.slotId = t"AttachmentSlots.WeaponLeft";
+    left.itemId = t"Items.crowd_cigarette_i_stick";
+    let right = new AIEquipCommand();
+    right.slotId = t"AttachmentSlots.WeaponRight";
+    right.itemId = t"Items.apparel_lighter_a";
     let controller = this.GetAIControllerComponent();
-    controller.SendCommand(command);
+    controller.SendCommand(left);
+    controller.SendCommand(right);
 
     let callback = new SmokeCallback();
     callback.player = this;
@@ -328,7 +327,7 @@ public func Smoke() -> Void {
   this.entitySystem = GameInstance.GetDynamicEntitySystem();
   this.entitySystem.RegisterListener(n"Addicted", this, n"OnEntityUpdate");
   let deviceSpec = new DynamicEntitySpec();
-  deviceSpec.templatePath = r"base\\cyberscript\\entity\\workspot_anim.ent";
+  deviceSpec.templatePath = r"base\\cyberscript\\entity\\smoke.ent";
   deviceSpec.position = this.GetWorldPosition();
   deviceSpec.orientation = EulerAngles.ToQuat(Vector4.ToRotation(this.GetWorldPosition()));
   deviceSpec.persistState = false;
