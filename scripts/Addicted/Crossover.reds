@@ -19,7 +19,7 @@ protected func HandleHumanityPenalty(count: Int32, threshold: Threshold) -> Void
   let serious: Bool = Helper.IsSerious(threshold);
 
   if serious {
-    let multiplier: Int32 = Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) ? 4 : 2;
+    let multiplier: Int32 = Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) ? 6 : 3;
     let value: Int32 = Max(5, count);
     let penalty: Int32 = count * multiplier;
     if NotEquals(current, penalty) {
