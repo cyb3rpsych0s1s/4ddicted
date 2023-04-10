@@ -1,12 +1,10 @@
 module Addicted
 
-@if(ModuleExists("Edgerunning.System"))
-import Edgerunning.System.EdgerunningSystem
-
 import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect}
+import Addicted.Crossover
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -45,21 +43,13 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
       system.OnRested(id);
     }
 
-    if Equals(id, t"BaseStatusEffect.BlackLaceV0") {
-      this.AddPenaltyFromBlackLace(20);
+    if Generic.IsBlackLace(id) {
+      EI(id, s"consumed BlackLace");
+      let threshold: Threshold = system.Threshold(Consumable.BlackLace);
+      let count = Cast<Int32>(StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.BlackLace").GetStackCount());
+      this.HandlePenaltyFromBlackLace(count, threshold);
     }
 }
-
-@if(ModuleExists("Edgerunning.System"))
-@addMethod(PlayerPuppet)
-protected func AddPenaltyFromBlackLace(value: Int32) -> Void {
-  E(s"add humanity penalty");
-  EdgerunningSystem.GetInstance(this.GetGame()).AddHumanityPenalty("Mod-Addicted-Edgerunning-BlackLace-Penalty", value);
-}
-
-@if(!ModuleExists("Edgerunning.System"))
-@addMethod(PlayerPuppet)
-protected func AddPenaltyFromBlackLace(value: Int32) -> Void {}
 
 // play hints on dissipation
 @wrapMethod(PlayerPuppet)
