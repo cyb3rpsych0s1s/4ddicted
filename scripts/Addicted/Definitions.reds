@@ -165,6 +165,23 @@ public class Consumptions {
     let average = this.AverageConsumption(addiction);
     return Helper.Threshold(average);
   }
+  public func HighestThreshold() -> Threshold {
+    let consumption: ref<Consumption>;
+    let keys = this.Keys();
+    let current: Threshold = Threshold.Clean;
+    let next: Threshold;
+    for key in keys {
+      consumption = this.Get(key);
+      if IsDefined(consumption) {
+        next = consumption.Threshold();
+        if EnumInt(next) > EnumInt(current) {
+          current = next;
+          if Equals(EnumInt(current), EnumInt(Threshold.Severely)) { return current; }
+        }
+      }
+    }
+    return current;
+  }
   /// average consumption for a given consumable
   /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
   public func AverageConsumption(consumable: Consumable) -> Int32 {
@@ -314,4 +331,12 @@ enum Addiction {
 enum PlaySoundPolicy {
   All = 0,
   AmbientOnly = 1,
+}
+
+enum Mood {
+  Any = 0,
+  Disheartened = 1,
+  Offhanded = 2,
+  Pestered = 3,
+  Surprised = 4,
 }

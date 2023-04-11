@@ -18,7 +18,7 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
     super.Unregister(player);
   }
 
-  protected func UpdateSymptoms(symptoms: Int32) -> Bool {
+  protected func UpdateSymptoms(symptoms: Uint32) -> Bool {
     let blacklace = Bits.Has(symptoms, EnumInt(Consumable.BlackLace));
     E(s"update black lace symptom: current (\(this.withdrawing)) incoming (\(blacklace))");
     let invalidate: Bool = false;

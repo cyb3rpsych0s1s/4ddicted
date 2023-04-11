@@ -9,8 +9,8 @@ on:
       - "beta*"
       - "alpha*"
 env:
-  WOLVENKIT_CORE_VERSION: '8.8.1'
-  WOLVENKIT_CLI_VERSION: '1.8.1'
+  WOLVENKIT_CORE_VERSION: '8.9.0'
+  WOLVENKIT_CLI_VERSION: '1.8.2'
   IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
 
 jobs:
