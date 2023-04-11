@@ -119,7 +119,7 @@ public class Helper {
       case Consumable.StaminaBooster:
         return [t"BaseStatusEffect.StaminaBooster"];
       case Consumable.BlackLace:
-        return [t"BaseStatusEffect.BlackLaceV0"];
+        return Helper.EffectsByName("BlackLace");
       default:
         break;
     }

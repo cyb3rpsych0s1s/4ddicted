@@ -2,6 +2,7 @@ module Addicted
 
 import Addicted.Helper
 import Addicted.Helpers.{Generic,Translations}
+import Addicted.Utils.E
 
 public abstract class Hint {
   // game timestamp where to stop at
@@ -181,6 +182,24 @@ public class Consumptions {
       }
     }
     return current;
+  }
+  public func HighestThreshold(consumable: Consumable) -> Threshold {
+    let ids = Helper.Effects(consumable);
+    let consumption: wref<Consumption>;
+    let highest: Threshold = Threshold.Clean;
+    let found: Threshold;
+    for id in ids {
+      E(s"consumable variant ID: \(TDBID.ToStringDEBUG(id))");
+      consumption = this.Get(id) as Consumption;
+      if IsDefined(consumption) {
+        found = consumption.Threshold();
+        if Equals(EnumInt(found), EnumInt(Threshold.Severely)) { return found; }
+        if EnumInt(found) > EnumInt(highest) {
+          highest = found;
+        }
+      }
+    }
+    return highest;
   }
   /// average consumption for a given consumable
   /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)

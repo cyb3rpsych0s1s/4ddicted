@@ -61,8 +61,10 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
 
     if Generic.IsBlackLace(id) {
       EI(id, s"consumed BlackLace");
-      let threshold: Threshold = system.Threshold(Consumable.BlackLace);
-      let count = Cast<Int32>(StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.BlackLace").GetStackCount());
+      let threshold: Threshold = system.HighestThreshold(Consumable.BlackLace);
+      let insanity = StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.Insanity");
+      E(s"insanity: \(TDBID.ToStringDEBUG(insanity.GetRecord().GetID()))");
+      let count: Int32 = IsDefined(insanity) ? Cast<Int32>(insanity.GetStackCount()) : 0;
       this.HandleHumanityPenalty(count, threshold);
     }
 }

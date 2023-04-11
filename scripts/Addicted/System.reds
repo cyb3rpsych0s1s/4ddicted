@@ -458,6 +458,9 @@ public class AddictedSystem extends ScriptableSystem {
   public func AlreadyWarned(min: Uint32) -> Bool { return this.warnings >= min; }
 
   public func HighestThreshold() -> Threshold { return this.consumptions.HighestThreshold(); }
+  public func HighestThreshold(consumable: Consumable) -> Threshold {
+    return this.consumptions.HighestThreshold(consumable);
+  }
 
   public func OnSkipTime() -> Void {
     this.restingSince = this.timeSystem.GetGameTimeStamp();
