@@ -60,6 +60,7 @@ BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
     intValues: [70]
 
 UIIcon.InsanityIcon:
+  $type: UIIcon_Record
   atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
   atlasPartName: agony
 
@@ -73,16 +74,20 @@ BaseStatusEffect.Insanity:
   $base: BaseStatusEffect.Drugged
   uiData: UIData.Insanity
   maxStacks:
-    - $type: StatModifierGroup_Record
-      statModifiers:
-        - $type: ConstantStatModifier_Record
-          modifierType: Additive
-          statType: BaseStats.MaxStacks
-          value: 5
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.MaxStacks
+        value: 5
+  packages: []
+  gameplayTags: [n"Debuff"]
+  SFX: []
+  AIData: None
 
-ObjectActionEffect.Insanity:
+Items.BlacklaceInsanityObjectActionEffect:
   $type: ObjectActionEffect_Record
   statusEffect: BaseStatusEffect.Insanity
 
 Items.BlackLaceV0_inline5.completionEffects:
-  - !append ObjectActionEffect.Insanity
+  - !append Items.BlacklaceInsanityObjectActionEffect

@@ -42,6 +42,9 @@ public class HealerManager extends IScriptable {
 
   public func ContainsHealerStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
     for record in actionEffects {
+      E(s"action effect: \(TDBID.ToStringDEBUG(record.GetID()))");
+    }
+    for record in actionEffects {
       if Generic.IsHealer(record.GetID()) {
         return true;
       }
