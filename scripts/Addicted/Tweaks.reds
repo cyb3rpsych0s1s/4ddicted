@@ -4,7 +4,6 @@ import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect}
-import Addicted.Crossover
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -47,7 +46,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
       EI(id, s"consumed BlackLace");
       let threshold: Threshold = system.Threshold(Consumable.BlackLace);
       let count = Cast<Int32>(StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.BlackLace").GetStackCount());
-      this.HandlePenaltyFromBlackLace(count, threshold);
+      this.HandleHumanityPenalty(count, threshold);
     }
 }
 

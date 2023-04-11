@@ -3,6 +3,7 @@ module Addicted.Crossover
 @if(ModuleExists("Edgerunning.System"))
 import Edgerunning.System.EdgerunningSystem
 
+import Addicted.Threshold
 import Addicted.Helper
 import Addicted.Consumable
 
@@ -21,7 +22,7 @@ protected func HandleHumanityPenalty(count: Int32, threshold: Threshold) -> Void
   if serious {
     let multiplier: Int32 = Equals(EnumInt(threshold), EnumInt(Threshold.Severely)) ? 6 : 3;
     let value: Int32 = Max(5, count);
-    let penalty: Int32 = count * multiplier;
+    let penalty: Int32 = value * multiplier;
     if NotEquals(current, penalty) {
       edgerunning.AddHumanityPenalty("Mod-Addicted-Edgerunning-BlackLace-Penalty", penalty);
     }
