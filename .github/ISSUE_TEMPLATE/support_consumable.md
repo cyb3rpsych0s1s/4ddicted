@@ -8,6 +8,10 @@ assignees: ''
 
 ---
 
+implement XXX addiction system, general guideline:
+
+<!-- List all mods with respective consumable implementation. -->
+
 ## [MOD X](.)
 
 <!-- Copy/paste image from mod here. -->
