@@ -62,6 +62,8 @@ public class AddictedSystem extends ScriptableSystem {
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
 
+      this.CreateBiomon();
+
       this.RefreshConfig();
     } else { F(s"no player found!"); }
   }
@@ -108,6 +110,20 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);
+  }
+
+  private func CreateBiomon() -> Void {
+    let system = GameInstance.GetInkSystem();
+    let hud = system.GetLayer(n"inkHUDLayer").GetVirtualWindow();
+    let biomon = new BiomonitorComponent();
+    let widget = hud
+    .GetGameController()
+    .SpawnFromExternal(
+      biomon, 
+      r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", 
+      n"Root:BiomonitorController"
+    );
+    biomon.Reparent(hud);
   }
 
   public func RefreshConfig() -> Void {
