@@ -333,6 +333,7 @@ enum Consumable {
   StaminaBooster = 7,
   BlackLace = 8,
   CarryCapacityBooster = 9,
+  NeuroBlocker = 10,
 }
 
 enum Kind {

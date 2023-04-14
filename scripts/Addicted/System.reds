@@ -260,6 +260,16 @@ public class AddictedSystem extends ScriptableSystem {
         return this.blacklaceManager.AlterBlackLaceStatusEffects(actionEffects);
       }
     }
+    if this.blacklaceManager.ContainsNeuroBlockerStatusEffects(actionEffects) {
+      let threshold = this.Threshold(Consumable.NeuroBlocker);
+      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
+        let percent = Cast<Float>(EnumInt(threshold)) / 100.0;
+        let odds = RandF();
+        if odds <= percent {
+          return [];
+        }
+      }
+    }
     return actionEffects;
   }
 
