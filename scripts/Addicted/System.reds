@@ -255,7 +255,10 @@ public class AddictedSystem extends ScriptableSystem {
       return this.healerManager.AlterHealerStatusEffects(actionEffects);
     }
     if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
-      return this.blacklaceManager.AlterBlackLaceStatusEffects(actionEffects);
+      let threshold = this.Threshold(Consumable.BlackLace);
+      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
+        return this.blacklaceManager.AlterBlackLaceStatusEffects(actionEffects);
+      }
     }
     return actionEffects;
   }

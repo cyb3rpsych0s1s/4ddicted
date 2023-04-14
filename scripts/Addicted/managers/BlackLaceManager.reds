@@ -49,9 +49,11 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
   /// this is because actionEffects are immutable
   protected func AlterBlackLaceStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
     let insanity = TweakDBInterface.GetObjectActionEffectRecord(t"Items.BlacklaceInsanityObjectActionEffect");
+    let depot = GameInstance.GetResourceDepot();
+    let edgerunner = depot.ArchiveExists("WannabeEdgerunner.archive");
     if !IsDefined(insanity) { F(s"could not find Items.BlacklaceInsanityObjectActionEffect"); }
     else {
-      if !ArrayContains(actionEffects, insanity) {
+      if edgerunner && !ArrayContains(actionEffects, insanity) {
         E(s"about to grow action effects array...");
         ArrayGrow(actionEffects, 1);
         ArrayInsert(actionEffects, ArraySize(actionEffects) -1, insanity);
@@ -62,9 +64,6 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
   }
 
   public func ContainsBlackLaceStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
-    for record in actionEffects {
-      E(s"action effect: \(TDBID.ToStringDEBUG(record.GetID()))");
-    }
     for record in actionEffects {
       if Generic.IsBlackLace(record.GetID()) {
         return true;
