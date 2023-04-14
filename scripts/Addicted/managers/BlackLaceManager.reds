@@ -73,13 +73,8 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
   }
 
   public func ContainsNeuroBlockerStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
-    let neuroblockers = [
-      t"BaseStatusEffect.RipperDocMedBuff",
-      t"BaseStatusEffect.RipperDocMedBuffUncommon",
-      t"BaseStatusEffect.RipperDocMedBuffCommon"
-    ];
     for record in actionEffects {
-      if ArrayContains(neuroblockers, record.GetID()) {
+      if Generic.IsNeuroBlocker(record.GetID()) {
         return true;
       }
     }

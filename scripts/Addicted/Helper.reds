@@ -70,7 +70,8 @@ public class Helper {
       Consumable.OxyBooster,
       Consumable.StaminaBooster,
       Consumable.BlackLace,
-      Consumable.CarryCapacityBooster
+      Consumable.CarryCapacityBooster,
+      Consumable.NeuroBlocker
     ];
   }
 
@@ -94,7 +95,11 @@ public class Helper {
         ];
       case Addiction.Neuros:
         return [
-          t"Items.MemoryBooster"
+          t"Items.MemoryBooster",
+          // Wannabe Edgerunner
+          t"Items.ripperdoc_med",
+          t"Items.ripperdoc_med_uncommon",
+          t"Items.ripperdoc_med_common"
         ];
       default:
         break;
@@ -124,6 +129,12 @@ public class Helper {
           t"BaseStatusEffect.BlackLaceV1",
           t"BaseStatusEffect.BlackLaceV2"
       ];
+      case Consumable.NeuroBlocker:
+        return [
+          t"BaseStatusEffect.RipperDocMedBuff",
+          t"BaseStatusEffect.RipperDocMedBuffUncommon",
+          t"BaseStatusEffect.RipperDocMedBuffCommon"
+        ];
       default:
         break;
     }

@@ -154,4 +154,10 @@ public class Generic {
     let suffix = StrAfterFirst(str, ".");
     return StrContains(suffix, "OxyBooster");
   }
+
+  public static func IsNeuroBlocker(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "RipperDocMedBuff") || StrContains(suffix, "ripperdoc_med");
+  }
 }
