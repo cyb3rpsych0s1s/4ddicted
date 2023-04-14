@@ -34,6 +34,7 @@ public class Generic {
     if Generic.IsMemoryBooster(id)    { return Consumable.MemoryBooster; }
     if Generic.IsBlackLace(id)        { return Consumable.BlackLace; }
     if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
+    if Generic.IsNeuroBlocker(id)     { return Consumable.NeuroBlocker; }
     return Consumable.Invalid;
   }
 
@@ -77,7 +78,7 @@ public class Generic {
   }
 
   public static func IsInjector(id: TweakDBID) -> Bool {
-    return Generic.IsBounceBack(id);
+    return Generic.IsBounceBack(id) || Generic.IsNeuroBlocker(id);
   }
 
   public static func IsKit(id: TweakDBID) -> Bool {
