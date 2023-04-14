@@ -53,7 +53,7 @@ public class Helper {
       case Addiction.Anabolics:
         return [Consumable.StaminaBooster, Consumable.CarryCapacityBooster];
       case Addiction.Neuros:
-        return [Consumable.MemoryBooster];
+        return [Consumable.MemoryBooster, Consumable.NeuroBlocker];
       default:
         break;
     }
