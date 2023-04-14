@@ -254,6 +254,9 @@ public class AddictedSystem extends ScriptableSystem {
     if this.healerManager.ContainsHealerStatusEffects(actionEffects) {
       return this.healerManager.AlterHealerStatusEffects(actionEffects);
     }
+    if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
+      return this.blacklaceManager.AlterBlackLaceStatusEffects(actionEffects);
+    }
     return actionEffects;
   }
 

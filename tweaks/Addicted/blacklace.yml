@@ -83,11 +83,7 @@ BaseStatusEffect.Insanity:
   packages: []
   gameplayTags: [n"Debuff"]
   SFX: []
-  AIData: None
 
 Items.BlacklaceInsanityObjectActionEffect:
   $type: ObjectActionEffect_Record
   statusEffect: BaseStatusEffect.Insanity
-
-Items.BlackLaceV0_inline5.completionEffects:
-  - !append Items.BlacklaceInsanityObjectActionEffect
