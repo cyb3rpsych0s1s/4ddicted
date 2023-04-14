@@ -365,15 +365,12 @@ public class HealerTweaks extends ScriptableTweak {
         let variantEffectId: TweakDBID  = TDBID.Create("BaseStatusEffect." + variantEffect);
 
         let cloned = TweakDBManager.CloneRecord(variantItemName, originalItemId);
-        if !cloned {
-          F(s"unable to clone \(TDBID.ToStringDEBUG(originalItemId)) as \(NameToString(variantItemName))");
-          return;
+        if cloned {
+          let item: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantItemId);
+          let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
+          TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
+          TweakDBManager.UpdateRecord(item.GetID());
         }
-
-        let item: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantItemId);
-        let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
-        TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
-        TweakDBManager.UpdateRecord(item.GetID());
         
         i += 1;
       }
