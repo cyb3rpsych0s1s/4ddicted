@@ -179,8 +179,12 @@ bundle:
     cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
     cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
-    @just copy_recursive '{{sounds_input_dir}}' en-us wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_input_dir}}' vanilla Wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}'
+    @just bundle_lang
+
+bundle_lang CODE='en-us':
+    mkdir -p '{{ join(redmod_release_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_input_dir}}' {{CODE}} wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_input_dir}}' vanilla/{{CODE}} Wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}'
     cp '{{info_input_file}}' '{{ join(redmod_release_dir, "info.json") }}'
 
 [private]
