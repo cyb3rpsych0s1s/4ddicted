@@ -1,4 +1,4 @@
-module Addicted
+module Addicted.Debug
 
 import Addicted.Threshold
 import Addicted.System.AddictedSystem
