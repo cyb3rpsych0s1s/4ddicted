@@ -4,6 +4,8 @@ import Addicted.Utils.*
 import Addicted.*
 import Addicted.Helpers.*
 import Addicted.Manager.*
+import Addicted.Crossover.AlterNeuroBlockerStatusEffects
+import Addicted.Crossover.AlterBlackLaceStatusEffects
 
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
@@ -257,28 +259,14 @@ public class AddictedSystem extends ScriptableSystem {
     if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
       let threshold = this.Threshold(Consumable.BlackLace);
       if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
-        return this.blacklaceManager.AlterBlackLaceStatusEffects(actionEffects);
+        return AlterBlackLaceStatusEffects(this, actionEffects);
       }
     }
     if this.blacklaceManager.ContainsNeuroBlockerStatusEffects(actionEffects) {
-      let neuro = this.Threshold(Consumable.NeuroBlocker);
-      let lace = this.Threshold(Consumable.BlackLace);
-      let divide = 1;
-      if EnumInt(neuro) >= EnumInt(Threshold.Notably)  { divide += 1; }
-      if EnumInt(neuro) == EnumInt(Threshold.Severely) { divide += 1; }
-      if EnumInt(lace)  >= EnumInt(Threshold.Notably)  { divide += 1; }
-      if EnumInt(lace)  == EnumInt(Threshold.Severely) { divide += 1; }
-
-      let action = actionEffects[0] as ObjectActionEffect_Record;
-      let effect = action.statusEffect as StatusEffect_Record;
-      let duration = effect.duration as StatModifierGroup_Record;
-
-      let shortened = new ConstantStatModifier_Record();
-      shortened.statType = gamedataStatType.MaxDuration;
-      shortened.modifierType = gameStatModifierType.Additive;
-      shortened.value = actionEffects[0].statModifiers[0].value / divide;
-
-      actionEffects[0].statusEffect[0].duration.statModifiers[0] = shortened;
+      let threshold = this.Threshold(Consumable.NeuroBlocker);
+      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
+        return AlterNeuroBlockerStatusEffects(this, actionEffects);
+      }
     }
     return actionEffects;
   }

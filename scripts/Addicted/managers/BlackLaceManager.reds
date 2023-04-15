@@ -45,24 +45,6 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
     this.Invalidate(Consumable.BlackLace, this.withdrawing, applied, applicables);
   }
 
-  /// append status effect to existing one(s)
-  /// this is because actionEffects are immutable
-  protected func AlterBlackLaceStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
-    let insanity = TweakDBInterface.GetObjectActionEffectRecord(t"Items.BlacklaceInsanityObjectActionEffect");
-    let depot = GameInstance.GetResourceDepot();
-    let edgerunner = depot.ArchiveExists("WannabeEdgerunner.archive");
-    if !IsDefined(insanity) { F(s"could not find Items.BlacklaceInsanityObjectActionEffect"); }
-    else {
-      if edgerunner && !ArrayContains(actionEffects, insanity) {
-        E(s"about to grow action effects array...");
-        ArrayGrow(actionEffects, 1);
-        ArrayInsert(actionEffects, ArraySize(actionEffects) -1, insanity);
-        E(s"add insanity object action effect record to blacklace's existing one(s)");
-      }
-    }
-    return actionEffects;
-  }
-
   public func ContainsBlackLaceStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
     for record in actionEffects {
       if Generic.IsBlackLace(record.GetID()) {
