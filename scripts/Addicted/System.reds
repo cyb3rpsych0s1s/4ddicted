@@ -261,14 +261,22 @@ public class AddictedSystem extends ScriptableSystem {
       }
     }
     if this.blacklaceManager.ContainsNeuroBlockerStatusEffects(actionEffects) {
-      let threshold = this.Threshold(Consumable.NeuroBlocker);
-      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
-        let percent = Cast<Float>(EnumInt(threshold)) / 100.0;
-        let odds = RandF();
-        if odds <= percent {
-          return [];
-        }
-      }
+      let neuro = this.Threshold(Consumable.NeuroBlocker);
+      let lace = this.Threshold(Consumable.BlackLace);
+      let divide = 1;
+      if EnumInt(neuro) >= EnumInt(Threshold.Notably)  { divide += 1; }
+      if EnumInt(neuro) == EnumInt(Threshold.Severely) { divide += 1; }
+      if EnumInt(lace)  >= EnumInt(Threshold.Notably)  { divide += 1; }
+      if EnumInt(lace)  == EnumInt(Threshold.Severely) { divide += 1; }
+
+      let effect = actionEffects[0];
+      let duration = effect.duration as StatModifierGroup_Record;
+      let shortened = new ConstantStatModifier_Record();
+      shortened.statType = gamedataStatType.MaxDuration;
+      shortened.modifierType = gameStatModifierType.Additive;
+      shortened.value = actionEffects[0].statModifiers[0].value / divide;
+
+      actionEffects[0].statModifiers[0] = shortened;
     }
     return actionEffects;
   }
