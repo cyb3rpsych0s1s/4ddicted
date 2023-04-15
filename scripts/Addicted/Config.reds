@@ -16,6 +16,3 @@ enum AddictedMode {
 public class AddictedConfig {
   public let mode: AddictedMode = AddictedMode.Normal;
 }
-
-// Replace false with true to show full debug logs in CET console
-public static func ShowDebugLogsAddicted() -> Bool = true

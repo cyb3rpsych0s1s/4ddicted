@@ -6,9 +6,7 @@ module Addicted.Utils
 public static func E(str: String) -> Void;
 @if(ModuleExists("Addicted.Debug"))
 public static func E(str: String) -> Void {
-  if ShowDebugLogsAddicted() {
-    LogChannel(n"DEBUG", s"[Addicted] \(str)");
-  };
+  LogChannel(n"DEBUG", s"[Addicted] \(str)");
 }
 
 public static func F(str: String) -> Void {
