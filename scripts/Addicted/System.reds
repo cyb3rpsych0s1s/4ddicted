@@ -259,13 +259,13 @@ public class AddictedSystem extends ScriptableSystem {
     if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
       let threshold = this.Threshold(Consumable.BlackLace);
       if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
-        return AlterBlackLaceStatusEffects(this, actionEffects);
+        return AlterBlackLaceStatusEffects(threshold, actionEffects);
       }
     }
     if this.blacklaceManager.ContainsNeuroBlockerStatusEffects(actionEffects) {
       let threshold = this.Threshold(Consumable.NeuroBlocker);
       if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
-        return AlterNeuroBlockerStatusEffects(this, actionEffects);
+        return AlterNeuroBlockerStatusEffects(threshold, actionEffects);
       }
     }
     return actionEffects;

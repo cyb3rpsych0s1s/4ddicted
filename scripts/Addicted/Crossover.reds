@@ -7,7 +7,7 @@ import Addicted.System.AddictedSystem
 import Addicted.Threshold
 import Addicted.Helper
 import Addicted.Consumable
-import Addicted.Utils.E
+import Addicted.Utils.{E,F}
 
 @if(!ModuleExists("Edgerunning.System"))
 @addMethod(PlayerPuppet)
@@ -40,24 +40,22 @@ protected func HandleHumanityPenalty(count: Int32, threshold: Threshold) -> Void
 
 /// replace existing status effect with modified one
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
-public static func AlterNeuroBlockerStatusEffects(system: ref<AddictedSystem>, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
-  let neuro = this.Threshold(Consumable.NeuroBlocker);
+public static func AlterNeuroBlockerStatusEffects(threshold: Threshold, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
   let weakened: String = "NotablyWeakened";
-  if EnumInt(neuro) == EnumInt(Threshold.Severely) { weakened = "SeverelyWeakened"; }
+  if EnumInt(threshold) == EnumInt(Threshold.Severely) { weakened = "SeverelyWeakened"; }
   let effect = (actionEffects[0] as ObjectActionEffect_Record).StatusEffect();
   let id: TweakDBID = effect.GetID();
   let str: String = TDBID.ToStringDEBUG(id);
-  let prefix: String;
-  let suffix: String;
-  let split = StrSplitFirst(str, ".", prefix, suffix);
-  let replacer = TweakDBID.Create(prefix + "." + weakened + suffix);
+  let suffix: String = StrAfterFirst(str, ".");
+  let weaker = TDBID.Create("Items." + weakened + suffix);
+  let replacer = TweakDBInterface.GetObjectActionEffectRecord(weaker);
   actionEffects[0] = replacer;
   return actionEffects;
 }
 
 /// append status effect to existing one(s)
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
-public static func AlterBlackLaceStatusEffects(_: ref<AddictedSystem>, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
+public static func AlterBlackLaceStatusEffects(threshold: Threshold, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
   let insanity = TweakDBInterface.GetObjectActionEffectRecord(t"Items.BlacklaceInsanityObjectActionEffect");
   let depot = GameInstance.GetResourceDepot();
   let edgerunner = depot.ArchiveExists("WannabeEdgerunner.archive");
@@ -71,5 +69,71 @@ public static func AlterBlackLaceStatusEffects(_: ref<AddictedSystem>, actionEff
     }
   }
   return actionEffects;
+}
+
+public class NeuroBlockerTweaks extends ScriptableTweak {
+  protected cb func OnApply() -> Void {
+    let notably   = "NotablyWeakened";
+    let severely  = "SeverelyWeakened";
+    let prefixes  = [notably, severely];
+
+    let item      = "RipperDocMedBuff";
+
+    let depot = GameInstance.GetResourceDepot();
+    let edgerunner = depot.ArchiveExists("WannabeEdgerunner.archive");
+
+    if edgerunner {
+      this.Derive(prefixes, item, ["", "Uncommon", "Common"]);
+    }
+  }
+
+  // create object action effect for weakened neuroblockers :
+  // e.g. Items.NotablyWeakenedActionEffectRipperDocMedBuff for completionEffects
+  // with status effect set as BaseStatusEffect.NotablyWeakenedRipperDocMedBuff
+  private func Derive(prefixes: array<String>, diminutive: String, suffixes: array<String>) -> Void {
+    for prefix in prefixes {
+      for suffix in suffixes {
+        let effect: ref<StatusEffect_Record> = TweakDBInterface.GetStatusEffectRecord(TDBID.Create("BaseStatusEffect." + diminutive + suffix));
+        let duration: ref<StatModifierGroup_Record> = effect.Duration();
+        let modifier: ref<ConstantStatModifier_Record> = duration.GetStatModifiersItem(0) as ConstantStatModifier_Record;
+
+        let value: Float = modifier.Value();
+        let updated: Float = Equals(prefix, "NotablyWeakened") ? value / 2.0 : value / 4.0;
+
+        let variantDuration: String = this.DeriveName(TDBID.ToStringDEBUG(duration.GetID()), prefix);
+        if !IsDefined(TweakDBInterface.GetRecord(TDBID.Create(variantDuration))) {
+          TweakDBManager.CloneRecord(StringToName(variantDuration), duration.GetID());
+          TweakDBManager.SetFlat(TDBID.Create(variantDuration + ".statModifiers.0.value"), updated);
+          TweakDBManager.UpdateRecord(TDBID.Create(variantDuration));
+          E(s"created: \(variantDuration)");
+        }
+
+        let variantEffect: String = this.DeriveName(TDBID.ToStringDEBUG(effect.GetID()), prefix);
+        if !IsDefined(TweakDBInterface.GetRecord(TDBID.Create(variantEffect))) {
+          TweakDBManager.CloneRecord(StringToName(variantEffect), effect.GetID());
+          TweakDBManager.SetFlat(TDBID.Create(variantEffect + ".duration"), TweakDBInterface.GetRecord(TDBID.Create(variantDuration)));
+          TweakDBManager.UpdateRecord(TDBID.Create(variantEffect));
+          E(s"created: \(variantEffect)");
+        }
+
+        let variantAction: String = "Items." + prefix + "ActionEffect" + diminutive + suffix;
+        if !IsDefined(TweakDBInterface.GetRecord(TDBID.Create(variantAction))) {
+          TweakDBManager.CreateRecord(StringToName(variantAction), n"ObjectActionEffect_Record");
+          TweakDBManager.SetFlat(TDBID.Create(variantAction + ".statusEffect"), TweakDBInterface.GetRecord(TDBID.Create(variantEffect)));
+          TweakDBManager.UpdateRecord(TDBID.Create(variantAction));
+          E(s"created: \(variantAction)");
+        }
+      }
+    }
+  }
+
+  // given e.g. Items.RipperdocMedDurationRare and NotablyWeakened
+  // will return Items.NotablyWeakenedRipperdocMedDurationRare
+  private func DeriveName(base: String, prepend: String) -> String {
+    let prefix: String;
+    let suffix: String;
+    StrSplitFirst(base, ".", prefix, suffix);
+    return prefix + "." + prepend + suffix;
+  }
 }
     
