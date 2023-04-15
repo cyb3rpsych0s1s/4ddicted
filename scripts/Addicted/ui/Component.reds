@@ -102,52 +102,52 @@ public class BiomonitorComponent extends inkComponent {
     //     j += 1;
     // }
 
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_BLOOD_PRESSURE_text"));
-    ArrayPush(row, center.GetWidgetByIndex(0));
-    ArrayPush(row, rightmost.GetWidgetByIndex(0));
+    ArrayResize(row, 3);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_BLOOD_PRESSURE_text"));
+    ArrayInsert(row, 1, center.GetWidgetByIndex(0));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(0));
     ArrayPush(this.vitals, row);
 
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_LEVEL_AO_text"));
-    ArrayPush(row, center.GetWidgetByIndex(1));
-    ArrayPush(row, rightmost.GetWidgetByIndex(1));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_LEVEL_AO_text"));
+    ArrayInsert(row, 1, center.GetWidgetByIndex(1));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(1));
     ArrayPush(this.vitals, row);
     
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_ALBU_GLOBU_text"));
-    ArrayPush(row, center.GetWidgetByIndex(2));
-    ArrayPush(row, rightmost.GetWidgetByIndex(2));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_ALBU_GLOBU_text"));
+    ArrayInsert(row, 1, center.GetWidgetByIndex(2));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(2));
     ArrayPush(this.vitals, row);
 
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_ESR_text"));
-    ArrayPush(row, center.GetWidget(n"Critical_CRITICAL_text"));
-    ArrayPush(row, rightmost.GetWidgetByIndex(3));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_ESR_text"));
+    ArrayInsert(row, 1, center.GetWidget(n"Critical_CRITICAL_text"));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(3));
     ArrayPush(this.vitals, row);
 
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_RESPIRATORY_text"));
-    ArrayPush(row, center.GetWidget(n"Critical_AT_RISK_text"));
-    ArrayPush(row, rightmost.GetWidgetByIndex(4));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_RESPIRATORY_text"));
+    ArrayInsert(row, 1, center.GetWidget(n"Critical_AT_RISK_text"));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(4));
     ArrayPush(this.vitals, row);
     
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_IMMUNE_text"));
-    ArrayPush(row, center.GetWidget(n"Critical_AT_RISK2_text"));
-    ArrayPush(row, rightmost.GetWidgetByIndex(5));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_IMMUNE_text"));
+    ArrayInsert(row, 1, center.GetWidget(n"Critical_AT_RISK2_text"));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(5));
     ArrayPush(this.vitals, row);
 
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_CNS_text"));
-    ArrayPush(row, center.GetWidget(n"Critical_AT_RISK3_text"));
-    ArrayPush(row, rightmost.GetWidgetByIndex(6));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_CNS_text"));
+    ArrayInsert(row, 1, center.GetWidget(n"Critical_AT_RISK3_text"));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(6));
     ArrayPush(this.vitals, row);
     
-    row = [];
-    ArrayPush(row, leftmost.GetWidget(n"Critical_PNS_text"));
-    ArrayPush(row, center.GetWidget(n"Critical_CRITICAL2_text"));
-    ArrayPush(row, rightmost.GetWidgetByIndex(7));
+    ArrayClear(row);
+    ArrayInsert(row, 0, leftmost.GetWidget(n"Critical_PNS_text"));
+    ArrayInsert(row, 1, center.GetWidget(n"Critical_CRITICAL2_text"));
+    ArrayInsert(row, 2, rightmost.GetWidgetByIndex(7));
     ArrayPush(this.vitals, row);
     
     this.booting.SetLocalizedText(n"Mod-Addicted-Biomonitor-Booting");
