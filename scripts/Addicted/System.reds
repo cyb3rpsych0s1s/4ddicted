@@ -269,14 +269,16 @@ public class AddictedSystem extends ScriptableSystem {
       if EnumInt(lace)  >= EnumInt(Threshold.Notably)  { divide += 1; }
       if EnumInt(lace)  == EnumInt(Threshold.Severely) { divide += 1; }
 
-      let effect = actionEffects[0];
+      let action = actionEffects[0] as ObjectActionEffect_Record;
+      let effect = action.statusEffect as StatusEffect_Record;
       let duration = effect.duration as StatModifierGroup_Record;
+
       let shortened = new ConstantStatModifier_Record();
       shortened.statType = gamedataStatType.MaxDuration;
       shortened.modifierType = gameStatModifierType.Additive;
       shortened.value = actionEffects[0].statModifiers[0].value / divide;
 
-      actionEffects[0].statModifiers[0] = shortened;
+      actionEffects[0].statusEffect[0].duration.statModifiers[0] = shortened;
     }
     return actionEffects;
   }
