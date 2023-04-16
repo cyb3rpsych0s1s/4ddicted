@@ -109,17 +109,17 @@ public class NeuroBlockerTweaks extends ScriptableTweak {
         }
 
         let variantEffect: String = this.DeriveName(TDBID.ToStringDEBUG(effect.GetID()), prefix);
-        if !IsDefined(TweakDBInterface.GetRecord(TDBID.Create(variantEffect))) {
+        if !IsDefined(TweakDBInterface.GetStatusEffectRecord(TDBID.Create(variantEffect))) {
           TweakDBManager.CloneRecord(StringToName(variantEffect), effect.GetID());
-          TweakDBManager.SetFlat(TDBID.Create(variantEffect + ".duration"), TweakDBInterface.GetRecord(TDBID.Create(variantDuration)));
+          TweakDBManager.SetFlat(TDBID.Create(variantEffect + ".duration"), TweakDBInterface.GetStatModifierGroupRecord(TDBID.Create(variantDuration)));
           TweakDBManager.UpdateRecord(TDBID.Create(variantEffect));
           E(s"created: \(variantEffect)");
         }
 
         let variantAction: String = "Items." + prefix + "ActionEffect" + diminutive + suffix;
-        if !IsDefined(TweakDBInterface.GetRecord(TDBID.Create(variantAction))) {
+        if !IsDefined(TweakDBInterface.GetObjectActionEffectRecord(TDBID.Create(variantAction))) {
           TweakDBManager.CreateRecord(StringToName(variantAction), n"ObjectActionEffect_Record");
-          TweakDBManager.SetFlat(TDBID.Create(variantAction + ".statusEffect"), TweakDBInterface.GetRecord(TDBID.Create(variantEffect)));
+          TweakDBManager.SetFlat(TDBID.Create(variantAction + ".statusEffect"), TweakDBInterface.GetStatusEffectRecord(TDBID.Create(variantEffect)));
           TweakDBManager.UpdateRecord(TDBID.Create(variantAction));
           E(s"created: \(variantAction)");
         }
