@@ -129,7 +129,7 @@ public class NeuroBlockerTweaks extends ScriptableTweak {
 
         let variantDuration: String = this.DeriveName(TDBID.ToStringDEBUG(duration.GetID()), prefix);
         let variantConstant: String = variantDuration + "Constant";
-        if !IsDefined(TweakDBInterface.GetRecord(TDBID.Create(variantDuration))) {
+        if !IsDefined(TweakDBInterface.GetStatModifierGroupRecord(TDBID.Create(variantDuration))) {
           TweakDBManager.CloneRecord(StringToName(variantDuration), duration.GetID());
           TweakDBManager.CloneRecord(StringToName(variantConstant), duration.GetStatModifiersItem(0).GetID());
           
