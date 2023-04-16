@@ -51,7 +51,7 @@ public static func AlterNeuroBlockerStatusEffects(threshold: Threshold, actionEf
   let id: TweakDBID = effect.GetID();
   let str: String = TDBID.ToStringDEBUG(id);
   let suffix: String = StrAfterFirst(str, ".");
-  let weaker = TDBID.Create("Items." + weakened + suffix);
+  let weaker = TDBID.Create("Items." + weakened + "ActionEffect" + suffix);
   let replacer = TweakDBInterface.GetObjectActionEffectRecord(weaker);
   actionEffects[0] = replacer;
   return actionEffects;
