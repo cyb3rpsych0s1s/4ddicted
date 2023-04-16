@@ -168,6 +168,10 @@ public func DebugBiomon() -> Void {
 public func Checkup() -> Void {
   let system = AddictedSystem.GetInstance(this.GetGame());
   system.Checkup();
+  let effects = StatusEffectHelper.GetAppliedEffects(this);
+  for effect in effects {
+    E(s"applied status effect: \(TDBID.ToStringDEBUG(effect.GetRecord().GetID()))");
+  }
 }
 
 // use like: Game.GetPlayer():DebugSound("v_scene_rogue_default_m_1af69f1db32d2000"); // vanilla

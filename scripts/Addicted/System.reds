@@ -4,6 +4,8 @@ import Addicted.Utils.*
 import Addicted.*
 import Addicted.Helpers.*
 import Addicted.Manager.*
+import Addicted.Crossover.AlterNeuroBlockerStatusEffects
+import Addicted.Crossover.AlterBlackLaceStatusEffects
 
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
@@ -254,6 +256,18 @@ public class AddictedSystem extends ScriptableSystem {
     if this.healerManager.ContainsHealerStatusEffects(actionEffects) {
       return this.healerManager.AlterHealerStatusEffects(actionEffects);
     }
+    if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
+      let threshold = this.Threshold(Consumable.BlackLace);
+      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
+        return AlterBlackLaceStatusEffects(threshold, actionEffects);
+      }
+    }
+    if this.blacklaceManager.ContainsNeuroBlockerStatusEffects(actionEffects) {
+      let threshold = this.Threshold(Consumable.NeuroBlocker);
+      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
+        return AlterNeuroBlockerStatusEffects(threshold, actionEffects);
+      }
+    }
     return actionEffects;
   }
 
@@ -458,6 +472,9 @@ public class AddictedSystem extends ScriptableSystem {
   public func AlreadyWarned(min: Uint32) -> Bool { return this.warnings >= min; }
 
   public func HighestThreshold() -> Threshold { return this.consumptions.HighestThreshold(); }
+  public func HighestThreshold(consumable: Consumable) -> Threshold {
+    return this.consumptions.HighestThreshold(consumable);
+  }
 
   public func OnSkipTime() -> Void {
     this.restingSince = this.timeSystem.GetGameTimeStamp();

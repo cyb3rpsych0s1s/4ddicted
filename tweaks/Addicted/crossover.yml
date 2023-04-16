@@ -1,0 +1,11 @@
+# weakened neuroblockers status effect
+
+UIIcon.NotablyWeakenedNeuroblocker:
+  $type: UIIcon_Record
+  atlasPartName: notably_inhaler_buff_icon
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+UIIcon.SeverelyWeakenedNeuroblocker:
+  $type: UIIcon_Record
+  atlasPartName: severely_inhaler_buff_icon
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas

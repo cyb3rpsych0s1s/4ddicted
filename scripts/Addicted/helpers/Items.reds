@@ -39,7 +39,8 @@ public class Items {
   public static func IsPillAction(id: TweakDBID) -> Bool {
     return Generic.IsCapacityBooster(id) ||
     Items.IsStaminaBoosterAction(id) ||
-    Items.IsMemoryBoosterAction(id);
+    Items.IsMemoryBoosterAction(id) ||
+    Items.IsNeuroBlockerAction(id);
   }
 
   public static func IsAnabolicAction(id: TweakDBID) -> Bool {
@@ -81,6 +82,14 @@ public class Items {
   private static func IsMemoryBoosterAction(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     if StrBeginsWith(str, "Items") && StrContains(str, "MemoryBooster") { return true; }
+    return false;
+  }
+
+  private static func IsNeuroBlockerAction(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    if StrBeginsWith(str, "Items") && StrEndsWith(str, "ripperdoc_med") { return true; }
+    if StrBeginsWith(str, "Items") && StrEndsWith(str, "ripperdoc_med_uncommon") { return true; }
+    if StrBeginsWith(str, "Items") && StrEndsWith(str, "ripperdoc_med_common") { return true; }
     return false;
   }
 

@@ -58,3 +58,32 @@ BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
   uiData:
     $base: UIData.WithdrawnFromBlackLace
     intValues: [70]
+
+UIIcon.InsanityIcon:
+  $type: UIIcon_Record
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+  atlasPartName: agony
+
+UIData.Insanity:
+  $base: BaseStatusEffect.Drugged_inline5
+  description: LocKey#Mod-Addicted-Overdose-BlackLace-Desc
+  displayName: LocKey#Mod-Addicted-Overdose-BlackLace
+  iconPath: InsanityIcon
+
+BaseStatusEffect.Insanity:
+  $base: BaseStatusEffect.Drugged
+  uiData: UIData.Insanity
+  maxStacks:
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.MaxStacks
+        value: 5
+  packages: []
+  gameplayTags: [n"Debuff"]
+  SFX: []
+
+Items.BlacklaceInsanityObjectActionEffect:
+  $type: ObjectActionEffect_Record
+  statusEffect: BaseStatusEffect.Insanity
