@@ -38,8 +38,14 @@ protected func HandleHumanityPenalty(count: Int32, threshold: Threshold) -> Void
   }
 }
 
+@if(!ModuleExists("Edgerunning.System"))
+public static func AlterNeuroBlockerStatusEffects(threshold: Threshold, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
+  return actionEffects;
+}
+
 /// replace existing status effect with modified one
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
+@if(ModuleExists("Edgerunning.System"))
 public static func AlterNeuroBlockerStatusEffects(threshold: Threshold, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
   let weakened: String = "NotablyWeakened";
   if EnumInt(threshold) == EnumInt(Threshold.Severely) { weakened = "SeverelyWeakened"; }
@@ -53,8 +59,13 @@ public static func AlterNeuroBlockerStatusEffects(threshold: Threshold, actionEf
   return actionEffects;
 }
 
+@if(!ModuleExists("Edgerunning.System"))
+public static func AlterBlackLaceStatusEffects(threshold: Threshold, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
+  return actionEffects;
+}
 /// append status effect to existing one(s)
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
+@if(ModuleExists("Edgerunning.System"))
 public static func AlterBlackLaceStatusEffects(threshold: Threshold, actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
   let insanity = TweakDBInterface.GetObjectActionEffectRecord(t"Items.BlacklaceInsanityObjectActionEffect");
   let depot = GameInstance.GetResourceDepot();
