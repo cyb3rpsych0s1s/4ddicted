@@ -1,6 +1,7 @@
 module Addicted.Helpers
 
 import Addicted.*
+import Addicted.Crossover.ExtraDesignation
 
 // effects or items agnostic
 public class Generic {
@@ -13,6 +14,8 @@ public class Generic {
   public static func Designation(id: TweakDBID) -> TweakDBID {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
+    let extra = ExtraDesignation(suffix);
+    if NotEquals(extra, t"None") { return extra; }
     if StrContains(suffix, "NotablyWeakened") || StrContains(suffix, "SeverelyWeakened") {
       suffix = StrReplace(suffix, "NotablyWeakened", "");
       suffix = StrReplace(suffix, "SeverelyWeakened", "");
