@@ -59,8 +59,17 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
       system.OnRested(id);
     }
 
-    if Generic.IsNeuroBlocker(id) && StatusEffectSystem.HasStatusEffect(this.GetEntityID(), t"BaseStatusEffect.Insanity") {
-      StatusEffectHelper.RemoveStatusEffect(this, t"BaseStatusEffect.Insanity");
+    if Generic.IsNeuroBlocker(id) && IsDefined(StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.Insanity")) {
+      let stacks = 5u;
+      let lace: Threshold = system.HighestThreshold(Consumable.BlackLace);
+      let neuro: Threshold = system.HighestThreshold(Consumable.NeuroBlocker);
+      if EnumInt(lace)  >= EnumInt(Threshold.Notably)  { stacks -= 1u; }
+      if EnumInt(lace)  == EnumInt(Threshold.Severely) { stacks -= 1u; }
+      if EnumInt(neuro) >= EnumInt(Threshold.Notably)  { stacks -= 1u; }
+      if EnumInt(neuro) == EnumInt(Threshold.Severely) { stacks -= 2u; }
+      GameInstance
+      .GetStatusEffectSystem(this.GetGame())
+      .RemoveStatusEffect(this.GetEntityID(), t"BaseStatusEffect.Insanity", stacks);
     }
 
     if Generic.IsBlackLace(id) {
