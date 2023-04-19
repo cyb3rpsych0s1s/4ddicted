@@ -92,6 +92,24 @@ When suffering from Fibromalgya, V will also express some pain.
 
 Craving for Black Lace will also be shown in radial wheel with custom icon.
 
+---
+
+🆕 >= beta-0.9.0
+
+Additional mechanisms now exists to account for players using `Wannabe Edgerunner` mod together.
+
+###### Insanity
+
+Whenever addicted to Black Lace, V can suffer an additional `Humanity` penalty, called Insanity.
+Penalty is calculated from max number of consecutive consumptions, along with addiction threshold.
+
+###### Neuroblockers
+
+Neuroblockers addiction works a little bit like Healers, except that it weakens their duration.
+In short: the more you're addicted to Neuroblockers, the shorter they last.
+
+The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.
+
 ### Cyberware
 
 Some cyberwares also have an impact on addiction in general.
@@ -122,3 +140,17 @@ The UI is also dismissable, and automatically hides whenever interacting with an
 
 ![screenshot biomonitor loading](./pictures/ingame-biomonitor-loading.png)
 ![screenshot biomonitor diagnosis](./pictures/ingame-biomonitor-diagnosis.png)
+
+### Voiced reactions
+
+🆕 >= beta-0.8.0
+
+Now V will sometimes have voiced reactions, for English language only (it will have no effect for people playing  in another language yet).
+
+Examples:
+
+- whenever biomonitor boots many times.
+- whenever biomonitor reports serious condition multiple times.
+- whenever biomonitor is dismissed during combat.
+
+Some of these voiced reactions are unique.
