@@ -59,6 +59,10 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
       system.OnRested(id);
     }
 
+    if Generic.IsNeuroBlocker(id) && StatusEffectSystem.HasStatusEffect(this.GetEntityID(), t"BaseStatusEffect.Insanity") {
+      StatusEffectHelper.RemoveStatusEffect(this, t"BaseStatusEffect.Insanity");
+    }
+
     if Generic.IsBlackLace(id) {
       EI(id, s"consumed BlackLace");
       let threshold: Threshold = system.HighestThreshold(Consumable.BlackLace);

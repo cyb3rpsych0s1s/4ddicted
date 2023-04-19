@@ -258,7 +258,8 @@ public class AddictedSystem extends ScriptableSystem {
     }
     if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
       let threshold = this.Threshold(Consumable.BlackLace);
-      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
+      let immune = StatusEffectSystem.ObjectHasStatusEffectWithTag(this.player, n"Neuroblockers");
+      if EnumInt(threshold) >= EnumInt(Threshold.Notably) && !immune {
         return AlterBlackLaceStatusEffects(threshold, actionEffects);
       }
     }
