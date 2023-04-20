@@ -7,3 +7,5 @@ title = "Addicted"
 
 [build]
 extra-watch-dirs = ["pages"]
+
+[output.linkcheck]
