@@ -21,6 +21,14 @@ jobs:
           mkdir mdbook
           curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.22/mdbook-v0.4.22-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
+      - name: Install mdbook link check
+        run: |
+          mkdir -p mdbook-linkcheck && cd "$_" && \
+          curl -L https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases/latest/download/mdbook-linkcheck.x86_64-unknown-linux-gnu.zip -o mdbook-linkcheck.zip && \
+          unzip "$_" && \
+          chmod +x mdbook-linkcheck && \
+          export PATH=$PWD:$PATH && \
+          cd ..
       - name: Deploy GitHub Pages
         run: |
           mdbook build
