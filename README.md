@@ -17,3 +17,29 @@ also this repo has a [book](https://cyb3rpsych0s1s.github.io/4ddicted/) which co
 - Redscript coding patterns
 - Wolvenkit tutorials
 - Blog notes
+
+## credits
+
+To all people who helped along the way:
+
+♦ [psiberx](https://github.com/psiberx)
+♦ [DJ_Kovrik](https://github.com/djkovrik)
+♦ RMK SoundSystem
+♦ keanuWheeze
+♦ Technic235
+♦ [mana](https://github.com/manavortex)
+♦ [jekky](https://github.com/jac3km4)
+♦ [tobozo](https://github.com/tobozo)
+♦ [IslandDancer](https://github.com/IslandDancer)
+♦ Auska
+♦ Lyralei
+♦ Sürr
+♦ Hróbjartur Fóðarsson
+♦ [deadlymustard](https://github.com/deadlymustard)
+♦ [Maxime](https://github.com/maximegmd)
+♦ [WopSs](https://github.com/WopsS)
+♦ Simarilius
+♦ dddzzzkkk
+♦ Paperclip
+♦ donk7413
+♦ Eli
