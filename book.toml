@@ -8,4 +8,7 @@ title = "Addicted"
 [build]
 extra-watch-dirs = ["pages"]
 
+[output.html]
+
 [output.linkcheck]
+optional = true
