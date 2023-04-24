@@ -16,11 +16,11 @@ one cannot e.g.
 ```swift
 public func GetIDs() -> array<TweakDBID> { ... }
 
-// WRONG!
+// ❌ WRONG!
 public func IsID(id: TweakDBID) -> Bool {
   return ArrayContains(GetIDs(), id);
 }
-// do this instead:
+// ✅ do this instead:
 public func IsID(id: TweakDBID) -> Bool {
   let ids = GetIDs();
   return ArrayContains(ids, id);
