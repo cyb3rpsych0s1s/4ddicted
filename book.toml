@@ -8,6 +8,14 @@ title = "Addicted"
 [build]
 extra-watch-dirs = ["pages"]
 
+[preprocessor.codeblocks]
+renderers = ["html"]
+cpp = { color = "#FFFF99", link = "https://wiki.redmodding.org/red4ext" }
+swift = { icon = "fa-r", label = "Redscript", color = "tomato", link = "https://wiki.redmodding.org/redscript" }
+rust = { color = "tomato", link = "https://github.com/jac3km4/red4ext-rs" }
+lua = { color = "skyblue", link = "https://wiki.redmodding.org/cyber-engine-tweaks" }
+yaml = { color = "tomato", link = "https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks" }
+
 [output.html]
 
 [output.linkcheck]
