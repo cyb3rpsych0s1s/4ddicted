@@ -12,6 +12,76 @@
 
 
 
+
+
+<a name="beta-0.9.1" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.9.1
+
+### Miscellaneous
+- coffin  remove unused methods in items helper
+- 📝  update spoilers
+
+<a name="beta-0.9.0" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.9.0
+
+### Added
+- ✨  implement additional gameplay for neuroblocker
+
+### Changed
+- 🎨  call typed method in scriptable tweak for neuroblocker
+- ♻️  add conditional compilation
+- ♻️  types
+- 🍱  update icons
+- ♻️  alter method and create scriptable tweak
+- ♻️  refactor crossover methods
+- ♻️  add neuroblocker to neuros
+- ♻️  add missing entries for neuroblockers
+- ♻️  refactor and add missing entries for neuroblockers
+- ♻️  statically define effect variants
+- ♻️  conditionally apply status effect
+- 🔧  update support_consumable template
+- 🔧  update support_consumable template
+- 🔧  adjust penalty
+- ♻️  implement and split logic to separate file
+
+### Removed
+- 🔇  remove logs
+- 🔇  remove healers action effect log
+- 🔥  remove unused archive project file
+
+### Fixed
+- 🐛  fix typos with neuroblocker object action effect
+- 🐛  fix neuroblockers designation ordering for status effects
+- 🐛  fix neuroblockers designation for status effects
+- 🐛  fix neuroblockers designation
+- 🐛  fix ui icon issue for altered neuroblocker effect
+- 🐛  regenerate ink atlas
+- 🐛  fix typos
+- 🐛  fix issue with additional completion effect not taken into account for blacklace
+- 🐛  fix potential issue with healers tweaks
+- ✏️  fix typo in issue template
+- 🐛  fix typos
+
+### Miscellaneous
+- 📦  regenerate ink atlas
+- 📦  import updated atlas and icons
+- necktie  decrease neuroblocker duration instead of negating
+- 🙈  ignore cli exes
+- 🚧  completion effect not being applied
+- 🚧  work in progress stack effect
+- 📝  update readme
+- 📝  add travelog entry on contributing for translations
+- ⚗  experiment with wannabe edgerunner humanity modifier system
+
+<a name="beta-0.8.1" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.8.1
+
+### Changed
+- ⚡️  refactoring to codeware bits
+
+### Miscellaneous
+- 🚀  update changelog [no ci]
+
 <a name="beta-0.8.0" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version beta-0.8.0
 

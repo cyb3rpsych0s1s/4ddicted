@@ -58,6 +58,16 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
       EI(id, s"housing");
       system.OnRested(id);
     }
+
+    if Generic.IsBlackLace(id) {
+      EI(id, s"consumed BlackLace");
+      let threshold: Threshold = system.HighestThreshold(Consumable.BlackLace);
+      let insanity = StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.Insanity");
+      E(s"is defined insanity: \(IsDefined(insanity))");
+      E(s"insanity: \(TDBID.ToStringDEBUG(insanity.GetRecord().GetID()))");
+      let count: Int32 = IsDefined(insanity) ? Cast<Int32>(insanity.GetStackCount()) : 0;
+      this.HandleHumanityPenalty(count, threshold);
+    }
 }
 
 // play hints on dissipation
@@ -355,15 +365,12 @@ public class HealerTweaks extends ScriptableTweak {
         let variantEffectId: TweakDBID  = TDBID.Create("BaseStatusEffect." + variantEffect);
 
         let cloned = TweakDBManager.CloneRecord(variantItemName, originalItemId);
-        if !cloned {
-          F(s"unable to clone \(TDBID.ToStringDEBUG(originalItemId)) as \(NameToString(variantItemName))");
-          return;
+        if cloned {
+          let item: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantItemId);
+          let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
+          TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
+          TweakDBManager.UpdateRecord(item.GetID());
         }
-
-        let item: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantItemId);
-        let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
-        TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
-        TweakDBManager.UpdateRecord(item.GetID());
         
         i += 1;
       }

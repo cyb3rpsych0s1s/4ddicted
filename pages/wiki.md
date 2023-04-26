@@ -18,7 +18,7 @@ end)
 
 is the equivalent of:
 
-```rust
+```swift
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
     // execute some logic when player starts game

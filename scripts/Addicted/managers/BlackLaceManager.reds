@@ -2,7 +2,7 @@ module Addicted.Manager
 
 import Addicted.*
 import Addicted.Utils.*
-import Addicted.Helpers.{Bits,Effect}
+import Addicted.Helpers.{Bits,Effect,Generic}
 
 public class BlackLaceManager extends WithdrawalSymptomsManager {
 
@@ -43,5 +43,23 @@ public class BlackLaceManager extends WithdrawalSymptomsManager {
     StatusEffectHelper.GetAppliedEffectsWithTag(this.owner, n"WithdrawalSymptom", applied);
 
     this.Invalidate(Consumable.BlackLace, this.withdrawing, applied, applicables);
+  }
+
+  public func ContainsBlackLaceStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
+    for record in actionEffects {
+      if Generic.IsBlackLace(record.GetID()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public func ContainsNeuroBlockerStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Bool {
+    for record in actionEffects {
+      if Generic.IsNeuroBlocker(record.GetID()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

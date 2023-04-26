@@ -83,7 +83,7 @@ Then proceed:
 - open your IDE
   - edit your YAML Tweak, e.g.
 
-    ```swift
+    ```yaml
     UIIcon.NotablyWeakenedFirstAidWhiff:
      $type: UIIcon_Record
      atlasPartName: notably_first_aid_whiff
@@ -92,7 +92,7 @@ Then proceed:
 
   - use in your tweaks, e.g.
 
-    ```swift
+    ```yaml
     BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
      $base: BaseStatusEffect.FirstAidWhiffV0
      uiData:
