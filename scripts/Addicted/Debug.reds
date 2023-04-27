@@ -283,8 +283,8 @@ public let entitySystem: ref<DynamicEntitySystem>;
 
 @addMethod(PlayerPuppet)
 private cb func OnEntityUpdate(event: ref<DynamicEntityEvent>) {
-  LogChannel(n"DEBUG", s"Entity \(event.GetType()) \(EntityID.GetHash(event.GetEntityID())) \(event.GetClassName())");
-  if Equals(event.GetTag(), n"Addicted") && Equals(EnumInt(event.GetType()), EnumInt(DynamicEntityEventType.Spawned)) {
+  LogChannel(n"DEBUG", s"Entity \(event.GetEventType()) \(EntityID.GetHash(event.GetEntityID())) \(event.GetClassName())");
+  if Equals(event.GetEntityTag(), n"Addicted") && Equals(EnumInt(event.GetEventType()), EnumInt(DynamicEntityEventType.Spawned)) {
     E(s"found event with tag Addicted and entityID \(ToString(event.GetEntityID()))");
     let device = this.entitySystem.GetEntity(event.GetEntityID()) as GameObject;
     // let device = GameInstance.FindEntityByID(this.GetGame(), event.GetEntityID());
