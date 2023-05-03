@@ -25,11 +25,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Install mdbook-codeblocks
         run: |
-          cargo install mdbook-codeblocks
-        # run: |
-        #   mkdir mdbook-codeblocks
-        #   curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.2/mdbook-codeblocks-v0.1.2-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
-        #   echo `pwd`/mdbook-codeblocks >> $GITHUB_PATH
+          mkdir mdbook-codeblocks
+          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.5/mdbook-codeblocks-v0.1.5-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
+          echo `pwd`/mdbook-codeblocks >> $GITHUB_PATH
       - name: Deploy GitHub Pages
         run: |
           mdbook build
