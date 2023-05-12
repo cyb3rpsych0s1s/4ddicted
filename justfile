@@ -49,6 +49,14 @@ red_cache_bundle := join(red_cache_dir, "final.redscripts")
 # path to WolvenKit CLI
 wk_cli := env_var_or_default("WK_CLI", DEFAULT_WK_CLI)
 
+red4ext_logs        := join(game_dir, "red4ext", "logs", "red4ext.log")
+redscript_logs      := join(game_dir, "r6", "logs", "redscript_rCURRENT.log")
+cet_logs            := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log")
+archivexl_logs      := join(game_dir, "red4ext", "plugins", "ArchiveXL", "ArchiveXL.log")
+tweakxl_logs        := join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log")
+mod_settings_logs   := join(game_dir, "red4ext", "logs", "mod_settings.log")
+mod_logs            := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log")
+
 # list all commands
 default:
   @just --list --unsorted
@@ -89,14 +97,13 @@ rebuild:
 
 # 🧾 show logs from CET and RED
 logs:
-    echo "\n=== TweakXL ===\n" && \
-    cat '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' && \
-    echo "\n=== CET ===\n" && \
-    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' && \
-    echo "\n=== REDscript ===\n" && \
-    cat '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}' && \
-    echo "\n=== Toxicity ===\n" && \
-    cat '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
+    @[ -f '{{red4ext_logs}}' ]       && cat '{{red4ext_logs}}'
+    @[ -f '{{redscript_logs}}' ]     && cat '{{redscript_logs}}'
+    @[ -f '{{cet_logs}}' ]           && cat '{{cet_logs}}'
+    @[ -f '{{archivexl_logs}}' ]     && cat '{{archivexl_logs}}'
+    @[ -f '{{tweakxl_logs}}' ]       && cat '{{tweakxl_logs}}'
+    @[ -f '{{mod_settings_logs}}' ]  && cat '{{mod_settings_logs}}'
+    @[ -f '{{mod_logs}}' ]           && cat '{{mod_logs}}'
 
 # 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
 clear:
@@ -116,7 +123,10 @@ alias forget := erase
 
 # 🗑️🧾 clear out logs
 erase: clear
-    rm -f '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
+    rm -f '{{ join(game_dir, "red4ext", "logs", "red4ext.log") }}' \
+    '{{ join(game_dir, "red4ext", "logs", "mod_settings.log") }}' \
+    '{{ join(game_dir, "red4ext", "plugins", "ArchiveXL", "ArchiveXL.log") }}' \
+    '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
     '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}' \
     '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'

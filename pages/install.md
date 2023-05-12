@@ -14,6 +14,8 @@ Mandatory steps, in order:
    >  modding tools (used to load custom souds)
    install DLC from your launcher, e.g. Steam
 
+   ⚠️ do not forget to check "Enable mods" on your launcher too.
+
 3. ⚙️ CET
    > scripting engine, based on .lua
    1. download [latest CET release](https://github.com/yamashi/CyberEngineTweaks/releases/latest)
