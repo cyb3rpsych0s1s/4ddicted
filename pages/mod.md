@@ -1,16 +1,18 @@
-# Mod
+# Mod mechanics
 
-⚠️ **Spoiler alert** !
-
+```admonish warning title="Spoiler alert!"
 The following description details **every feature** of this mod, which will ruin any surprise intended to be discovered and enjoyed by the player.
 
 This is only for people who can't stand playing a mod without knowing each of their internal gameplay mechanics. 🫣
 
 You've been warned !
+```
 
-**A note of caution too** : please note the gameplay below might evolve over time, as more content get released.
+```admonish info title="A note of caution too"
+Please note the gameplay below might evolve over time, as more content get released.
 
 Since it has to be manually maintained and it can happen that I forgot to do it (*I'm a mere human after all choom's, not some methodic borg*), please let me know in the [Github issues](https://github.com/cyb3rpsych0s1s/4ddicted/issues) if ever something is outdated.
+```
 
 ## Systems
 
