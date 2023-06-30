@@ -57,6 +57,11 @@ Then, in any order:
    1. download [latest Codeware release](https://github.com/psiberx/cp2077-codeware/releases/latest)
    2. unzip at the root of your game folder
 
+And finally this mod itself:
+
+1. download latest Addicted release on [Github](https://github.com/cyb3rpsych0s1s/4ddicted/releases/latest) or [Nexus](https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files)
+2. unzip at the root of your game folder
+
 ## Only for developers
 
 If you would like to contribute to this repo,
