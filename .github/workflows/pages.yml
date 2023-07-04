@@ -24,7 +24,7 @@ jobs:
       - name: Install mdbook-codeblocks
         run: |
           mkdir mdbook-codeblocks
-          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.7/mdbook-codeblocks-v0.1.7-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
+          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.8/mdbook-codeblocks-v0.1.8-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
           echo `pwd`/mdbook-codeblocks >> $GITHUB_PATH
       - name: Install mdbook-admonish
         run: |
