@@ -323,27 +323,6 @@
       "file": "fr-fr/offhanded/male_v_ytmb_9b1st6nnc6QqzSEJb9JU.wav",
       "gain": 1.0,
       "pitch": 0.0
-    },
-    {
-      "name": "addicted.fr-fr.fem_v_ono_hhuh",
-      "type": "mod_sfx_2d",
-      "file": "vanilla/fr-fr/v_q113_f_1956c7fde04e1000.Wav",
-      "gain": 1.0,
-      "pitch": 0.0
-    },
-    {
-      "name": "addicted.fr-fr.fem_v_ono_huh",
-      "type": "mod_sfx_2d",
-      "file": "vanilla/fr-fr/v_q004_f_168ac1406f29f000.Wav",
-      "gain": 1.0,
-      "pitch": 0.0
-    },
-    {
-      "name": "addicted.fr-fr.fem_v_ono_huhuh",
-      "type": "mod_sfx_2d",
-      "file": "vanilla/fr-fr/v_q003_f_178d53e0694b6000.Wav",
-      "gain": 1.0,
-      "pitch": 0.0
     }
   ]
  }
