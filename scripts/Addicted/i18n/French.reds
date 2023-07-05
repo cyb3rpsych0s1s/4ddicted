@@ -1,7 +1,7 @@
 module Addicted.Localization
 import Codeware.Localization.*
 
-public class English extends ModLocalizationPackage {
+public class French extends ModLocalizationPackage {
 
   protected func DefineSubtitles() -> Void {
    // snake case suffixes must match entries in info.json (custom sounds)
