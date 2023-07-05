@@ -13,10 +13,10 @@ Basically adds a chance to become addicted to consumables too frequently consume
 Feel free to have a look at the sources and grab whatever you fancy,
 also this repo has a [book](https://cyb3rpsych0s1s.github.io/4ddicted/) which contains tons of useful informations:
 
-- Contributing guide
-- Redscript coding patterns
-- Wolvenkit tutorials
-- Blog notes
+- 🧑‍💻 contributing guide
+- 🔴 Redscript coding patterns
+- 🐺 WolvenKit tutorials
+- 📝 blog notes
 
 ## credits
 

@@ -27,3 +27,5 @@ It also has been tested with these other mods:
 | [Wannabe Edgerunner](https://www.nexusmods.com/cyberpunk2077/mods/5646)       | 1.6.6   | ✅            |
 
 updated on 19apr23.
+
+{{#include footer.md}}

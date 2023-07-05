@@ -45,3 +45,5 @@ To make our lives easier, there's many terminal shortcuts commands at our dispos
 2. refresh:
    - once done, click in CET console:`archive` for WolvenKit archive, TweakXL `tweaks`, REDscript `scripts` and/or CET `reload all mods`
 3. remember that depending on your changes reloading a save is necessary, or the game itself sometimes.
+
+{{#include footer.md}}
