@@ -18,7 +18,7 @@ red_input_dir := join("scripts", "Addicted")
 tweak_input_dir := join("tweaks", "Addicted")
 archive_input_dir := join("archive", "packed")
 sounds_input_dir := join("archive", "source", "customSounds")
-info_input_file := join("archive", "source", "resources", "info.json")
+resources_input_dir := join("archive", "source", "resources")
 
 # game files
 cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
@@ -82,7 +82,7 @@ build: rebuild
     mkdir -p '{{ join(redmod_output_dir, "customSounds") }}'
     @just copy_recursive '{{sounds_input_dir}}' en-us wav '{{ join(redmod_output_dir, "customSounds") }}'
     @just copy_recursive '{{sounds_input_dir}}' vanilla Wav '{{ join(redmod_output_dir, "customSounds") }}'
-    cp '{{info_input_file}}' '{{ join(redmod_output_dir, "info.json") }}'
+    cp '{{ join(resources_input_dir, "info.json") }}' '{{ join(redmod_output_dir, "info.json") }}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
@@ -191,22 +191,26 @@ bundle:
     cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
     @just bundle_lang
 
-bundle_lang CODE='en-us':
+bundle_lang CODE='en-us' FILE='info.json':
     mkdir -p '{{ join(redmod_release_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_input_dir}}' {{CODE}} wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_input_dir}}' vanilla/{{CODE}} Wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}'
-    cp '{{info_input_file}}' '{{ join(redmod_release_dir, "info.json") }}'
+    @just copy_recursive '{{sounds_input_dir}}' {{CODE}} wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}' 'true'
+    @just copy_recursive '{{sounds_input_dir}}' vanilla/{{CODE}} Wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}' 'false'
+    cp '{{ join(resources_input_dir, FILE) }}' '{{ join(redmod_release_dir, "info.json") }}'
 
 [private]
 [windows]
-copy_recursive IN SUB EXT OUT:
+copy_recursive IN SUB EXT OUT NESTED='false':
     cd '{{IN}}' && cp -r --parents {{SUB}}/**/*.{{EXT}} '{{OUT}}'
 
 [private]
-[macos]
 [linux]
-copy_recursive IN SUB EXT OUT:
-    rsync -R {{ join(IN, SUB, "**", "*." + EXT) }} {{OUT}}
+copy_recursive IN SUB EXT OUT NESTED='false':
+    rsync -R {{ join(IN, SUB, if NESTED == "false" { "" } else { "**" }, "*." + EXT) }} {{OUT}}
+
+[private]
+[macos]
+copy_recursive IN SUB EXT OUT NESTED='false':
+    cd '{{IN}}' && rsync -Rr {{ join(SUB, if NESTED == "false" { "" } else { "**" }, "*." + EXT) }} {{OUT}}
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
