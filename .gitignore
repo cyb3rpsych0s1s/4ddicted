@@ -13,7 +13,7 @@ scripts/*
 /archive/source/customSounds/**/*.mp3
 /archive/Addicted.cpmodproj
 
-./Addicted/
+/Addicted
 /.VSCodeCounter
 dump.redscripts
 saved.json
