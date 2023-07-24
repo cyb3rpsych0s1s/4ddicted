@@ -149,7 +149,7 @@ public func Reacts(reaction: CName) -> Void {
   let localization = LocalizationSystem.GetInstance(game);
   let language = localization.GetVoiceLanguage();
   E(s"reacts: voice language (\(NameToString(language)))");
-  if !StrBeginsWith(NameToString(language), "en-") { return; }
+  if !StrBeginsWith(NameToString(language), "en-") || !StrBeginsWith(NameToString(language), "fr-") { return; }
   let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
   let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
   E(s"reacts: subtitle key (\(key))");
