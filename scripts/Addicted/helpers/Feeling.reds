@@ -6,7 +6,7 @@ import Addicted.Utils.E
 public class Feeling {
   public static func OnceWarned(threshold: Threshold, warnings: Uint32) -> Mood {
     let random = RandF();
-    let likeliness = MaxF(Cast<Float>(warnings / 10u), 0.9);
+    let likeliness = 1.0 - MinF(Cast<Float>(warnings) / 10, 0.9);
     if random < likeliness {
       return Mood.Surprised;
     }
