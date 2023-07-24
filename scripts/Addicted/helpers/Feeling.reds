@@ -39,6 +39,7 @@ public class Feeling {
      "yeah_yeah_yeah_who_cares",
      "you_tell_me_biomon",
      "nah_everything_is_all_good",
+     "nah_im_cool",
      "noo"
    ];
   }
