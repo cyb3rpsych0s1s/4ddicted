@@ -101,6 +101,13 @@
       "pitch": 0.0
     },
     {
+      "name": "addicted.fr-fr.fem_v_nah_im_cool",
+      "type": "mod_sfx_2d",
+      "file": "fr-fr/offhanded/fem_v_nic_BZmECzGdB509vK4aEKGM.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
       "name": "addicted.fr-fr.fem_v_noo",
       "type": "mod_sfx_2d",
       "file": "vanilla/fr-fr/v_scene_mitch_default_f_1b1a38325729f000.Wav",
@@ -258,6 +265,13 @@
       "name": "addicted.fr-fr.male_v_nah_everything_is_all_good",
       "type": "mod_sfx_2d",
       "file": "vanilla/fr-fr/v_scene_dex_default_m_182ad40c364ea000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.fr-fr.male_v_nah_im_cool",
+      "type": "mod_sfx_2d",
+      "file": "fr-fr/offhanded/male_v_nic_JsxTz7SfZuJZVQiPNvxX.wav",
       "gain": 1.0,
       "pitch": 0.0
     },
