@@ -148,6 +148,7 @@ public func Reacts(reaction: CName) -> Void {
   let game = this.GetGame();
   let localization = LocalizationSystem.GetInstance(game);
   let language = localization.GetVoiceLanguage();
+  // TODO: add support for GetSubtitleLanguage()
   E(s"reacts: voice language (\(NameToString(language)))");
   if !StrBeginsWith(NameToString(language), "en-") || !StrBeginsWith(NameToString(language), "fr-") { return; }
   let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
