@@ -71,6 +71,7 @@ public class Feeling {
     let which: Int32;
     let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
     if StrLen(language) == 0 { language = "en-us"; }
+    if NotEquals(language, "en-us") && NotEquals(language, "fr-fr") { return n""; }
 
     switch(mood) {
       case Mood.Disheartened:
