@@ -64,14 +64,14 @@ public class Feeling {
 
   public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
     if Equals(mood, Mood.Any) { return n""; }
+    if StrLen(language) == 0 { language = "en-us"; }
+    if NotEquals(language, "en-us") && NotEquals(language, "fr-fr") { return n""; }
 
     let output: CName;
     let choices: array<String>;
     let size: Int32;
     let which: Int32;
     let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
-    if StrLen(language) == 0 { language = "en-us"; }
-    if NotEquals(language, "en-us") && NotEquals(language, "fr-fr") { return n""; }
 
     switch(mood) {
       case Mood.Disheartened:
