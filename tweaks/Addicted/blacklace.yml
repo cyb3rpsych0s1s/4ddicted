@@ -1,44 +1,12 @@
-Effectors.Fibromyalgia:
-  $type: Effector_Record
-  effectorClassName: PlaySFXEffector
-  activationSFXName: ono_v_pain_short
-  unique: false
-
-UIIcon.WithdrawnFromBlackLace:
-  $type: UIIcon_Record
-  atlasPartName: craving_for_drugs_icon
-  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
-
-UIData.WithdrawnFromBlackLace:
-  $base: BaseStatusEffect.BlackLaceV0_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-BlackLace-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-BlackLace
-  iconPath: WithdrawnFromBlackLace
-
-BaseStatusEffect.NotablyWithdrawnFromBlackLace:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Reflexes
-          value: 0.9
-    - $type: GameplayLogicPackage_Record
+BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
+  $instances:
+    - threshold: Notably
+      modifier: 0.9
+      modifiers: [90]
       effectors: [Effectors.Fibromyalgia]
-  uiData:
-    $base: UIData.WithdrawnFromBlackLace
-    intValues: [90]
-
-BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Reflexes
-          value: 0.7
+    - threshold: Severely
+      modifier: 0.7
+      modifiers: [70]
       effectors:
         - $base: Effectors.Fibromyalgia
           prereqRecord:
@@ -55,9 +23,36 @@ BaseStatusEffect.SeverelyWithdrawnFromBlackLace:
             $base: Prereqs.DurationPrereq
             duration: 9
             randRange: 3
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Reflexes
+          value: ${modifier}
+    - $type: GameplayLogicPackage_Record
+      effectors: ${effectors}
   uiData:
     $base: UIData.WithdrawnFromBlackLace
-    intValues: [70]
+    intValues: ${modifiers}
+
+Effectors.Fibromyalgia:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  activationSFXName: ono_v_pain_short
+  unique: false
+
+UIIcon.WithdrawnFromBlackLace:
+  $type: UIIcon_Record
+  atlasPartName: craving_for_drugs_icon
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+UIData.WithdrawnFromBlackLace:
+  $base: BaseStatusEffect.BlackLaceV0_inline2
+  description: LocKey#Mod-Addicted-Withdrawn-BlackLace-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-BlackLace
+  iconPath: WithdrawnFromBlackLace
 
 UIIcon.InsanityIcon:
   $type: UIIcon_Record
