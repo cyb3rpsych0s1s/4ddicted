@@ -27,24 +27,10 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Barely",
-              "maleVariant": "",
-              "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Threshold-Barely"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
               "femaleVariant": "V start getting barely addicted past this threshold",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Mildly",
-              "maleVariant": "",
-              "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Threshold-Mildly"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
