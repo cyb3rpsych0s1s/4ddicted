@@ -34,119 +34,48 @@ UIIcon.${threshold}Weakened${consumable}:
 
 ## first aid whiff (a.k.a maxdoc)
 
-### v0
-
-BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
-  $base: BaseStatusEffect.FirstAidWhiffV0
+BaseStatusEffect.${threshold}WeakenedFirstAidWhiffV${version}:
+  $instances:
+    - threshold: Notably
+      intensity: mildly
+      version: 0
+      value: 30
+    - threshold: Severely
+      intensity: piddly
+      version: 0
+      value: 20
+    - threshold: Notably
+      intensity: mildly
+      version: 1
+      value: 45
+    - threshold: Severely
+      intensity: piddly
+      version: 1
+      value: 30
+    - threshold: Notably
+      intensity: mildly
+      version: 2
+      value: 60
+    - threshold: Severely
+      intensity: piddly
+      version: 2
+      value: 40
+  $base: BaseStatusEffect.FirstAidWhiffV${version}
   packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV0_inline0
+    - $base: BaseStatusEffect.FirstAidWhiffV${version}_inline0
       effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
+        - $base: BaseStatusEffect.FirstAidWhiffV${version}_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStatPools.Health
-              statPoolValue: 30
+              statPoolValue: ${value}  
   VFX:
     - $type: StatusEffectFX_Record
-      name: mildly_splinter_buff
+      name: ${intensity}_splinter_buff
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: NotablyWeakenedFirstAidWhiff
-
-BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV0:
-  $base: BaseStatusEffect.FirstAidWhiffV0
-  packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV0_inline0
-      effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV0_inline1
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 20
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: piddly_splinter_buff
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: SeverelyWeakenedFirstAidWhiff
-
-### v1
-
-BaseStatusEffect.NotablyWeakenedFirstAidWhiffV1:
-  $base: BaseStatusEffect.FirstAidWhiffV1
-  packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV1_inline0
-      effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 45
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: mildly_splinter_buff
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: NotablyWeakenedFirstAidWhiff
-
-BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV1:
-  $base: BaseStatusEffect.FirstAidWhiffV1
-  packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV1_inline0
-      effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV1_inline1
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 30
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: piddly_splinter_buff
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: SeverelyWeakenedFirstAidWhiff
-
-### v2
-
-BaseStatusEffect.NotablyWeakenedFirstAidWhiffV2:
-  $base: BaseStatusEffect.FirstAidWhiffV2
-  packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV2_inline0
-      effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 60
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: mildly_splinter_buff
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: NotablyWeakenedFirstAidWhiff
-
-BaseStatusEffect.SeverelyWeakenedFirstAidWhiffV2:
-  $base: BaseStatusEffect.FirstAidWhiffV2
-  packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV2_inline0
-      effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV2_inline1
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 40
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: piddly_splinter_buff
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: SeverelyWeakenedFirstAidWhiff
+    $base: BaseStatusEffect.FirstAidWhiffV${version}_inline4
+    iconPath: ${threshold}WeakenedFirstAidWhiff
 
 ## bounce back (a.k.a bones mccoy)
 
