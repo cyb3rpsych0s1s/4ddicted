@@ -162,4 +162,23 @@ BaseStatusEffect.${threshold}WeakenedHealthBooster:
     iconPath: ${threshold}WeakenedHealthBooster
     intValues: ${modifiers}
 
-# object action effect: see scriptable tweaks
+# object action effect
+
+Items.${threshold}WeakenedActionEffect${consumable}${version}:
+  $instances:
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline2 }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline2 }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V1, flat: inline6 }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V1, flat: inline6 }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V2, flat: inline6 }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V2, flat: inline6 }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V0, flat: inline2 }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V0, flat: inline2 }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V1, flat: inline2 }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V1, flat: inline2 }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V2, flat: inline6 }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline6 }
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1 }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1 }
+  $base: Items.${consumable}${version}_${flat}
+  statusEffect: BaseStatusEffect.${threshold}Weakened${consumable}${version}
