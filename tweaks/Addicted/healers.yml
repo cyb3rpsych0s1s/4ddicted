@@ -79,149 +79,65 @@ BaseStatusEffect.${threshold}WeakenedFirstAidWhiffV${version}:
 
 ## bounce back (a.k.a bones mccoy)
 
-### v0
-
-BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0:
-  $base: BaseStatusEffect.BonesMcCoy70V0
+BaseStatusEffect.${threshold}WeakenedBonesMcCoy70V${version}:
+  $instances:
+    - threshold: Notably
+      intensity: mildly
+      version: 0
+      modifier: 2
+      modifiers: [2]
+      value: 10
+    - threshold: Severely
+      intensity: piddly
+      version: 0
+      modifier: 1
+      modifiers: [1]
+      value: 5
+    - threshold: Notably
+      intensity: mildly
+      version: 1
+      modifier: 3
+      modifiers: [3]
+      value: 15
+    - threshold: Severely
+      intensity: piddly
+      version: 1
+      modifier: 2
+      modifiers: [2]
+      value: 10
+    - threshold: Notably
+      intensity: mildly
+      version: 2
+      modifier: 4
+      modifiers: [4]
+      value: 20
+    - threshold: Severely
+      intensity: piddly
+      version: 2
+      modifier: 3
+      modifiers: [3]
+      value: 15
+  $base: BaseStatusEffect.BonesMcCoy70V${version}
   packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+    - $base: BaseStatusEffect.BonesMcCoy70V${version}_inline0
       effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+        - $base: BaseStatusEffect.BonesMcCoy70V${version}_inline1
           poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V0_inline2
-            valuePerSec: 2
-        - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
+            $base: BaseStatusEffect.BonesMcCoy70V${version}_inline2
+            valuePerSec: ${modifier}
+        - $base: BaseStatusEffect.BonesMcCoy70V${version}_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStatPools.Health
-              statPoolValue: 10
+              statPoolValue: ${value}
   VFX:
     - $type: StatusEffectFX_Record
-      name: mildly_reflex_buster
+      name: ${intensity}_reflex_buster
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V0_inline7
-    iconPath: NotablyWeakenedBonesMcCoy70
-    intValues: [2]
-
-BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V0:
-  $base: BaseStatusEffect.BonesMcCoy70V0
-  packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
-      effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
-          poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V0_inline2
-            valuePerSec: 1
-        - $base: BaseStatusEffect.BonesMcCoy70V0_inline4
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 5
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: piddly_reflex_buster
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V0_inline7
-    iconPath: SeverelyWeakenedBonesMcCoy70
-    intValues: [1]
-
-### v1
-
-BaseStatusEffect.NotablyWeakenedBonesMcCoy70V1:
-  $base: BaseStatusEffect.BonesMcCoy70V1
-  packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V1_inline0
-      effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V1_inline1
-          poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V1_inline2
-            valuePerSec: 3
-        - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 15
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: mildly_reflex_buster
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V1_inline7
-    iconPath: NotablyWeakenedBonesMcCoy70
-    intValues: [3]
-
-BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V1:
-  $base: BaseStatusEffect.BonesMcCoy70V1
-  packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V1_inline0
-      effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V1_inline1
-          poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V1_inline2
-            valuePerSec: 2
-        - $base: BaseStatusEffect.BonesMcCoy70V1_inline4
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 10
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: piddly_reflex_buster
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V1_inline7
-    iconPath: SeverelyWeakenedBonesMcCoy70
-    intValues: [2]
-
-### v2
-
-BaseStatusEffect.NotablyWeakenedBonesMcCoy70V2:
-  $base: BaseStatusEffect.BonesMcCoy70V1
-  packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V2_inline0
-      effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V2_inline1
-          poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V2_inline2
-            valuePerSec: 4
-        - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 20
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: mildly_reflex_buster
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V2_inline7
-    iconPath: NotablyWeakenedBonesMcCoy70
-    intValues: [4]
-
-BaseStatusEffect.SeverelyWeakenedBonesMcCoy70V2:
-  $base: BaseStatusEffect.BonesMcCoy70V1
-  packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V2_inline0
-      effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V2_inline1
-          poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V2_inline2
-            valuePerSec: 3
-        - $base: BaseStatusEffect.BonesMcCoy70V2_inline4
-          statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: 15
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: piddly_reflex_buster
-      shouldReapply: false
-  uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V2_inline7
-    iconPath: SeverelyWeakenedBonesMcCoy70
-    intValues: [3]
+    $base: BaseStatusEffect.BonesMcCoy70V${version}_inline7
+    iconPath: ${threshold}WeakenedBonesMcCoy70
+    intValues: ${modifiers}
 
 ## health booster
 
