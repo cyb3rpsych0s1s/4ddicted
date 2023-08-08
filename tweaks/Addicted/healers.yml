@@ -16,19 +16,19 @@ UIIcon.${threshold}Weakened${consumable}:
 
 ## first aid whiff (a.k.a maxdoc)
 
-BaseStatusEffect.${threshold}WeakenedFirstAidWhiffV${version}:
+BaseStatusEffect.${threshold}WeakenedFirstAidWhiff${version}:
   $instances:
-    - { threshold: Notably,  intensity: mildly, version: 0, value: 30 }
-    - { threshold: Severely, intensity: piddly, version: 0, value: 20 }
-    - { threshold: Notably,  intensity: mildly, version: 1, value: 45 }
-    - { threshold: Severely, intensity: piddly, version: 1, value: 30 }
-    - { threshold: Notably,  intensity: mildly, version: 2, value: 60 }
-    - { threshold: Severely, intensity: piddly, version: 2, value: 40 }
-  $base: BaseStatusEffect.FirstAidWhiffV${version}
+    - { threshold: Notably,  intensity: mildly, version: V0, value: 30 }
+    - { threshold: Severely, intensity: piddly, version: V0, value: 20 }
+    - { threshold: Notably,  intensity: mildly, version: V1, value: 45 }
+    - { threshold: Severely, intensity: piddly, version: V1, value: 30 }
+    - { threshold: Notably,  intensity: mildly, version: V2, value: 60 }
+    - { threshold: Severely, intensity: piddly, version: V2, value: 40 }
+  $base: BaseStatusEffect.FirstAidWhiff${version}
   packages:
-    - $base: BaseStatusEffect.FirstAidWhiffV${version}_inline0
+    - $base: BaseStatusEffect.FirstAidWhiff${version}_inline0
       effectors:
-        - $base: BaseStatusEffect.FirstAidWhiffV${version}_inline1
+        - $base: BaseStatusEffect.FirstAidWhiff${version}_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStatPools.Health
@@ -38,28 +38,28 @@ BaseStatusEffect.${threshold}WeakenedFirstAidWhiffV${version}:
       name: ${intensity}_splinter_buff
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV${version}_inline4
+    $base: BaseStatusEffect.FirstAidWhiff${version}_inline4
     iconPath: ${threshold}WeakenedFirstAidWhiff
 
 ## bounce back (a.k.a bones mccoy)
 
-BaseStatusEffect.${threshold}WeakenedBonesMcCoy70V${version}:
+BaseStatusEffect.${threshold}WeakenedBonesMcCoy70${version}:
   $instances:
-    - { threshold: Notably,  intensity: mildly, version: 0, modifier: 2, modifiers: [2], value: 10 }
-    - { threshold: Severely, intensity: piddly, version: 0, modifier: 1, modifiers: [1], value: 5 }
-    - { threshold: Notably,  intensity: mildly, version: 1, modifier: 3, modifiers: [3], value: 15 }
-    - { threshold: Severely, intensity: piddly, version: 1, modifier: 2, modifiers: [2], value: 10 }
-    - { threshold: Notably,  intensity: mildly, version: 2, modifier: 4, modifiers: [4], value: 20 }
-    - { threshold: Severely, intensity: piddly, version: 2, modifier: 3, modifiers: [3], value: 15 }
-  $base: BaseStatusEffect.BonesMcCoy70V${version}
+    - { threshold: Notably,  intensity: mildly, version: V0, modifier: 2, modifiers: [2], value: 10 }
+    - { threshold: Severely, intensity: piddly, version: V0, modifier: 1, modifiers: [1], value: 5 }
+    - { threshold: Notably,  intensity: mildly, version: V1, modifier: 3, modifiers: [3], value: 15 }
+    - { threshold: Severely, intensity: piddly, version: V1, modifier: 2, modifiers: [2], value: 10 }
+    - { threshold: Notably,  intensity: mildly, version: V2, modifier: 4, modifiers: [4], value: 20 }
+    - { threshold: Severely, intensity: piddly, version: V2, modifier: 3, modifiers: [3], value: 15 }
+  $base: BaseStatusEffect.BonesMcCoy70${version}
   packages:
-    - $base: BaseStatusEffect.BonesMcCoy70V${version}_inline0
+    - $base: BaseStatusEffect.BonesMcCoy70${version}_inline0
       effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70V${version}_inline1
+        - $base: BaseStatusEffect.BonesMcCoy70${version}_inline1
           poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70V${version}_inline2
+            $base: BaseStatusEffect.BonesMcCoy70${version}_inline2
             valuePerSec: ${modifier}
-        - $base: BaseStatusEffect.BonesMcCoy70V${version}_inline4
+        - $base: BaseStatusEffect.BonesMcCoy70${version}_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStatPools.Health
@@ -69,7 +69,7 @@ BaseStatusEffect.${threshold}WeakenedBonesMcCoy70V${version}:
       name: ${intensity}_reflex_buster
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.BonesMcCoy70V${version}_inline7
+    $base: BaseStatusEffect.BonesMcCoy70${version}_inline7
     iconPath: ${threshold}WeakenedBonesMcCoy70
     intValues: ${modifiers}
 
