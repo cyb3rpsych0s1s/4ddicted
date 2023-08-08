@@ -10,10 +10,10 @@ UIData.WithdrawnFrom${consumable}:
 
 BaseStatusEffect.${threshold}WithdrawnFrom${consumable}:
   $instances:
-    - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: [90] }
-    - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: [70] }
-    - { threshold: Notably,  consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.9, modifiers: [90] }
-    - { threshold: Severely, consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.7, modifiers: [70] }
+    - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: 70 }
+    - { threshold: Notably,  consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.7, modifiers: 70 }
   $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
@@ -26,12 +26,13 @@ BaseStatusEffect.${threshold}WithdrawnFrom${consumable}:
       effectors: [Effectors.Grunt]
   uiData:
     $base: UIData.WithdrawnFrom${consumable}
-    intValues: ${modifiers}
+    intValues:
+      - ${modifiers}
 
 BaseStatusEffect.${threshold}WithdrawnFromMemoryBooster:
   $instances:
-    - { threshold: Notably,  modifier: 0.9, modifiers: [90] }
-    - { threshold: Severely, modifier: 0.7, modifiers: [70] }
+    - { threshold: Notably,  modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, modifier: 0.7, modifiers: 70 }
   $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
@@ -47,7 +48,8 @@ BaseStatusEffect.${threshold}WithdrawnFromMemoryBooster:
         - Effectors.Dizzy
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
-    intValues: ${modifiers}
+    intValues:
+      - ${modifiers}
 
 Effectors.Grunt:
   $type: Effector_Record

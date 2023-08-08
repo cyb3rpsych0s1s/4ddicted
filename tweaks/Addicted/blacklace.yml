@@ -2,11 +2,12 @@ BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
   $instances:
     - threshold: Notably
       modifier: 0.9
-      modifiers: [90]
-      effectors: [Effectors.Fibromyalgia]
+      modifiers: 90
+      effectors: 
+        - Effectors.Fibromyalgia
     - threshold: Severely
       modifier: 0.7
-      modifiers: [70]
+      modifiers: 70
       effectors:
         - $base: Effectors.Fibromyalgia
           prereqRecord:
@@ -32,10 +33,12 @@ BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
           statType: BaseStats.Reflexes
           value: ${modifier}
     - $type: GameplayLogicPackage_Record
-      effectors: ${effectors}
+      effectors:
+        - !append-from ${effectors}
   uiData:
     $base: UIData.WithdrawnFromBlackLace
-    intValues: ${modifiers}
+    intValues:
+      - ${modifiers}
 
 Effectors.Fibromyalgia:
   $type: Effector_Record
