@@ -141,7 +141,14 @@ BaseStatusEffect.${threshold}WeakenedBonesMcCoy70V${version}:
 
 ## health booster
 
-BaseStatusEffect.NotablyWeakenedHealthBooster:
+BaseStatusEffect.${threshold}WeakenedHealthBooster:
+  $instances:
+    - threshold: Notably
+      modifier: 1.15
+      modifiers: [15]
+    - threshold: Severely
+      modifier: 1.1
+      modifiers: [10]
   $base: BaseStatusEffect.HealthBooster
   packages:
     - $base: BaseStatusEffect.HealthBooster_inline0
@@ -149,24 +156,10 @@ BaseStatusEffect.NotablyWeakenedHealthBooster:
         - $type: ConstantStatModifier_Record
           modifierType: Multiplier
           statType: BaseStats.Health
-          value: 1.15
+          value: ${modifier}
   uiData:
     $base: BaseStatusEffect.HealthBooster_inline2
-    iconPath: NotablyWeakenedHealthBooster
-    intValues: [15]
-
-BaseStatusEffect.SeverelyWeakenedHealthBooster:
-  $base: BaseStatusEffect.HealthBooster
-  packages:
-    - $base: BaseStatusEffect.HealthBooster_inline0
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Health
-          value: 1.1
-  uiData:
-    $base: BaseStatusEffect.HealthBooster_inline2
-    iconPath: SeverelyWeakenedHealthBooster
-    intValues: [10]
+    iconPath: ${threshold}WeakenedHealthBooster
+    intValues: ${modifiers}
 
 # object action effect: see scriptable tweaks
