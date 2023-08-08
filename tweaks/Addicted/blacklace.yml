@@ -3,27 +3,11 @@ BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
     - threshold: Notably
       modifier: 0.9
       modifiers: 90
-      effectors: 
-        - Effectors.Fibromyalgia
+      package: Logic.NotableFibromyalgia
     - threshold: Severely
       modifier: 0.7
       modifiers: 70
-      effectors:
-        - $base: Effectors.Fibromyalgia
-          prereqRecord:
-            $base: Prereqs.DurationPrereq
-            duration: 0
-            randRange: 2
-        - $base: Effectors.Fibromyalgia
-          prereqRecord:
-            $base: Prereqs.DurationPrereq
-            duration: 3
-            randRange: 5
-        - $base: Effectors.Fibromyalgia
-          prereqRecord:
-            $base: Prereqs.DurationPrereq
-            duration: 9
-            randRange: 3
+      package: Logic.SevereFibromyalgia
   $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
@@ -32,9 +16,7 @@ BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
           modifierType: Multiplier
           statType: BaseStats.Reflexes
           value: ${modifier}
-    - $type: GameplayLogicPackage_Record
-      effectors:
-        - !append-from ${effectors}
+    - ${package}
   uiData:
     $base: UIData.WithdrawnFromBlackLace
     intValues:
@@ -45,6 +27,30 @@ Effectors.Fibromyalgia:
   effectorClassName: PlaySFXEffector
   activationSFXName: ono_v_pain_short
   unique: false
+
+Logic.NotableFibromyalgia:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.Fibromyalgia
+
+Logic.SevereFibromyalgia:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - $base: Effectors.Fibromyalgia
+      prereqRecord:
+        $base: Prereqs.DurationPrereq
+        duration: 0
+        randRange: 2
+    - $base: Effectors.Fibromyalgia
+      prereqRecord:
+        $base: Prereqs.DurationPrereq
+        duration: 3
+        randRange: 5
+    - $base: Effectors.Fibromyalgia
+      prereqRecord:
+        $base: Prereqs.DurationPrereq
+        duration: 9
+        randRange: 3
 
 UIIcon.WithdrawnFromBlackLace:
   $type: UIIcon_Record
