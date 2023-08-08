@@ -1,3 +1,13 @@
+UIData.WithdrawnFrom${consumable}:
+  $instances:
+    - { consumable: StaminaBooster,       key: Stamina-Booster }
+    - { consumable: CarryCapacityBooster, key: Capacity-Booster }
+    - { consumable: MemoryBooster,        key: Memory-Booster }
+  $base: BaseStatusEffect.${consumable}_inline2
+  description: LocKey#Mod-Addicted-Withdrawn-${key}-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-${key}
+  iconPath: WithdrawnFromPill
+
 Effectors.Grunt:
   $type: Effector_Record
   effectorClassName: PlaySFXEffector
@@ -40,24 +50,6 @@ UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
   atlasPartName: craving_for_pill
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
-
-UIData.WithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.StaminaBooster_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-Stamina-Booster-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-Stamina-Booster
-  iconPath: WithdrawnFromPill
-
-UIData.WithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.CarryCapacityBooster_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-Capacity-Booster-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-Capacity-Booster
-  iconPath: WithdrawnFromPill
-
-UIData.WithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.MemoryBooster_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-Memory-Booster-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-Memory-Booster
-  iconPath: WithdrawnFromPill
 
 BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
   $base: BaseStatusEffect.WithdrawalSymptom
