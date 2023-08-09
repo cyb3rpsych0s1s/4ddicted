@@ -1,13 +1,28 @@
-BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
+BaseStatusEffect.$(threshold)WithdrawnFromBlackLace:
   $instances:
     - threshold: Notably
       modifier: 0.9
       modifiers: 90
-      package: Logic.NotableFibromyalgia
+      effectors: [Effectors.Fibromyalgia]
     - threshold: Severely
       modifier: 0.7
       modifiers: 70
-      package: Logic.SevereFibromyalgia
+      effectors:
+        - $base: Effectors.Fibromyalgia
+          prereqRecord:
+            $base: Prereqs.DurationPrereq
+            duration: 0
+            randRange: 2
+        - $base: Effectors.Fibromyalgia
+          prereqRecord:
+            $base: Prereqs.DurationPrereq
+            duration: 3
+            randRange: 5
+        - $base: Effectors.Fibromyalgia
+          prereqRecord:
+            $base: Prereqs.DurationPrereq
+            duration: 9
+            randRange: 3
   $base: BaseStatusEffect.WithdrawalSymptom
   packages:
     - $type: GameplayLogicPackage_Record
@@ -15,42 +30,18 @@ BaseStatusEffect.${threshold}WithdrawnFromBlackLace:
         - $type: ConstantStatModifier_Record
           modifierType: Multiplier
           statType: BaseStats.Reflexes
-          value: ${modifier}
-    - ${package}
+          value: $(modifier)
+    - $type: GameplayLogicPackage_Record
+      effectors: $(effectors)
   uiData:
     $base: UIData.WithdrawnFromBlackLace
-    intValues:
-      - ${modifiers}
+    intValues: [ $(modifiers) ]
 
 Effectors.Fibromyalgia:
   $type: Effector_Record
   effectorClassName: PlaySFXEffector
   activationSFXName: ono_v_pain_short
   unique: false
-
-Logic.NotableFibromyalgia:
-  $type: GameplayLogicPackage_Record
-  effectors:
-    - Effectors.Fibromyalgia
-
-Logic.SevereFibromyalgia:
-  $type: GameplayLogicPackage_Record
-  effectors:
-    - $base: Effectors.Fibromyalgia
-      prereqRecord:
-        $base: Prereqs.DurationPrereq
-        duration: 0
-        randRange: 2
-    - $base: Effectors.Fibromyalgia
-      prereqRecord:
-        $base: Prereqs.DurationPrereq
-        duration: 3
-        randRange: 5
-    - $base: Effectors.Fibromyalgia
-      prereqRecord:
-        $base: Prereqs.DurationPrereq
-        duration: 9
-        randRange: 3
 
 UIIcon.WithdrawnFromBlackLace:
   $type: UIIcon_Record

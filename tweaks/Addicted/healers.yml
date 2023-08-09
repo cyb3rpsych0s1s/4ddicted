@@ -1,6 +1,6 @@
 # weakened status effect icons
 
-UIIcon.${threshold}Weakened${consumable}:
+UIIcon.$(threshold)Weakened$(consumable):
   $instances:
     - { threshold: Notably,  consumable: FirstAidWhiff, part_prefix: notably,  part_suffix: first_aid_whiff }
     - { threshold: Severely, consumable: FirstAidWhiff, part_prefix: severely, part_suffix: first_aid_whiff }
@@ -9,14 +9,14 @@ UIIcon.${threshold}Weakened${consumable}:
     - { threshold: Notably,  consumable: HealthBooster, part_prefix: notably,  part_suffix: health_booster_regen }
     - { threshold: Severely, consumable: HealthBooster, part_prefix: severely, part_suffix: health_booster_regen }
   $type: UIIcon_Record
-  atlasPartName: ${part_prefix}_${part_suffix}
+  atlasPartName: $(part_prefix)_$(part_suffix)
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
 
 # status effect
 
 ## first aid whiff (a.k.a maxdoc)
 
-BaseStatusEffect.${threshold}WeakenedFirstAidWhiff${version}:
+BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
   $instances:
     - { threshold: Notably,  intensity: mildly, version: V0, value: 30 }
     - { threshold: Severely, intensity: piddly, version: V0, value: 20 }
@@ -24,26 +24,26 @@ BaseStatusEffect.${threshold}WeakenedFirstAidWhiff${version}:
     - { threshold: Severely, intensity: piddly, version: V1, value: 30 }
     - { threshold: Notably,  intensity: mildly, version: V2, value: 60 }
     - { threshold: Severely, intensity: piddly, version: V2, value: 40 }
-  $base: BaseStatusEffect.FirstAidWhiff${version}
+  $base: BaseStatusEffect.FirstAidWhiff$(version)
   packages:
-    - $base: BaseStatusEffect.FirstAidWhiff${version}_inline0
+    - $base: BaseStatusEffect.FirstAidWhiff$(version)_inline0
       effectors:
-        - $base: BaseStatusEffect.FirstAidWhiff${version}_inline1
+        - $base: BaseStatusEffect.FirstAidWhiff$(version)_inline1
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStatPools.Health
-              statPoolValue: ${value}  
+              statPoolValue: $(value)  
   VFX:
     - $type: StatusEffectFX_Record
-      name: ${intensity}_splinter_buff
+      name: $(intensity)_splinter_buff
       shouldReapply: false
   uiData:
     $base: BaseStatusEffect.FirstAidWhiffV0_inline4
-    iconPath: ${threshold}WeakenedFirstAidWhiff
+    iconPath: $(threshold)WeakenedFirstAidWhiff
 
 ## bounce back (a.k.a bones mccoy)
 
-BaseStatusEffect.${threshold}WeakenedBonesMcCoy70${version}:
+BaseStatusEffect.$(threshold)WeakenedBonesMcCoy70$(version):
   $instances:
     - { threshold: Notably,  intensity: mildly, version: V0, modifier: 2, value: 10 }
     - { threshold: Severely, intensity: piddly, version: V0, modifier: 1, value: 5 }
@@ -51,32 +51,31 @@ BaseStatusEffect.${threshold}WeakenedBonesMcCoy70${version}:
     - { threshold: Severely, intensity: piddly, version: V1, modifier: 2, value: 10 }
     - { threshold: Notably,  intensity: mildly, version: V2, modifier: 4, value: 20 }
     - { threshold: Severely, intensity: piddly, version: V2, modifier: 3, value: 15 }
-  $base: BaseStatusEffect.BonesMcCoy70${version}
+  $base: BaseStatusEffect.BonesMcCoy70$(version)
   packages:
-    - $base: BaseStatusEffect.BonesMcCoy70${version}_inline0
+    - $base: BaseStatusEffect.BonesMcCoy70$(version)_inline0
       effectors:
-        - $base: BaseStatusEffect.BonesMcCoy70${version}_inline1
+        - $base: BaseStatusEffect.BonesMcCoy70$(version)_inline1
           poolModifier:
-            $base: BaseStatusEffect.BonesMcCoy70${version}_inline2
-            valuePerSec: ${modifier}
-        - $base: BaseStatusEffect.BonesMcCoy70${version}_inline4
+            $base: BaseStatusEffect.BonesMcCoy70$(version)_inline2
+            valuePerSec: $(modifier)
+        - $base: BaseStatusEffect.BonesMcCoy70$(version)_inline4
           statPoolUpdates:
             - $type: StatPoolUpdate_Record
               statPoolType: BaseStatPools.Health
-              statPoolValue: ${value}
+              statPoolValue: $(value)
   VFX:
     - $type: StatusEffectFX_Record
-      name: ${intensity}_reflex_buster
+      name: $(intensity)_reflex_buster
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.BonesMcCoy70${version}_inline7
-    iconPath: ${threshold}WeakenedBonesMcCoy70
-    intValues:
-      - ${modifier}
+    $base: BaseStatusEffect.BonesMcCoy70$(version)_inline7
+    iconPath: $(threshold)WeakenedBonesMcCoy70
+    intValues: [ $(modifier) ]
 
 ## health booster
 
-BaseStatusEffect.${threshold}WeakenedHealthBooster:
+BaseStatusEffect.$(threshold)WeakenedHealthBooster:
   $instances:
     - { threshold: Notably,  modifier: 1.15, modifiers: 15 }
     - { threshold: Severely, modifier: 1.1,  modifiers: 10 }
@@ -87,16 +86,15 @@ BaseStatusEffect.${threshold}WeakenedHealthBooster:
         - $type: ConstantStatModifier_Record
           modifierType: Multiplier
           statType: BaseStats.Health
-          value: ${modifier}
+          value: $(modifier)
   uiData:
     $base: BaseStatusEffect.HealthBooster_inline2
-    iconPath: ${threshold}WeakenedHealthBooster
-    intValues:
-      - ${modifiers}
+    iconPath: $(threshold)WeakenedHealthBooster
+    intValues: [ $(modifiers) ]
 
 # object action effect
 
-Items.${threshold}WeakenedActionEffect${consumable}${version}:
+Items.$(threshold)WeakenedActionEffect$(consumable)$(version):
   $instances:
     - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline2 }
     - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline2 }
@@ -112,5 +110,5 @@ Items.${threshold}WeakenedActionEffect${consumable}${version}:
     - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline6 }
     - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1 }
     - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1 }
-  $base: Items.${consumable}${version}_${flat}
-  statusEffect: BaseStatusEffect.${threshold}Weakened${consumable}${version}
+  $base: Items.$(consumable)$(version)_$(flat)
+  statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)

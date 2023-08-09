@@ -1,14 +1,14 @@
-UIData.WithdrawnFrom${consumable}:
+UIData.WithdrawnFrom$(consumable):
   $instances:
     - { consumable: StaminaBooster,       key: Stamina-Booster }
     - { consumable: CarryCapacityBooster, key: Capacity-Booster }
     - { consumable: MemoryBooster,        key: Memory-Booster }
-  $base: BaseStatusEffect.${consumable}_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-${key}-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-${key}
+  $base: BaseStatusEffect.$(consumable)_inline2
+  description: LocKey#Mod-Addicted-Withdrawn-$(key)-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-$(key)
   iconPath: WithdrawnFromPill
 
-BaseStatusEffect.${threshold}WithdrawnFrom${consumable}:
+BaseStatusEffect.$(threshold)WithdrawnFrom$(consumable):
   $instances:
     - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: 90 }
     - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: 70 }
@@ -20,16 +20,15 @@ BaseStatusEffect.${threshold}WithdrawnFrom${consumable}:
       stats:
         - $type: ConstantStatModifier_Record
           modifierType: Multiplier
-          statType: BaseStats.${stat}
-          value: ${modifier}
+          statType: BaseStats.$(stat)
+          value: $(modifier)
     - $type: GameplayLogicPackage_Record
       effectors: [Effectors.Grunt]
   uiData:
-    $base: UIData.WithdrawnFrom${consumable}
-    intValues:
-      - ${modifiers}
+    $base: UIData.WithdrawnFrom$(consumable)
+    intValues: [ $(modifiers) ]
 
-BaseStatusEffect.${threshold}WithdrawnFromMemoryBooster:
+BaseStatusEffect.$(threshold)WithdrawnFromMemoryBooster:
   $instances:
     - { threshold: Notably,  modifier: 0.9, modifiers: 90 }
     - { threshold: Severely, modifier: 0.7, modifiers: 70 }
@@ -40,7 +39,7 @@ BaseStatusEffect.${threshold}WithdrawnFromMemoryBooster:
         - $type: ConstantStatModifier_Record
           modifierType: Multiplier
           statType: BaseStats.Memory
-          value: ${modifier}
+          value: $(modifier)
     - $type: GameplayLogicPackage_Record
       effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
     - $type: GameplayLogicPackage_Record
@@ -48,8 +47,7 @@ BaseStatusEffect.${threshold}WithdrawnFromMemoryBooster:
         - Effectors.Dizzy
   uiData:
     $base: UIData.WithdrawnFromMemoryBooster
-    intValues:
-      - ${modifiers}
+    intValues: [ $(modifiers) ]
 
 Effectors.Grunt:
   $type: Effector_Record
