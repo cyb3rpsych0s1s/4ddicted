@@ -9,7 +9,7 @@ At the current time of this writing the project is being developed with:
 | RED4ext                  | 1.15.0   |
 | REDscript                | 0.5.14   |
 | RED Hot Tools            | 0.4.12   |
-| TweakXL                  | 1.2.0    |
+| TweakXL                  | 1.2.1    |
 | ArchiveXL                | 1.5.1    |
 | Codeware                 | 1.1.8    |
 | clipTester               | ?        |
