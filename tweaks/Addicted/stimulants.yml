@@ -1,3 +1,54 @@
+UIData.WithdrawnFrom$(consumable):
+  $instances:
+    - { consumable: StaminaBooster,       key: Stamina-Booster }
+    - { consumable: CarryCapacityBooster, key: Capacity-Booster }
+    - { consumable: MemoryBooster,        key: Memory-Booster }
+  $base: BaseStatusEffect.$(consumable)_inline2
+  description: LocKey#Mod-Addicted-Withdrawn-$(key)-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-$(key)
+  iconPath: WithdrawnFromPill
+
+BaseStatusEffect.$(threshold)WithdrawnFrom$(consumable):
+  $instances:
+    - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: 70 }
+    - { threshold: Notably,  consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.7, modifiers: 70 }
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.$(stat)
+          value: $(modifier)
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Grunt]
+  uiData:
+    $base: UIData.WithdrawnFrom$(consumable)
+    intValues: [ $(modifiers) ]
+
+BaseStatusEffect.$(threshold)WithdrawnFromMemoryBooster:
+  $instances:
+    - { threshold: Notably,  modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, modifier: 0.7, modifiers: 70 }
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Memory
+          value: $(modifier)
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
+    - $type: GameplayLogicPackage_Record
+      effectors:
+        - Effectors.Dizzy
+  uiData:
+    $base: UIData.WithdrawnFromMemoryBooster
+    intValues: [ $(modifiers) ]
+
 Effectors.Grunt:
   $type: Effector_Record
   effectorClassName: PlaySFXEffector
@@ -40,117 +91,3 @@ UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
   atlasPartName: craving_for_pill
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
-
-UIData.WithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.StaminaBooster_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-Stamina-Booster-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-Stamina-Booster
-  iconPath: WithdrawnFromPill
-
-UIData.WithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.CarryCapacityBooster_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-Capacity-Booster-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-Capacity-Booster
-  iconPath: WithdrawnFromPill
-
-UIData.WithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.MemoryBooster_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-Memory-Booster-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-Memory-Booster
-  iconPath: WithdrawnFromPill
-
-BaseStatusEffect.NotablyWithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Stamina
-          value: 0.9
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.Grunt]
-  uiData:
-    $base: UIData.WithdrawnFromStaminaBooster
-    intValues: [90]
-
-BaseStatusEffect.SeverelyWithdrawnFromStaminaBooster:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Stamina
-          value: 0.7
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.Grunt]
-  uiData:
-    $base: UIData.WithdrawnFromStaminaBooster
-    intValues: [70]
-
-BaseStatusEffect.NotablyWithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.CarryCapacity
-          value: 0.9
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.Grunt]
-  uiData:
-    $base: UIData.WithdrawnFromCarryCapacityBooster
-    intValues: [90]
-
-BaseStatusEffect.SeverelyWithdrawnFromCarryCapacityBooster:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.CarryCapacity
-          value: 0.7
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.Grunt]
-  uiData:
-    $base: UIData.WithdrawnFromCarryCapacityBooster
-    intValues: [70]
-
-BaseStatusEffect.NotablyWithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Memory
-          value: 0.9
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
-    - $type: GameplayLogicPackage_Record
-      effectors:
-        - Effectors.Dizzy
-  uiData:
-    $base: UIData.WithdrawnFromMemoryBooster
-    intValues: [90]
-
-BaseStatusEffect.SeverelyWithdrawnFromMemoryBooster:
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Memory
-          value: 0.7
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
-    - $type: GameplayLogicPackage_Record
-      effectors:
-        - Effectors.Dizzy
-  uiData:
-    $base: UIData.WithdrawnFromMemoryBooster
-    intValues: [70]
