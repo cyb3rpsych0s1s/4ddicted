@@ -11,6 +11,7 @@ scripts/*
 /archive/packed/
 /archive/layout.xml
 /archive/source/customSounds/**/*.mp3
+/archive/source/resources/info.json
 /archive/Addicted.cpmodproj
 
 /Addicted
