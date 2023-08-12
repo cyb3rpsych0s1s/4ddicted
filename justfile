@@ -1,53 +1,55 @@
 set dotenv-load
 
 # default to steam default game dir
-DEFAULT_GAME_DIR := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
+DEFAULT_GAME_DIR    := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 # default to CI RED cli path
-DEFAULT_RED_CLI := join(".", "redscript-cli.exe")
+DEFAULT_RED_CLI     := join(".", "redscript-cli.exe")
 # default to local WolvenKit cli path
-DEFAULT_WK_CLI := join(".", "WolvenKit.CLI.exe")
+DEFAULT_WK_CLI      := join(".", "WolvenKit.CLI.exe")
+
+mod_name            := 'Addicted'
 
 # installation dir for Cyberpunk 2077, e.g. Steam
-game_dir := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
-bundle_dir := 'Addicted'
-alt_game_dir := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
+game_dir            := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
+bundle_dir          := mod_name
+alt_game_dir        := '../../../Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077'
 
 # codebase (outside of game files)
-cet_input_dir := join("mods", "Addicted")
-red_input_dir := join("scripts", "Addicted")
-tweak_input_dir := join("tweaks", "Addicted")
-archive_input_dir := join("archive", "packed")
-sounds_input_dir := join("archive", "source", "customSounds")
-resources_input_dir := join("archive", "source", "resources")
+cet_repo_dir        := join("mods", mod_name)
+red_repo_dir        := join("scripts", mod_name)
+tweak_repo_dir      := join("tweaks", mod_name)
+archive_repo_dir    := join("archive", "packed")
+sounds_repo_dir     := join("archive", "source", "customSounds")
+resources_repo_dir  := join("archive", "source", "resources")
 
 # game files
-cet_output_dir := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
-red_output_dir := join(game_dir, "r6", "scripts", "Addicted")
-tweak_output_dir := join(game_dir, "r6", "tweaks", "Addicted")
-archive_output_dir := join(game_dir, "archive", "pc", "mod")
-redmod_output_dir := join(game_dir, "mods", "Addicted")
-red_cache_dir := join(game_dir, "r6", "cache")
+cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
+red_game_dir        := join(game_dir, "r6", "scripts", mod_name)
+tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
+archive_game_dir    := join(game_dir, "archive", "pc", "mod")
+redmod_game_dir     := join(game_dir, "mods", mod_name)
+red_cache_dir       := join(game_dir, "r6", "cache")
 
 # bundle files for release
-cet_release_dir := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted")
-red_release_dir := join(bundle_dir, "r6", "scripts", "Addicted")
-tweak_release_dir := join(bundle_dir, "r6", "tweaks", "Addicted")
-archive_release_dir := join(bundle_dir, "archive", "pc", "mod")
-redmod_release_dir := join(bundle_dir, "mods", "Addicted")
+cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
+red_bundle_dir      := join(bundle_dir, "r6", "scripts", mod_name)
+tweak_bundle_dir    := join(bundle_dir, "r6", "tweaks", mod_name)
+archive_bundle_dir  := join(bundle_dir, "archive", "pc", "mod")
+redmod_bundle_dir   := join(bundle_dir, "mods", mod_name)
 
-latest_release := env_var_or_default("LATEST_RELEASE", "")
-latest_version := env_var_or_default("LATEST_VERSION", "")
-latest_artifact_windows := 'Addicted-windows-latest-{{latest_version}}.zip'
-latest_artifact_linux := "Addicted-ubuntu-latest-{{latest_version}}.zip"
+latest_release      := env_var_or_default("LATEST_RELEASE", "")
+latest_version      := env_var_or_default("LATEST_VERSION", "")
+latest_artifact_windows := mod_name + '-windows-latest-{{latest_version}}.zip'
+latest_artifact_linux   := mod_name + "-ubuntu-latest-{{latest_version}}.zip"
 
 # path to REDscript CLI
-red_cli := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
+red_cli             := env_var_or_default("RED_CLI", DEFAULT_RED_CLI)
 
 # path to RED cache bundle file in game files
-red_cache_bundle := join(red_cache_dir, "final.redscripts")
+red_cache_bundle    := join(red_cache_dir, "final.redscripts")
 
 # path to WolvenKit CLI
-wk_cli := env_var_or_default("WK_CLI", DEFAULT_WK_CLI)
+wk_cli              := env_var_or_default("WK_CLI", DEFAULT_WK_CLI)
 
 red4ext_logs        := join(game_dir, "red4ext", "logs", "red4ext.log")
 redscript_logs      := join(game_dir, "r6", "logs", "redscript_rCURRENT.log")
@@ -65,8 +67,8 @@ default:
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
-    mkdir -p '{{cet_output_dir}}'
-    mkdir -p '{{red_output_dir}}'
+    mkdir -p '{{cet_game_dir}}'
+    mkdir -p '{{red_game_dir}}'
 
 # 🎨 lint code
 lint:
@@ -78,11 +80,11 @@ compile:
 
 # ➡️  copy codebase files to game files, including archive
 build: rebuild
-    cp -r '{{archive_input_dir}}'/. '{{game_dir}}'
-    mkdir -p '{{ join(redmod_output_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_input_dir}}' en-us wav '{{ join(redmod_output_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_input_dir}}' vanilla Wav '{{ join(redmod_output_dir, "customSounds") }}'
-    cp '{{ join(resources_input_dir, "info.json") }}' '{{ join(redmod_output_dir, "info.json") }}'
+    cp -r '{{archive_repo_dir}}'/. '{{game_dir}}'
+    mkdir -p '{{ join(redmod_game_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_repo_dir}}' en-us wav '{{ join(redmod_game_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_repo_dir}}' vanilla Wav '{{ join(redmod_game_dir, "customSounds") }}'
+    cp '{{ join(resources_repo_dir, "info.json") }}' '{{ join(redmod_game_dir, "info.json") }}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
@@ -91,9 +93,9 @@ deploy:
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild:
-    cp -r '{{cet_input_dir}}'/. '{{cet_output_dir}}'
-    cp -r '{{red_input_dir}}'/. '{{red_output_dir}}'
-    cp -r '{{tweak_input_dir}}'/. '{{tweak_output_dir}}'
+    cp -r '{{cet_repo_dir}}'/. '{{cet_game_dir}}'
+    cp -r '{{red_repo_dir}}'/. '{{red_game_dir}}'
+    cp -r '{{tweak_repo_dir}}'/. '{{tweak_game_dir}}'
 
 # 🧾 show logs from CET and RED
 logs:
@@ -176,26 +178,26 @@ assemble:
 
 # 📦 bundle mod files (for release in CI)
 bundle:
-    mkdir -p '{{archive_input_dir}}'
-    mv archive.archive '{{ join(archive_input_dir, "Addicted.archive") }}'
-    cp '{{ join("archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(archive_input_dir, "Addicted.archive.xl") }}'
+    mkdir -p '{{archive_repo_dir}}'
+    mv archive.archive '{{ join(archive_repo_dir, "Addicted.archive") }}'
+    cp '{{ join("archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(archive_repo_dir, "Addicted.archive.xl") }}'
 
-    mkdir -p '{{archive_release_dir}}'
-    mkdir -p '{{cet_release_dir}}'
-    mkdir -p '{{red_release_dir}}'
-    mkdir -p '{{tweak_release_dir}}'
-    mkdir -p '{{ join(redmod_release_dir, "customSounds") }}'
-    cp -r '{{archive_input_dir}}'/. '{{archive_release_dir}}'
-    cp -r '{{cet_input_dir}}'/. '{{cet_release_dir}}'
-    cp -r '{{red_input_dir}}'/. '{{red_release_dir}}'
-    cp -r '{{tweak_input_dir}}'/. '{{tweak_release_dir}}'
+    mkdir -p '{{archive_bundle_dir}}'
+    mkdir -p '{{cet_bundle_dir}}'
+    mkdir -p '{{red_bundle_dir}}'
+    mkdir -p '{{tweak_bundle_dir}}'
+    mkdir -p '{{ join(redmod_bundle_dir, "customSounds") }}'
+    cp -r '{{archive_repo_dir}}'/. '{{archive_bundle_dir}}'
+    cp -r '{{cet_repo_dir}}'/. '{{cet_bundle_dir}}'
+    cp -r '{{red_repo_dir}}'/. '{{red_bundle_dir}}'
+    cp -r '{{tweak_repo_dir}}'/. '{{tweak_bundle_dir}}'
     @just bundle_lang
 
 bundle_lang CODE='en-us' FILE='info.json':
-    mkdir -p '{{ join(redmod_release_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_input_dir}}' {{CODE}} wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}' 'true'
-    @just copy_recursive '{{sounds_input_dir}}' vanilla/{{CODE}} Wav '{{ join(`pwd`, redmod_release_dir, "customSounds") }}' 'false'
-    cp '{{ join(resources_input_dir, FILE) }}' '{{ join(redmod_release_dir, "info.json") }}'
+    mkdir -p '{{ join(redmod_bundle_dir, "customSounds") }}'
+    @just copy_recursive '{{sounds_repo_dir}}' {{CODE}} wav '{{ join(`pwd`, redmod_bundle_dir, "customSounds") }}' 'true'
+    @just copy_recursive '{{sounds_repo_dir}}' vanilla/{{CODE}} Wav '{{ join(`pwd`, redmod_bundle_dir, "customSounds") }}' 'false'
+    cp '{{ join(resources_repo_dir, FILE) }}' '{{ join(redmod_bundle_dir, "info.json") }}'
 
 [private]
 [windows]
@@ -217,24 +219,24 @@ uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninsta
 
 # 🗑️🎭  clear out mod archive files in game files
 uninstall-archive:
-    rm -f '{{archive_output_dir}}'/Addicted.archive
-    rm -f '{{archive_output_dir}}'/Addicted.archive.xl
+    rm -f '{{archive_game_dir}}'/Addicted.archive
+    rm -f '{{archive_game_dir}}'/Addicted.archive.xl
 
 # 🗑️⚙️   clear out mod CET files in game files
 uninstall-cet:
-    rm -rf '{{cet_output_dir}}'
+    rm -rf '{{cet_game_dir}}'
 
 # 🗑️🧧  clear out mod REDscript files in game files
 uninstall-red:
-    rm -rf '{{red_output_dir}}'
+    rm -rf '{{red_game_dir}}'
 
 # 🗑️🗜️   clear out mod tweaks files in game files
 uninstall-tweak:
-    rm -rf '{{tweak_output_dir}}'
+    rm -rf '{{tweak_game_dir}}'
 
 # 🗑️⚙️   clear out mod REDmod files in game files
 uninstall-redmod:
-    rm -rf '{{redmod_output_dir}}'
+    rm -rf '{{redmod_game_dir}}'
 
 alias nuke := nuclear
 
