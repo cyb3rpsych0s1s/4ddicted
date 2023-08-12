@@ -40,13 +40,13 @@ latest_artifact_windows := mod_name + '-windows-latest-{{latest_version}}.zip'
 latest_artifact_linux   := mod_name + "-ubuntu-latest-{{latest_version}}.zip"
 
 # path to REDscript CLI
-red_cli             := env_var_or_default("RED_CLI", repo_dir)
+red_cli             := join(env_var_or_default("RED_CLI", repo_dir), "redscript-cli.exe")
 
 # path to RED cache bundle file in game files
 red_cache_bundle    := join(red_cache_dir, "final.redscripts")
 
 # path to WolvenKit CLI
-wk_cli              := env_var_or_default("WK_CLI", repo_dir)
+wk_cli              := join(env_var_or_default("WK_CLI", repo_dir), "WolvenKit.CLI.exe")
 
 red4ext_logs        := join(game_dir, "red4ext", "logs", "red4ext.log")
 redscript_logs      := join(game_dir, "r6", "logs", "redscript_rCURRENT.log")
@@ -81,14 +81,14 @@ import:
 
 # 📦 pack archive with WolvenKit
 [windows]
-pack LANGUAGE='en-us': import
+pack: import
     {{wk_cli}} pack '{{ join(repo_dir, "archive") }}'
     Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
     cp -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
 
 # 🔛 just compile to check (without building)
 compile:
-    '{{red_cli}}' compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
+    {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
@@ -98,11 +98,10 @@ build LANGUAGE='en-us': rebuild
     @if (!(Test-Path '{{ join(redmod_game_dir, "customSounds", "vanilla") }}')) { New-Item '{{ join(redmod_game_dir, "customSounds", "vanilla") }}' -ItemType Directory; Write-Host "Created folder at {{ join(redmod_game_dir, 'customSounds', 'vanilla') }}"; }
     cp -Recurse -Force '{{ join(repo_dir, "archive", "source", "customSounds", LANGUAGE) }}' '{{ join(redmod_game_dir, "customSounds") }}'
     cp -Recurse -Force '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LANGUAGE) }}' '{{ join(redmod_game_dir, "customSounds", "vanilla") }}'
-    cp -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LANGUAGE + ".json") }}' '{{ join(redmod_game_dir, "customSounds", "info.json") }}'
+    cp -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LANGUAGE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
 
 deploy:
-    cd '{{ join(game_dir, "tools", "redmod", "bin") }}' && \
-    ./redMod.exe deploy -root="{{game_dir}}"
+    cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
 
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
