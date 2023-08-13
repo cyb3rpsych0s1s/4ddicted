@@ -282,6 +282,15 @@ extract IN OUT:
     '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
 
 # encode .mp3 back into .wav
+[windows]
+encode OVERWRITE='False':
+    @Dir '{{ join(justfile_directory(), "archive", "source", "customSounds") }}' -Recurse -File -Filter "*.mp3" | %{ \
+        if ($_.Name -clike "*.mp3") { $from = ".mp3"; $into = ".wav"; } else { $from = ".Mp3"; $into = ".Wav"; } \
+        if ((!(Test-Path $_.Fullname.Replace($from,$into))) -or ([System.Convert]::ToBoolean('{{OVERWRITE}}'))) { ffmpeg -hide_banner -loglevel error -i $_.Fullname -ar 44100 -sample_fmt s16 -y $_.Fullname.Replace($from,$into); Write-Host "converted " $_.Fullname; } \
+    }
+
+# encode .mp3 back into .wav
+[macos]
 encode OVERWRITE='false':
   for file in `ls ./archive/source/customSounds`; do \
     if [[ ('{{OVERWRITE}}' != 'false' || ! -f ./archive/source/customSounds/${file%.mp3}.wav) && $file == *.mp3 ]]; then \
