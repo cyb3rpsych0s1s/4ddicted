@@ -81,9 +81,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [bundle, bundle-translations]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
