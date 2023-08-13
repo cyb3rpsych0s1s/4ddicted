@@ -11,7 +11,7 @@ public class French extends ModLocalizationPackage {
    this.Subtitle("Addicted-Voice-Subtitle-come_on_biomon_cant_you_give_me_a_break", "Eh biomon', lâche-moi un peu les basques");
    this.Subtitle("Addicted-Voice-Subtitle-damn_cant_you_just_leave_me_alone", "Mince.. Tu veux pas me foutre la paix un peu?");
    this.Subtitle("Addicted-Voice-Subtitle-damn_thats_fucked_up", "Sans déconner!");
-   this.Subtitle("Addicted-Voice-Subtitle-dont_you_see_im_in_trouble", "C'est pas le moment là!!");
+   this.Subtitle("Addicted-Voice-Subtitle-dont_you_see_im_in_trouble", "Eh pas maintenant!!");
    this.Subtitle("Addicted-Voice-Subtitle-fuck", "Merde..");
    this.Subtitle("Addicted-Voice-Subtitle-fuck_this_biomon_just_not_right_now", "Putain de biomon' ! Pas maintenant!!");
    this.Subtitle("Addicted-Voice-Subtitle-get_this_damn_ui_out_of_my_face", "Hors de ma vue!");
