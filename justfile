@@ -141,14 +141,22 @@ store:
 alias forget := erase
 
 # 🗑️🧾 clear out logs
+[windows]
 erase: clear
-    rm -f '{{ join(game_dir, "red4ext", "logs", "red4ext.log") }}' \
-    '{{ join(game_dir, "red4ext", "logs", "mod_settings.log") }}' \
-    '{{ join(game_dir, "red4ext", "plugins", "ArchiveXL", "ArchiveXL.log") }}' \
-    '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}' \
-    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}' \
-    '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}' \
-    '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'
+    @$log = '{{ join(game_dir, "red4ext", "logs", "red4ext.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
+    @$log = '{{ join(game_dir, "red4ext", "logs", "mod_settings.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
+    @$log = '{{ join(game_dir, "red4ext", "plugins", "ArchiveXL", "ArchiveXL.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
+    @$log = '{{ join(game_dir, "red4ext", "plugins", "TweakXL", "TweakXL.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
+    @$log = '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "scripting.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
+    @$log = '{{ join(game_dir, "r6", "logs", "redscript_rCURRENT.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
+    @$log = '{{ join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", "Addicted", "Addicted.log") }}'; \
+    if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
 
 # check if given env vars exists
 check-env NAME:
