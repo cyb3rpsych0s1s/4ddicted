@@ -202,7 +202,7 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Memory Booster",
+              "femaleVariant": "RAM Jolt",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-MemoryBooster"
@@ -223,14 +223,14 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Reflexes",
+              "femaleVariant": "{int_0}% Max Reflexes",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-BlackLace-Desc"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Stamina",
+              "femaleVariant": "{int_0}% Max Stamina",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Stamina-Booster-Desc"
@@ -244,7 +244,7 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Memory",
+              "femaleVariant": "{int_0}% Max RAM Units",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Memory-Booster-Desc"
