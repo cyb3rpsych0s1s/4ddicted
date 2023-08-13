@@ -370,6 +370,27 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Overdose de Lien Noir",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Edgerunning-BlackLace-Penalty"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Sous l'emprise du Lien Noir",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Overdose-BlackLace"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "on dit que la surconsommation de Lien Noir peut entraîner des crises de Cyberpsychose",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Overdose-BlackLace-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
               "femaleVariant": "INCONNU",
               "maleVariant": "",
               "primaryKey": 0,
