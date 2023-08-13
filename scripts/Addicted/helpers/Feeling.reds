@@ -62,7 +62,8 @@ public class Feeling {
    ];
   }
 
-  public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
+  public static func Reaction(mood: Mood, gender: gamedataGender, language: CName) -> CName {
+    let language = NameToString(language);
     if Equals(mood, Mood.Any) { return n""; }
     if StrLen(language) == 0 { language = "en-us"; }
     if NotEquals(language, "en-us") && NotEquals(language, "fr-fr") { return n""; }

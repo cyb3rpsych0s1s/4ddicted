@@ -770,6 +770,8 @@ public class BiomonitorController extends inkGameController {
         let reaction: CName;
         let player: ref<PlayerPuppet> = this.GetPlayerControlledObject() as PlayerPuppet;
         let game: GameInstance = player.GetGame();
+        let localization = LocalizationSystem.GetInstance(game);
+        let language = localization.GetVoiceLanguage();
         let system: ref<AddictedSystem> = AddictedSystem.GetInstance(game) as AddictedSystem;
         let gender: gamedataGender = Equals(player.GetResolvedGenderName(), n"Female")
             ? gamedataGender.Female
@@ -782,7 +784,7 @@ public class BiomonitorController extends inkGameController {
             this.state = BiomonitorState.Dismissing;
             if player.IsInCombat() {
                 E(s">>> trigger reaction when dismissing in combat");
-                reaction = Helper.OnDismissInCombat(gender);
+                reaction = Helper.OnDismissInCombat(gender, language);
                 player.Reacts(reaction);
             }
             return this.Close(0.1);
@@ -834,7 +836,7 @@ public class BiomonitorController extends inkGameController {
             let closed = this.Close(4.0);
             if !player.IsInCombat() {
                 E(s">>> trigger reaction on symptoms summary when not in combat");
-                reaction = Helper.OnceWarned(gender, threshold, warnings);
+                reaction = Helper.OnceWarned(gender, threshold, warnings, language);
                 E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
                 player.Reacts(reaction);
             }
