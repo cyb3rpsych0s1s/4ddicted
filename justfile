@@ -17,7 +17,7 @@ red_repo_dir        := join(repo_dir, "scripts", mod_name)
 tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
-resources_repo_dir  := join(repo_dir, "archive", "source", "resources")
+resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -93,13 +93,13 @@ compile:
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
-build LANGUAGE: rebuild
+build LOCALE: rebuild
     Copy-Item -Force -Recurse '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
-    @$folder = '{{ join(redmod_game_dir, "customSounds", LANGUAGE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LANGUAGE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LANGUAGE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LANGUAGE) }}'
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LANGUAGE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LANGUAGE) }}'
-    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LANGUAGE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
+    @$folder = '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'
+    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
@@ -205,42 +205,30 @@ assemble:
     mdbook build
 
 # 📦 bundle mod files (for release in CI)
-bundle:
-    mkdir -p '{{archive_repo_dir}}'
-    mv archive.archive '{{ join(archive_repo_dir, "Addicted.archive") }}'
-    cp '{{ join("archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(archive_repo_dir, "Addicted.archive.xl") }}'
-
-    mkdir -p '{{archive_bundle_dir}}'
-    mkdir -p '{{cet_bundle_dir}}'
-    mkdir -p '{{red_bundle_dir}}'
-    mkdir -p '{{tweak_bundle_dir}}'
-    mkdir -p '{{ join(redmod_bundle_dir, "customSounds") }}'
-    cp -r '{{archive_repo_dir}}'/. '{{archive_bundle_dir}}'
-    cp -r '{{cet_repo_dir}}'/. '{{cet_bundle_dir}}'
-    cp -r '{{red_repo_dir}}'/. '{{red_bundle_dir}}'
-    cp -r '{{tweak_repo_dir}}'/. '{{tweak_bundle_dir}}'
-    @just bundle_lang
-
-bundle_lang CODE='en-us' FILE='info.json':
-    mkdir -p '{{ join(redmod_bundle_dir, "customSounds") }}'
-    @just copy_recursive '{{sounds_repo_dir}}' {{CODE}} wav '{{ join(`pwd`, redmod_bundle_dir, "customSounds") }}' 'true'
-    @just copy_recursive '{{sounds_repo_dir}}' vanilla/{{CODE}} Wav '{{ join(`pwd`, redmod_bundle_dir, "customSounds") }}' 'false'
-    cp '{{ join(resources_repo_dir, FILE) }}' '{{ join(redmod_bundle_dir, "info.json") }}'
-
-[private]
 [windows]
-copy_recursive IN SUB EXT OUT NESTED='false':
-    cd '{{IN}}' && cp -r --parents {{SUB}}/**/*.{{EXT}} '{{OUT}}'
+bundle:
+    @$folder = '{{archive_bundle_dir}}'; \
+    if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{cet_bundle_dir}}'; \
+    if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{red_bundle_dir}}'; \
+    if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{tweak_bundle_dir}}'; \
+    if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    Copy-Item -Recurse '{{ join(archive_repo_dir, "*") }}' '{{archive_bundle_dir}}'
+    Copy-Item -Recurse '{{ join(cet_repo_dir, "*") }}' '{{cet_bundle_dir}}'
+    Copy-Item -Recurse '{{ join(red_repo_dir, "*") }}' '{{red_bundle_dir}}'
+    Copy-Item -Recurse '{{ join(tweak_repo_dir, "*") }}' '{{tweak_bundle_dir}}' -Include "*.yml" 
+    @just bundle_lang "en-us"
 
-[private]
-[linux]
-copy_recursive IN SUB EXT OUT NESTED='false':
-    rsync -R {{ join(IN, SUB, if NESTED == "false" { "" } else { "**" }, "*." + EXT) }} {{OUT}}
-
-[private]
-[macos]
-copy_recursive IN SUB EXT OUT NESTED='false':
-    cd '{{IN}}' && rsync -Rr {{ join(SUB, if NESTED == "false" { "" } else { "**" }, "*." + EXT) }} {{OUT}}
+bundle_lang LOCALE:
+    @$folder = '{{ join(redmod_bundle_dir, "customSounds", LOCALE) }}'; \
+    if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{ join(redmod_bundle_dir, "customSounds", "vanilla", LOCALE) }}'; \
+    if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    Copy-Item -Recurse '{{ join(sounds_repo_dir, LOCALE, "*") }}' '{{ join(redmod_bundle_dir, "customSounds", LOCALE) }}'
+    Copy-Item -Recurse '{{ join(sounds_repo_dir, "vanilla", LOCALE, "*") }}' '{{ join(redmod_bundle_dir, "customSounds", "vanilla", LOCALE) }}'
+    Copy-Item '{{ join(resources_repo_dir, "info." + LOCALE + ".json") }}' '{{ join(redmod_bundle_dir, "info.json") }}'
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 [windows]
