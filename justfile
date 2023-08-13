@@ -134,8 +134,9 @@ clear:
     }
 
 # 💾 store (or overwrite) logs in latest.log
+[windows]
 store:
-    (just logs)  > 'latest.log'
+    (just logs)  | Set-Content 'latest.log'
 
 alias forget := erase
 
