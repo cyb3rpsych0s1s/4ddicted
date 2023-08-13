@@ -353,9 +353,9 @@ public class AddictedSystem extends ScriptableSystem {
 
     let customer: ref<Customer> = new Customer();
     customer.FirstName = "V";
-    customer.LastName = "UNKNOWN";
+    customer.LastName = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
     customer.Age = "27";
-    customer.BloodGroup = "UNKNOWN";
+    customer.BloodGroup = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
     customer.Insurance = "-";
 
     let symptoms = this.Symptoms();
