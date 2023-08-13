@@ -64,11 +64,11 @@ default:
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
-    @if (!(Test-Path '{{cet_game_dir}}')) { New-Item '{{cet_game_dir}}' -ItemType Directory; Write-Host "Created folder at {{cet_game_dir}}"; }
-    @if (!(Test-Path '{{red_game_dir}}')) { New-Item '{{red_game_dir}}' -ItemType Directory; Write-Host "Created folder at {{red_game_dir}}"; }
-    @if (!(Test-Path '{{tweak_game_dir}}')) { New-Item '{{tweak_game_dir}}' -ItemType Directory; Write-Host "Created folder at {{tweak_game_dir}}"; }
-    @if (!(Test-Path '{{redmod_game_dir}}')) { New-Item '{{redmod_game_dir}}' -ItemType Directory; Write-Host "Created folder at {{redmod_game_dir}}"; }
-    @if (!(Test-Path '{{archive_game_dir}}')) { New-Item '{{archive_game_dir}}' -ItemType Directory; Write-Host "Created folder at {{archive_game_dir}}"; }
+    @if (!(Test-Path '{{cet_game_dir}}'))     { [void](New-Item '{{cet_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{cet_game_dir}}"; }
+    @if (!(Test-Path '{{red_game_dir}}'))     { [void](New-Item '{{red_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{red_game_dir}}"; }
+    @if (!(Test-Path '{{tweak_game_dir}}'))   { [void](New-Item '{{tweak_game_dir}}'   -ItemType Directory); Write-Host "Created folder at {{tweak_game_dir}}"; }
+    @if (!(Test-Path '{{redmod_game_dir}}'))  { [void](New-Item '{{redmod_game_dir}}'  -ItemType Directory); Write-Host "Created folder at {{redmod_game_dir}}"; }
+    @if (!(Test-Path '{{archive_game_dir}}')) { [void](New-Item '{{archive_game_dir}}' -ItemType Directory); Write-Host "Created folder at {{archive_game_dir}}"; }
 
 # 🎨 lint code
 lint:
@@ -84,7 +84,7 @@ import:
 pack: import
     {{wk_cli}} pack '{{ join(repo_dir, "archive") }}'
     Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
-    cp -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
+    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
 
 # 🔛 just compile to check (without building)
 compile:
@@ -93,12 +93,12 @@ compile:
 # ➡️  copy codebase files to game files, including archive
 [windows]
 build LANGUAGE='en-us': rebuild
-    cp -Recurse -Force '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
-    @if (!(Test-Path '{{ join(redmod_game_dir, "customSounds") }}')) { New-Item '{{ join(redmod_game_dir, "customSounds") }}' -ItemType Directory; Write-Host "Created folder at {{ join(redmod_game_dir, 'customSounds') }}"; }
-    @if (!(Test-Path '{{ join(redmod_game_dir, "customSounds", "vanilla") }}')) { New-Item '{{ join(redmod_game_dir, "customSounds", "vanilla") }}' -ItemType Directory; Write-Host "Created folder at {{ join(redmod_game_dir, 'customSounds', 'vanilla') }}"; }
-    cp -Recurse -Force '{{ join(repo_dir, "archive", "source", "customSounds", LANGUAGE) }}' '{{ join(redmod_game_dir, "customSounds") }}'
-    cp -Recurse -Force '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LANGUAGE) }}' '{{ join(redmod_game_dir, "customSounds", "vanilla") }}'
-    cp -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LANGUAGE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
+    Copy-Item -Force -Recurse '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
+    @$folder = '{{ join(redmod_game_dir, "customSounds", LANGUAGE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LANGUAGE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LANGUAGE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LANGUAGE) }}'
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LANGUAGE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LANGUAGE) }}'
+    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LANGUAGE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
@@ -106,10 +106,10 @@ deploy:
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 [windows]
-rebuild:
-    cp -Recurse -Force '{{ join(cet_repo_dir, "*") }}' '{{cet_game_dir}}'
-    cp -Recurse -Force '{{ join(red_repo_dir, "*") }}' '{{red_game_dir}}'
-    cp -Recurse -Force '{{ join(tweak_repo_dir, "*") }}' '{{tweak_game_dir}}'
+rebuild: setup
+    Copy-Item -Force -Recurse '{{ join(cet_repo_dir, "*") }}' '{{cet_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(red_repo_dir, "*") }}' '{{red_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(tweak_repo_dir, "*") }}' '{{tweak_game_dir}}' -Include "*.yml"
 
 # 🧾 show logs from CET and RED
 [windows]
@@ -242,51 +242,63 @@ copy_recursive IN SUB EXT OUT NESTED='false':
     cd '{{IN}}' && rsync -Rr {{ join(SUB, if NESTED == "false" { "" } else { "**" }, "*." + EXT) }} {{OUT}}
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
+[windows]
 uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
 
 # 🗑️🎭  clear out mod archive files in game files
+[windows]
 uninstall-archive:
-    rm -f '{{archive_game_dir}}'/Addicted.archive
-    rm -f '{{archive_game_dir}}'/Addicted.archive.xl
+    @$file = '{{ join(archive_game_dir, mod_name + ".archive") }}'; \
+    if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
+    @$file = '{{ join(archive_game_dir, mod_name + ".archive.xl") }}'; \
+    if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
 
 # 🗑️⚙️   clear out mod CET files in game files
+[windows]
 uninstall-cet:
-    rm -rf '{{cet_game_dir}}'
+    @$folder = '{{cet_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # 🗑️🧧  clear out mod REDscript files in game files
+[windows]
 uninstall-red:
-    rm -rf '{{red_game_dir}}'
+    @$folder = '{{red_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # 🗑️🗜️   clear out mod tweaks files in game files
+[windows]
 uninstall-tweak:
-    rm -rf '{{tweak_game_dir}}'
+    @$folder = '{{tweak_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # 🗑️⚙️   clear out mod REDmod files in game files
+[windows]
 uninstall-redmod:
-    rm -rf '{{redmod_game_dir}}'
+    @$folder = '{{redmod_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 alias nuke := nuclear
 
 # 🧨 nuke your game files as a last resort (vanilla reset)
+[windows]
 nuclear:
-    rm -rf '{{ join(game_dir, "mods") }}'
-    rm -rf '{{ join(game_dir, "plugins") }}'
-    rm -rf '{{ join(game_dir, "engine") }}'
-    rm -rf '{{ join(game_dir, "r6") }}'
-    rm -rf '{{ join(game_dir, "red4ext") }}'
-    rm -rf '{{ join(game_dir, "archive", "pc", "mod") }}'
-
-# ↘️  extract audios (add .wem to WolvenKit project, then point to this directory and specify where to export)
-extract IN OUT:
-    mkdir -p '{{OUT}}'
-    '{{wk_cli}}' export '{{IN}}' -o '{{OUT}}'
+    @$folder = '{{ join(game_dir, "mods") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{ join(game_dir, "plugins") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{ join(game_dir, "r6") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{ join(game_dir, "red4ext") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{ join(game_dir, "archive", "pc", "mod") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # encode .mp3 back into .wav
 [windows]
 encode OVERWRITE='False':
     @Dir '{{ join(justfile_directory(), "archive", "source", "customSounds") }}' -Recurse -File -Filter "*.mp3" | %{ \
         if ($_.Name -clike "*.mp3") { $from = ".mp3"; $into = ".wav"; } else { $from = ".Mp3"; $into = ".Wav"; } \
-        if ((!(Test-Path $_.Fullname.Replace($from,$into))) -or ([System.Convert]::ToBoolean('{{OVERWRITE}}'))) { ffmpeg -hide_banner -loglevel error -i $_.Fullname -ar 44100 -sample_fmt s16 -y $_.Fullname.Replace($from,$into); Write-Host "converted " $_.Fullname; } \
+        if ((!(Test-Path $_.Fullname.Replace($from,$into) -PathType leaf)) -or ([System.Convert]::ToBoolean('{{OVERWRITE}}'))) { ffmpeg -hide_banner -loglevel error -i $_.Fullname -ar 44100 -sample_fmt s16 -y $_.Fullname.Replace($from,$into); Write-Host "converted " $_.Fullname; } \
     }
 
 # encode .mp3 back into .wav
