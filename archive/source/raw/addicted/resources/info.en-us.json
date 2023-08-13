@@ -1,6 +1,6 @@
 {
   "name": "Addicted",
-  "version": "0.7.3",
+  "version": "0.9.3",
   "customSounds": [
     {
       "name": "addicted.en-us.fem_v_ono_hhuh",
@@ -97,6 +97,13 @@
       "name": "addicted.en-us.fem_v_nah_everything_is_all_good",
       "type": "mod_sfx_2d",
       "file": "vanilla/en-us/v_scene_dex_default_f_182ad40c364ea000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.fem_v_nah_im_cool",
+      "type": "mod_sfx_2d",
+      "file": "en-us/offhanded/fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav",
       "gain": 1.0,
       "pitch": 0.0
     },
@@ -258,6 +265,13 @@
       "name": "addicted.en-us.male_v_nah_everything_is_all_good",
       "type": "mod_sfx_2d",
       "file": "vanilla/en-us/v_scene_dex_default_m_182ad40c364ea000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    {
+      "name": "addicted.en-us.male_v_nah_im_cool",
+      "type": "mod_sfx_2d",
+      "file": "en-us/offhanded/male_v_nic_TMRFw1PuUP0SPTXQf2Ch.wav",
       "gain": 1.0,
       "pitch": 0.0
     },

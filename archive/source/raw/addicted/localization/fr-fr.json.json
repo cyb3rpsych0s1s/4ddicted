@@ -1,0 +1,391 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.8.0",
+    "WKitJsonVersion": "0.0.3",
+    "GameVersion": 1610,
+    "ExportedDateTime": "2023-01-13T01:40:14.9559553Z",
+    "DataType": "CR2W",
+    "ArchiveFileName": "C:\\Development\\modding-cyberpunk\\4ddicted\\archive\\source\\archive\\addicted\\localization\\fr-fr.json"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "JsonResource",
+      "cookingPlatform": "PLATFORM_PC",
+      "root": {
+        "HandleId": "0",
+        "Data": {
+          "$type": "localizationPersistenceOnScreenEntries",
+          "entries": [
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Stades",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Thresholds"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "A peine",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Barely"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "V commence à être à peine accro à ce stade",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Passablement",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "V commence à être passablement accro à ce stade",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Titube",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Totter"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Titubant",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Totter-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Mode",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Mode"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "les doigts dans le nez",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Mode-Normal"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "plus... mortel",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Mode-Hard"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "substance",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Substance"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "palier",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "clean",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Clean"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "à peine",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Barely"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "passablement",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Mildly"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "notoirement",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Notably"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "sévèrement",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Threshold-Severely"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "symptômes d'accoutumance détectés",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Warn-Increased"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "symptômes d'accoutumance en récession",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Warn-Decreased"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "symptômes d'accoutumance dissipés",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Warn-Gone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "CHARGEMENT",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Biomonitor-Booting"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Consommable inconnu",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-Unknown"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "MaxDOC",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-MaxDOC"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "BounceBack",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-BounceBack"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Health Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-HealthBooster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "BlackLace",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-BlackLace"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Stamina Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-StaminaBooster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Carry Capacity Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-CarryCapacityBooster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Memory Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Consumable-MemoryBooster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "SYMPTÔMES D'ACCOUTUMANCE ALARMANTS",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Biomonitor-Status-Threshold-Severely"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "SYMPTÔMES D'ACCOUTUMANCE NOTOIRES",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Biomonitor-Status-Threshold-Notably"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Réflexes",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-BlackLace-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Vigueur",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-Stamina-Booster-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Capacité d'encombrement",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-Capacity-Booster-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "{int_0}% Mémoire",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Withdrawn-Memory-Booster-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "En manque de Stamina Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Craving-For-Stamina-Booster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "En manque de Carry Capacity Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Craving-For-Capacity-Booster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "En manque de Memory Booster",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Craving-For-Memory-Booster"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "En manque de Black Lace",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Craving-For-BlackLace"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Benzedrine",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Benzedrine"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Cortisone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Cortisone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Dynorphine",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Dynorphin"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Ethanol",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Ethanol"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Hydrocortisone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Hydrocortisone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Méthadone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Methadone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Modafinil",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Modafinil"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Oxandrine",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Oxandrin"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Prednisone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Prednisone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Testostérone",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Testosterone"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Trimix",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Trimix"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Non-applicable",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Chemical-Irrelevant"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Eteindre le biomoniteur",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Dismiss-Biomonitor"
+            }
+          ]
+        }
+      }
+    },
+    "EmbeddedFiles": []
+  }
+}
