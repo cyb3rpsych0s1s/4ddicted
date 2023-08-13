@@ -159,8 +159,10 @@ erase: clear
     if (Test-Path $log) { Remove-Item -Force -Path $log; Write-Host "deleted $log"; } else {  Write-Host "missing $log"; }
 
 # check if given env vars exists
+[windows]
 check-env NAME:
-    [[ "{{ env_var_or_default(NAME, '') }}" != "" ]] || {{ error('please set env var: ' + NAME) }};
+    @$v = '{{ env_var_or_default(NAME, "") }}'; \
+    if ([string]::IsNullOrEmpty($v)) { throw "please set env var: {{NAME}}"; }
 
 # 💠 direct install on Windows from repository (use `just --shell powershell.exe --shell-arg -c install`)
 [windows]
