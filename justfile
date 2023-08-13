@@ -123,14 +123,15 @@ logs:
     @if(Test-Path '{{mod_logs}}')           { cat '{{mod_logs}}' }
 
 # 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
+[windows]
 clear:
-    @if [[ -f "{{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}" ]]; then \
-        echo "replacing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
-        cp -f '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}' '{{ join(red_cache_dir, "modded", "final.redscripts") }}'; \
-        rm -f '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}'; \
-    else \
-        echo "missing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
-    fi
+    @if(Test-Path "{{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}" ) { \
+        Write-Host "replacing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
+        cp -Force '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}' '{{ join(red_cache_dir, "modded", "final.redscripts") }}'; \
+        Remove-Item -Force -Path '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}'; \
+    } else { \
+        Write-Host "missing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
+    }
 
 # 💾 store (or overwrite) logs in latest.log
 store:
