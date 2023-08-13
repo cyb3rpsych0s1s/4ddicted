@@ -80,11 +80,12 @@ import:
     {{wk_cli}} cr2w -d '{{ join(repo_dir, "archive", "source", "raw", "addicted", "localization") }}' -o '{{ join(repo_dir, "archive", "source", "archive", "addicted", "localization") }}'
 
 # 📦 pack archive with WolvenKit
-[windows]
-pack: import
-    {{wk_cli}} pack '{{ join(repo_dir, "archive") }}'
-    Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
-    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
+# deprecated because of bug (biomonitor not triggered, 8.9.0)
+# [windows]
+# pack: import
+#     {{wk_cli}} pack '{{ join(repo_dir, "archive") }}'
+#     Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
+#     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
 
 # 🔛 just compile to check (without building)
 compile:
