@@ -31,7 +31,7 @@ red_cache_dir       := join(game_dir, "r6", "cache")
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
 red_bundle_dir      := join(bundle_dir, "r6", "scripts", mod_name)
 tweak_bundle_dir    := join(bundle_dir, "r6", "tweaks", mod_name)
-archive_bundle_dir  := join(bundle_dir, "archive", "pc", "mod")
+archive_bundle_dir  := bundle_dir
 redmod_bundle_dir   := join(bundle_dir, "mods", mod_name)
 
 latest_release      := env_var_or_default("LATEST_RELEASE", "")
