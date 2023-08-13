@@ -151,7 +151,7 @@ public func Reacts(reaction: CName) -> Void {
   let written = localization.GetSubtitleLanguage();
   E(s"reacts: voice language (\(NameToString(spoken)))");
   // if spoken language is not available, abort
-  if !StrBeginsWith(NameToString(spoken), "en-") || !StrBeginsWith(NameToString(spoken), "fr-") { return; }
+  if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
   // only show subtitles if they are available
   if StrBeginsWith(NameToString(written), "en-") || StrBeginsWith(NameToString(written), "fr-") {
     let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
