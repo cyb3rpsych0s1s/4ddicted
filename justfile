@@ -112,14 +112,15 @@ rebuild:
     cp -Recurse -Force '{{ join(tweak_repo_dir, "*") }}' '{{tweak_game_dir}}'
 
 # 🧾 show logs from CET and RED
+[windows]
 logs:
-    @[ -f '{{red4ext_logs}}' ]       && cat '{{red4ext_logs}}'
-    @[ -f '{{redscript_logs}}' ]     && cat '{{redscript_logs}}'
-    @[ -f '{{cet_logs}}' ]           && cat '{{cet_logs}}'
-    @[ -f '{{archivexl_logs}}' ]     && cat '{{archivexl_logs}}'
-    @[ -f '{{tweakxl_logs}}' ]       && cat '{{tweakxl_logs}}'
-    @[ -f '{{mod_settings_logs}}' ]  && cat '{{mod_settings_logs}}'
-    @[ -f '{{mod_logs}}' ]           && cat '{{mod_logs}}'
+    @if(Test-Path '{{red4ext_logs}}')       { cat '{{red4ext_logs}}' }
+    @if(Test-Path '{{redscript_logs}}')     { cat '{{redscript_logs}}' }
+    @if(Test-Path '{{cet_logs}}')           { cat '{{cet_logs}}' }
+    @if(Test-Path '{{archivexl_logs}}')     { cat '{{archivexl_logs}}' }
+    @if(Test-Path '{{tweakxl_logs}}')       { cat '{{tweakxl_logs}}' }
+    @if(Test-Path '{{mod_settings_logs}}')  { cat '{{mod_settings_logs}}' }
+    @if(Test-Path '{{mod_logs}}')           { cat '{{mod_logs}}' }
 
 # 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
 clear:
