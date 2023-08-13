@@ -92,7 +92,7 @@ compile:
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
-build LANGUAGE='en-us': rebuild
+build LANGUAGE: rebuild
     Copy-Item -Force -Recurse '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
     @$folder = '{{ join(redmod_game_dir, "customSounds", LANGUAGE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LANGUAGE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
