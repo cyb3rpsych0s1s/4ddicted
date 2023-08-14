@@ -5,6 +5,7 @@ set dotenv-load
 DEFAULT_GAME_DIR    := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 
 mod_name            := 'Addicted'
+plugin_name         := 'audioware'
 
 # installation dir for Cyberpunk 2077, e.g. Steam
 repo_dir            := justfile_directory()    
@@ -18,8 +19,8 @@ tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
 resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
-red4ext_plugin_name := join(repo_dir, target, "debug", lowercase(mod_name) + ".dll")
-red4ext_scripts_dir := join(repo_dir, "plugins", lowercase(mod_name), "reds")
+red4ext_plugin_name := join(repo_dir, "target", "debug", plugin_name + ".dll")
+red4ext_scripts_dir := join(repo_dir, "plugins", plugin_name, "reds")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -28,8 +29,8 @@ tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
 archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
 red_cache_dir       := join(game_dir, "r6", "cache")
-red4ext_plugin_game_name := join(game_dir, "red4ext", "plugins", lowercase(mod_name), lowercase(mod_name) + ".dll")
-red4ext_script_game_dir := join(game_dir, "r6", "scripts", lowercase(mod_name))
+red4ext_plugin_game_dir := join(game_dir, "red4ext", "plugins", plugin_name)
+red4ext_script_game_dir := join(game_dir, "r6", "scripts", plugin_name)
 
 # bundle files for release
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -100,13 +101,14 @@ compile:
 # ➡️  copy codebase files to game files, including archive
 [windows]
 build LOCALE: rebuild
+    cargo build
     Copy-Item -Force -Recurse '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
     @$folder = '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'
     Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'
     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
-    Copy-Item -Force '{{red4ext_plugin_name}}' '{{red4ext_plugin_game_name}}'
+    Copy-Item -Force '{{red4ext_plugin_name}}' '{{ join(red4ext_plugin_game_dir, plugin_name + ".dll") }}'
     Copy-Item -Force -Recurse '{{ join(red4ext_scripts_dir, "*") }}' '{{red4ext_script_game_dir}}'
 
 deploy:

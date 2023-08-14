@@ -178,5 +178,6 @@ public func Checkup() -> Void {
 // use like: Game.GetPlayer():DebugSound("addicted.en-us.fem_v_as_if_I_didnt_know_already"); // custom sounds
 @addMethod(PlayerPuppet)
 public func DebugSound(sound: String) -> Void {
-  GameObject.PlaySound(this, StringToName(sound));
+  // GameObject.PlaySound(this, StringToName(sound));
+  PlayCustom();
 }
