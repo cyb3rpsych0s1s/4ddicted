@@ -18,6 +18,8 @@ tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
 resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
+red4ext_plugin_name := join(repo_dir, target, "debug", lowercase(mod_name) + ".dll")
+red4ext_scripts_dir := join(repo_dir, "plugins", lowercase(mod_name), "reds")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -26,6 +28,8 @@ tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
 archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
 red_cache_dir       := join(game_dir, "r6", "cache")
+red4ext_plugin_game_name := join(game_dir, "red4ext", "plugins", lowercase(mod_name), lowercase(mod_name) + ".dll")
+red4ext_script_game_dir := join(game_dir, "r6", "scripts", lowercase(mod_name))
 
 # bundle files for release
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -69,6 +73,8 @@ setup:
     @if (!(Test-Path '{{tweak_game_dir}}'))   { [void](New-Item '{{tweak_game_dir}}'   -ItemType Directory); Write-Host "Created folder at {{tweak_game_dir}}"; }
     @if (!(Test-Path '{{redmod_game_dir}}'))  { [void](New-Item '{{redmod_game_dir}}'  -ItemType Directory); Write-Host "Created folder at {{redmod_game_dir}}"; }
     @if (!(Test-Path '{{archive_game_dir}}')) { [void](New-Item '{{archive_game_dir}}' -ItemType Directory); Write-Host "Created folder at {{archive_game_dir}}"; }
+    @if (!(Test-Path '{{red4ext_plugin_game_dir}}')) { [void](New-Item '{{red4ext_plugin_game_dir}}' -ItemType Directory); Write-Host "Created folder at {{red4ext_plugin_game_dir}}"; }
+    @if (!(Test-Path '{{red4ext_script_game_dir}}')) { [void](New-Item '{{red4ext_script_game_dir}}' -ItemType Directory); Write-Host "Created folder at {{red4ext_script_game_dir}}"; }
 
 # 🎨 lint code
 lint:
@@ -100,6 +106,8 @@ build LOCALE: rebuild
     Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'
     Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'
     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
+    Copy-Item -Force '{{red4ext_plugin_name}}' '{{red4ext_plugin_game_name}}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_scripts_dir, "*") }}' '{{red4ext_script_game_dir}}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
