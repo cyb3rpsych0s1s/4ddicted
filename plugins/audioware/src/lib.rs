@@ -1,16 +1,15 @@
 use std::{
     borrow::BorrowMut,
+    collections::HashMap,
     env::current_dir,
-    path::Path,
     sync::{Arc, Mutex},
-    time::Duration,
 };
 
 use lazy_static::lazy_static;
 
 use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
-    sound::static_sound::{StaticSoundData, StaticSoundSettings},
+    sound::static_sound::{StaticSoundData, StaticSoundHandle, StaticSoundSettings},
 };
 // use metadata::MediaFileMetadata;
 use red4ext_rs::{define_plugin, info, register_function, warn};
@@ -26,14 +25,37 @@ define_plugin! {
     }
 }
 
+const ID: &str = "NahImCool";
+
 lazy_static! {
     static ref AUDIO: Arc<Mutex<Audioware>> = Arc::new(Mutex::new(Audioware::default()));
+    static ref REGISTRY: Arc<Mutex<HashMap<String, StaticSoundData>>> =
+        Arc::new(Mutex::new(HashMap::default()));
+    static ref HANDLES: Arc<Mutex<HashMap<String, StaticSoundHandle>>> =
+        Arc::new(Mutex::new(HashMap::default()));
 }
 
 pub fn attach() {
     info!("[red4ext] on attach audioware");
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
+    let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
+    info!("current dir is: {current:#?}");
+    let filepath = current
+        .join("..")
+        .join("..")
+        .join("mods")
+        .join("Addicted")
+        .join("customSounds")
+        .join("en-us")
+        .join("offhanded")
+        .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
+    if let Ok(ref mut guard) = REGISTRY.clone().borrow_mut().lock() {
+        guard.insert(
+            ID.into(),
+            StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap(),
+        );
+    }
     info!(
         "[red4ext] initialized audioware (thread: {:#?})",
         std::thread::current().id()
@@ -42,6 +64,8 @@ pub fn attach() {
 pub fn detach() {
     info!("[red4ext] on detach audioware");
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(None);
+    *REGISTRY.clone().borrow_mut().lock().unwrap() = HashMap::default();
+    *HANDLES.clone().borrow_mut().lock().unwrap() = HashMap::default();
     info!(
         "[red4ext] cleaned audioware (thread: {:#?})",
         std::thread::current().id()
@@ -55,16 +79,21 @@ impl Default for Audioware {
     }
 }
 impl Audioware {
-    fn play_custom(&mut self, filepath: impl AsRef<Path>) {
+    fn play_custom(&mut self, id: impl AsRef<str>) {
         info!(
             "[red4ext] play custom (thread: {:#?})",
             std::thread::current().id()
         );
         if let Some(ref mut manager) = self.0 {
             info!("[red4ext] audio manager about to play...");
-            let _ = manager.play(
-                StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap(),
-            );
+            if let Ok(ref guard) = REGISTRY.clone().lock() {
+                let map = guard.clone();
+                let sound = map.get(id.as_ref()).unwrap().clone();
+                let handle = manager.play(sound).unwrap();
+                if let Ok(ref mut guard) = HANDLES.clone().borrow_mut().lock() {
+                    guard.insert(ID.into(), handle);
+                }
+            }
         } else {
             warn!("for some reason there's no manager when there should be");
         }
@@ -80,25 +109,8 @@ fn play_custom() {
         "[red4ext] audio manager handle exists (thread: {:#?})",
         std::thread::current().id()
     );
-    let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
-    info!("current dir is: {current:#?}");
-    let filepath = current
-        .join("..")
-        .join("..")
-        .join("mods")
-        .join("Addicted")
-        .join("customSounds")
-        .join("en-us")
-        .join("offhanded")
-        .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
     if let Ok(mut guard) = (*AUDIO.clone().borrow_mut()).lock() {
-        guard.play_custom(&filepath);
-        // let duration = MediaFileMetadata::new(&filepath)
-        //     .unwrap()
-        //     ._duration
-        //     .unwrap();
-        let duration: f64 = 1.5;
-        std::thread::sleep(Duration::from_secs_f64(duration));
+        guard.play_custom(ID);
         info!(
             "[red4ext] audio manager finished playing! (thread: {:#?})",
             std::thread::current().id()
