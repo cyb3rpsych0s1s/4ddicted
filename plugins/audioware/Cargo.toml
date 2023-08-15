@@ -10,5 +10,6 @@ name = "audioware"
 [dependencies]
 kira = "0.8.4"
 lazy_static = "1.4.0"
+metadata = "0.1.8"
 once_cell = "1.18.0"
 red4ext-rs = { git = "https://github.com/jac3km4/red4ext-rs.git", tag = "v0.3.4", features = ["macros"] }

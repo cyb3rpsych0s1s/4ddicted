@@ -242,7 +242,7 @@ bundle_lang LOCALE:
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 [windows]
-uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
+uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod uninstall-plugin
 
 # 🗑️🎭  clear out mod archive files in game files
 [windows]
@@ -274,6 +274,14 @@ uninstall-tweak:
 [windows]
 uninstall-redmod:
     @$folder = '{{redmod_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+
+# 🗑️⚙️   clear out mod RED4ext-rs files in game files
+[windows]
+uninstall-plugin:
+    @$folder = '{{red4ext_plugin_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{red4ext_script_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 alias nuke := nuclear
