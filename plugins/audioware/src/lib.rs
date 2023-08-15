@@ -11,7 +11,6 @@ use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
     sound::static_sound::{StaticSoundData, StaticSoundHandle, StaticSoundSettings},
 };
-// use metadata::MediaFileMetadata;
 use red4ext_rs::{define_plugin, info, register_function, warn};
 
 define_plugin! {
@@ -50,8 +49,6 @@ pub fn attach() {
         .join("en-us")
         .join("offhanded")
         .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
-    // let metadata = MediaFileMetadata::new(&filepath).unwrap();
-    // info!("loaded file lasts for {}", metadata.duration);
     if let Ok(ref mut guard) = REGISTRY.clone().borrow_mut().lock() {
         let sound = StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap();
         info!("loaded file lasts for {:#?}", sound.duration());

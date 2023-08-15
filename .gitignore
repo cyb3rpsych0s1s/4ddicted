@@ -2,7 +2,6 @@
 **/*.log
 **/.DS_Store
 
-/vendor
 /book
 !scripts/
 scripts/*
