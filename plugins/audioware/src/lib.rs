@@ -1,9 +1,12 @@
 use std::{
     borrow::BorrowMut,
     env::current_dir,
+    path::Path,
     sync::{Arc, Mutex},
-    time::Duration, path::Path,
+    time::Duration,
 };
+
+use lazy_static::lazy_static;
 
 use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
@@ -23,24 +26,26 @@ define_plugin! {
     }
 }
 
-thread_local! {
-    static AUDIO: Arc<Mutex<Audioware>> = Arc::new(Mutex::new(Audioware::default()));
+lazy_static! {
+    static ref AUDIO: Arc<Mutex<Audioware>> = Arc::new(Mutex::new(Audioware::default()));
 }
 
 pub fn attach() {
     info!("[red4ext] on attach audioware");
-    AUDIO.with(|mut handle| {
-        let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
-        *handle.borrow_mut().lock().unwrap() = Audioware(Some(manager));
-        info!("[red4ext] initialized audioware (thread: {:#?})", std::thread::current().id());
-    });
+    let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
+    *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
+    info!(
+        "[red4ext] initialized audioware (thread: {:#?})",
+        std::thread::current().id()
+    );
 }
 pub fn detach() {
     info!("[red4ext] on detach audioware");
-    AUDIO.with(|mut handle| {
-        *handle.borrow_mut().lock().unwrap() = Audioware(None);
-        info!("[red4ext] cleaned audioware (thread: {:#?})", std::thread::current().id());
-    });
+    *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(None);
+    info!(
+        "[red4ext] cleaned audioware (thread: {:#?})",
+        std::thread::current().id()
+    );
 }
 
 pub struct Audioware(Option<AudioManager<DefaultBackend>>);
@@ -51,12 +56,14 @@ impl Default for Audioware {
 }
 impl Audioware {
     fn play_custom(&mut self, filepath: impl AsRef<Path>) {
-        info!("[red4ext] play custom (thread: {:#?})", std::thread::current().id());
+        info!(
+            "[red4ext] play custom (thread: {:#?})",
+            std::thread::current().id()
+        );
         if let Some(ref mut manager) = self.0 {
             info!("[red4ext] audio manager about to play...");
             let _ = manager.play(
-                StaticSoundData::from_file(filepath, StaticSoundSettings::default())
-                    .unwrap(),
+                StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap(),
             );
         } else {
             warn!("for some reason there's no manager when there should be");
@@ -65,29 +72,36 @@ impl Audioware {
 }
 
 fn play_custom() {
-    info!("[red4ext] getting audio manager handle... (thread: {:#?})", std::thread::current().id());
-    AUDIO.with(|mut handle| {
-        info!("[red4ext] audio manager handle exists (thread: {:#?})", std::thread::current().id());
-        let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
-        info!("current dir is: {current:#?}");
-        let filepath = current
-            .join("..")
-            .join("..")
-            .join("mods")
-            .join("Addicted")
-            .join("customSounds")
-            .join("en-us")
-            .join("offhanded")
-            .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
-        if let Ok(mut guard) = (*handle.borrow_mut()).lock() {
-            guard.play_custom(&filepath);
-            // let duration = MediaFileMetadata::new(&filepath)
-            //     .unwrap()
-            //     ._duration
-            //     .unwrap();
-            let duration: f64 = 1.5;
-            std::thread::sleep(Duration::from_secs_f64(duration));
-            info!("[red4ext] audio manager finished playing! (thread: {:#?})", std::thread::current().id());
-        }
-    });
+    info!(
+        "[red4ext] getting audio manager handle... (thread: {:#?})",
+        std::thread::current().id()
+    );
+    info!(
+        "[red4ext] audio manager handle exists (thread: {:#?})",
+        std::thread::current().id()
+    );
+    let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
+    info!("current dir is: {current:#?}");
+    let filepath = current
+        .join("..")
+        .join("..")
+        .join("mods")
+        .join("Addicted")
+        .join("customSounds")
+        .join("en-us")
+        .join("offhanded")
+        .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
+    if let Ok(mut guard) = (*AUDIO.clone().borrow_mut()).lock() {
+        guard.play_custom(&filepath);
+        // let duration = MediaFileMetadata::new(&filepath)
+        //     .unwrap()
+        //     ._duration
+        //     .unwrap();
+        let duration: f64 = 1.5;
+        std::thread::sleep(Duration::from_secs_f64(duration));
+        info!(
+            "[red4ext] audio manager finished playing! (thread: {:#?})",
+            std::thread::current().id()
+        );
+    }
 }
