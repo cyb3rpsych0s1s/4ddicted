@@ -11,7 +11,17 @@ use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
     sound::static_sound::{StaticSoundData, StaticSoundHandle, StaticSoundSettings},
 };
-use red4ext_rs::{define_plugin, info, register_function, warn};
+use red4ext_rs::{define_plugin, info, register_function, warn, prelude::redscript_global};
+
+#[redscript_global(name = "RemoteLogChannel")]
+fn remote_log(message: String) -> ();
+
+macro_rules! remote_info {
+    ($($args:expr),*) => {
+        let args = format!("[audioware][info] {}", format_args!($($args),*));
+        remote_log(args);
+    }
+}
 
 define_plugin! {
     name: "audioware",
@@ -21,6 +31,26 @@ define_plugin! {
         register_function!("PlayCustom", play_custom);
         register_function!("OnAttachAudioware", attach);
         register_function!("OnDetachAudioware", detach);
+    }
+}
+
+fn setup_registry() {
+    remote_info!("setup registry...");
+    let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
+    info!("current dir is: {current:#?}");
+    let filepath = current
+        .join("..")
+        .join("..")
+        .join("mods")
+        .join("Addicted")
+        .join("customSounds")
+        .join("en-us")
+        .join("offhanded")
+        .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
+    if let Ok(ref mut guard) = REGISTRY.clone().borrow_mut().lock() {
+        let sound = StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap();
+        info!("loaded file lasts for {:#?}", sound.duration());
+        guard.insert(ID.into(), sound);
     }
 }
 
@@ -38,22 +68,7 @@ pub fn attach() {
     info!("[red4ext] on attach audioware");
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
-    let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
-    info!("current dir is: {current:#?}");
-    let filepath = current
-        .join("..")
-        .join("..")
-        .join("mods")
-        .join("Addicted")
-        .join("customSounds")
-        .join("en-us")
-        .join("offhanded")
-        .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
-    if let Ok(ref mut guard) = REGISTRY.clone().borrow_mut().lock() {
-        let sound = StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap();
-        info!("loaded file lasts for {:#?}", sound.duration());
-        guard.insert(ID.into(), sound);
-    }
+    setup_registry();
     info!(
         "[red4ext] initialized audioware (thread: {:#?})",
         std::thread::current().id()
