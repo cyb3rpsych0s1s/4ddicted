@@ -50,11 +50,12 @@ pub fn attach() {
         .join("en-us")
         .join("offhanded")
         .join("fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav");
+    // let metadata = MediaFileMetadata::new(&filepath).unwrap();
+    // info!("loaded file lasts for {}", metadata.duration);
     if let Ok(ref mut guard) = REGISTRY.clone().borrow_mut().lock() {
-        guard.insert(
-            ID.into(),
-            StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap(),
-        );
+        let sound = StaticSoundData::from_file(filepath, StaticSoundSettings::default()).unwrap();
+        info!("loaded file lasts for {:#?}", sound.duration());
+        guard.insert(ID.into(), sound);
     }
     info!(
         "[red4ext] initialized audioware (thread: {:#?})",
