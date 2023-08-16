@@ -110,6 +110,7 @@ build LOCALE: rebuild
     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
     Copy-Item -Force '{{red4ext_plugin_name}}' '{{ join(red4ext_plugin_game_dir, plugin_name + ".dll") }}'
     Copy-Item -Force -Recurse '{{ join(red4ext_scripts_dir, "*") }}' '{{red4ext_script_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "audioware.yml") }}' '{{ join(redmod_game_dir, "audioware.yml") }}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"

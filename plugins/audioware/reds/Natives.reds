@@ -1,4 +1,4 @@
-native func PlayCustom() -> Void;
+native func PlayCustom(mod: String, sfx: String) -> Void;
 native func OnAttachAudioware() -> Void;
 native func OnDetachAudioware() -> Void;
 
@@ -21,6 +21,6 @@ public class Audioware extends ScriptableSystem {
 
     public func PlayCustom() {
         LogChannel(n"DEBUG", "[reds] play custom");
-        PlayCustom();
+        PlayCustom("Addicted", "addicted.fem_v_as_if_I_didnt_know_already");
     }
 }
