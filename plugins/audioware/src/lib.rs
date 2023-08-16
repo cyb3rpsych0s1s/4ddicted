@@ -35,7 +35,7 @@ define_plugin! {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum AudioKind {
     Sound,
@@ -44,62 +44,87 @@ enum AudioKind {
     Ambient,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 struct Audio {
     path: String,
     kind: AudioKind,
     #[serde(skip)]
     duration: f64,
 }
-impl From<&Audio> for StaticSoundData {
-    fn from(value: &Audio) -> Self {
-        StaticSoundData::from_file(value.path.clone(), StaticSoundSettings::default())
-            .expect("previously validated path")
+impl<'a> TryFrom<&'a Selection<'a>> for StaticSoundData {
+    type Error = kira::sound::FromFileError;
+    fn try_from(value: &Selection) -> Result<Self, Self::Error> {
+        let mut at = mods_game_dir().clone().join(value.0).join("customSounds");
+        at.extend(value.1.path.split(&['\\', '/'][..]));
+        info!("about to get static sound data from: {:#?}", at);
+        StaticSoundData::from_file(at, StaticSoundSettings::default())
     }
 }
+pub struct Selection<'a>(&'a str, &'a Audio);
 
-#[derive(Default, Serialize, Deserialize, derive_more::Deref, derive_more::DerefMut)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct Bank(HashMap<String, Audio>);
 impl Bank {
     fn get(&self, sfx: impl AsRef<str>) -> Option<&Audio> {
         self.0.get(sfx.as_ref())
     }
 }
+impl Default for Bank {
+    fn default() -> Self {
+        Self(HashMap::new())
+    }
+}
 
-#[derive(Default, Serialize, Deserialize, derive_more::Deref, derive_more::DerefMut)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct Banks(HashMap<String, Bank>);
 impl Banks {
     fn get(&self, module: impl AsRef<str>) -> Option<&Bank> {
         self.0.get(module.as_ref())
     }
 }
+impl Default for Banks {
+    fn default() -> Self {
+        Self(HashMap::new())
+    }
+}
+
+fn root_game_dir() -> PathBuf {
+    current_dir().expect("game exists") // Cyberpunk 2077\bin\x64
+}
+
+fn mods_game_dir() -> PathBuf {
+    root_game_dir()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join("mods")
+}
 
 fn setup_registry() {
     remote_info!("setup registry...");
-    let current = current_dir().unwrap(); // Cyberpunk 2077\bin\x64
-    info!("current dir is: {current:#?}");
-    let mods = current.join("..").join("..").join("mods");
-    let mods = std::fs::read_dir(mods);
+    let mods = std::fs::read_dir(mods_game_dir());
+    remote_info!("mods: {mods:#?}");
     if let Ok(mods) = mods {
-        for resource in mods {
-            if let Ok(resource) = resource {
-                if resource.path().is_dir() {
-                    let manifest = PathBuf::from(resource.path()).join("audioware.yml");
+        for rsrc in mods {
+            match rsrc {
+                Ok(folder) if folder.path().is_dir() => {
+                    remote_info!("found folder at: {}", folder.path().display());
+                    let manifest = PathBuf::from(folder.path()).join("audioware.yml");
+                    let folder = folder.file_name().to_string_lossy().to_string();
                     if manifest.exists() && manifest.is_file() {
-                        let conversion =
-                            serde_yaml::from_str::<Bank>(manifest.to_str().expect("file exists"));
+                        let raw = std::fs::read_to_string(manifest.clone()).expect("file exists");
+                        let conversion = serde_yaml::from_str::<Bank>(&raw);
                         match conversion {
                             Ok(bank) => {
-                                if let Ok(ref mut guard) = REGISTRY.clone().borrow_mut().lock() {
-                                    guard.insert(
-                                        resource.file_name().to_string_lossy().to_string(),
-                                        bank,
-                                    );
+                                remote_info!("{:#?}", folder);
+                                let outcome = REGISTRY.clone().borrow_mut().try_lock().is_ok_and(
+                                    |mut guard| guard.0.insert(folder.clone(), bank).is_none(),
+                                );
+                                if outcome {
+                                    remote_info!("{folder}: successful registration");
                                 } else {
-                                    error!(
-                                        "unable to register manifest at: {}",
-                                        manifest.display()
-                                    );
+                                    remote_info!("{folder}: failed registration");
                                 }
                             }
                             Err(e) => {
@@ -110,6 +135,10 @@ fn setup_registry() {
                         warn!("no manifest found in: {}", manifest.display());
                     }
                 }
+                Err(e) => {
+                    error!("error reading files ({e})");
+                }
+                _ => {}
             }
         }
     }
@@ -123,22 +152,22 @@ lazy_static! {
 }
 
 pub fn attach() {
-    info!("[red4ext] on attach audioware");
+    info!("on attach audioware");
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
     setup_registry();
     info!(
-        "[red4ext] initialized audioware (thread: {:#?})",
+        "initialized audioware (thread: {:#?})",
         std::thread::current().id()
     );
 }
 pub fn detach() {
-    info!("[red4ext] on detach audioware");
+    info!("on detach audioware");
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(None);
     *REGISTRY.clone().borrow_mut().lock().unwrap() = Banks::default();
     *HANDLES.clone().borrow_mut().lock().unwrap() = HashMap::default();
     info!(
-        "[red4ext] cleaned audioware (thread: {:#?})",
+        "cleaned audioware (thread: {:#?})",
         std::thread::current().id()
     );
 }
@@ -151,22 +180,39 @@ impl Default for Audioware {
 }
 impl Audioware {
     fn play_custom(&mut self, module: impl AsRef<str>, id: impl AsRef<str>) -> bool {
-        info!(
-            "[red4ext] play custom (thread: {:#?})",
-            std::thread::current().id()
-        );
+        info!("play custom (thread: {:#?})", std::thread::current().id());
         if let Some(ref mut manager) = self.0 {
-            info!("[red4ext] audio manager about to play...");
-            if let Ok(ref guard) = REGISTRY.clone().lock() {
+            info!("audio manager about to play...");
+            if let Ok(ref guard) = REGISTRY.clone().try_lock() {
                 let banks = guard.clone();
                 if let Some(bank) = banks.get(module.as_ref()) {
-                    if let Some(sfx) = bank.get(id.as_ref()) {
-                        let handle = manager.play(StaticSoundData::from(sfx)).unwrap();
-                        if let Ok(ref mut guard) = HANDLES.clone().borrow_mut().lock() {
-                            guard.insert(id.as_ref().to_string(), handle);
-                            return true;
+                    if let Some(audio) = bank.get(id.as_ref()) {
+                        if let Ok(data) =
+                            StaticSoundData::try_from(&Selection(module.as_ref(), audio))
+                        {
+                            info!("retrieved static sound data {:#?}", data);
+                            if let Ok(handle) = manager.play(StaticSoundData::from(data)) {
+                                if let Ok(ref mut guard) = HANDLES.clone().borrow_mut().try_lock() {
+                                    if !guard.contains_key(id.as_ref()) {
+                                        return guard
+                                            .insert(id.as_ref().to_string(), handle)
+                                            .is_none();
+                                    }
+                                    return true;
+                                } else {
+                                    warn!("unable to get HANDLES");
+                                }
+                            } else {
+                                warn!("unable to play static sound data from: {}", audio.path);
+                            }
+                        } else {
+                            warn!("unable to get static sound data from: {}", audio.path);
                         }
+                    } else {
+                        warn!("unknown sfx {}", id.as_ref());
                     }
+                } else {
+                    warn!("unknown bank {}", module.as_ref());
                 }
             }
         } else {
@@ -178,17 +224,17 @@ impl Audioware {
 
 fn play_custom(module: String, sfx: String) -> bool {
     info!(
-        "[red4ext] getting audio manager handle... (thread: {:#?})",
-        std::thread::current().id()
-    );
-    info!(
-        "[red4ext] audio manager handle exists (thread: {:#?})",
+        "getting audio manager handle... (thread: {:#?})",
         std::thread::current().id()
     );
     if let Ok(mut guard) = (*AUDIO.clone().borrow_mut()).lock() {
+        info!(
+            "audio manager handle exists (thread: {:#?})",
+            std::thread::current().id()
+        );
         let outcome = guard.play_custom(module, sfx);
         info!(
-            "[red4ext] audio manager finished playing! (thread: {:#?})",
+            "audio manager finished playing! (outcome: {outcome}, thread: {:#?})",
             std::thread::current().id()
         );
         return outcome;

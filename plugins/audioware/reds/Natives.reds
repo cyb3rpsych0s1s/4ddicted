@@ -1,4 +1,4 @@
-native func PlayCustom(mod: String, sfx: String) -> Void;
+native func PlayCustom(mod: String, sfx: String) -> Bool;
 native func OnAttachAudioware() -> Void;
 native func OnDetachAudioware() -> Void;
 
@@ -21,6 +21,7 @@ public class Audioware extends ScriptableSystem {
 
     public func PlayCustom() {
         LogChannel(n"DEBUG", "[reds] play custom");
-        PlayCustom("Addicted", "addicted.fem_v_as_if_I_didnt_know_already");
+        let can = PlayCustom("Addicted", "addicted.fem_v_as_if_I_didnt_know_already");
+        if can { LogChannel(n"DEBUG", "[reds] successfully played"); } else { LogChannel(n"DEBUG", "[reds] couldn't play"); }
     }
 }
