@@ -13,15 +13,35 @@ addicted.fem_v_ono_huhuh:
 addicted.fem_v_biomon:
   kind: sound
   path: en-us/surprised/fem_v_b_PrXR9m3y3Iss2M4JPv1y.wav
+  subtitles:
+    id: Addicted-Voice-Subtitle-biomon
+    translations:
+      en-us: "Biomon..."
+      fr-fr: "Biomon'..."
 
 addicted.fem_v_as_if_I_didnt_know_already:
   kind: sound
   path: en-us/disheartened/fem_v_aiidka.wav
+  subtitles:
+    id: Addicted-Voice-Subtitle-as_if_I_didnt_know_already
+    translations:
+      en-us: "As if I didn't know already..."
+      fr-fr: "Comme si j'étais pas déjà au courant..."
 
 addicted.fem_v_come_on_again:
   kind: sound
   path: en-us/surprised/fem_v_coa_03.wav
+  subtitles:
+    id: Addicted-Voice-Subtitle-come_on_again
+    translations:
+      en-us: "Come on... again?!?"
+      fr-fr: "Encore toi?!?"
 
 addicted.fem_v_come_on_biomon_cant_you_give_me_a_break:
   kind: sound
   path: en-us/disheartened/fem_v_cobcygmab_02.wav
+  subtitles:
+    id: Addicted-Voice-Subtitle-come_on_again
+    translations:
+      en-us: "Come on biomon, can't you just give me a break?"
+      fr-fr: "Eh biomon', lâche-moi un peu les basques"

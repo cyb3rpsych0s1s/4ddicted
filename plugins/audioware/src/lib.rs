@@ -11,8 +11,14 @@ use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
     sound::static_sound::{StaticSoundData, StaticSoundHandle, StaticSoundSettings},
 };
-use red4ext_rs::{define_plugin, error, info, prelude::redscript_global, register_function, warn};
-use serde::{Deserialize, Serialize};
+use red4ext_rs::{
+    define_plugin, error, info,
+    prelude::{redscript_global, NativeRepr},
+    register_function,
+    types::RedString,
+    warn,
+};
+use serde::Deserialize;
 
 #[redscript_global(name = "RemoteLogChannel")]
 fn remote_log(message: String) -> ();
@@ -32,10 +38,11 @@ define_plugin! {
         register_function!("PlayCustom", play_custom);
         register_function!("OnAttachAudioware", attach);
         register_function!("OnDetachAudioware", detach);
+        register_function!("RetrieveSubtitles", retrieve_subtitles);
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum AudioKind {
     Sound,
@@ -44,12 +51,26 @@ enum AudioKind {
     Ambient,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
+#[repr(i64)]
+enum Locale {
+    #[serde(rename = "en-us")]
+    #[default]
+    English = 0,
+    #[serde(rename = "fr-fr")]
+    French = 1,
+}
+unsafe impl NativeRepr for Locale {
+    const NAME: &'static str = "Locale";
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 struct Audio {
     path: String,
     kind: AudioKind,
     #[serde(skip)]
     duration: f64,
+    subtitles: Option<Subtitles>,
 }
 impl<'a> TryFrom<&'a Selection<'a>> for StaticSoundData {
     type Error = kira::sound::FromFileError;
@@ -62,7 +83,13 @@ impl<'a> TryFrom<&'a Selection<'a>> for StaticSoundData {
 }
 pub struct Selection<'a>(&'a str, &'a Audio);
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+struct Subtitles {
+    id: String,
+    translations: HashMap<Locale, String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 struct Bank(HashMap<String, Audio>);
 impl Bank {
     fn get(&self, sfx: impl AsRef<str>) -> Option<&Audio> {
@@ -75,7 +102,7 @@ impl Default for Bank {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 struct Banks(HashMap<String, Bank>);
 impl Banks {
     fn get(&self, module: impl AsRef<str>) -> Option<&Bank> {
@@ -240,4 +267,42 @@ fn play_custom(module: String, sfx: String) -> bool {
         return outcome;
     }
     false
+}
+
+#[repr(C)]
+pub struct Translation {
+    locale: Locale,
+    female: RedString,
+    male: RedString,
+}
+
+unsafe impl NativeRepr for Translation {
+    // this needs to refer to an actual in-game type name
+    const NAME: &'static str = "Translation";
+}
+
+fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
+    remote_info!("retrieve subtitles from Rust");
+    let mut translations = Vec::<Translation>::new();
+    if let Ok(ref guard) = REGISTRY.clone().try_lock() {
+        let banks = guard.clone();
+        if let Some(bank) = banks.get(module.as_str()) {
+            let keys = bank.0.keys();
+            remote_info!("keys {keys:#?}");
+            for key in keys {
+                if let Some(subtitles) = &bank.0.get(key).unwrap().subtitles {
+                    if let Some(ref translation) = subtitles.translations.get(&locale) {
+                        remote_info!("found translation for {key}:{locale:#?}:{translation}");
+                        translations.push(Translation {
+                            locale,
+                            female: RedString::new(translation.as_str()),
+                            male: RedString::new(translation.as_str()),
+                        })
+                    }
+                }
+            }
+        }
+    }
+    remote_info!("looped subtitles");
+    translations
 }

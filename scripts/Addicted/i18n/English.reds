@@ -4,6 +4,7 @@ import Codeware.Localization.*
 public class English extends ModLocalizationPackage {
 
   protected func DefineSubtitles() -> Void {
+    LogChannel(n"DEBUG", "[Addicted] define localization for ENGLISH"); // initialized after natives!
    // snake case suffixes must match entries in info.json (custom sounds)
    this.Subtitle("Addicted-Voice-Subtitle-biomon", "Biomon...");
    this.Subtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already", "As if I didn't know already...");
