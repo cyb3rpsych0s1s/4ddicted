@@ -34,9 +34,9 @@ public class AudiowareLocalizationPackage extends ModLocalizationPackage {
     protected func DefineSubtitles() -> Void {
         // retrieve from natives ...
         let subtitles = RetrieveSubtitles("Addicted", this.locale);
-        LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] retrieved subtitles from audioware");
+        DEBUG("retrieved subtitles from audioware");
         for subtitle in subtitles {
-            LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] subtitle: \(subtitle.Locale), \(subtitle.Female), \(subtitle.Male)");
+            DEBUG(s"subtitle: \(subtitle.Locale), \(subtitle.Female), \(subtitle.Male)");
         }
     }
 }

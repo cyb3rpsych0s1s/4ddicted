@@ -2,15 +2,16 @@ native func PlayCustom(mod: String, sfx: String) -> Bool;
 native func OnAttachAudioware() -> Void;
 native func OnDetachAudioware() -> Void;
 
-private func RemoteLogChannel(message: String) -> Void { LogChannel(n"DEBUG", message); }
+public static func DEBUG(message: String) -> Void { LogChannel(n"DEBUG", s"[audioware] \(message)"); }
+public static func ASSERT(message: String) -> Void { LogChannel(n"ASSERT", s"[audioware] \(message)"); }
 
 public class Audioware extends ScriptableSystem {
     private func OnAttach() -> Void {
-        LogChannel(n"DEBUG", "[reds] on attach audioware");
+        DEBUG("on attach audioware");
         OnAttachAudioware();
     }
     private func OnDetach() -> Void {
-        LogChannel(n"DEBUG", "[reds] on detach audioware");
+        DEBUG("on detach audioware");
         OnDetachAudioware();
     }
   
@@ -20,8 +21,8 @@ public class Audioware extends ScriptableSystem {
     }
 
     public func PlayCustom() {
-        LogChannel(n"DEBUG", "[reds] play custom");
+        DEBUG("play custom");
         let can = PlayCustom("Addicted", "addicted.fem_v_as_if_I_didnt_know_already");
-        if can { LogChannel(n"DEBUG", "[reds] successfully played"); } else { LogChannel(n"DEBUG", "[reds] couldn't play"); }
+        if can { DEBUG("successfully played"); } else { DEBUG("couldn't play"); }
     }
 }

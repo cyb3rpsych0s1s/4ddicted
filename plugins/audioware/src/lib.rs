@@ -20,13 +20,18 @@ use red4ext_rs::{
 };
 use serde::Deserialize;
 
-#[redscript_global(name = "RemoteLogChannel")]
-fn remote_log(message: String) -> ();
+#[allow(non_snake_case)]
+#[redscript_global(name = "DEBUG")]
+fn REDS_DEBUG(message: String) -> ();
 
-macro_rules! remote_info {
+#[allow(non_snake_case)]
+#[redscript_global(name = "ASSERT")]
+fn REDS_ASSERT(message: String) -> ();
+
+macro_rules! reds_debug {
     ($($args:expr),*) => {
-        let args = format!("[audioware][info] {}", format_args!($($args),*));
-        remote_log(args);
+        let args = format!("{}", format_args!($($args),*));
+        $crate::REDS_DEBUG(args);
     }
 }
 
@@ -129,14 +134,14 @@ fn mods_game_dir() -> PathBuf {
 }
 
 fn setup_registry() {
-    remote_info!("setup registry...");
+    reds_debug!("setup registry...");
     let mods = std::fs::read_dir(mods_game_dir());
-    remote_info!("mods: {mods:#?}");
+    reds_debug!("mods: {mods:#?}");
     if let Ok(mods) = mods {
         for rsrc in mods {
             match rsrc {
                 Ok(folder) if folder.path().is_dir() => {
-                    remote_info!("found folder at: {}", folder.path().display());
+                    reds_debug!("found folder at: {}", folder.path().display());
                     let manifest = PathBuf::from(folder.path()).join("audioware.yml");
                     let folder = folder.file_name().to_string_lossy().to_string();
                     if manifest.exists() && manifest.is_file() {
@@ -144,14 +149,14 @@ fn setup_registry() {
                         let conversion = serde_yaml::from_str::<Bank>(&raw);
                         match conversion {
                             Ok(bank) => {
-                                remote_info!("{:#?}", folder);
+                                reds_debug!("{:#?}", folder);
                                 let outcome = REGISTRY.clone().borrow_mut().try_lock().is_ok_and(
                                     |mut guard| guard.0.insert(folder.clone(), bank).is_none(),
                                 );
                                 if outcome {
-                                    remote_info!("{folder}: successful registration");
+                                    reds_debug!("{folder}: successful registration");
                                 } else {
-                                    remote_info!("{folder}: failed registration");
+                                    reds_debug!("{folder}: failed registration");
                                 }
                             }
                             Err(e) => {
@@ -282,17 +287,17 @@ unsafe impl NativeRepr for Translation {
 }
 
 fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
-    remote_info!("retrieve subtitles from Rust");
+    info!("retrieve subtitles from Rust");
     let mut translations = Vec::<Translation>::new();
     if let Ok(ref guard) = REGISTRY.clone().try_lock() {
         let banks = guard.clone();
         if let Some(bank) = banks.get(module.as_str()) {
             let keys = bank.0.keys();
-            remote_info!("keys {keys:#?}");
+            info!("keys {keys:#?}");
             for key in keys {
                 if let Some(subtitles) = &bank.0.get(key).unwrap().subtitles {
                     if let Some(ref translation) = subtitles.translations.get(&locale) {
-                        remote_info!("found translation for {key}:{locale:#?}:{translation}");
+                        info!("found translation for {key}:{locale:#?}:{translation}");
                         translations.push(Translation {
                             locale,
                             female: RedString::new(translation.as_str()),
@@ -303,6 +308,6 @@ fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
             }
         }
     }
-    remote_info!("looped subtitles");
+    info!("looped subtitles");
     translations
 }
