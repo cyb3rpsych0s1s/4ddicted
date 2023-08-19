@@ -86,7 +86,21 @@ pub struct Selection<'a>(&'a str, &'a Audio);
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 struct Subtitles {
     id: String,
-    translations: HashMap<Locale, String>,
+    translations: HashMap<Locale, SubtitleVariant>,
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+enum SubtitleVariant {
+    /// gender neutral
+    Both(String),
+    /// gender sensitive
+    Specific(Subtitle),
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+struct Subtitle {
+    female: String,
+    male: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -168,6 +182,7 @@ fn setup_registry() {
                 _ => {}
             }
         }
+        info!("parsed registry {:#?}", REGISTRY.clone().try_lock().unwrap());
     }
 }
 
@@ -291,13 +306,21 @@ fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
             remote_info!("keys {keys:#?}");
             for key in keys {
                 if let Some(subtitles) = &bank.0.get(key).unwrap().subtitles {
-                    if let Some(ref translation) = subtitles.translations.get(&locale) {
-                        remote_info!("found translation for {key}:{locale:#?}:{translation}");
-                        translations.push(Translation {
-                            locale,
-                            female: RedString::new(translation.as_str()),
-                            male: RedString::new(translation.as_str()),
-                        })
+                    if let Some(ref variant) = subtitles.translations.get(&locale) {
+                        remote_info!("found translation for {key}:{locale:#?}:{variant:#?}");
+                        let translation = match variant {
+                            SubtitleVariant::Both(translation) => Translation {
+                                locale,
+                                female: RedString::new(translation.as_str()),
+                                male: RedString::new(translation.as_str()),
+                            },
+                            SubtitleVariant::Specific(Subtitle{female, male}) => Translation {
+                                locale,
+                                female: RedString::new(female.as_str()),
+                                male: RedString::new(male.as_str()),
+                            },
+                        };
+                        translations.push(translation);
                     }
                 }
             }

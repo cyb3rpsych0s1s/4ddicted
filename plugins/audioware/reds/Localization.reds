@@ -8,19 +8,21 @@ enum Locale {
 }
 
 public struct Translation {
-    let locale: Locale;
-    let female: String;
-    let male: String;
+    let Locale: Locale;
+    let Female: String;
+    let Male: String;
 }
 
 public class AudiowareLocalizationProvider extends ModLocalizationProvider {
     public func GetPackage(language: CName) -> ref<ModLocalizationPackage> {
         switch language {
             case n"en-us":
+                DEBUG("get en-us package");
                 let package = new AudiowareLocalizationPackage();
                 package.locale = Locale.English;
                 return package;
             case n"fr-fr":
+                DEBUG("get fr-fr package");
                 let package = new AudiowareLocalizationPackage();
                 package.locale = Locale.French;
                 return package;
@@ -34,9 +36,9 @@ public class AudiowareLocalizationPackage extends ModLocalizationPackage {
     protected func DefineSubtitles() -> Void {
         // retrieve from natives ...
         let subtitles = RetrieveSubtitles("Addicted", this.locale);
-        LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] retrieved subtitles from audioware");
+        DEBUG("retrieved subtitles from audioware");
         for subtitle in subtitles {
-            LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] subtitle: \(subtitle.locale), \(subtitle.female), \(subtitle.male)");
+            DEBUG(s"subtitle: \(subtitle.Locale), \(subtitle.Female), \(subtitle.Male)");
         }
     }
 }
