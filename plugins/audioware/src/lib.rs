@@ -1,3 +1,4 @@
+use de::{Subtitle, SubtitleVariant};
 use lazy_static::lazy_static;
 use std::{
     borrow::BorrowMut,
@@ -19,6 +20,8 @@ use red4ext_rs::{
     warn,
 };
 use serde::Deserialize;
+
+mod de;
 
 #[allow(non_snake_case)]
 #[redscript_global(name = "DEBUG")]
@@ -91,7 +94,7 @@ pub struct Selection<'a>(&'a str, &'a Audio);
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 struct Subtitles {
     id: String,
-    translations: HashMap<Locale, String>,
+    translations: HashMap<Locale, SubtitleVariant>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -296,13 +299,21 @@ fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
             info!("keys {keys:#?}");
             for key in keys {
                 if let Some(subtitles) = &bank.0.get(key).unwrap().subtitles {
-                    if let Some(ref translation) = subtitles.translations.get(&locale) {
-                        info!("found translation for {key}:{locale:#?}:{translation}");
-                        translations.push(Translation {
-                            locale,
-                            female: RedString::new(translation.as_str()),
-                            male: RedString::new(translation.as_str()),
-                        })
+                    if let Some(translation) = subtitles.translations.get(&locale) {
+                        info!("found translation for {key}:{locale:#?}:{translation:#?}");
+                        let translation = match translation {
+                            SubtitleVariant::Neutral(translation) => Translation {
+                                locale,
+                                female: RedString::new(translation.as_str()),
+                                male: RedString::new(translation.as_str()),
+                            },
+                            SubtitleVariant::Sensitive(Subtitle { female, male }) => Translation {
+                                locale,
+                                female: RedString::new(female.as_str()),
+                                male: RedString::new(male.as_str()),
+                            },
+                        };
+                        translations.push(translation);
                     }
                 }
             }

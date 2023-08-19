@@ -9,6 +9,7 @@ name = "audioware"
 
 [dependencies]
 derive_more = "0.99.17"
+either = { version = "1.9.0", features = ["serde"] }
 kira = "0.8.4"
 lazy_static = "1.4.0"
 red4ext-rs = { git = "https://github.com/jac3km4/red4ext-rs.git", tag = "v0.3.4", features = ["macros"] }
