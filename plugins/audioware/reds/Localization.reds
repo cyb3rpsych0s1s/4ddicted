@@ -8,9 +8,9 @@ enum Locale {
 }
 
 public struct Translation {
-    let locale: Locale;
-    let female: String;
-    let male: String;
+    let Locale: Locale;
+    let Female: String;
+    let Male: String;
 }
 
 public class AudiowareLocalizationProvider extends ModLocalizationProvider {
@@ -36,7 +36,7 @@ public class AudiowareLocalizationPackage extends ModLocalizationPackage {
         let subtitles = RetrieveSubtitles("Addicted", this.locale);
         LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] retrieved subtitles from audioware");
         for subtitle in subtitles {
-            LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] subtitle: \(subtitle.locale), \(subtitle.female), \(subtitle.male)");
+            LogChannel(n"DEBUG", s"[!!AUDIOWARE!!] subtitle: \(subtitle.Locale), \(subtitle.Female), \(subtitle.Male)");
         }
     }
 }
