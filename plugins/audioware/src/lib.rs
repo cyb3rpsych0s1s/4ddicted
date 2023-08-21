@@ -1,4 +1,7 @@
-use de::{Subtitle, SubtitleVariant};
+mod interop;
+mod utils;
+
+use interop::{Banks, Locale, Translation};
 use lazy_static::lazy_static;
 use std::{
     borrow::BorrowMut,
@@ -10,33 +13,11 @@ use std::{
 
 use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
-    sound::static_sound::{StaticSoundData, StaticSoundHandle, StaticSoundSettings},
+    sound::static_sound::{StaticSoundData, StaticSoundHandle},
 };
-use red4ext_rs::{
-    define_plugin, error, info,
-    prelude::{redscript_global, NativeRepr},
-    register_function,
-    types::RedString,
-    warn,
-};
-use serde::Deserialize;
+use red4ext_rs::{define_plugin, error, info, register_function, warn};
 
-mod de;
-
-#[allow(non_snake_case)]
-#[redscript_global(name = "DEBUG")]
-fn REDS_DEBUG(message: String) -> ();
-
-#[allow(non_snake_case)]
-#[redscript_global(name = "ASSERT")]
-fn REDS_ASSERT(message: String) -> ();
-
-macro_rules! reds_debug {
-    ($($args:expr),*) => {
-        let args = format!("{}", format_args!($($args),*));
-        $crate::REDS_DEBUG(args);
-    }
-}
+use crate::interop::{Bank, Selection};
 
 define_plugin! {
     name: "audioware",
@@ -47,79 +28,6 @@ define_plugin! {
         register_function!("OnAttachAudioware", attach);
         register_function!("OnDetachAudioware", detach);
         register_function!("RetrieveSubtitles", retrieve_subtitles);
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Deserialize)]
-#[serde(rename_all = "lowercase")]
-enum AudioKind {
-    Sound,
-    Dialog,
-    Music,
-    Ambient,
-}
-
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
-#[repr(i64)]
-enum Locale {
-    #[serde(rename = "en-us")]
-    #[default]
-    English = 0,
-    #[serde(rename = "fr-fr")]
-    French = 1,
-}
-unsafe impl NativeRepr for Locale {
-    const NAME: &'static str = "Locale";
-}
-
-#[derive(Debug, Clone, PartialEq, Deserialize)]
-struct Audio {
-    path: String,
-    kind: AudioKind,
-    #[serde(skip)]
-    duration: f64,
-    subtitles: Option<Subtitles>,
-}
-impl<'a> TryFrom<&'a Selection<'a>> for StaticSoundData {
-    type Error = kira::sound::FromFileError;
-    fn try_from(value: &Selection) -> Result<Self, Self::Error> {
-        let mut at = mods_game_dir().clone().join(value.0).join("customSounds");
-        at.extend(value.1.path.split(&['\\', '/'][..]));
-        info!("about to get static sound data from: {:#?}", at);
-        StaticSoundData::from_file(at, StaticSoundSettings::default())
-    }
-}
-pub struct Selection<'a>(&'a str, &'a Audio);
-
-#[derive(Debug, Clone, PartialEq, Deserialize)]
-struct Subtitles {
-    id: String,
-    translations: HashMap<Locale, SubtitleVariant>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-struct Bank(HashMap<String, Audio>);
-impl Bank {
-    fn get(&self, sfx: impl AsRef<str>) -> Option<&Audio> {
-        self.0.get(sfx.as_ref())
-    }
-}
-impl Default for Bank {
-    fn default() -> Self {
-        Self(HashMap::new())
-    }
-}
-
-#[derive(Debug, Clone, Deserialize)]
-struct Banks(HashMap<String, Bank>);
-impl Banks {
-    fn get(&self, module: impl AsRef<str>) -> Option<&Bank> {
-        self.0.get(module.as_ref())
-    }
-}
-impl Default for Banks {
-    fn default() -> Self {
-        Self(HashMap::new())
     }
 }
 
@@ -145,7 +53,7 @@ fn setup_registry() {
             match rsrc {
                 Ok(folder) if folder.path().is_dir() => {
                     reds_debug!("found folder at: {}", folder.path().display());
-                    let manifest = PathBuf::from(folder.path()).join("audioware.yml");
+                    let manifest = folder.path().join("audioware.yml");
                     let folder = folder.file_name().to_string_lossy().to_string();
                     if manifest.exists() && manifest.is_file() {
                         let raw = std::fs::read_to_string(manifest.clone()).expect("file exists");
@@ -154,7 +62,7 @@ fn setup_registry() {
                             Ok(bank) => {
                                 reds_debug!("{:#?}", folder);
                                 let outcome = REGISTRY.clone().borrow_mut().try_lock().is_ok_and(
-                                    |mut guard| guard.0.insert(folder.clone(), bank).is_none(),
+                                    |mut guard| guard.insert(folder.clone(), bank).is_none(),
                                 );
                                 if outcome {
                                     reds_debug!("{folder}: successful registration");
@@ -207,12 +115,9 @@ pub fn detach() {
     );
 }
 
+#[derive(Default)]
 pub struct Audioware(Option<AudioManager<DefaultBackend>>);
-impl Default for Audioware {
-    fn default() -> Self {
-        Self(None)
-    }
-}
+
 impl Audioware {
     fn play_custom(&mut self, module: impl AsRef<str>, id: impl AsRef<str>) -> bool {
         info!("play custom (thread: {:#?})", std::thread::current().id());
@@ -223,10 +128,10 @@ impl Audioware {
                 if let Some(bank) = banks.get(module.as_ref()) {
                     if let Some(audio) = bank.get(id.as_ref()) {
                         if let Ok(data) =
-                            StaticSoundData::try_from(&Selection(module.as_ref(), audio))
+                            StaticSoundData::try_from(&Selection::new(module.as_ref(), audio))
                         {
                             info!("retrieved static sound data {:#?}", data);
-                            if let Ok(handle) = manager.play(StaticSoundData::from(data)) {
+                            if let Ok(handle) = manager.play(data) {
                                 if let Ok(ref mut guard) = HANDLES.clone().borrow_mut().try_lock() {
                                     if !guard.contains_key(id.as_ref()) {
                                         return guard
@@ -238,10 +143,10 @@ impl Audioware {
                                     warn!("unable to get HANDLES");
                                 }
                             } else {
-                                warn!("unable to play static sound data from: {}", audio.path);
+                                warn!("unable to play static sound data from: {}", audio.path());
                             }
                         } else {
-                            warn!("unable to get static sound data from: {}", audio.path);
+                            warn!("unable to get static sound data from: {}", audio.path());
                         }
                     } else {
                         warn!("unknown sfx {}", id.as_ref());
@@ -277,42 +182,19 @@ fn play_custom(module: String, sfx: String) -> bool {
     false
 }
 
-#[repr(C)]
-pub struct Translation {
-    locale: Locale,
-    female: RedString,
-    male: RedString,
-}
-
-unsafe impl NativeRepr for Translation {
-    // this needs to refer to an actual in-game type name
-    const NAME: &'static str = "Translation";
-}
-
 fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
     info!("retrieve subtitles from Rust");
     let mut translations = Vec::<Translation>::new();
     if let Ok(ref guard) = REGISTRY.clone().try_lock() {
         let banks = guard.clone();
         if let Some(bank) = banks.get(module.as_str()) {
-            let keys = bank.0.keys();
+            let keys = bank.keys();
             info!("keys {keys:#?}");
             for key in keys {
-                if let Some(subtitles) = &bank.0.get(key).unwrap().subtitles {
-                    if let Some(translation) = subtitles.translations.get(&locale) {
+                if let Some(subtitles) = &bank.get(key).unwrap().subtitles() {
+                    if let Some(translation) = subtitles.translations().get(&locale) {
                         info!("found translation for {key}:{locale:#?}:{translation:#?}");
-                        let translation = match translation {
-                            SubtitleVariant::Neutral(translation) => Translation {
-                                locale,
-                                female: RedString::new(translation.as_str()),
-                                male: RedString::new(translation.as_str()),
-                            },
-                            SubtitleVariant::Sensitive(Subtitle { female, male }) => Translation {
-                                locale,
-                                female: RedString::new(female.as_str()),
-                                male: RedString::new(male.as_str()),
-                            },
-                        };
+                        let translation = (locale, translation).into();
                         translations.push(translation);
                     }
                 }
