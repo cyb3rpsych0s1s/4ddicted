@@ -3,9 +3,7 @@ mod plugin;
 mod utils;
 mod registry;
 
-use interop::{Banks, Locale, Translation};
 use lazy_static::lazy_static;
-use plugin::Audioware;
 use std::{
     borrow::BorrowMut,
     collections::HashMap,
@@ -18,7 +16,9 @@ use kira::{
     sound::static_sound::StaticSoundHandle,
 };
 use red4ext_rs::{define_plugin, info, register_function};
-use registry::setup_registry;
+use crate::interop::{Banks, Locale, Translation};
+use crate::plugin::Audioware;
+use crate::registry::Registry;
 
 define_plugin! {
     name: "audioware",
@@ -56,7 +56,7 @@ pub fn attach() {
     info!("on attach audioware");
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     let _ = Audioware::create(manager);
-    setup_registry();
+    let _ = Registry::setup();
     info!(
         "initialized audioware (thread: {:#?})",
         std::thread::current().id()
