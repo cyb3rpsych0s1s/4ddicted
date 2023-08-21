@@ -8,6 +8,7 @@ crate-type = ["cdylib"]
 name = "audioware"
 
 [dependencies]
+anyhow = "1.0.75"
 derive_more = "0.99.17"
 either = { version = "1.9.0", features = ["serde"] }
 kira = "0.8.4"

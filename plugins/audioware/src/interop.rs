@@ -71,8 +71,7 @@ impl Subtitles {
     }
 }
 
-#[derive(Debug, Clone, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Deserialize, Default)]
 pub struct Bank(HashMap<String, Audio>);
 impl Bank {
     pub fn get(&self, sfx: impl AsRef<str>) -> Option<&Audio> {
@@ -83,9 +82,7 @@ impl Bank {
     }
 }
 
-
-#[derive(Debug, Clone, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Deserialize, Default)]
 pub struct Banks(HashMap<String, Bank>);
 impl Banks {
     pub fn get(&self, module: impl AsRef<str>) -> Option<&Bank> {
@@ -95,7 +92,6 @@ impl Banks {
         self.0.insert(module.as_ref().to_string(), bank)
     }
 }
-
 
 #[repr(C)]
 pub struct Translation {
