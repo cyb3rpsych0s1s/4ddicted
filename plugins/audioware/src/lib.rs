@@ -19,7 +19,14 @@ use red4ext_rs::{
     types::RedString,
     warn,
 };
+use retour::RawDetour;
 use serde::Deserialize;
+use std::ops::Not;
+use widestring::U16CString;
+use winapi::{
+    shared::minwindef::HMODULE,
+    um::libloaderapi::GetModuleHandleW,
+};
 
 mod de;
 
@@ -98,30 +105,24 @@ struct Subtitles {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[derive(Default)]
 struct Bank(HashMap<String, Audio>);
 impl Bank {
     fn get(&self, sfx: impl AsRef<str>) -> Option<&Audio> {
         self.0.get(sfx.as_ref())
     }
 }
-impl Default for Bank {
-    fn default() -> Self {
-        Self(HashMap::new())
-    }
-}
+
 
 #[derive(Debug, Clone, Deserialize)]
+#[derive(Default)]
 struct Banks(HashMap<String, Bank>);
 impl Banks {
     fn get(&self, module: impl AsRef<str>) -> Option<&Bank> {
         self.0.get(module.as_ref())
     }
 }
-impl Default for Banks {
-    fn default() -> Self {
-        Self(HashMap::new())
-    }
-}
+
 
 fn root_game_dir() -> PathBuf {
     current_dir().expect("game exists") // Cyberpunk 2077\bin\x64
@@ -145,7 +146,7 @@ fn setup_registry() {
             match rsrc {
                 Ok(folder) if folder.path().is_dir() => {
                     reds_debug!("found folder at: {}", folder.path().display());
-                    let manifest = PathBuf::from(folder.path()).join("audioware.yml");
+                    let manifest = folder.path().join("audioware.yml");
                     let folder = folder.file_name().to_string_lossy().to_string();
                     if manifest.exists() && manifest.is_file() {
                         let raw = std::fs::read_to_string(manifest.clone()).expect("file exists");
@@ -184,10 +185,55 @@ lazy_static! {
     static ref REGISTRY: Arc<Mutex<Banks>> = Arc::new(Mutex::new(Banks::default()));
     static ref HANDLES: Arc<Mutex<HashMap<String, StaticSoundHandle>>> =
         Arc::new(Mutex::new(HashMap::default()));
+    static ref HOOK: Arc<Mutex<Option<RawDetour>>> = Arc::new(Mutex::new(None));
+}
+
+type FnOnAudioEvent = unsafe extern "C" fn(usize, usize) -> ();
+
+fn hook() -> anyhow::Result<()> {
+    let relative: usize = 0x1419130;
+    unsafe {
+        let base: usize = get_module("Cyberpunk2077.exe").unwrap() as usize;
+        let address = base + relative;
+        info!("base address:       0x{base:X}");
+        info!("relative address:   0x{relative:X}");
+        info!("calculated address: 0x{address:X}");
+        let target: FnOnAudioEvent = std::mem::transmute(address);
+        match RawDetour::new(target as *const (), on_audio_event as *const ()) {
+            Ok(detour) => match detour.enable() {
+                Ok(_) => {
+                    if let Ok(mut guard) = HOOK.clone().borrow_mut().try_lock() {
+                        *guard = Some(detour);
+                    } else {
+                        error!("could not store detour");
+                    }
+                }
+                Err(e) => {
+                    error!("could not enable detour ({e})");
+                }
+            },
+            Err(e) => {
+                error!("could not initialize detour ({e})");
+            }
+        }
+    }
+    Ok(())
+}
+
+pub fn on_audio_event(o: usize, a: usize) {
+    info!("hooked");
+    if let Ok(ref guard) = HOOK.clone().try_lock() {
+        if let Some(detour) = guard.as_ref() {
+            let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
+            unsafe { original(o, a) };
+            info!("original method called");
+        }
+    }
 }
 
 pub fn attach() {
     info!("on attach audioware");
+    let _ = hook();
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
     setup_registry();
@@ -207,12 +253,9 @@ pub fn detach() {
     );
 }
 
+#[derive(Default)]
 pub struct Audioware(Option<AudioManager<DefaultBackend>>);
-impl Default for Audioware {
-    fn default() -> Self {
-        Self(None)
-    }
-}
+
 impl Audioware {
     fn play_custom(&mut self, module: impl AsRef<str>, id: impl AsRef<str>) -> bool {
         info!("play custom (thread: {:#?})", std::thread::current().id());
@@ -226,7 +269,7 @@ impl Audioware {
                             StaticSoundData::try_from(&Selection(module.as_ref(), audio))
                         {
                             info!("retrieved static sound data {:#?}", data);
-                            if let Ok(handle) = manager.play(StaticSoundData::from(data)) {
+                            if let Ok(handle) = manager.play(data) {
                                 if let Ok(ref mut guard) = HANDLES.clone().borrow_mut().try_lock() {
                                     if !guard.contains_key(id.as_ref()) {
                                         return guard
@@ -321,4 +364,10 @@ fn retrieve_subtitles(module: String, locale: Locale) -> Vec<Translation> {
     }
     info!("looped subtitles");
     translations
+}
+
+unsafe fn get_module(module: &str) -> Option<HMODULE> {
+    let module = U16CString::from_str_truncate(module);
+    let res = GetModuleHandleW(module.as_ptr());
+    res.is_null().not().then_some(res)
 }
