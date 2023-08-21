@@ -1,6 +1,7 @@
 mod interop;
 mod plugin;
 mod utils;
+mod registry;
 
 use interop::{Banks, Locale, Translation};
 use lazy_static::lazy_static;
@@ -12,14 +13,12 @@ use std::{
     path::PathBuf,
     sync::{Arc, Mutex},
 };
-
 use kira::{
     manager::{backend::DefaultBackend, AudioManager, AudioManagerSettings},
     sound::static_sound::StaticSoundHandle,
 };
-use red4ext_rs::{define_plugin, error, info, register_function, warn};
-
-use crate::interop::Bank;
+use red4ext_rs::{define_plugin, info, register_function};
+use registry::setup_registry;
 
 define_plugin! {
     name: "audioware",
@@ -44,49 +43,6 @@ fn mods_game_dir() -> PathBuf {
         .parent()
         .unwrap()
         .join("mods")
-}
-
-fn setup_registry() {
-    reds_debug!("setup registry...");
-    let mods = std::fs::read_dir(mods_game_dir());
-    reds_debug!("mods: {mods:#?}");
-    if let Ok(mods) = mods {
-        for rsrc in mods {
-            match rsrc {
-                Ok(folder) if folder.path().is_dir() => {
-                    reds_debug!("found folder at: {}", folder.path().display());
-                    let manifest = folder.path().join("audioware.yml");
-                    let folder = folder.file_name().to_string_lossy().to_string();
-                    if manifest.exists() && manifest.is_file() {
-                        let raw = std::fs::read_to_string(manifest.clone()).expect("file exists");
-                        let conversion = serde_yaml::from_str::<Bank>(&raw);
-                        match conversion {
-                            Ok(bank) => {
-                                reds_debug!("{:#?}", folder);
-                                let outcome = REGISTRY.clone().borrow_mut().try_lock().is_ok_and(
-                                    |mut guard| guard.insert(folder.clone(), bank).is_none(),
-                                );
-                                if outcome {
-                                    reds_debug!("{folder}: successful registration");
-                                } else {
-                                    reds_debug!("{folder}: failed registration");
-                                }
-                            }
-                            Err(e) => {
-                                error!("unable to parse manifest at: {} ({e})", manifest.display());
-                            }
-                        }
-                    } else {
-                        warn!("no manifest found in: {}", manifest.display());
-                    }
-                }
-                Err(e) => {
-                    error!("error reading files ({e})");
-                }
-                _ => {}
-            }
-        }
-    }
 }
 
 lazy_static! {
