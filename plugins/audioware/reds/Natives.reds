@@ -5,8 +5,6 @@ native func OnDetachAudioware() -> Void;
 public static func DEBUG(message: String) -> Void { LogChannel(n"DEBUG", s"[audioware] \(message)"); }
 public static func ASSERT(message: String) -> Void { LogChannel(n"ASSERT", s"[audioware] \(message)"); }
 
-public class RawAudioEvent extends AudioEvent {}
-
 public static func SEND_AUDIO_EVENT(event: CName) -> String {
     return NameToString(event);
 }

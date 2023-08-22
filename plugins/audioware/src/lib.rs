@@ -16,19 +16,20 @@ use red4ext_rs::{
     define_plugin, error, info,
     prelude::{redscript_global, NativeRepr},
     register_function,
-    types::{RedString, IScriptable, RefCount, CName},
+    types::{CName, RedString},
     warn,
 };
 use retour::RawDetour;
 use serde::Deserialize;
 use std::ops::Not;
 use widestring::U16CString;
-use winapi::{
-    shared::minwindef::HMODULE,
-    um::libloaderapi::GetModuleHandleW,
-};
+use winapi::{shared::minwindef::HMODULE, um::libloaderapi::GetModuleHandleW};
 
 mod de;
+
+pub trait FromMemory<T> {
+    fn from_memory(address: usize, offset: usize) -> anyhow::Result<T>;
+}
 
 #[allow(non_snake_case)]
 #[redscript_global(name = "DEBUG")]
@@ -108,8 +109,7 @@ struct Subtitles {
     translations: HashMap<Locale, SubtitleVariant>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Deserialize, Default)]
 struct Bank(HashMap<String, Audio>);
 impl Bank {
     fn get(&self, sfx: impl AsRef<str>) -> Option<&Audio> {
@@ -117,16 +117,13 @@ impl Bank {
     }
 }
 
-
-#[derive(Debug, Clone, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Deserialize, Default)]
 struct Banks(HashMap<String, Bank>);
 impl Banks {
     fn get(&self, module: impl AsRef<str>) -> Option<&Bank> {
         self.0.get(module.as_ref())
     }
 }
-
 
 fn root_game_dir() -> PathBuf {
     current_dir().expect("game exists") // Cyberpunk 2077\bin\x64
@@ -194,41 +191,14 @@ lazy_static! {
 
 type FnOnAudioEvent = unsafe extern "C" fn(usize, usize) -> ();
 
-#[derive(Debug, Clone)]
-#[repr(C)]
-pub struct RawAudioEvent {
-    ptr: *mut IScriptable,
-    count: *mut RefCount,
-}
-
-impl Default for RawAudioEvent {
-    fn default() -> Self {
-        Self {
-            ptr: std::ptr::null_mut(),
-            count: std::ptr::null_mut(),
-        }
-    }
-}
-impl RawAudioEvent {
-    pub fn from_ptr(ptr: *mut IScriptable) -> Self {
-        Self { ptr, count: std::ptr::null_mut() }
-    }
-}
-
-unsafe impl NativeRepr for RawAudioEvent {
-    const MANGLED_NAME: &'static str = "ref<AudioEvent>";
-    const NAME: &'static str = "AudioEvent";
-    const NATIVE_NAME: &'static str = "handle:entAudioEvent";
-}
-
 fn hook() -> anyhow::Result<()> {
     let relative: usize = 0x1419130; // pattern: 48 89 74 24 20 57 48 83 EC ??
     unsafe {
         let base: usize = get_module("Cyberpunk2077.exe").unwrap() as usize;
         let address = base + relative;
-        info!("base address:       0x{base:X}");        // e.g. 0x7FF6C51B0000
-        info!("relative address:   0x{relative:X}");    // e.g. 0x1419130
-        info!("calculated address: 0x{address:X}");     // e.g. 0x7FF6C65C9130
+        info!("base address:       0x{base:X}"); // e.g. 0x7FF6C51B0000
+        info!("relative address:   0x{relative:X}"); // e.g. 0x1419130
+        info!("calculated address: 0x{address:X}"); // e.g. 0x7FF6C65C9130
         let target: FnOnAudioEvent = std::mem::transmute(address);
         match RawDetour::new(target as *const (), on_audio_event as *const ()) {
             Ok(detour) => match detour.enable() {
@@ -251,17 +221,131 @@ fn hook() -> anyhow::Result<()> {
     Ok(())
 }
 
+#[derive(Debug, Clone)]
+#[repr(C)]
+pub struct AudioEvent {
+    event_name: CName,
+    emitter_name: CName,
+    name_data: CName,
+    float_data: f32,
+    event_type: AudioEventActionType,
+    event_flags: AudioAudioEventFlags,
+}
+
+impl TryFrom<usize> for AudioEvent {
+    type Error = anyhow::Error;
+
+    fn try_from(_value: usize) -> Result<Self, Self::Error> {
+        todo!()
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u32)]
+pub enum AudioEventActionType {
+    Play = 0,
+    PlayAnimation = 1,
+    SetParameter = 2,
+    StopSound = 3,
+    SetSwitch = 4,
+    StopTagged = 5,
+    PlayExternal = 6,
+    Tag = 7,
+    Untag = 8,
+    SetAppearanceName = 9,
+    SetEntityName = 10,
+    AddContainerStreamingPrefetch = 11,
+    RemoveContainerStreamingPrefetch = 12,
+}
+
+impl TryFrom<u32> for AudioEventActionType {
+    type Error = anyhow::Error;
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Play),
+            1 => Ok(Self::PlayAnimation),
+            2 => Ok(Self::SetParameter),
+            3 => Ok(Self::StopSound),
+            4 => Ok(Self::SetSwitch),
+            5 => Ok(Self::StopTagged),
+            6 => Ok(Self::PlayExternal),
+            7 => Ok(Self::Tag),
+            8 => Ok(Self::Untag),
+            9 => Ok(Self::SetAppearanceName),
+            10 => Ok(Self::SetEntityName),
+            11 => Ok(Self::AddContainerStreamingPrefetch),
+            12 => Ok(Self::RemoveContainerStreamingPrefetch),
+            _ => anyhow::bail!("unknown AudioEventActionType variant ({})", value),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u32)]
+pub enum AudioAudioEventFlags {
+    NoEventFlags = 0,
+    SloMoOnly = 1,
+    Music = 2,
+    Unique = 4,
+    Metadata = 8,
+}
+
+impl TryFrom<u32> for AudioAudioEventFlags {
+    type Error = anyhow::Error;
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::NoEventFlags),
+            1 => Ok(Self::SloMoOnly),
+            2 => Ok(Self::Music),
+            4 => Ok(Self::Unique),
+            8 => Ok(Self::Metadata),
+            _ => anyhow::bail!("unknown AudioAudioEventFlags variant ({})", value),
+        }
+    }
+}
+
 pub fn on_audio_event(o: usize, a: usize) {
     info!("hooked");
-    // let audio: *mut IScriptable = a as *mut IScriptable;
-    // let audio: Ref<IScriptable> = unsafe { std::mem::transmute(a) };
     if let Ok(ref guard) = HOOK.clone().try_lock() {
+        info!("hook handle retrieved");
         if let Some(detour) = guard.as_ref() {
-            let event_slice: &[CName] = unsafe { core::slice::from_raw_parts::<CName>((a + 0x40) as *const CName, 1) };
-            info!("audio event slice {event_slice:#?}");
-            let event_cname = event_slice.get(0).unwrap().clone();
-            let event_name = SEND_AUDIO_EVENT(event_cname);
-            info!("audio event name {}", event_name.as_str());
+            let event_name: &[CName] =
+                unsafe { core::slice::from_raw_parts::<CName>((a + 0x40) as *const CName, 1) };
+            info!("hook got raw event name");
+            let raw_event_type: &[u32] =
+                unsafe { core::slice::from_raw_parts::<u32>((a + 0x5C) as *const u32, 1) };
+            info!("hook got raw event type");
+            let event_flags: &[AudioAudioEventFlags] = unsafe {
+                core::slice::from_raw_parts::<AudioAudioEventFlags>(
+                    (a + 0x5C) as *const AudioAudioEventFlags,
+                    1,
+                )
+            };
+            let event_name = event_name
+                .get(0)
+                .map(Clone::clone)
+                .unwrap_or(CName::new("None"));
+            let event_name = red4ext_rs::ffi::resolve_cname(&event_name);
+            if raw_event_type.first()
+                .map(|raw| [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].contains(raw))
+                .unwrap_or(false)
+            {
+                let event_type: &[AudioEventActionType] = unsafe {
+                    core::slice::from_raw_parts::<AudioEventActionType>(
+                        (a + 0x5C) as *const AudioEventActionType,
+                        1,
+                    )
+                };
+                let event_type = event_type.get(0).unwrap();
+                info!(
+                    "audio event name {event_name}, type {event_type:#?}, flags: {event_flags:#?}"
+                );
+            } else {
+                error!("[BUG] audio event name {event_name}, type {raw_event_type:#?}, flags: {event_flags:#?}")
+            }
+
             let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
             unsafe { original(o, a) };
             info!("original method called");
@@ -285,6 +369,7 @@ pub fn detach() {
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(None);
     *REGISTRY.clone().borrow_mut().lock().unwrap() = Banks::default();
     *HANDLES.clone().borrow_mut().lock().unwrap() = HashMap::default();
+    *HOOK.clone().borrow_mut().lock().unwrap() = None;
     info!(
         "cleaned audioware (thread: {:#?})",
         std::thread::current().id()
