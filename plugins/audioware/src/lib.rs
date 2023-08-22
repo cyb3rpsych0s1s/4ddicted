@@ -191,13 +191,13 @@ lazy_static! {
 type FnOnAudioEvent = unsafe extern "C" fn(usize, usize) -> ();
 
 fn hook() -> anyhow::Result<()> {
-    let relative: usize = 0x1419130;
+    let relative: usize = 0x1419130; // pattern: 48 89 74 24 20 57 48 83 EC ??
     unsafe {
         let base: usize = get_module("Cyberpunk2077.exe").unwrap() as usize;
         let address = base + relative;
-        info!("base address:       0x{base:X}");
-        info!("relative address:   0x{relative:X}");
-        info!("calculated address: 0x{address:X}");
+        info!("base address:       0x{base:X}");        // e.g. 0x7FF6C51B0000
+        info!("relative address:   0x{relative:X}");    // e.g. 0x1419130
+        info!("calculated address: 0x{address:X}");     // e.g. 0x7FF6C65C9130
         let target: FnOnAudioEvent = std::mem::transmute(address);
         match RawDetour::new(target as *const (), on_audio_event as *const ()) {
             Ok(detour) => match detour.enable() {
@@ -222,6 +222,8 @@ fn hook() -> anyhow::Result<()> {
 
 pub fn on_audio_event(o: usize, a: usize) {
     info!("hooked");
+    // let audio: *mut IScriptable = a as *mut IScriptable;
+    // let audio: Ref<IScriptable> = unsafe { std::mem::transmute(a) };
     if let Ok(ref guard) = HOOK.clone().try_lock() {
         if let Some(detour) = guard.as_ref() {
             let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
