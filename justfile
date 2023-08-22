@@ -79,7 +79,9 @@ setup:
 
 # 🎨 lint code
 lint:
-    '{{red_cli}}' lint -s 'scripts' -b '{{red_cache_bundle}}'
+    cargo clippy --fix --allow-dirty --allow-staged
+    cargo fix --allow-dirty --allow-staged
+    {{red_cli}} lint -s 'scripts' -b '{{red_cache_bundle}}'
 
 # 🌐 convert translations files with WolvenKit
 [windows]

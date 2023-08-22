@@ -16,7 +16,7 @@ use red4ext_rs::{
     define_plugin, error, info,
     prelude::{redscript_global, NativeRepr},
     register_function,
-    types::RedString,
+    types::{RedString, IScriptable, RefCount, CName},
     warn,
 };
 use retour::RawDetour;
@@ -37,6 +37,10 @@ fn REDS_DEBUG(message: String) -> ();
 #[allow(non_snake_case)]
 #[redscript_global(name = "ASSERT")]
 fn REDS_ASSERT(message: String) -> ();
+
+#[allow(non_snake_case)]
+#[redscript_global(name = "SEND_AUDIO_EVENT")]
+fn SEND_AUDIO_EVENT(evt: CName) -> RedString;
 
 macro_rules! reds_debug {
     ($($args:expr),*) => {
@@ -190,6 +194,33 @@ lazy_static! {
 
 type FnOnAudioEvent = unsafe extern "C" fn(usize, usize) -> ();
 
+#[derive(Debug, Clone)]
+#[repr(C)]
+pub struct RawAudioEvent {
+    ptr: *mut IScriptable,
+    count: *mut RefCount,
+}
+
+impl Default for RawAudioEvent {
+    fn default() -> Self {
+        Self {
+            ptr: std::ptr::null_mut(),
+            count: std::ptr::null_mut(),
+        }
+    }
+}
+impl RawAudioEvent {
+    pub fn from_ptr(ptr: *mut IScriptable) -> Self {
+        Self { ptr, count: std::ptr::null_mut() }
+    }
+}
+
+unsafe impl NativeRepr for RawAudioEvent {
+    const MANGLED_NAME: &'static str = "ref<AudioEvent>";
+    const NAME: &'static str = "AudioEvent";
+    const NATIVE_NAME: &'static str = "handle:entAudioEvent";
+}
+
 fn hook() -> anyhow::Result<()> {
     let relative: usize = 0x1419130; // pattern: 48 89 74 24 20 57 48 83 EC ??
     unsafe {
@@ -226,6 +257,11 @@ pub fn on_audio_event(o: usize, a: usize) {
     // let audio: Ref<IScriptable> = unsafe { std::mem::transmute(a) };
     if let Ok(ref guard) = HOOK.clone().try_lock() {
         if let Some(detour) = guard.as_ref() {
+            let event_slice: &[CName] = unsafe { core::slice::from_raw_parts::<CName>((a + 0x40) as *const CName, 1) };
+            info!("audio event slice {event_slice:#?}");
+            let event_cname = event_slice.get(0).unwrap().clone();
+            let event_name = SEND_AUDIO_EVENT(event_cname);
+            info!("audio event name {}", event_name.as_str());
             let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
             unsafe { original(o, a) };
             info!("original method called");
