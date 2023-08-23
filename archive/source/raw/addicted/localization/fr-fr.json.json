@@ -27,24 +27,10 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "A peine",
-              "maleVariant": "",
-              "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Threshold-Barely"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
               "femaleVariant": "V commence à être à peine accro à ce stade",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Passablement",
-              "maleVariant": "",
-              "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Threshold-Mildly"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
@@ -181,42 +167,42 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "BounceBack",
+              "femaleVariant": "Revitalisant",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-BounceBack"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Health Booster",
+              "femaleVariant": "Booster de Santé",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-HealthBooster"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "BlackLace",
+              "femaleVariant": "Lien Noir",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-BlackLace"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Stamina Booster",
+              "femaleVariant": "Booster d'Endurance",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-StaminaBooster"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Carry Capacity Booster",
+              "femaleVariant": "Booster de Charge",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-CarryCapacityBooster"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Memory Booster",
+              "femaleVariant": "Sursaut de Mémoire Vive",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-MemoryBooster"
@@ -244,49 +230,49 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Vigueur",
+              "femaleVariant": "{int_0}% Endurance max.",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Stamina-Booster-Desc"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Capacité d'encombrement",
+              "femaleVariant": "{int_0}% Capacité de charge",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Capacity-Booster-Desc"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Mémoire",
+              "femaleVariant": "{int_0}% Max d'unite de mémoire vive",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Memory-Booster-Desc"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "En manque de Stamina Booster",
+              "femaleVariant": "Accro au Booster d'Endurance",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Craving-For-Stamina-Booster"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "En manque de Carry Capacity Booster",
+              "femaleVariant": "Accro au Booster de Charge",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Craving-For-Capacity-Booster"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "En manque de Memory Booster",
+              "femaleVariant": "Accro au Sursaut de Mémoire Vive",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Craving-For-Memory-Booster"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "En manque de Black Lace",
+              "femaleVariant": "Accro au Lien Noir",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Craving-For-BlackLace"
@@ -381,6 +367,34 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Dismiss-Biomonitor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Overdose de Lien Noir",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Edgerunning-BlackLace-Penalty"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Sous l'emprise du Lien Noir",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Overdose-BlackLace"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "on dit que la surconsommation de Lien Noir peut entraîner des crises de Cyberpsychose",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Overdose-BlackLace-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "INCONNU",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Unknown"
             }
           ]
         }
