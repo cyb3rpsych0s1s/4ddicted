@@ -27,10 +27,6 @@ use winapi::{shared::minwindef::HMODULE, um::libloaderapi::GetModuleHandleW};
 
 mod de;
 
-pub trait FromMemory<T> {
-    fn from_memory(address: usize, offset: usize) -> anyhow::Result<T>;
-}
-
 #[allow(non_snake_case)]
 #[redscript_global(name = "DEBUG")]
 fn REDS_DEBUG(message: String) -> ();
@@ -221,6 +217,7 @@ fn hook() -> anyhow::Result<()> {
     Ok(())
 }
 
+/// see [AudioEvent](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/ent/AudioEvent.hpp).
 #[derive(Debug, Clone)]
 #[repr(C)]
 pub struct AudioEvent {
@@ -232,15 +229,58 @@ pub struct AudioEvent {
     event_flags: AudioAudioEventFlags,
 }
 
-impl TryFrom<usize> for AudioEvent {
-    type Error = anyhow::Error;
+/// # Safety
+/// this is only safe as long as it matches memory representation specified in [RED4ext.SDK](https://github.com/WopsS/RED4ext.SDK).
+unsafe trait FromMemory {
+    fn from_memory(address: usize) -> Self;
+}
 
-    fn try_from(_value: usize) -> Result<Self, Self::Error> {
-        todo!()
+unsafe impl FromMemory for AudioEvent {
+    fn from_memory(address: usize) -> Self {
+        let event_name: CName = unsafe {
+            core::slice::from_raw_parts::<CName>((address + 0x40) as *const CName, 1)
+                .get_unchecked(0)
+                .clone()
+        };
+        let emitter_name: CName = unsafe {
+            core::slice::from_raw_parts::<CName>((address + 0x48) as *const CName, 1)
+                .get_unchecked(0)
+                .clone()
+        };
+        let name_data: CName = unsafe {
+            core::slice::from_raw_parts::<CName>((address + 0x50) as *const CName, 1)
+                .get_unchecked(0)
+                .clone()
+        };
+        let float_data: f32 = unsafe {
+            *core::slice::from_raw_parts::<f32>((address + 0x58) as *const f32, 1).get_unchecked(0)
+        };
+        let event_type: AudioEventActionType = unsafe {
+            *core::slice::from_raw_parts::<AudioEventActionType>(
+                (address + 0x5C) as *const AudioEventActionType,
+                1,
+            )
+            .get_unchecked(0)
+        };
+        let event_flags: AudioAudioEventFlags = unsafe {
+            *core::slice::from_raw_parts::<AudioAudioEventFlags>(
+                (address + 0x60) as *const AudioAudioEventFlags,
+                1,
+            )
+            .get_unchecked(0)
+        };
+        Self {
+            event_name,
+            emitter_name,
+            name_data,
+            float_data,
+            event_type,
+            event_flags,
+        }
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::FromRepr)]
 #[repr(u32)]
 pub enum AudioEventActionType {
     Play = 0,
@@ -258,30 +298,7 @@ pub enum AudioEventActionType {
     RemoveContainerStreamingPrefetch = 12,
 }
 
-impl TryFrom<u32> for AudioEventActionType {
-    type Error = anyhow::Error;
-
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        match value {
-            0 => Ok(Self::Play),
-            1 => Ok(Self::PlayAnimation),
-            2 => Ok(Self::SetParameter),
-            3 => Ok(Self::StopSound),
-            4 => Ok(Self::SetSwitch),
-            5 => Ok(Self::StopTagged),
-            6 => Ok(Self::PlayExternal),
-            7 => Ok(Self::Tag),
-            8 => Ok(Self::Untag),
-            9 => Ok(Self::SetAppearanceName),
-            10 => Ok(Self::SetEntityName),
-            11 => Ok(Self::AddContainerStreamingPrefetch),
-            12 => Ok(Self::RemoveContainerStreamingPrefetch),
-            _ => anyhow::bail!("unknown AudioEventActionType variant ({})", value),
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::FromRepr)]
 #[repr(u32)]
 pub enum AudioAudioEventFlags {
     NoEventFlags = 0,
@@ -291,60 +308,25 @@ pub enum AudioAudioEventFlags {
     Metadata = 8,
 }
 
-impl TryFrom<u32> for AudioAudioEventFlags {
-    type Error = anyhow::Error;
-
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        match value {
-            0 => Ok(Self::NoEventFlags),
-            1 => Ok(Self::SloMoOnly),
-            2 => Ok(Self::Music),
-            4 => Ok(Self::Unique),
-            8 => Ok(Self::Metadata),
-            _ => anyhow::bail!("unknown AudioAudioEventFlags variant ({})", value),
-        }
-    }
-}
-
 pub fn on_audio_event(o: usize, a: usize) {
     info!("hooked");
     if let Ok(ref guard) = HOOK.clone().try_lock() {
         info!("hook handle retrieved");
         if let Some(detour) = guard.as_ref() {
-            let event_name: &[CName] =
-                unsafe { core::slice::from_raw_parts::<CName>((a + 0x40) as *const CName, 1) };
-            info!("hook got raw event name");
-            let raw_event_type: &[u32] =
-                unsafe { core::slice::from_raw_parts::<u32>((a + 0x5C) as *const u32, 1) };
-            info!("hook got raw event type");
-            let event_flags: &[AudioAudioEventFlags] = unsafe {
-                core::slice::from_raw_parts::<AudioAudioEventFlags>(
-                    (a + 0x5C) as *const AudioAudioEventFlags,
-                    1,
-                )
-            };
-            let event_name = event_name
-                .get(0)
-                .map(Clone::clone)
-                .unwrap_or(CName::new("None"));
-            let event_name = red4ext_rs::ffi::resolve_cname(&event_name);
-            if raw_event_type.first()
-                .map(|raw| [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].contains(raw))
-                .unwrap_or(false)
-            {
-                let event_type: &[AudioEventActionType] = unsafe {
-                    core::slice::from_raw_parts::<AudioEventActionType>(
-                        (a + 0x5C) as *const AudioEventActionType,
-                        1,
-                    )
-                };
-                let event_type = event_type.get(0).unwrap();
-                info!(
-                    "audio event name {event_name}, type {event_type:#?}, flags: {event_flags:#?}"
-                );
-            } else {
-                error!("[BUG] audio event name {event_name}, type {raw_event_type:#?}, flags: {event_flags:#?}")
-            }
+            let AudioEvent {
+                event_name,
+                emitter_name,
+                name_data,
+                float_data,
+                event_type,
+                event_flags,
+            } = AudioEvent::from_memory(a);
+            info!(
+                "got audio event: name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
+                red4ext_rs::ffi::resolve_cname(&event_name),
+                red4ext_rs::ffi::resolve_cname(&emitter_name),
+                red4ext_rs::ffi::resolve_cname(&name_data)
+            );
 
             let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
             unsafe { original(o, a) };
