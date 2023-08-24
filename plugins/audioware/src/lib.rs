@@ -399,6 +399,7 @@ pub fn detach() {
     *REGISTRY.clone().borrow_mut().lock().unwrap() = Banks::default();
     *HANDLES.clone().borrow_mut().lock().unwrap() = HashMap::default();
     *HOOK_ON_ENT_AUDIO_EVENT.clone().borrow_mut().lock().unwrap() = None;
+    *HOOK_ON_PLAY_SOUND.clone().borrow_mut().lock().unwrap() = None;
     info!(
         "cleaned audioware (thread: {:#?})",
         std::thread::current().id()
