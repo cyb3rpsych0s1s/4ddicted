@@ -26,6 +26,11 @@ use widestring::U16CString;
 use winapi::{shared::minwindef::HMODULE, um::libloaderapi::GetModuleHandleW};
 
 mod de;
+mod hook;
+
+use hook::FnOnAudioEvent;
+
+use crate::hook::FnOnPlaySound;
 
 #[allow(non_snake_case)]
 #[redscript_global(name = "DEBUG")]
@@ -182,39 +187,8 @@ lazy_static! {
     static ref REGISTRY: Arc<Mutex<Banks>> = Arc::new(Mutex::new(Banks::default()));
     static ref HANDLES: Arc<Mutex<HashMap<String, StaticSoundHandle>>> =
         Arc::new(Mutex::new(HashMap::default()));
-    static ref HOOK: Arc<Mutex<Option<RawDetour>>> = Arc::new(Mutex::new(None));
-}
-
-type FnOnAudioEvent = unsafe extern "C" fn(usize, usize) -> ();
-
-fn hook() -> anyhow::Result<()> {
-    let relative: usize = 0x1419130; // pattern: 48 89 74 24 20 57 48 83 EC ??
-    unsafe {
-        let base: usize = get_module("Cyberpunk2077.exe").unwrap() as usize;
-        let address = base + relative;
-        info!("base address:       0x{base:X}"); // e.g. 0x7FF6C51B0000
-        info!("relative address:   0x{relative:X}"); // e.g. 0x1419130
-        info!("calculated address: 0x{address:X}"); // e.g. 0x7FF6C65C9130
-        let target: FnOnAudioEvent = std::mem::transmute(address);
-        match RawDetour::new(target as *const (), on_audio_event as *const ()) {
-            Ok(detour) => match detour.enable() {
-                Ok(_) => {
-                    if let Ok(mut guard) = HOOK.clone().borrow_mut().try_lock() {
-                        *guard = Some(detour);
-                    } else {
-                        error!("could not store detour");
-                    }
-                }
-                Err(e) => {
-                    error!("could not enable detour ({e})");
-                }
-            },
-            Err(e) => {
-                error!("could not initialize detour ({e})");
-            }
-        }
-    }
-    Ok(())
+    static ref HOOK_ON_ENT_AUDIO_EVENT: Arc<Mutex<Option<RawDetour>>> = Arc::new(Mutex::new(None));
+    static ref HOOK_ON_PLAY_SOUND: Arc<Mutex<Option<RawDetour>>> = Arc::new(Mutex::new(None));
 }
 
 /// see [AudioEvent](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/ent/AudioEvent.hpp).
@@ -227,6 +201,17 @@ pub struct AudioEvent {
     float_data: f32,
     event_type: AudioEventActionType,
     event_flags: AudioAudioEventFlags,
+}
+
+// see [PlaySound](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/game/audio/events/PlaySound.hpp)
+#[derive(Debug, Clone)]
+#[repr(C)]
+pub struct PlaySound {
+    sound_name: CName,
+    emitter_name: CName,
+    audio_tag: CName,
+    seek_time: f32,
+    play_unique: bool,
 }
 
 /// # Safety
@@ -280,6 +265,39 @@ unsafe impl FromMemory for AudioEvent {
     }
 }
 
+unsafe impl FromMemory for PlaySound {
+    fn from_memory(address: usize) -> Self {
+        let sound_name: CName = unsafe {
+            core::slice::from_raw_parts::<CName>((address + 0x40) as *const CName, 1)
+                .get_unchecked(0)
+                .clone()
+        };
+        let emitter_name: CName = unsafe {
+            core::slice::from_raw_parts::<CName>((address + 0x48) as *const CName, 1)
+                .get_unchecked(0)
+                .clone()
+        };
+        let audio_tag: CName = unsafe {
+            core::slice::from_raw_parts::<CName>((address + 0x50) as *const CName, 1)
+                .get_unchecked(0)
+                .clone()
+        };
+        let seek_time: f32 = unsafe {
+            *core::slice::from_raw_parts::<f32>((address + 0x58) as *const f32, 1).get_unchecked(0)
+        };
+        let play_unique: bool = unsafe {
+            *core::slice::from_raw_parts::<bool>((address + 0x5C) as *const bool, 1).get_unchecked(0)
+        };
+        Self {
+            sound_name,
+            emitter_name,
+            audio_tag,
+            seek_time,
+            play_unique,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::FromRepr)]
 #[repr(u32)]
 pub enum AudioEventActionType {
@@ -308,11 +326,38 @@ pub enum AudioAudioEventFlags {
     Metadata = 8,
 }
 
-pub fn on_audio_event(o: usize, a: usize) {
-    info!("hooked");
-    if let Ok(ref guard) = HOOK.clone().try_lock() {
-        info!("hook handle retrieved");
+pub fn on_play_sound(o: usize, a: usize) {
+    info!("hooked (on_play_sound)");
+    if let Ok(ref guard) = HOOK_ON_PLAY_SOUND.clone().try_lock() {
+        info!("hook handle retrieved (on_play_sound)");
         if let Some(detour) = guard.as_ref() {
+        let PlaySound {
+            sound_name,
+            emitter_name,
+            audio_tag,
+            seek_time,
+            play_unique,
+        } = PlaySound::from_memory(a);
+        info!(
+            "got play sound: name {}, emitter {}, tag {}, seek {seek_time}, unique {play_unique}",
+            red4ext_rs::ffi::resolve_cname(&sound_name),
+            red4ext_rs::ffi::resolve_cname(&emitter_name),
+            red4ext_rs::ffi::resolve_cname(&audio_tag)
+        );
+
+        let original: FnOnPlaySound = unsafe { std::mem::transmute(detour.trampoline()) };
+        unsafe { original(o, a) };
+        info!("original method called (on_play_sound)");
+    }
+    }
+}
+
+pub fn on_audio_event(o: usize, a: usize) {
+    // info!("hooked (on_audio_event)");
+    if let Ok(ref guard) = HOOK_ON_ENT_AUDIO_EVENT.clone().try_lock() {
+        // info!("hook handle retrieved (on_audio_event)");
+        if let Some(detour) = guard.as_ref() {
+            #[allow(unused_variables)]
             let AudioEvent {
                 event_name,
                 emitter_name,
@@ -321,23 +366,24 @@ pub fn on_audio_event(o: usize, a: usize) {
                 event_type,
                 event_flags,
             } = AudioEvent::from_memory(a);
-            info!(
-                "got audio event: name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
-                red4ext_rs::ffi::resolve_cname(&event_name),
-                red4ext_rs::ffi::resolve_cname(&emitter_name),
-                red4ext_rs::ffi::resolve_cname(&name_data)
-            );
+            // info!(
+            //     "got audio event: name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
+            //     red4ext_rs::ffi::resolve_cname(&event_name),
+            //     red4ext_rs::ffi::resolve_cname(&emitter_name),
+            //     red4ext_rs::ffi::resolve_cname(&name_data)
+            // );
 
             let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
             unsafe { original(o, a) };
-            info!("original method called");
+            // info!("original method called");
         }
     }
 }
 
 pub fn attach() {
     info!("on attach audioware");
-    let _ = hook();
+    let _ = hook::hook_ent_audio_event();
+    let _ = hook::hook_play_sound();
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
     setup_registry();
@@ -351,7 +397,7 @@ pub fn detach() {
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(None);
     *REGISTRY.clone().borrow_mut().lock().unwrap() = Banks::default();
     *HANDLES.clone().borrow_mut().lock().unwrap() = HashMap::default();
-    *HOOK.clone().borrow_mut().lock().unwrap() = None;
+    *HOOK_ON_ENT_AUDIO_EVENT.clone().borrow_mut().lock().unwrap() = None;
     info!(
         "cleaned audioware (thread: {:#?})",
         std::thread::current().id()
