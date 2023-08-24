@@ -17,9 +17,9 @@ macro_rules! make_hook {
             unsafe {
                 let base: usize = $crate::get_module("Cyberpunk2077.exe").unwrap() as usize;
                 let address = base + relative;
-                ::red4ext_rs::info!("base address:       0x{base:X}"); // e.g. 0x7FF6C51B0000
-                ::red4ext_rs::info!("relative address:   0x{relative:X}"); // e.g. 0x1419130
-                ::red4ext_rs::info!("calculated address: 0x{address:X}"); // e.g. 0x7FF6C65C9130
+                ::red4ext_rs::debug!("[{}] base address:       0x{base:X}",      ::std::stringify!{$name}); // e.g. 0x7FF6C51B0000
+                ::red4ext_rs::debug!("[{}] relative address:   0x{relative:X}",  ::std::stringify!{$name}); // e.g. 0x1419130
+                ::red4ext_rs::debug!("[{}] calculated address: 0x{address:X}",   ::std::stringify!{$name}); // e.g. 0x7FF6C65C9130
                 let target: $kind = ::std::mem::transmute(address);
                 match ::retour::RawDetour::new(target as *const (), $hook as *const ()) {
                     Ok(detour) => match detour.enable() {

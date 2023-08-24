@@ -17,7 +17,7 @@ use red4ext_rs::{
     prelude::{redscript_global, NativeRepr},
     register_function,
     types::{CName, RedString},
-    warn,
+    warn, debug,
 };
 use retour::RawDetour;
 use serde::Deserialize;
@@ -328,9 +328,9 @@ pub enum AudioAudioEventFlags {
 }
 
 pub fn on_play_sound(o: usize, a: usize) {
-    info!("hooked (on_play_sound)");
+    debug!("[on_play_sound] hooked");
     if let Ok(ref guard) = HOOK_ON_PLAY_SOUND.clone().try_lock() {
-        info!("hook handle retrieved (on_play_sound)");
+        debug!("[on_play_sound] hook handle retrieved");
         if let Some(detour) = guard.as_ref() {
             let PlaySound {
                 sound_name,
@@ -340,7 +340,7 @@ pub fn on_play_sound(o: usize, a: usize) {
                 play_unique,
             } = PlaySound::from_memory(a);
             info!(
-            "got play sound: name {}, emitter {}, tag {}, seek {seek_time}, unique {play_unique}",
+            "[on_play_sound][PlaySound] name {}, emitter {}, tag {}, seek {seek_time}, unique {play_unique}",
             red4ext_rs::ffi::resolve_cname(&sound_name),
             red4ext_rs::ffi::resolve_cname(&emitter_name),
             red4ext_rs::ffi::resolve_cname(&audio_tag)
@@ -348,15 +348,15 @@ pub fn on_play_sound(o: usize, a: usize) {
 
             let original: FnOnPlaySound = unsafe { std::mem::transmute(detour.trampoline()) };
             unsafe { original(o, a) };
-            info!("original method called (on_play_sound)");
+            debug!("[on_play_sound] original method called");
         }
     }
 }
 
 pub fn on_audio_event(o: usize, a: usize) {
-    // info!("hooked (on_audio_event)");
+    debug!("[on_audio_event] hooked");
     if let Ok(ref guard) = HOOK_ON_ENT_AUDIO_EVENT.clone().try_lock() {
-        // info!("hook handle retrieved (on_audio_event)");
+        debug!("[on_audio_event] hook handle retrieved");
         if let Some(detour) = guard.as_ref() {
             #[allow(unused_variables)]
             let AudioEvent {
@@ -367,16 +367,16 @@ pub fn on_audio_event(o: usize, a: usize) {
                 event_type,
                 event_flags,
             } = AudioEvent::from_memory(a);
-            // info!(
-            //     "got audio event: name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
-            //     red4ext_rs::ffi::resolve_cname(&event_name),
-            //     red4ext_rs::ffi::resolve_cname(&emitter_name),
-            //     red4ext_rs::ffi::resolve_cname(&name_data)
-            // );
+            debug!(
+                "[on_audio_event][AudioEvent] name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
+                red4ext_rs::ffi::resolve_cname(&event_name),
+                red4ext_rs::ffi::resolve_cname(&emitter_name),
+                red4ext_rs::ffi::resolve_cname(&name_data)
+            );
 
             let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
             unsafe { original(o, a) };
-            // info!("original method called");
+            debug!("[on_audio_event] original method called");
         }
     }
 }
