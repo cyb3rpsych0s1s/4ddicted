@@ -2,8 +2,9 @@ use std::borrow::BorrowMut;
 
 use crate::{on_audio_event, on_play_sound, HOOK_ON_ENT_AUDIO_EVENT, HOOK_ON_PLAY_SOUND};
 
-/// pattern: 48 89 74 24 20 57 48 83 EC ??
+/// pattern: 48 89 74 24 20 57 48 83 EC
 pub(crate) const ON_ENT_AUDIO_EVENT: usize = 0x1419130;
+/// pattern: 48 8B 01 FF A0 60 02 00 00
 pub(crate) const ON_PLAY_SOUND: usize = 0x1696FCC;
 
 pub(crate) type FnOnAudioEvent = unsafe extern "C" fn(usize, usize) -> ();
@@ -43,5 +44,17 @@ macro_rules! make_hook {
     };
 }
 
-make_hook!(hook_ent_audio_event, ON_ENT_AUDIO_EVENT, FnOnAudioEvent, on_audio_event, HOOK_ON_ENT_AUDIO_EVENT);
-make_hook!(hook_play_sound, ON_PLAY_SOUND, FnOnPlaySound, on_play_sound, HOOK_ON_PLAY_SOUND);
+make_hook!(
+    hook_ent_audio_event,
+    ON_ENT_AUDIO_EVENT,
+    FnOnAudioEvent,
+    on_audio_event,
+    HOOK_ON_ENT_AUDIO_EVENT
+);
+make_hook!(
+    hook_play_sound,
+    ON_PLAY_SOUND,
+    FnOnPlaySound,
+    on_play_sound,
+    HOOK_ON_PLAY_SOUND
+);
