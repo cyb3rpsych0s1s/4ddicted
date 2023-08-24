@@ -286,7 +286,8 @@ unsafe impl FromMemory for PlaySound {
             *core::slice::from_raw_parts::<f32>((address + 0x58) as *const f32, 1).get_unchecked(0)
         };
         let play_unique: bool = unsafe {
-            *core::slice::from_raw_parts::<bool>((address + 0x5C) as *const bool, 1).get_unchecked(0)
+            *core::slice::from_raw_parts::<bool>((address + 0x5C) as *const bool, 1)
+                .get_unchecked(0)
         };
         Self {
             sound_name,
@@ -331,24 +332,24 @@ pub fn on_play_sound(o: usize, a: usize) {
     if let Ok(ref guard) = HOOK_ON_PLAY_SOUND.clone().try_lock() {
         info!("hook handle retrieved (on_play_sound)");
         if let Some(detour) = guard.as_ref() {
-        let PlaySound {
-            sound_name,
-            emitter_name,
-            audio_tag,
-            seek_time,
-            play_unique,
-        } = PlaySound::from_memory(a);
-        info!(
+            let PlaySound {
+                sound_name,
+                emitter_name,
+                audio_tag,
+                seek_time,
+                play_unique,
+            } = PlaySound::from_memory(a);
+            info!(
             "got play sound: name {}, emitter {}, tag {}, seek {seek_time}, unique {play_unique}",
             red4ext_rs::ffi::resolve_cname(&sound_name),
             red4ext_rs::ffi::resolve_cname(&emitter_name),
             red4ext_rs::ffi::resolve_cname(&audio_tag)
         );
 
-        let original: FnOnPlaySound = unsafe { std::mem::transmute(detour.trampoline()) };
-        unsafe { original(o, a) };
-        info!("original method called (on_play_sound)");
-    }
+            let original: FnOnPlaySound = unsafe { std::mem::transmute(detour.trampoline()) };
+            unsafe { original(o, a) };
+            info!("original method called (on_play_sound)");
+        }
     }
 }
 
