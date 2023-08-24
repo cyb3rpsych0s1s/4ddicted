@@ -1,18 +1,148 @@
 # Changelog
 
 
+<a name="beta-0.9.4" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.9.4
 
+### Removed
+- 🔥  remove duplicate translation keys
 
+### Fixed
+- 🐛  shrink doses
+- 🐛  fix incorrect translations and improve existing ones
+- 🐛  add missing translations
+- 🐛  missing ui translation
 
+### Miscellaneous
+- 📦  convert translations and pack archive
+- coffin  remove unused method
 
+<a name="beta-0.9.3" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.9.3
 
+### Changed
+- ⏪  remove condition used for test
+- ⚡️  remove unused ci checkout step
+- 🏗  modify release workflow
+- ♻️  improve encode command on powershell
+- ♻️  refactor check-env command to powershell
+- ♻️  refactor erase command to powershell
+- ♻️  refactor store command to powershell
+- ♻️  refactor clear command to powershell
+- ♻️  refactor log command to powershell
+- ♻️  refactor commands
+- 🚚  relocate translations files
+- ♻️  rename just vars
+- ♻️  earlier return
+- ♻️  early return on language mismatch
+- ♻️  list new offhanded reaction
+- ♻️  also handle subtitles
+- ♻️  allow french language
+- ⬆️  bump mdbook-codeblocks
+- ⬆️  bump mdbook
+- 🔨  update bundle related commands
+- 🔨  update command to bundle translation separately
 
+### Removed
+- 🔇  disable command
+- 🔥  remove unused audio file
+- 🔥  remove duplicate entries in localization
 
+### Fixed
+- 🐛  fix incorrect archive path in bundle
+- 💚  missing job step dependency
+- 🐛  fix incorrect subtitle translation
+- 🐛  fix erroneous subtitle gender
+- 🐛  fix erroneous language condition
+- 🐛  add language to reactions
+- 🐛  fix a bunch of powershell issues
+- 🐛  fix commands
+- ✏️  fix typo in archive filename
+- ✏️  fix type
+- 🐛  fix probability issue
+- ✏️  fix translation for vanilla
+- ✏️  rename audio files
+- ✏️  fix typo in .gitignore
 
+### Miscellaneous
+- 📦  pack archive
+- ⚗  test bundle on branch
+- necktie  version archive because of cli pack issue
+- necktie  make recipe parameter mandatory to avoid omission
+- 🙈  ignore redmod log
+- 🙈  ignore info.json
+- 💡  add reminder to support subtitle language
+- 🚧  add additional reaction for english
+- 🚧  adding voice translations
+- 🚧  wip
+- 📦  import translations
+- 🌐  add translations for onscreens
+- 📦  add keys to info json
+- 📦  add vanilla audios
+- 🙈  ignore cli exes
 
+<a name="beta-0.9.2" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
+## Version beta-0.9.2
 
+### Added
+- ➕  add admonish preprocessor
+- ✨  add codeblock preprocessor
 
+### Changed
+- 🎨  refactor for next lib version
+- ♻️  refactor blacklace effect
+- ♻️  refactor stimulants effect
+- ♻️  refactor stimulants ui data
+- 🎨  use same field naming convention in healers
+- 🎨  refactor healers more concisely
+- ♻️  refactor healers object action effect
+- ♻️  refactor health booster effect
+- ♻️  refactor bounceback effect
+- ♻️  refactor maxdoc effect
+- ♻️  refactor healers icons
+- ⬆️  update mdbook and dependencies
+- ⬆️  bump mdbook-codeblocks
+- ⬆️  bump mdbook
+- ⬆️  upgrade mdbook-codeblocks in ci
+- 🎨  improve readme contribution section
+- 🎨  improve layout on install, mod mechanics and effectors book pages
+- ⬆️  bump mdbook and mdbook-codeblocks
+- ⬆️  bump mdbook and preprocessor in ci
+- 🔨  refactor command vars
+- ♻️  install preprocessor from release
+- 🎨  highlight point in troubleshooting
+- 🔧  add link check
+- ⬆️  update manifest deps
 
+### Removed
+- 🔥  remove duplicate key
+
+### Fixed
+- 🐛  fix effectors tweak issue
+- 🐛  fix ui data and effectors
+- ✏️  fix typos in install in book
+- ✏️  use language standard name in code block for now
+- ✏️  fix incorrect code blocks language
+- 💚  bump mdbook version in ci
+- ✏️  fix typo in codeblock
+- 💚  simplify pages deployment
+- 💚  move install in step
+- 💚  make link check available in workflow
+- 💚  install mdbook link check in workflow
+
+### Miscellaneous
+- 📝  update manifest
+- 📦  bundle localization file
+- 📝  update manifest
+- 📝  add footer to cli and manifest book sections
+- 📝  add mod links in book
+- 📝  add github repo link to book
+- adhesive_bandage  temporarily install preprocessor with cargo
+- rotating_lights  fix warning with links
+- 📝  add credits
+- 📝  fix broken links
+- 📝  mention about enable mods for redmod
+- 🚀  update changelog [no ci]
 
 <a name="beta-0.9.1" data-comment="this line is used by gitmoji-changelog, don't remove it!"></a>
 ## Version beta-0.9.1

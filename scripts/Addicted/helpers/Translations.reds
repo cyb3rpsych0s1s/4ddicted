@@ -82,7 +82,7 @@ public class Translations {
   public static func SubtitleKey(mood: String, language: String) -> String {
     let suffix: String;
     if StrBeginsWith(mood, "addicted." + language + ".fem_v_") {
-      suffix = StrAfterFirst(mood, "addicted." + language + ".male_v_");
+      suffix = StrAfterFirst(mood, "addicted." + language + ".fem_v_");
       return "Addicted-Voice-Subtitle-" + suffix;
     }
     if StrBeginsWith(mood, "addicted." + language + ".male_v_") {
@@ -90,44 +90,5 @@ public class Translations {
       return "Addicted-Voice-Subtitle-" + suffix;
     }
     return "";
-  }
-
-  public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
-    if Equals(mood, Mood.Any) { return n""; }
-
-    let output: CName;
-    let choices: array<String>;
-    let size: Int32;
-    let which: Int32;
-    let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
-    if StrLen(language) == 0 { language = "en-us"; }
-
-    switch(mood) {
-      case Mood.Disheartened:
-        choices = Feeling.Disheartened();
-        break;
-      case Mood.Offhanded:
-        choices = Feeling.Offhanded();
-        break;
-      case Mood.Pestered:
-        choices = Feeling.Pestered();
-        break;
-      case Mood.Surprised:
-        choices = Feeling.Surprised();
-        break;
-      default:
-        choices = [];
-        break;
-    }
-
-    size = ArraySize(choices);
-    if size > 0 {
-      which = size > 1 ? RandRange(0, size -1) : 0;
-      output = StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
-      E(s"picked \(NameToString(output)) (\(which))");
-      return IsNameValid(output) ? output : n"";
-    }
-
-    return n"";
   }
 }

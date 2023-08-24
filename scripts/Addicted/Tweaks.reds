@@ -147,30 +147,35 @@ public func Reacts(reaction: CName) -> Void {
   if !IsNameValid(reaction) { return; }
   let game = this.GetGame();
   let localization = LocalizationSystem.GetInstance(game);
-  let language = localization.GetVoiceLanguage();
-  E(s"reacts: voice language (\(NameToString(language)))");
-  if !StrBeginsWith(NameToString(language), "en-") { return; }
-  let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-  let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
-  E(s"reacts: subtitle key (\(key))");
-  let subtitle: String = localization.GetSubtitle(key);
-  E(s"reacts: subtitle (\(subtitle))");
-  if StrLen(key) > 0 && NotEquals(key, subtitle) {
-    let duration: Float = 3.0;
-    let line: scnDialogLineData;
-    line.duration = duration;
-    line.id = this.ReactionID();
-    line.isPersistent = false;
-    line.speaker = this;
-    line.speakerName = "V";
-    line.text = subtitle;
-    line.type = scnDialogLineType.Regular;
-    board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-    let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-    callback.player = this;
-    this.hideSubtitleCallback = GameInstance
-    .GetDelaySystem(game)
-    .DelayCallback(callback, duration);
+  let spoken = localization.GetVoiceLanguage();
+  let written = localization.GetSubtitleLanguage();
+  E(s"reacts: voice language (\(NameToString(spoken)))");
+  // if spoken language is not available, abort
+  if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
+  // only show subtitles if they are available
+  if StrBeginsWith(NameToString(written), "en-") || StrBeginsWith(NameToString(written), "fr-") {
+    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
+    let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(written));
+    E(s"reacts: subtitle key (\(key))");
+    let subtitle: String = localization.GetSubtitle(key);
+    E(s"reacts: subtitle (\(subtitle))");
+    if StrLen(key) > 0 && NotEquals(key, subtitle) {
+      let duration: Float = 3.0;
+      let line: scnDialogLineData;
+      line.duration = duration;
+      line.id = this.ReactionID();
+      line.isPersistent = false;
+      line.speaker = this;
+      line.speakerName = "V";
+      line.text = subtitle;
+      line.type = scnDialogLineType.Regular;
+      board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+      let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
+      callback.player = this;
+      this.hideSubtitleCallback = GameInstance
+      .GetDelaySystem(game)
+      .DelayCallback(callback, duration);
+    }
   }
   GameObject.PlaySound(this, reaction);
 }

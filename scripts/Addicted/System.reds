@@ -94,6 +94,8 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.healerManager = null;
 
+    this.ShrinkDoses();
+
     // ModSettings.UnregisterListenerToModifications(this);
   }
 
@@ -252,6 +254,30 @@ public class AddictedSystem extends ScriptableSystem {
     this.delaySystem.DelayCallbackNextFrame(callback);
   }
 
+  public func ShrinkDoses() -> Void {
+    let consumption: ref<Consumption>;
+    let doses: array<Float>;
+    let dose: Float;
+    let shrinked: array<Float>;
+    let count: Int32;
+    let idx: Int32;
+    let ids = this.consumptions.Keys();
+    for id in ids {
+      consumption = this.consumptions.Get(id);
+      doses = consumption.doses;
+      count = ArraySize(doses);
+      if count > 100 {
+        shrinked = [];
+        idx = count - 100;
+        while idx < count {
+          dose = doses[idx];
+          ArrayPush(shrinked, dose);
+        }
+        consumption.doses = shrinked;
+      }
+    }
+  }
+
   public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
     if this.healerManager.ContainsHealerStatusEffects(actionEffects) {
       return this.healerManager.AlterHealerStatusEffects(actionEffects);
@@ -353,9 +379,9 @@ public class AddictedSystem extends ScriptableSystem {
 
     let customer: ref<Customer> = new Customer();
     customer.FirstName = "V";
-    customer.LastName = "UNKNOWN";
+    customer.LastName = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
     customer.Age = "27";
-    customer.BloodGroup = "UNKNOWN";
+    customer.BloodGroup = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
     customer.Insurance = "-";
 
     let symptoms = this.Symptoms();

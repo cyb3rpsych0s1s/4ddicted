@@ -220,16 +220,16 @@ public class Helper {
     return null;
   }
 
-  public static func OnceWarned(gender: gamedataGender, threshold: Threshold, warnings: Uint32) -> CName {
+  public static func OnceWarned(gender: gamedataGender, threshold: Threshold, warnings: Uint32, language: CName) -> CName {
     let reaction: CName;
     let odds: Float = 1.0;
     let female: Bool = Equals(gender, gamedataGender.Female);
     let onos: array<CName> = [
       n"ono_v_greet",
       n"ono_v_curious",
-      female ? n"addicted.en-us.fem_v_ono_hhuh" : n"addicted.en-us.male_v_ono_hhuh",
-      female ? n"addicted.en-us.fem_v_ono_huh" : n"addicted.en-us.male_v_ono_huh",
-      female ? n"addicted.en-us.fem_v_ono_huhuh" : n"addicted.en-us.male_v_ono_huhuh"
+      female ? StringToName("addicted." + NameToString(language) + ".fem_v_ono_hhuh") : StringToName("addicted." + NameToString(language) + ".male_v_ono_hhuh"),
+      female ? StringToName("addicted." + NameToString(language) + ".fem_v_ono_huh")  : StringToName("addicted." + NameToString(language) + ".male_v_ono_huh"),
+      female ? StringToName("addicted." + NameToString(language) + ".fem_v_ono_huhuh"): StringToName("addicted." + NameToString(language) + ".male_v_ono_huhuh")
     ];
     let random = RandF();
     if warnings >= 5u { odds -= 0.2; } // cumulative
@@ -239,7 +239,7 @@ public class Helper {
     E(s"once warned => random: \(random) > odds: \(odds)");
     if random > odds {
       let mood: Mood = Feeling.OnceWarned(threshold, warnings);
-      reaction = Feeling.Reaction(mood, gender);
+      reaction = Feeling.Reaction(mood, gender, language);
     } else {
       let choice: Int32 = RandRange(0, ArraySize(onos) -1);
       reaction = onos[choice];
@@ -248,9 +248,10 @@ public class Helper {
     return reaction;
   }
 
-  public static func OnDismissInCombat(gender: gamedataGender) -> CName {
+  public static func OnDismissInCombat(gender: gamedataGender, language: CName) -> CName {
     let mood: Mood = Feeling.OnDismissInCombat();
-    let reaction = Feeling.Reaction(mood, gender);
+    
+    let reaction = Feeling.Reaction(mood, gender, language);
     return reaction;
   }
 
