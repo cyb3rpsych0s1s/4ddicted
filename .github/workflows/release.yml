@@ -33,8 +33,8 @@ jobs:
         if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: thedoctor0/zip-release@0.7.0
         with:
-          type: 'zip'
-          filename: 'Addicted-windows-latest-${{ github.ref_name }}.zip'
+          type: "zip"
+          filename: "Addicted-windows-latest-${{ github.ref_name }}.zip"
           directory: ./Addicted
           path: .
           recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
@@ -49,6 +49,9 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+    strategy:
+      matrix:
+        locale: ["fr-fr", "es-es"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -59,12 +62,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bundle files
-        run: just bundle_lang "fr-fr"
+        run: just bundle_lang ${{ matrix.locale }}
       - name: Zip files
         uses: thedoctor0/zip-release@0.7.0
         with:
-          type: 'zip'
-          filename: 'Addicted-windows-latest-fr-fr-${{ github.ref_name }}.zip'
+          type: "zip"
+          filename: "Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip"
           directory: ./Addicted
           path: .
           recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
@@ -72,8 +75,8 @@ jobs:
         if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: actions/upload-artifact@v3
         with:
-          name: windows-latest-${{ github.ref_name }}-translations-fr-fr
-          path: Addicted/Addicted-windows-latest-fr-fr-${{ github.ref_name }}.zip
+          name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
+          path: Addicted/Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
@@ -89,6 +92,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: windows-latest-${{ github.ref_name }}-translations-fr-fr
+          path: release
+      - name: Download Spanish translations
+        uses: actions/download-artifact@v3
+        with:
+          name: windows-latest-${{ github.ref_name }}-translations-es-es
           path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
