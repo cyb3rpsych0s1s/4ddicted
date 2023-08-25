@@ -17,20 +17,18 @@ use red4ext_rs::{
     prelude::{redscript_global, NativeRepr},
     register_function,
     types::{CName, RedString},
-    warn, debug,
+    warn,
 };
-use retour::RawDetour;
 use serde::Deserialize;
 use std::ops::Not;
 use widestring::U16CString;
 use winapi::{shared::minwindef::HMODULE, um::libloaderapi::GetModuleHandleW};
 
+use crate::hook::Hooks;
+
 mod de;
 mod hook;
-
-use hook::FnOnAudioEvent;
-
-use crate::hook::FnOnPlaySound;
+mod interop;
 
 #[allow(non_snake_case)]
 #[redscript_global(name = "DEBUG")]
@@ -187,31 +185,6 @@ lazy_static! {
     static ref REGISTRY: Arc<Mutex<Banks>> = Arc::new(Mutex::new(Banks::default()));
     static ref HANDLES: Arc<Mutex<HashMap<String, StaticSoundHandle>>> =
         Arc::new(Mutex::new(HashMap::default()));
-    static ref HOOK_ON_ENT_AUDIO_EVENT: Arc<Mutex<Option<RawDetour>>> = Arc::new(Mutex::new(None));
-    static ref HOOK_ON_PLAY_SOUND: Arc<Mutex<Option<RawDetour>>> = Arc::new(Mutex::new(None));
-}
-
-/// see [AudioEvent](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/ent/AudioEvent.hpp).
-#[derive(Debug, Clone)]
-#[repr(C)]
-pub struct AudioEvent {
-    event_name: CName,
-    emitter_name: CName,
-    name_data: CName,
-    float_data: f32,
-    event_type: AudioEventActionType,
-    event_flags: AudioAudioEventFlags,
-}
-
-// see [PlaySound](https://github.com/WopsS/RED4ext.SDK/blob/master/include/RED4ext/Scripting/Natives/Generated/game/audio/events/PlaySound.hpp)
-#[derive(Debug, Clone)]
-#[repr(C)]
-pub struct PlaySound {
-    sound_name: CName,
-    emitter_name: CName,
-    audio_tag: CName,
-    seek_time: f32,
-    play_unique: bool,
 }
 
 /// # Safety
@@ -220,171 +193,9 @@ unsafe trait FromMemory {
     fn from_memory(address: usize) -> Self;
 }
 
-unsafe impl FromMemory for AudioEvent {
-    fn from_memory(address: usize) -> Self {
-        let event_name: CName = unsafe {
-            core::slice::from_raw_parts::<CName>((address + 0x40) as *const CName, 1)
-                .get_unchecked(0)
-                .clone()
-        };
-        let emitter_name: CName = unsafe {
-            core::slice::from_raw_parts::<CName>((address + 0x48) as *const CName, 1)
-                .get_unchecked(0)
-                .clone()
-        };
-        let name_data: CName = unsafe {
-            core::slice::from_raw_parts::<CName>((address + 0x50) as *const CName, 1)
-                .get_unchecked(0)
-                .clone()
-        };
-        let float_data: f32 = unsafe {
-            *core::slice::from_raw_parts::<f32>((address + 0x58) as *const f32, 1).get_unchecked(0)
-        };
-        let event_type: AudioEventActionType = unsafe {
-            *core::slice::from_raw_parts::<AudioEventActionType>(
-                (address + 0x5C) as *const AudioEventActionType,
-                1,
-            )
-            .get_unchecked(0)
-        };
-        let event_flags: AudioAudioEventFlags = unsafe {
-            *core::slice::from_raw_parts::<AudioAudioEventFlags>(
-                (address + 0x60) as *const AudioAudioEventFlags,
-                1,
-            )
-            .get_unchecked(0)
-        };
-        Self {
-            event_name,
-            emitter_name,
-            name_data,
-            float_data,
-            event_type,
-            event_flags,
-        }
-    }
-}
-
-unsafe impl FromMemory for PlaySound {
-    fn from_memory(address: usize) -> Self {
-        let sound_name: CName = unsafe {
-            core::slice::from_raw_parts::<CName>((address + 0x40) as *const CName, 1)
-                .get_unchecked(0)
-                .clone()
-        };
-        let emitter_name: CName = unsafe {
-            core::slice::from_raw_parts::<CName>((address + 0x48) as *const CName, 1)
-                .get_unchecked(0)
-                .clone()
-        };
-        let audio_tag: CName = unsafe {
-            core::slice::from_raw_parts::<CName>((address + 0x50) as *const CName, 1)
-                .get_unchecked(0)
-                .clone()
-        };
-        let seek_time: f32 = unsafe {
-            *core::slice::from_raw_parts::<f32>((address + 0x58) as *const f32, 1).get_unchecked(0)
-        };
-        let play_unique: bool = unsafe {
-            *core::slice::from_raw_parts::<bool>((address + 0x5C) as *const bool, 1)
-                .get_unchecked(0)
-        };
-        Self {
-            sound_name,
-            emitter_name,
-            audio_tag,
-            seek_time,
-            play_unique,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::FromRepr)]
-#[repr(u32)]
-pub enum AudioEventActionType {
-    Play = 0,
-    PlayAnimation = 1,
-    SetParameter = 2,
-    StopSound = 3,
-    SetSwitch = 4,
-    StopTagged = 5,
-    PlayExternal = 6,
-    Tag = 7,
-    Untag = 8,
-    SetAppearanceName = 9,
-    SetEntityName = 10,
-    AddContainerStreamingPrefetch = 11,
-    RemoveContainerStreamingPrefetch = 12,
-}
-
-#[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::FromRepr)]
-#[repr(u32)]
-pub enum AudioAudioEventFlags {
-    NoEventFlags = 0,
-    SloMoOnly = 1,
-    Music = 2,
-    Unique = 4,
-    Metadata = 8,
-}
-
-pub fn on_play_sound(o: usize, a: usize) {
-    debug!("[on_play_sound] hooked");
-    if let Ok(ref guard) = HOOK_ON_PLAY_SOUND.clone().try_lock() {
-        debug!("[on_play_sound] hook handle retrieved");
-        if let Some(detour) = guard.as_ref() {
-            let PlaySound {
-                sound_name,
-                emitter_name,
-                audio_tag,
-                seek_time,
-                play_unique,
-            } = PlaySound::from_memory(a);
-            info!(
-            "[on_play_sound][PlaySound] name {}, emitter {}, tag {}, seek {seek_time}, unique {play_unique}",
-            red4ext_rs::ffi::resolve_cname(&sound_name),
-            red4ext_rs::ffi::resolve_cname(&emitter_name),
-            red4ext_rs::ffi::resolve_cname(&audio_tag)
-        );
-
-            let original: FnOnPlaySound = unsafe { std::mem::transmute(detour.trampoline()) };
-            unsafe { original(o, a) };
-            debug!("[on_play_sound] original method called");
-        }
-    }
-}
-
-pub fn on_audio_event(o: usize, a: usize) {
-    debug!("[on_audio_event] hooked");
-    if let Ok(ref guard) = HOOK_ON_ENT_AUDIO_EVENT.clone().try_lock() {
-        debug!("[on_audio_event] hook handle retrieved");
-        if let Some(detour) = guard.as_ref() {
-            #[allow(unused_variables)]
-            let AudioEvent {
-                event_name,
-                emitter_name,
-                name_data,
-                float_data,
-                event_type,
-                event_flags,
-            } = AudioEvent::from_memory(a);
-            debug!(
-                "[on_audio_event][AudioEvent] name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
-                red4ext_rs::ffi::resolve_cname(&event_name),
-                red4ext_rs::ffi::resolve_cname(&emitter_name),
-                red4ext_rs::ffi::resolve_cname(&name_data)
-            );
-
-            let original: FnOnAudioEvent = unsafe { std::mem::transmute(detour.trampoline()) };
-            unsafe { original(o, a) };
-            debug!("[on_audio_event] original method called");
-        }
-    }
-}
-
 pub fn attach() {
     info!("on attach audioware");
-    let _ = hook::hook_ent_audio_event();
-    let _ = hook::hook_play_sound();
+    Hooks::on_attach();
     let manager = AudioManager::<DefaultBackend>::new(AudioManagerSettings::default()).unwrap();
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(Some(manager));
     setup_registry();
@@ -398,8 +209,7 @@ pub fn detach() {
     *AUDIO.clone().borrow_mut().lock().unwrap() = Audioware(None);
     *REGISTRY.clone().borrow_mut().lock().unwrap() = Banks::default();
     *HANDLES.clone().borrow_mut().lock().unwrap() = HashMap::default();
-    *HOOK_ON_ENT_AUDIO_EVENT.clone().borrow_mut().lock().unwrap() = None;
-    *HOOK_ON_PLAY_SOUND.clone().borrow_mut().lock().unwrap() = None;
+    Hooks::on_detach();
     info!(
         "cleaned audioware (thread: {:#?})",
         std::thread::current().id()
