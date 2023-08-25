@@ -143,7 +143,7 @@ make_hook!(
 );
 make_hook!(
     hook_ent_sound_event,
-    ON_ENT_AUDIO_EVENT,
+    ON_ENT_SOUND_EVENT,
     ExternFnRedEventHandler,
     on_ent_sound_event,
     HOOK_ON_ENT_SOUND_EVENT
@@ -161,7 +161,7 @@ pub fn on_play_sound(o: usize, a: usize) {
                 seek_time,
                 play_unique,
             } = PlaySound::from_memory(a);
-            red4ext_rs::debug!(
+            red4ext_rs::info!(
             "[on_play_sound][PlaySound] name {}, emitter {}, tag {}, seek {seek_time}, unique {play_unique}",
             red4ext_rs::ffi::resolve_cname(&sound_name),
             red4ext_rs::ffi::resolve_cname(&emitter_name),
@@ -189,7 +189,7 @@ pub fn on_audio_event(o: usize, a: usize) {
                 event_type,
                 event_flags,
             } = AudioEvent::from_memory(a);
-            red4ext_rs::debug!(
+            red4ext_rs::info!(
                 "[on_audio_event][AudioEvent] name {}, emitter {}, data {}, float {float_data}, type {event_type}, flags {event_flags}",
                 red4ext_rs::ffi::resolve_cname(&event_name),
                 red4ext_rs::ffi::resolve_cname(&emitter_name),
@@ -210,7 +210,7 @@ pub fn on_ent_sound_event(gameobject_ptr: usize, evt_ptr: usize) {
         red4ext_rs::trace!("[on_ent_sound_event] hook handle retrieved");
         if let Some(detour) = guard.as_ref() {
             let SoundEvent { event_name } = SoundEvent::from_memory(evt_ptr);
-            red4ext_rs::debug!(
+            red4ext_rs::info!(
                 "[on_ent_sound_event][SoundEvent] name {}",
                 red4ext_rs::ffi::resolve_cname(&event_name)
             );
