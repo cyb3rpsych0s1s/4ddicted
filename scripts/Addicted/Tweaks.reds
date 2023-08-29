@@ -147,30 +147,35 @@ public func Reacts(reaction: CName) -> Void {
   if !IsNameValid(reaction) { return; }
   let game = this.GetGame();
   let localization = LocalizationSystem.GetInstance(game);
-  let language = localization.GetVoiceLanguage();
-  E(s"reacts: voice language (\(NameToString(language)))");
-  if !StrBeginsWith(NameToString(language), "en-") { return; }
-  let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-  let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(language));
-  E(s"reacts: subtitle key (\(key))");
-  let subtitle: String = localization.GetSubtitle(key);
-  E(s"reacts: subtitle (\(subtitle))");
-  if StrLen(key) > 0 && NotEquals(key, subtitle) {
-    let duration: Float = 3.0;
-    let line: scnDialogLineData;
-    line.duration = duration;
-    line.id = this.ReactionID();
-    line.isPersistent = false;
-    line.speaker = this;
-    line.speakerName = "V";
-    line.text = subtitle;
-    line.type = scnDialogLineType.Regular;
-    board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-    let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-    callback.player = this;
-    this.hideSubtitleCallback = GameInstance
-    .GetDelaySystem(game)
-    .DelayCallback(callback, duration);
+  let spoken = localization.GetVoiceLanguage();
+  let written = localization.GetSubtitleLanguage();
+  E(s"reacts: voice language (\(NameToString(spoken)))");
+  // if spoken language is not available, abort
+  if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
+  // only show subtitles if they are available
+  if StrBeginsWith(NameToString(written), "en-") || StrBeginsWith(NameToString(written), "fr-") {
+    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
+    let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(written));
+    E(s"reacts: subtitle key (\(key))");
+    let subtitle: String = localization.GetSubtitle(key);
+    E(s"reacts: subtitle (\(subtitle))");
+    if StrLen(key) > 0 && NotEquals(key, subtitle) {
+      let duration: Float = 3.0;
+      let line: scnDialogLineData;
+      line.duration = duration;
+      line.id = this.ReactionID();
+      line.isPersistent = false;
+      line.speaker = this;
+      line.speakerName = "V";
+      line.text = subtitle;
+      line.type = scnDialogLineType.Regular;
+      board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
+      let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
+      callback.player = this;
+      this.hideSubtitleCallback = GameInstance
+      .GetDelaySystem(game)
+      .DelayCallback(callback, duration);
+    }
   }
   GameObject.PlaySound(this, reaction);
 }
@@ -313,67 +318,4 @@ private final func Apply() -> Void {
     system.OnSkipTime();
   }
   wrappedMethod();
-}
-
-// object action effects
-//
-// reduce boilerplate in YAML Tweaks
-public class HealerTweaks extends ScriptableTweak {
-  protected cb func OnApply() -> Void {
-    let notably   = "NotablyWeakened";
-    let severely  = "SeverelyWeakened";
-    let prefixes  = [notably, severely];
-
-    let maxdoc        = "FirstAidWhiff";
-    let bounceback    = "BonesMcCoy70";
-    let healthbooster = "HealthBooster";
-
-    this.Derive(prefixes, maxdoc,       ["_inline2", "_inline6", "_inline6"]);
-    this.Derive(prefixes, bounceback,   ["_inline2", "_inline2", "_inline6"]);
-    this.Derive(prefixes, healthbooster,["_inline1"]);
-  }
-
-  // create object action effect for weakened healers :
-  // e.g. Items.NotablyWeakenedActionEffectFirstAidWhiffV0 from Items.FirstAidWhiffV0_inline2
-  // with status effect set as BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0
-  private func Derive(prefixes: array<String>, diminutive: String, versions: array<String>) -> Void {
-    let size: Int32 = ArraySize(versions);
-    let many = size > 1;
-    let name: String;
-    let suffix: String;
-    for prefix in prefixes {
-      let i = 0;
-      for version in versions {
-        if many {
-          // consumables with versions, e.g. FirstAidWhiff
-          name = diminutive + "V" + ToString(i);
-          suffix = version;
-        } else {
-          // consumables without version, e.g. HealthBooster
-          name = diminutive;
-          suffix = "";
-        }
-
-        let original: String      = name + suffix;
-        let variantItem: String   = prefix + "ActionEffect" + name;
-        let variantEffect: String = prefix + name;
-
-        let originalItemId: TweakDBID   = TDBID.Create(("Items." + original));
-
-        let variantItemName: CName      = StringToName(("Items." + variantItem));
-        let variantItemId: TweakDBID    = TDBID.Create(("Items." + variantItem));
-        let variantEffectId: TweakDBID  = TDBID.Create("BaseStatusEffect." + variantEffect);
-
-        let cloned = TweakDBManager.CloneRecord(variantItemName, originalItemId);
-        if cloned {
-          let item: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantItemId);
-          let effect: ref<TweakDBRecord> = TweakDBInterface.GetRecord(variantEffectId);
-          TweakDBManager.SetFlat(item.GetID() + t".statusEffect", effect.GetID());
-          TweakDBManager.UpdateRecord(item.GetID());
-        }
-        
-        i += 1;
-      }
-    }
-  }
 }

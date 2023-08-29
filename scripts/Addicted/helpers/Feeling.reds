@@ -6,7 +6,7 @@ import Addicted.Utils.E
 public class Feeling {
   public static func OnceWarned(threshold: Threshold, warnings: Uint32) -> Mood {
     let random = RandF();
-    let likeliness = MaxF(Cast<Float>(warnings / 10u), 0.9);
+    let likeliness = 1.0 - MinF(Cast<Float>(warnings) / 10.0, 0.9);
     if random < likeliness {
       return Mood.Surprised;
     }
@@ -39,6 +39,7 @@ public class Feeling {
      "yeah_yeah_yeah_who_cares",
      "you_tell_me_biomon",
      "nah_everything_is_all_good",
+     "nah_im_cool",
      "noo"
    ];
   }
@@ -61,15 +62,17 @@ public class Feeling {
    ];
   }
 
-  public static func Reaction(mood: Mood, gender: gamedataGender, opt language: String) -> CName {
+  public static func Reaction(mood: Mood, gender: gamedataGender, language: CName) -> CName {
+    let language = NameToString(language);
     if Equals(mood, Mood.Any) { return n""; }
+    if StrLen(language) == 0 { language = "en-us"; }
+    if NotEquals(language, "en-us") && NotEquals(language, "fr-fr") { return n""; }
 
     let output: CName;
     let choices: array<String>;
     let size: Int32;
     let which: Int32;
     let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
-    if StrLen(language) == 0 { language = "en-us"; }
 
     switch(mood) {
       case Mood.Disheartened:

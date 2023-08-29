@@ -29,4 +29,6 @@ Here's another example with similarly designed status effect, `ElectrocutedSFX`,
 
 ![Electrocuted PlaySFXEffector](./pictures/RED-SFX-effectors.png)
 
+```admonish info
 Some experiments can be found in the [travelog entry from 2023-02-10](./../travelog/2023-02-10.md).
+```

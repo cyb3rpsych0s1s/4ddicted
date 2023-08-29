@@ -16,7 +16,15 @@ rust = { color = "tomato", link = "https://github.com/jac3km4/red4ext-rs" }
 lua = { color = "skyblue", link = "https://wiki.redmodding.org/cyber-engine-tweaks" }
 yaml = { color = "tomato", link = "https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks" }
 
+[preprocessor.admonish]
+command = "mdbook-admonish"
+assets_version = "2.0.1"    # do not edit: managed by `mdbook-admonish install`
+on_failure = "bail"
+after = ["links"]
+
 [output.html]
+git-repository-url = "https://github.com/cyb3rpsych0s1s/4ddicted"
+additional-css = ["./theme/css/mdbook-admonish.css"]
 
 [output.linkcheck]
 optional = true

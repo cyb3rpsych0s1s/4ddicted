@@ -4,10 +4,10 @@ on:
     branches:
       - main
     paths:
-      - '.github/**'
-      - 'book.toml'
-      - 'pages/**'
-      - '**.md'
+      - ".github/**"
+      - "book.toml"
+      - "pages/**"
+      - "**.md"
 
 jobs:
   deploy:
@@ -19,15 +19,20 @@ jobs:
       - name: Install mdbook
         run: |
           mkdir mdbook
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.28/mdbook-v0.4.28-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.34/mdbook-v0.4.34-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
-      - name: Setup rust toolchain
-        uses: dtolnay/rust-toolchain@stable
       - name: Install mdbook-codeblocks
         run: |
           mkdir mdbook-codeblocks
-          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.5/mdbook-codeblocks-v0.1.5-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
+          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.10/mdbook-codeblocks-v0.1.10-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
           echo `pwd`/mdbook-codeblocks >> $GITHUB_PATH
+      - name: Install mdbook-admonish
+        run: |
+          mkdir mdbook-admonish
+          curl -sSL https://github.com/tommilligan/mdbook-admonish/releases/download/v1.10.2/mdbook-admonish-v1.10.2-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
+          echo `pwd`/mdbook-admonish >> $GITHUB_PATH
+      - name: Setup rust toolchain
+        uses: dtolnay/rust-toolchain@stable
       - name: Deploy GitHub Pages
         run: |
           mdbook build

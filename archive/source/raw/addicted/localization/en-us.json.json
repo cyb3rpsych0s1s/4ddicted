@@ -27,24 +27,10 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Barely",
-              "maleVariant": "",
-              "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Threshold-Barely"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
               "femaleVariant": "V start getting barely addicted past this threshold",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Threshold-Barely-Desc"
-            },
-            {
-              "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Mildly",
-              "maleVariant": "",
-              "primaryKey": 0,
-              "secondaryKey": "Mod-Addicted-Threshold-Mildly"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
@@ -216,7 +202,7 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "Memory Booster",
+              "femaleVariant": "RAM Jolt",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Consumable-MemoryBooster"
@@ -237,14 +223,14 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Reflexes",
+              "femaleVariant": "{int_0}% Max Reflexes",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-BlackLace-Desc"
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Stamina",
+              "femaleVariant": "{int_0}% Max Stamina",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Stamina-Booster-Desc"
@@ -258,7 +244,7 @@
             },
             {
               "$type": "localizationPersistenceOnScreenEntry",
-              "femaleVariant": "{int_0}% Memory",
+              "femaleVariant": "{int_0}% Max RAM Units",
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Withdrawn-Memory-Booster-Desc"
@@ -402,6 +388,13 @@
               "maleVariant": "",
               "primaryKey": 0,
               "secondaryKey": "Mod-Addicted-Overdose-BlackLace-Desc"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "UNKNOWN",
+              "maleVariant": "",
+              "primaryKey": 0,
+              "secondaryKey": "Mod-Addicted-Unknown"
             }
           ]
         }

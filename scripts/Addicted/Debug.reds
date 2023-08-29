@@ -148,9 +148,9 @@ public func DebugBiomon() -> Void {
   let event: ref<CrossThresholdEvent> = new CrossThresholdEvent();
   let customer: ref<Customer> = new Customer();
   customer.FirstName = "V";
-  customer.LastName = "UNKNOWN";
+  customer.LastName = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
   customer.Age = "27";
-  customer.BloodGroup = "UNKNOWN";
+  customer.BloodGroup = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
   customer.Insurance = "-";
   let system: ref<AddictedSystem> = AddictedSystem.GetInstance(this.GetGame());
   let symptoms = system.Symptoms();
