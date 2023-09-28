@@ -17,12 +17,12 @@ public class System extends ScriptableSystem {
             initial.current = 0;
             this.dummy = initial;
         }
-        LogChannel(n"DEBUG", s"BEFORE \(this.dummy.current) \(ToString(this.dummy.doses))");
+        LogChannel(n"DEBUG", s"BEFORE \(this.dummy.current) \(ToString(this.dummy.doses)) \(ArraySize(this.dummy.doses))");
         let now = GameInstance
         .GetTimeSystem(this.GetGameInstance())
         .GetGameTimeStamp();
         Increase(this.dummy, now);
-        LogChannel(n"DEBUG", s"AFTER \(this.dummy.current) \(ToString(this.dummy.doses))");
+        LogChannel(n"DEBUG", s"AFTER \(this.dummy.current) \(ToString(this.dummy.doses)) \(ArraySize(this.dummy.doses))");
     }
 }
 
