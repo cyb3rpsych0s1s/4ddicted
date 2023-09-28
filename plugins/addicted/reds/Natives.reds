@@ -15,6 +15,7 @@ public class System extends ScriptableSystem {
         if !IsDefined(this.dummy) {
             let initial = new Consumption();
             initial.current = 0;
+            initial.doses = [];
             this.dummy = initial;
         }
         LogChannel(n"DEBUG", s"BEFORE \(this.dummy.current) \(ToString(this.dummy.doses)) \(ArraySize(this.dummy.doses))");
