@@ -5,7 +5,7 @@ define_plugin! {
     author: "Roms1383",
     version: 0:1:0,
     on_register: {
-        register_function!("TestRED4ext", test_red4ext);
+        register_function!("Addicted.TestRED4ext", test_red4ext);
     }
 }
 
