@@ -1,5 +1,7 @@
 use red4ext_rs::prelude::*;
 
+mod system;
+
 define_plugin! {
     name: "addicted",
     author: "Roms1383",
