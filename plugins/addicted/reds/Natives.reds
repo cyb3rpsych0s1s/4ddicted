@@ -1,6 +1,7 @@
 module Addicted
 
 public native func TestRED4ext(v: Int32) -> Void;
+public native func TestSystem(v: ref<System>) -> Void;
 
 public class System extends ScriptableSystem {
     public final static func GetInstance(game: GameInstance) -> ref<System> {
