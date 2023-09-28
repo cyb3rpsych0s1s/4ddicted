@@ -1,6 +1,6 @@
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
-    types::{IScriptable, Ref},
+    types::{IScriptable, RedArray, Ref},
 };
 
 #[derive(Default, Clone)]
@@ -17,4 +17,6 @@ unsafe impl RefRepr for Consumption {
 impl Consumption {
     pub fn set_current(&self, v: i32) -> ();
     pub fn get_current(&self) -> i32;
+    pub fn set_doses(&self, v: RedArray<f32>) -> ();
+    pub fn get_doses(&self) -> RedArray<f32>;
 }

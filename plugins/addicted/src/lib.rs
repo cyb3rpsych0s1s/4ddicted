@@ -25,6 +25,11 @@ fn test_system(system: System) {
     system.hello_world();
 }
 
-fn increase(consumption: Consumption) {
+fn increase(consumption: Consumption, on: f32) {
     consumption.set_current(consumption.get_current() + 1);
+    let doses = consumption.get_doses();
+    let mut copy = Vec::with_capacity(doses.as_slice().len() + 1);
+    doses.as_slice().clone_into(&mut copy);
+    copy.push(on);
+    consumption.set_doses(RedArray::from_sized_iter(copy.into_iter()));
 }
