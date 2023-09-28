@@ -64,6 +64,10 @@ default:
   @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
   @echo 'e.g. RED_CLI=C:\\\\somewhere\\\\on\\\\my\\\\computer\\\\redscript-cli.exe'
 
+# 📁 run once to create mod folders (if not exist) in game files
+setup:
+    @if (!(Test-Path '{{red_game_dir}}'))     { [void](New-Item '{{red_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{red_game_dir}}"; }
+
 # 🎨 lint code
 lint:
     '{{red_cli}}' lint -s 'scripts' -b '{{red_cache_bundle}}'
@@ -97,6 +101,11 @@ build TARGET='debug' LOCALE='en-us':
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
+
+# see WolvenKit archive Hot Reload (with Red Hot Tools)
+# ↪️  copy codebase files to game files, excluding archive (when game is running)
+rebuild: setup
+    Copy-Item -Force -Recurse '{{ join(red_repo_dir, "*") }}' '{{red_game_dir}}'
 
 # 🧾 show logs from CET and RED
 [windows]
