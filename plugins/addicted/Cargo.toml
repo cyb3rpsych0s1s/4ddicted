@@ -7,7 +7,6 @@ edition.workspace = true
 name = "addicted"
 crate-type = ["cdylib"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 cp2077-rs = { path = "../cp2077-rs" }
+red4ext-rs.workspace = true

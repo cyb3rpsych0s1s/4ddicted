@@ -5,3 +5,6 @@ resolver = "2"
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
+
+[workspace.dependencies]
+red4ext-rs = { git = "https://github.com/Roms1383/red4ext-rs.git", branch = "chore/2.0", features = ["macros"] }

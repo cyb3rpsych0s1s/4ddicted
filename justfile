@@ -18,7 +18,8 @@ tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
 resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
-red4ext_repo_dir    := join(repo_dir, "target")
+red4ext_bin_dir     := join(repo_dir, "target")
+red4ext_repo_dir     := join(repo_dir, "plugins", lowercase(mod_name), "reds")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -66,7 +67,7 @@ default:
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
-    @if (!(Test-Path '{{red_game_dir}}'))     { [void](New-Item '{{red_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{red_game_dir}}"; }
+    @if (!(Test-Path '{{ join(red_game_dir, "Natives") }}'))     { [void](New-Item '{{ join(red_game_dir, "Natives") }}'     -ItemType Directory); Write-Host "Created folder at {{ join(red_game_dir, 'Natives') }}"; }
 
 # 🎨 lint code
 lint:
@@ -91,13 +92,13 @@ compile:
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
-build TARGET='debug' LOCALE='en-us':
+build TARGET='debug' LOCALE='en-us': rebuild
     @$folder = '{{red4ext_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
         Write-Host "target can only be 'debug' or 'release' (default to 'release')"; exit 1; \
     }
     @if ('{{TARGET}}' -EQ 'debug') { cargo build; } else { cargo build --release; }
-    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
@@ -105,7 +106,7 @@ deploy:
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild: setup
-    Copy-Item -Force -Recurse '{{ join(red_repo_dir, "*") }}' '{{red_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*") }}' '{{ join(red_game_dir, "Natives") }}'
 
 # 🧾 show logs from CET and RED
 [windows]

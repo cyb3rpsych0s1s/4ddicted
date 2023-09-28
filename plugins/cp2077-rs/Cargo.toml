@@ -7,3 +7,4 @@ edition.workspace = true
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+red4ext-rs.workspace = true
