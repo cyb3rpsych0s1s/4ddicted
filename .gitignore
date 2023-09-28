@@ -12,6 +12,7 @@ scripts/*
 /archive/source/customSounds/**/*.mp3
 /archive/source/resources/info.json
 /archive/Addicted.cpmodproj
+/target
 
 /Addicted
 /.VSCodeCounter

@@ -18,6 +18,7 @@ tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
 resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
+red4ext_repo_dir    := join(repo_dir, "target")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -26,6 +27,7 @@ tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
 archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
 red_cache_dir       := join(game_dir, "r6", "cache")
+red4ext_game_dir    := join(game_dir, "red4ext", "plugins", lowercase(mod_name))
 
 # bundle files for release
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -62,14 +64,6 @@ default:
   @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
   @echo 'e.g. RED_CLI=C:\\\\somewhere\\\\on\\\\my\\\\computer\\\\redscript-cli.exe'
 
-# 📁 run once to create mod folders (if not exist) in game files
-setup:
-    @if (!(Test-Path '{{cet_game_dir}}'))     { [void](New-Item '{{cet_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{cet_game_dir}}"; }
-    @if (!(Test-Path '{{red_game_dir}}'))     { [void](New-Item '{{red_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{red_game_dir}}"; }
-    @if (!(Test-Path '{{tweak_game_dir}}'))   { [void](New-Item '{{tweak_game_dir}}'   -ItemType Directory); Write-Host "Created folder at {{tweak_game_dir}}"; }
-    @if (!(Test-Path '{{redmod_game_dir}}'))  { [void](New-Item '{{redmod_game_dir}}'  -ItemType Directory); Write-Host "Created folder at {{redmod_game_dir}}"; }
-    @if (!(Test-Path '{{archive_game_dir}}')) { [void](New-Item '{{archive_game_dir}}' -ItemType Directory); Write-Host "Created folder at {{archive_game_dir}}"; }
-
 # 🎨 lint code
 lint:
     '{{red_cli}}' lint -s 'scripts' -b '{{red_cache_bundle}}'
@@ -93,24 +87,16 @@ compile:
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
-build LOCALE: rebuild
-    Copy-Item -Force -Recurse '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
-    @$folder = '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'
-    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
+build TARGET='debug' LOCALE='en-us':
+    @$folder = '{{red4ext_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
+        Write-Host "target can only be 'debug' or 'release' (default to 'release')"; exit 1; \
+    }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo build; } else { cargo build --release; }
+    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
-
-# see WolvenKit archive Hot Reload (with Red Hot Tools)
-# ↪️  copy codebase files to game files, excluding archive (when game is running)
-[windows]
-rebuild: setup
-    Copy-Item -Force -Recurse '{{ join(cet_repo_dir, "*") }}' '{{cet_game_dir}}'
-    Copy-Item -Force -Recurse '{{ join(red_repo_dir, "*") }}' '{{red_game_dir}}'
-    Copy-Item -Force -Recurse '{{ join(tweak_repo_dir, "*") }}' '{{tweak_game_dir}}' -Include "*.yml"
 
 # 🧾 show logs from CET and RED
 [windows]
