@@ -1,0 +1,15 @@
+[workspace]
+members = ["plugins/cp2077-rs", "plugins/stupefied", "plugins/addicted"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.72"
+
+[workspace.dependencies]
+cp2077-rs = { path = "./plugins/cp2077-rs" }
+const-str = "0.5.6"
+lazy_static = "1.4.0"
+phf = { version = "0.11.2", features = ["macros"] }
+red4ext-rs = { git = "https://github.com/jac3km4/red4ext-rs.git", rev = "5551400", features = ["macros"] }

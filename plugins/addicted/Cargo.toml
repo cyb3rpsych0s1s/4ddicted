@@ -1,0 +1,25 @@
+[package]
+name = "addicted"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+name = "addicted"
+crate-type = ["cdylib"]
+
+[dependencies]
+bitflags = "2.4.0"
+casey = "0.4.0"
+const-str.workspace = true
+cp2077-rs.workspace = true
+lazy_static.workspace = true
+phf.workspace = true
+stupefied = { path = "../stupefied" }
+quote = "1.0.33"
+syn = "2.0.38"
+red4ext-rs.workspace = true
+
+[features]
+default = ["console"]
+console = []

@@ -5,6 +5,7 @@ set dotenv-load
 DEFAULT_GAME_DIR    := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 
 mod_name            := 'Addicted'
+mod_companion_name  := 'Stupefied'
 
 # installation dir for Cyberpunk 2077, e.g. Steam
 repo_dir            := justfile_directory()    
@@ -14,18 +15,25 @@ bundle_dir          := mod_name
 # codebase (outside of game files)
 cet_repo_dir        := join(repo_dir, "mods", mod_name)
 red_repo_dir        := join(repo_dir, "scripts", mod_name)
+red_companion_repo_dir := join(repo_dir, "scripts", mod_companion_name)
 tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
 resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
+red4ext_bin_dir     := join(repo_dir, "target")
+red4ext_repo_dir     := join(repo_dir, "plugins", lowercase(mod_name), "reds")
+red4ext_companion_repo_dir := join(repo_dir, "plugins", lowercase(mod_companion_name), "reds")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
 red_game_dir        := join(game_dir, "r6", "scripts", mod_name)
+red_companion_game_dir := join(game_dir, "r6", "scripts", mod_companion_name)
 tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
 archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
 red_cache_dir       := join(game_dir, "r6", "cache")
+red4ext_game_dir    := join(game_dir, "red4ext", "plugins", lowercase(mod_name))
+red4ext_companion_game_dir := join(game_dir, "red4ext", "plugins", lowercase(mod_companion_name))
 
 # bundle files for release
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -64,11 +72,10 @@ default:
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
-    @if (!(Test-Path '{{cet_game_dir}}'))     { [void](New-Item '{{cet_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{cet_game_dir}}"; }
-    @if (!(Test-Path '{{red_game_dir}}'))     { [void](New-Item '{{red_game_dir}}'     -ItemType Directory); Write-Host "Created folder at {{red_game_dir}}"; }
-    @if (!(Test-Path '{{tweak_game_dir}}'))   { [void](New-Item '{{tweak_game_dir}}'   -ItemType Directory); Write-Host "Created folder at {{tweak_game_dir}}"; }
-    @if (!(Test-Path '{{redmod_game_dir}}'))  { [void](New-Item '{{redmod_game_dir}}'  -ItemType Directory); Write-Host "Created folder at {{redmod_game_dir}}"; }
-    @if (!(Test-Path '{{archive_game_dir}}')) { [void](New-Item '{{archive_game_dir}}' -ItemType Directory); Write-Host "Created folder at {{archive_game_dir}}"; }
+    @$folder = '{{ join(red_game_dir, "Natives") }}';           if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{ join(red_companion_game_dir, "Natives") }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{tweak_game_dir}}';                            if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{archive_game_dir}}';                          if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
 
 # 🎨 lint code
 lint:
@@ -87,30 +94,40 @@ import:
 #     Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
 #     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
 
+pack:
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Icons", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Icons") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Icons", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Icons.archive") }}' -Force
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.VFX", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.VFX") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.VFX", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.VFX.archive") }}' -Force
+    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
+
 # 🔛 just compile to check (without building)
-compile:
-    {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
+# compile:
+#     {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
-build LOCALE: rebuild
-    Copy-Item -Force -Recurse '{{ join(archive_repo_dir, "*") }}' '{{game_dir}}'
-    @$folder = '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    @$folder = '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", LOCALE) }}'
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'
-    Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
+build TARGET='debug' LOCALE='en-us':
+    @$folder = '{{red4ext_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{red4ext_companion_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
+        Write-Host "target can only be 'debug' or 'release' (default to 'release')"; exit 1; \
+    }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p addicted; } else { cargo +nightly build -p addicted --release; }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p stupefied; } else { cargo +nightly build -p stupefied --release; }
+    Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_companion_name) + ".dll") }}' '{{red4ext_companion_game_dir}}'
+    @just rebuild
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
 
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
-[windows]
 rebuild: setup
-    Copy-Item -Force -Recurse '{{ join(cet_repo_dir, "*") }}' '{{cet_game_dir}}'
-    Copy-Item -Force -Recurse '{{ join(red_repo_dir, "*") }}' '{{red_game_dir}}'
-    Copy-Item -Force -Recurse '{{ join(tweak_repo_dir, "*") }}' '{{tweak_game_dir}}' -Include "*.yml"
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "tweaks", "*.yml") }}' '{{tweak_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*.reds") }}' '{{ join(red_game_dir, "Natives") }}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_companion_repo_dir, "*.reds") }}' '{{ join(red_companion_game_dir, "Natives") }}'
 
 # 🧾 show logs from CET and RED
 [windows]
@@ -126,12 +143,12 @@ logs:
 # 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
 [windows]
 clear:
-    @if(Test-Path "{{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}" ) { \
-        Write-Host "replacing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
-        cp -Force '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}' '{{ join(red_cache_dir, "modded", "final.redscripts") }}'; \
-        Remove-Item -Force -Path '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}'; \
+    @if(Test-Path "{{ join(red_cache_dir, 'final.redscripts.bk') }}" ) { \
+        Write-Host "replacing {{ join(red_cache_dir, 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
+        cp -Force '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'; \
+        Remove-Item -Force -Path '{{ join(red_cache_dir, "final.redscripts.bk") }}'; \
     } else { \
-        Write-Host "missing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
+        Write-Host "missing {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
     }
 
 # 💾 store (or overwrite) logs in latest.log
@@ -232,14 +249,15 @@ bundle_lang LOCALE:
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 [windows]
-uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod
+uninstall: uninstall-red uninstall-red4ext uninstall-archive
+# uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod uninstall-red4ext
 
 # 🗑️🎭  clear out mod archive files in game files
 [windows]
 uninstall-archive:
-    @$file = '{{ join(archive_game_dir, mod_name + ".archive") }}'; \
+    @$file = '{{ join(archive_game_dir, "Addicted.*.archive") }}'; \
     if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
-    @$file = '{{ join(archive_game_dir, mod_name + ".archive.xl") }}'; \
+    @$file = '{{ join(archive_game_dir, "Addicted.*.archive.xl") }}'; \
     if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
 
 # 🗑️⚙️   clear out mod CET files in game files
@@ -252,6 +270,8 @@ uninstall-cet:
 [windows]
 uninstall-red:
     @$folder = '{{red_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{red_companion_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # 🗑️🗜️   clear out mod tweaks files in game files
@@ -266,7 +286,21 @@ uninstall-redmod:
     @$folder = '{{redmod_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
+# 🗑️⚙️   clear out mod REDmod files in game files
+[windows]
+uninstall-red4ext:
+    @$folder = '{{red4ext_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{red4ext_companion_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+
 alias nuke := nuclear
+
+delete-bin:
+    rm -Recurse -Force '{{ join(repo_dir, "target") }}'
+
+delete-lock:
+    rm -Force '{{ join(repo_dir, "Cargo.lock") }}'
 
 # 🧨 nuke your game files as a last resort (vanilla reset)
 [windows]
@@ -302,3 +336,17 @@ encode OVERWRITE='false':
 # analyze given file audio settings (please install ffprobe manually)
 analyze FILE:
   ffprobe -i '{{FILE}}' -show_format -probesize 50000000 -analyzeduration 500
+
+# nuke everything and rebuild from scratch
+tabula: delete-bin delete-lock uninstall clear build
+
+format:
+    cargo fix --allow-dirty --allow-staged
+    cargo clippy --fix --allow-dirty --allow-staged
+    cargo fmt --all
+
+decompile MODE='code':
+    @if (-NOT('{{MODE}}' -EQ 'ast') -AND -NOT('{{MODE}}' -EQ 'code') -AND -NOT('{{MODE}}' -EQ 'bytecode')) { \
+        Write-Host "MODE can only be 'ast', 'code' or 'bytecode' (default to 'code')"; exit 1; \
+    }
+    {{red_cli}} decompile --input '{{red_cache_bundle}}' --mode '{{MODE}}' --verbose --output 'dump.reds'

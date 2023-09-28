@@ -11,11 +11,19 @@ scripts/*
 /archive/layout.xml
 /archive/source/customSounds/**/*.mp3
 /archive/source/resources/info.json
-/archive/Addicted.cpmodproj
+/archives/**/*.cpmodproj
+/archives/**/*.zip
+/archives/**/layout.xml
+/archives/**/install_log.xml
+/archives/**/packed
+/archives/*.archive
+/target
+/researches
 
 /Addicted
 /.VSCodeCounter
 dump.redscripts
+dump.reds
 saved.json
 /.installation
 /medium
