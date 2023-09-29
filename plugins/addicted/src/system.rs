@@ -11,7 +11,8 @@ unsafe impl RefRepr for System {
     const CLASS_NAME: &'static str = "Addicted.System";
 }
 
-#[redscript_import]
 impl System {
-    pub fn hello_world(&self) -> ();
+    pub fn on_consume_item(&self, item: ItemId) {
+        info!("consuming {item:#?}");
+    }
 }
