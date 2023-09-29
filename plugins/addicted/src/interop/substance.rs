@@ -1,4 +1,28 @@
-use red4ext_rs::prelude::NativeRepr;
+use red4ext_rs::{prelude::NativeRepr, types::{TweakDbId, ItemId}};
+
+use crate::addictive::Addictive;
+
+pub enum Error {
+    NonAddictive,
+}
+
+/// strongly-typed version of a TweakDbId:
+/// ensures that the ID is actually an addictive substance.
+pub struct SubstanceId(TweakDbId);
+
+unsafe impl NativeRepr for SubstanceId {
+    const NAME: &'static str = TweakDbId::NAME;
+    const NATIVE_NAME: &'static str = TweakDbId::NATIVE_NAME;
+}
+
+impl TryFrom<ItemId> for SubstanceId {
+    type Error = Error;
+
+    fn try_from(value: ItemId) -> Result<Self, Self::Error> {
+        if value.addictive() { return Ok(Self(value.get_tdbid())); }
+        Err(Error::NonAddictive)
+    }
+}
 
 /// represents all potentially addictive consumables found in-game.
 #[derive(Debug, Default, Clone, Copy, PartialEq)]

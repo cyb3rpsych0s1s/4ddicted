@@ -1,9 +1,7 @@
 mod healer;
 pub use healer::*;
 
-use red4ext_rs::types::{TweakDbId, ItemId};
-
-pub struct SubstanceId(TweakDbId);
+use red4ext_rs::{types::{TweakDbId, ItemId}, prelude::NativeRepr};
 
 pub trait Addictive {
     fn addictive(&self) -> bool;
@@ -11,7 +9,7 @@ pub trait Addictive {
 
 impl Addictive for ItemId {
     fn addictive(&self) -> bool {
-        self.is_healer()
+        self.is_healer() // || ...
     }
 }
 
