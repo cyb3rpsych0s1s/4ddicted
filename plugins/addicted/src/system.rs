@@ -1,3 +1,4 @@
+use cp2077_rs::Housing;
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
@@ -18,6 +19,11 @@ impl System {
         info!("consuming {item:#?}");
         if let Some(_) = SubstanceId::try_from(item).ok() {
             info!("item is addictive");
+        }
+    }
+    pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {
+        if effect.is_housing() {
+            info!("housing: {effect:#?}");
         }
     }
 }

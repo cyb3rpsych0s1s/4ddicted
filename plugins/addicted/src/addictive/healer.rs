@@ -20,7 +20,7 @@ pub trait Healer {
 }
 
 /// all MaxDOC variants from vanilla game
-/// 
+///
 /// There's also `Items.sts_wat_kab_01_inhaler`
 /// a.k.a _Mike's inhaler_: not equipable, not consumable, is this of any use ?
 pub const MAX_DOC: [TweakDbId; 12] = [
@@ -36,7 +36,7 @@ pub const MAX_DOC: [TweakDbId; 12] = [
     TweakDbId::new("Items.FirstAidWhiffVUncommon"),
     TweakDbId::new("Items.FirstAidWhiffVUncommonPlus"),
     TweakDbId::new("Items.TTReanimatorTutorial"),
-    ];
+];
 
 /// all BounceBack variants from vanilla game
 pub const BOUNCE_BACK: [TweakDbId; 10] = [
