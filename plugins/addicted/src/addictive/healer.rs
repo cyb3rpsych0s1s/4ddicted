@@ -1,6 +1,21 @@
 use red4ext_rs::types::{ItemId, TweakDbId};
 
-pub const MAX_DOC: [TweakDbId; 10] = [
+pub trait Healer {
+    /// is this a MaxDOC ?
+    fn is_maxdoc(&self) -> bool;
+    /// is this a BounceBack ?
+    fn is_bounceback(&self) -> bool;
+    /// is this a Health Booster ?
+    fn is_healthbooster(&self) -> bool;
+    /// is this a healer ?
+    fn is_healer(&self) -> bool {
+        self.is_maxdoc() || self.is_bounceback() || self.is_healthbooster()
+    }
+}
+
+/// all MaxDOC variants from vanilla game
+pub const MAX_DOC: [TweakDbId; 11] = [
+    TweakDbId::new("Items.CPO_FirstAidWhiff"),
     TweakDbId::new("Items.FirstAidWhiffV0"),
     TweakDbId::new("Items.FirstAidWhiffV1"),
     TweakDbId::new("Items.FirstAidWhiffV2"),
@@ -13,6 +28,7 @@ pub const MAX_DOC: [TweakDbId; 10] = [
     TweakDbId::new("Items.FirstAidWhiffVUncommonPlus"),
 ];
 
+/// all BounceBack variants from vanilla game
 pub const BOUNCE_BACK: [TweakDbId; 10] = [
     TweakDbId::new("Items.BonesMcCoy70V0"),
     TweakDbId::new("Items.BonesMcCoy70V1"),
@@ -26,14 +42,11 @@ pub const BOUNCE_BACK: [TweakDbId; 10] = [
     TweakDbId::new("Items.BonesMcCoy70VUncommonPlus"),
 ];
 
-pub trait Healer {
-    fn is_maxdoc(&self) -> bool;
-    fn is_bounceback(&self) -> bool;
-    fn is_healthbooster(&self) -> bool;
-    fn is_healer(&self) -> bool {
-        self.is_maxdoc() || self.is_bounceback() || self.is_healthbooster()
-    }
-}
+/// all Health Booster variants from vanilla game
+pub const HEALTH_BOOSTER: [TweakDbId; 2] = [
+    TweakDbId::new("Items.HealthBooster"),
+    TweakDbId::new("Items.Blackmarket_HealthBooster"),
+];
 
 impl Healer for ItemId {
     fn is_maxdoc(&self) -> bool {
@@ -45,6 +58,6 @@ impl Healer for ItemId {
     }
 
     fn is_healthbooster(&self) -> bool {
-        self.get_tdbid() == TweakDbId::new("Items.HealthBooster")
+        HEALTH_BOOSTER.contains(&self.get_tdbid())
     }
 }
