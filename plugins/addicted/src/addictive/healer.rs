@@ -1,3 +1,9 @@
+//! healers
+//!
+//! - all healers are `ConsumableItem_Record`
+//! - all healers can be identified through `ConsumableBaseName()` (`ConsumableBaseName.Alcohol`)
+//! - all healers triggers `Consume` but also a special `UseHealCharge` (`ObjectAction_Record`)
+
 use red4ext_rs::types::{ItemId, TweakDbId};
 
 pub trait Healer {
@@ -14,7 +20,10 @@ pub trait Healer {
 }
 
 /// all MaxDOC variants from vanilla game
-pub const MAX_DOC: [TweakDbId; 11] = [
+/// 
+/// There's also `Items.sts_wat_kab_01_inhaler`
+/// a.k.a _Mike's inhaler_: not equipable, not consumable, is this of any use ?
+pub const MAX_DOC: [TweakDbId; 12] = [
     TweakDbId::new("Items.CPO_FirstAidWhiff"),
     TweakDbId::new("Items.FirstAidWhiffV0"),
     TweakDbId::new("Items.FirstAidWhiffV1"),
@@ -26,7 +35,8 @@ pub const MAX_DOC: [TweakDbId; 11] = [
     TweakDbId::new("Items.FirstAidWhiffVRarePlus"),
     TweakDbId::new("Items.FirstAidWhiffVUncommon"),
     TweakDbId::new("Items.FirstAidWhiffVUncommonPlus"),
-];
+    TweakDbId::new("Items.TTReanimatorTutorial"),
+    ];
 
 /// all BounceBack variants from vanilla game
 pub const BOUNCE_BACK: [TweakDbId; 10] = [

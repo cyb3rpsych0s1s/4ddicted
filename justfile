@@ -106,7 +106,7 @@ deploy:
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild: setup
-    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*") }}' '{{ join(red_game_dir, "Natives") }}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*.reds") }}' '{{ join(red_game_dir, "Natives") }}'
 
 # 🧾 show logs from CET and RED
 [windows]

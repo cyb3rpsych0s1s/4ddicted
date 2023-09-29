@@ -1,3 +1,9 @@
+//! boosters
+//!
+//! - all boosters are `ConsumableItem_Record`
+//! - all boosters can be identified through `ConsumableBaseName()` (`ConsumableBaseName.Booster` and so on)
+//! - all boosters triggers `Consume` (`ObjectAction_Record`)
+
 use red4ext_rs::types::{ItemId, TweakDbId};
 
 pub const MEMORY_BOOSTER: [TweakDbId; 2] = [

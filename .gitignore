@@ -13,6 +13,7 @@ scripts/*
 /archive/source/resources/info.json
 /archive/Addicted.cpmodproj
 /target
+/researches
 
 /Addicted
 /.VSCodeCounter
