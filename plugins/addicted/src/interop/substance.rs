@@ -1,4 +1,7 @@
-use red4ext_rs::{prelude::NativeRepr, types::{TweakDbId, ItemId}};
+use red4ext_rs::{
+    prelude::NativeRepr,
+    types::{ItemId, TweakDbId},
+};
 
 use crate::addictive::Addictive;
 
@@ -19,7 +22,9 @@ impl TryFrom<ItemId> for SubstanceId {
     type Error = Error;
 
     fn try_from(value: ItemId) -> Result<Self, Self::Error> {
-        if value.addictive() { return Ok(Self(value.get_tdbid())); }
+        if value.addictive() {
+            return Ok(Self(value.get_tdbid()));
+        }
         Err(Error::NonAddictive)
     }
 }

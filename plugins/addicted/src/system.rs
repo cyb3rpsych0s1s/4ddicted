@@ -1,6 +1,8 @@
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
+use crate::interop::SubstanceId;
+
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct System(Ref<IScriptable>);
@@ -12,7 +14,10 @@ unsafe impl RefRepr for System {
 }
 
 impl System {
-    pub fn on_consume_item(&self, item: ItemId) {
+    pub fn on_process_item_action(&self, item: ItemId) {
         info!("consuming {item:#?}");
+        if let Some(_) = SubstanceId::try_from(item).ok() {
+            info!("item is addictive");
+        }
     }
 }
