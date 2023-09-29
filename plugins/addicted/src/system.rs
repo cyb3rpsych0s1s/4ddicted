@@ -14,7 +14,7 @@ unsafe impl RefRepr for System {
 }
 
 impl System {
-    pub fn on_process_item_action(&self, item: ItemId) {
+    pub fn on_ingested_item(&self, item: ItemId) {
         info!("consuming {item:#?}");
         if let Some(_) = SubstanceId::try_from(item).ok() {
             info!("item is addictive");

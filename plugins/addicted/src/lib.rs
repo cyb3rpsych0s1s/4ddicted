@@ -10,7 +10,7 @@ define_plugin! {
     author: "Roms1383",
     version: 0:1:0,
     on_register: {
-        register_function!("Addicted.OnProcessItemAction", on_process_item_action);
+        register_function!("Addicted.OnIngestedItem", on_ingested_item);
         register_function!("WriteToFile", write_to_file);
     }
 }
@@ -22,6 +22,6 @@ fn write_to_file(names: Vec<String>, filename: String) {
     );
 }
 
-fn on_process_item_action(system: System, item: ItemId) {
-    system.on_process_item_action(item);
+fn on_ingested_item(system: System, item: ItemId) {
+    system.on_ingested_item(item);
 }
