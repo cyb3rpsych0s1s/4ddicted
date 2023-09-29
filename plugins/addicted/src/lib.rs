@@ -1,7 +1,8 @@
 use red4ext_rs::prelude::*;
 use system::System;
 
-mod consumption;
+mod addictive;
+mod interop;
 mod system;
 
 define_plugin! {

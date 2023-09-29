@@ -206,7 +206,6 @@ dependencies = [
 [[package]]
 name = "red4ext-macros"
 version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/2.0#776224df46739e6c2797684547be4715794dc552"
 dependencies = [
  "darling",
  "heck",
@@ -218,7 +217,6 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/2.0#776224df46739e6c2797684547be4715794dc552"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -230,7 +228,6 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/2.0#776224df46739e6c2797684547be4715794dc552"
 dependencies = [
  "const-crc32",
  "cxx",

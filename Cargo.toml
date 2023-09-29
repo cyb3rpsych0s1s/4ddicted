@@ -7,4 +7,4 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace.dependencies]
-red4ext-rs = { git = "https://github.com/Roms1383/red4ext-rs.git", branch = "chore/2.0", features = ["macros"] }
+red4ext-rs = { path = "../red4ext-rs/red4ext", features = ["macros"] }
