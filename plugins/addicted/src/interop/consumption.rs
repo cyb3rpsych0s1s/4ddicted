@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use super::{SubstanceId, Potency};
+use super::{Potency, SubstanceId};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -42,7 +42,6 @@ impl Consumptions {
     fn create_consumption(&self, score: i32) -> Consumption;
 }
 
-#[allow(dead_code)]
 impl Consumptions {
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
         let idx = self
@@ -107,47 +106,6 @@ impl Consumptions {
             let values = values.into_iter().map(|x| x.0).collect();
             self.set_keys(keys);
             self.set_values(values);
-        }
-    }
-    pub fn decrease_one(&mut self, id: SubstanceId) {
-        let idx = self
-            .keys()
-            .as_slice()
-            .iter()
-            .enumerate()
-            .find_map(|(idx, key)| if *key == id { Some(idx as isize) } else { None })
-            .unwrap_or(-1);
-        if idx != -1 {
-            let idx = idx as usize;
-            if self.values().as_slice()[idx].current() == 0 {
-                let len = self.keys().as_slice().len();
-                if len > 0 {
-                    let mut keys = Vec::with_capacity(len - 1);
-                    let mut values = Vec::with_capacity(len - 1);
-                    if idx == 0 {
-                        keys.extend_from_slice(&self.keys().as_slice()[1..]);
-
-                        values.extend_from_slice(&self.values().as_slice()[1..]);
-                    } else if idx == (len - 1) {
-                        keys.extend_from_slice(&self.keys().as_slice()[..len]);
-
-                        values.extend_from_slice(&self.values().as_slice()[..len]);
-                    } else {
-                        keys.extend_from_slice(&self.keys().as_slice()[0..idx]);
-                        keys.extend_from_slice(&self.keys().as_slice()[idx + 1..]);
-
-                        values.extend_from_slice(&self.values().as_slice()[0..idx]);
-                        values.extend_from_slice(&self.values().as_slice()[idx + 1..]);
-                    }
-                    let values = values.into_iter().map(|x| x.0).collect();
-                    self.set_keys(keys);
-                    self.set_values(values);
-                }
-            } else {
-                let mut values = self.values();
-                let existing = &mut values.as_mut_slice()[idx];
-                existing.set_current(existing.current() - 1);
-            }
         }
     }
 }
