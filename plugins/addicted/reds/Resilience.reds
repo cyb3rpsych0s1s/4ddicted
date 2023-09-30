@@ -3,7 +3,6 @@ module Addicted
 import Addicted.System
 
 native func OnStatusEffectNotAppliedOnSpawn(system: ref<System>, id: TweakDBID) -> Void;
-native func OnSkipTime(system: ref<System>) -> Void;
 
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {

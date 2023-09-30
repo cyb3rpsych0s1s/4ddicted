@@ -43,5 +43,4 @@ impl System {
             self.consumptions().decrease();
         }
     }
-    pub fn on_skip_time(&self) {}
 }
