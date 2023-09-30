@@ -33,5 +33,4 @@ public final static func ProcessItemAction(gi: GameInstance, executor: wref<Game
     ProcessUsedItemAction(executor, actionID, itemData.GetID());
   }
   return used;
-  return used;
 }

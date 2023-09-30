@@ -9,6 +9,8 @@ pub enum Error {
     NonAddictive,
 }
 
+#[derive(Default, Clone, PartialEq)]
+#[repr(transparent)]
 /// strongly-typed version of a TweakDbId:
 /// ensures that the ID is actually an addictive substance.
 pub struct SubstanceId(TweakDbId);

@@ -5,6 +5,7 @@ set dotenv-load
 DEFAULT_GAME_DIR    := join("C:\\", "Program Files (x86)", "Steam", "steamapps", "common", "Cyberpunk 2077")
 
 mod_name            := 'Addicted'
+mod_companion_name  := 'Stupefied'
 
 # installation dir for Cyberpunk 2077, e.g. Steam
 repo_dir            := justfile_directory()    
@@ -14,6 +15,7 @@ bundle_dir          := mod_name
 # codebase (outside of game files)
 cet_repo_dir        := join(repo_dir, "mods", mod_name)
 red_repo_dir        := join(repo_dir, "scripts", mod_name)
+red_companion_repo_dir := join(repo_dir, "scripts", mod_companion_name)
 tweak_repo_dir      := join(repo_dir, "tweaks", mod_name)
 archive_repo_dir    := join(repo_dir, "archive", "packed")
 sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
