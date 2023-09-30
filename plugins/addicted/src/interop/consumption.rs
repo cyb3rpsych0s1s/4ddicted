@@ -22,8 +22,8 @@ pub struct Consumptions(Ref<IScriptable>);
 #[redscript_import]
 impl Consumption {
     fn current(&self) -> i32;
-    fn set_current(&mut self, value: i32) -> ();
     fn doses(&self) -> Vec<f32>;
+    fn set_current(&mut self, value: i32) -> ();
     fn set_doses(&mut self, value: Vec<f32>) -> ();
 }
 
@@ -37,8 +37,8 @@ unsafe impl RefRepr for Consumptions {
 impl Consumptions {
     fn keys(&self) -> Vec<SubstanceId>;
     fn values(&self) -> Vec<Consumption>;
-    fn set_keys(&self, keys: Vec<SubstanceId>) -> ();
-    fn set_values(&self, values: Vec<Consumption>) -> ();
+    fn set_keys(&mut self, keys: Vec<SubstanceId>) -> ();
+    fn set_values(&mut self, values: Vec<Consumption>) -> ();
     fn create_consumption(&self, score: i32) -> Consumption;
 }
 
