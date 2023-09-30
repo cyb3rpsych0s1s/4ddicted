@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use red4ext_rs::{
     prelude::{redscript_import, NativeRepr, RefRepr, Strong},
     types::{IScriptable, Ref, TweakDbId},
@@ -45,14 +47,27 @@ impl TimeSystem {
     pub fn get_game_time_stamp(&self) -> f32;
 }
 
-#[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(C)]
 pub struct GameTime {
     seconds: u32,
 }
 
 unsafe impl NativeRepr for GameTime {
-    const NAME: &'static str = "RED4ext::GameTime";
+    const NAME: &'static str = "GameTime";
+}
+
+impl Display for GameTime {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} day(s), {} hour(s), {} minute(s), {} second(s)",
+            self.days(),
+            self.hours(),
+            self.minutes(),
+            self.seconds()
+        )
+    }
 }
 
 const SECOND: u32 = 1;
@@ -122,5 +137,10 @@ mod tests {
         assert_eq!(time.hours(), 14);
         assert_eq!(time.minutes(), 0);
         assert_eq!(time.seconds(), 0);
+
+        let since = GameTime { seconds: 0 }.add_days(9).add_hours(19).add_minutes(12).add_seconds(41);
+        let now = GameTime { seconds: 0 }.add_days(10).add_hours(4).add_minutes(12).add_seconds(41);
+        assert_eq!(since.add_hours(9), now);
+        assert!(since.add_hours(6) < now);
     }
 }

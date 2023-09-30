@@ -33,12 +33,14 @@ impl System {
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {
         if effect.is_housing() {
             info!("housing: {effect:#?}");
-            let since = self.resting_since();
-            let now = self.time_system().get_game_time();
-            let sleep = effect.is_sleep();
-            let light = since.add_hours(6) < now;
-            if sleep && light {
-                return;
+            if effect.is_sleep() {
+                let since = self.resting_since();
+                let now = self.time_system().get_game_time();
+                let light = now < since.add_hours(6);
+                info!("slept: since ({since}) vs now ({now})");
+                if light {
+                    return;
+                }
             }
             self.consumptions().decrease();
         }
