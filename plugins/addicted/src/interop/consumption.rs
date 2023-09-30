@@ -1,33 +1,31 @@
 use red4ext_rs::{
-    prelude::{redscript_import, NativeRepr, RefRepr, Strong},
-    types::{IScriptable, RedArray, Ref},
+    prelude::{redscript_import, RefRepr, Strong},
+    types::{IScriptable, Ref},
 };
 
 use super::SubstanceId;
 
 #[derive(Default, Clone)]
-#[repr(C)]
-pub struct Consumption {
-    pub current: i32,
-    pub doses: Vec<f32>,
-}
+#[repr(transparent)]
+pub struct Consumption(Ref<IScriptable>);
 
-unsafe impl NativeRepr for Consumption {
-    const NAME: &'static str = "Addicted.Consumption";
-}
+unsafe impl RefRepr for Consumption {
+    type Type = Strong;
 
-impl Consumption {
-    pub fn new(amount: i32) -> Self {
-        Self {
-            current: amount,
-            doses: Default::default(),
-        }
-    }
+    const CLASS_NAME: &'static str = "Addicted.Consumption";
 }
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct Consumptions(Ref<IScriptable>);
+
+#[redscript_import]
+impl Consumption {
+    fn current(&self) -> i32;
+    fn set_current(&mut self, value: i32) -> ();
+    fn doses(&self) -> Vec<f32>;
+    fn set_doses(&mut self, value: Vec<f32>) -> ();
+}
 
 unsafe impl RefRepr for Consumptions {
     type Type = Strong;
@@ -37,47 +35,113 @@ unsafe impl RefRepr for Consumptions {
 
 #[redscript_import]
 impl Consumptions {
-    fn persist(keys: RedArray<i32>, values: RedArray<Consumption>) -> ();
     fn keys(&self) -> Vec<SubstanceId>;
     fn values(&self) -> Vec<Consumption>;
+    fn set_keys(&self, keys: Vec<SubstanceId>) -> ();
+    fn set_values(&self, values: Vec<Consumption>) -> ();
+    fn create_consumption(&self, score: i32) -> Consumption;
 }
 
 #[allow(dead_code)]
 impl Consumptions {
-    pub fn index(&self, id: SubstanceId) -> Option<usize> {
-        let keys = self.keys();
-        let mut iter = keys.iter().enumerate();
-        let idx: Option<usize> = loop {
-            match (iter.next(), iter.next_back()) {
-                (None, None) => break None,
-                (_, Some((idx, key))) | (Some((idx, key)), _) if *key == id => return Some(idx),
-                _ => continue,
-            }
-        };
-        idx
-    }
-    pub fn contains(&self, id: SubstanceId) -> bool {
-        self.index(id).is_some()
-    }
-    pub fn get(&self, id: SubstanceId) -> Option<Consumption> {
-        if let Some(idx) = self.index(id) {
-            return Some(unsafe { self.values().get_unchecked(idx) }.clone());
-        }
-        None
-    }
-    pub fn set(&mut self, id: SubstanceId, value: Consumption) {
-        if let Some(idx) = self.index(id.clone()) {
-            unsafe { *self.values().get_unchecked_mut(idx) = value };
+    pub fn increase(&mut self, id: SubstanceId) {
+        let idx = self
+            .keys()
+            .as_slice()
+            .iter()
+            .enumerate()
+            .find_map(|(idx, key)| if *key == id { Some(idx as isize) } else { None })
+            .unwrap_or(-1);
+        if idx == -1 {
+            let len = self.keys().as_slice().len();
+
+            let mut keys = Vec::with_capacity(len + 1);
+            keys.extend_from_slice(self.keys().as_slice());
+            keys.push(id);
+
+            let value = self.create_consumption(1);
+            let mut values = Vec::with_capacity(len + 1);
+            values.extend_from_slice(self.values().as_slice());
+            values.push(value);
+
+            self.set_keys(keys);
+            self.set_values(values);
         } else {
-            self.keys().push(id);
-            self.values().push(value);
+            let mut existing = self.values().as_slice()[idx as usize].clone();
+            existing.set_current(existing.current() + 1);
+            existing.set_doses(existing.doses());
         }
     }
-    pub fn unset(&mut self, id: SubstanceId) -> bool {
-        if let Some(idx) = self.index(id) {
-            self.keys().remove(idx);
-            self.values().remove(idx);
+    pub fn decrease(&mut self) {
+        let len = self.keys().as_slice().len();
+        if len == 0 {
+            return;
         }
-        false
+        let mut removables = Vec::with_capacity(len);
+        for (idx, consumption) in self.values().as_mut_slice().iter_mut().enumerate() {
+            if consumption.current() == 0 {
+                removables.push(idx);
+            } else {
+                consumption.set_current(consumption.current() - 1);
+            }
+        }
+        if removables.len() > 0 {
+            let mut keys = Vec::with_capacity(len - removables.len());
+            let mut values = Vec::with_capacity(len - removables.len());
+            let mut from = 0;
+            for to in removables {
+                if to != from {
+                    keys.extend_from_slice(&self.keys().as_slice()[from..to]);
+                    values.extend_from_slice(&self.values().as_slice()[from..to]);
+                }
+                from = to + 1;
+            }
+            if from <= len {
+                keys.extend_from_slice(&self.keys().as_slice()[from..]);
+                values.extend_from_slice(&self.values().as_slice()[from..]);
+            }
+            self.set_keys(keys);
+            self.set_values(values);
+        }
+    }
+    pub fn decrease_one(&mut self, id: SubstanceId) {
+        let idx = self
+            .keys()
+            .as_slice()
+            .iter()
+            .enumerate()
+            .find_map(|(idx, key)| if *key == id { Some(idx as isize) } else { None })
+            .unwrap_or(-1);
+        if idx != -1 {
+            let idx = idx as usize;
+            if self.values().as_slice()[idx].current() == 0 {
+                let len = self.keys().as_slice().len();
+                if len > 0 {
+                    let mut keys = Vec::with_capacity(len - 1);
+                    let mut values = Vec::with_capacity(len - 1);
+                    if idx == 0 {
+                        keys.extend_from_slice(&self.keys().as_slice()[1..]);
+
+                        values.extend_from_slice(&self.values().as_slice()[1..]);
+                    } else if idx == (len - 1) {
+                        keys.extend_from_slice(&self.keys().as_slice()[..len]);
+
+                        values.extend_from_slice(&self.values().as_slice()[..len]);
+                    } else {
+                        keys.extend_from_slice(&self.keys().as_slice()[0..idx]);
+                        keys.extend_from_slice(&self.keys().as_slice()[idx + 1..]);
+
+                        values.extend_from_slice(&self.values().as_slice()[0..idx]);
+                        values.extend_from_slice(&self.values().as_slice()[idx + 1..]);
+                    }
+                    self.set_keys(keys);
+                    self.set_values(values);
+                }
+            } else {
+                let mut values = self.values();
+                let existing = &mut values.as_mut_slice()[idx];
+                existing.set_current(existing.current() - 1);
+            }
+        }
     }
 }

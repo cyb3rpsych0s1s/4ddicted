@@ -7,6 +7,14 @@ public class System extends ScriptableSystem {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Addicted.System") as System;
     }
+    private func OnAttach() -> Void {
+        if !IsDefined(this.consumptions) {
+            let consumptions = new Consumptions();
+            consumptions.keys = [];
+            consumptions.values = [];
+            this.consumptions = consumptions;
+        }
+    }
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         if IsDefined(request.owner as PlayerPuppet) {
             this.player = request.owner as PlayerPuppet;
@@ -15,23 +23,28 @@ public class System extends ScriptableSystem {
     private final func OnPlayerDetach(request: ref<PlayerDetachRequest>) -> Void {
         this.player = null;
     }
-    func Consumptions() -> ref<Consumptions> { return this.consumptions; }
+    public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
 }
 
 public class Consumptions extends IScriptable {
     private persistent let keys: array<TweakDBID>;
-    private persistent let values: array<Consumption>;
+    private persistent let values: array<ref<Consumption>>;
     public func Keys() -> array<TweakDBID> { return this.keys; }
-    public func Values() -> array<Consumption> { return this.values; }
-    public func Persist(keys: array<TweakDBID>, values: array<Consumption>) -> Void {
-        this.keys = keys;
-        this.values = values;
+    public func Values() -> array<ref<Consumption>> { return this.values; }
+    public func SetKeys(keys: array<TweakDBID>) -> Void { this.keys = keys; }
+    public func SetValues(values: array<ref<Consumption>>) -> Void { this.values = values; }
+    public func CreateConsumption(score: Int32) -> ref<Consumption> {
+        let consumption = new Consumption();
+        consumption.current = score;
+        consumption.doses = [];
+        return consumption;
     }
 }
-public struct Consumption {
+public class Consumption extends IScriptable {
     public persistent let current: Int32;
     public persistent let doses: array<Float>;
-    public static final func Create(current: Int32, doses: array<Float>) -> Consumption {
-        return new Consumption(current, doses);
-    }
+    public func Current() -> Int32 { return this.current; }
+    public func SetCurrent(value: Int32) -> Void { this.current = value; }
+    public func Doses() -> array<Float> { return this.doses; }
+    public func SetDoses(value: array<Float>) -> Void { this.doses = value; }
 }
