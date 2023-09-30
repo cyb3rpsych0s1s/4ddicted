@@ -1,4 +1,4 @@
-use cp2077_rs::Housing;
+use cp2077_rs::{Housing, TimeSystem};
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
@@ -17,6 +17,7 @@ unsafe impl RefRepr for System {
 #[redscript_import]
 impl System {
     fn consumptions(&self) -> Consumptions;
+    fn time_system(&self) -> TimeSystem;
 }
 
 impl System {
@@ -24,7 +25,7 @@ impl System {
         info!("consuming {item:#?}");
         if let Some(id) = SubstanceId::try_from(item).ok() {
             info!("item is addictive");
-            self.consumptions().increase(id);
+            self.consumptions().increase(id, self.time_system().get_game_time_stamp());
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {

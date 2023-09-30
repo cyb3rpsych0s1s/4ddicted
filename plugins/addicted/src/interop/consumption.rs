@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use super::SubstanceId;
+use super::{SubstanceId, Potency};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -44,7 +44,7 @@ impl Consumptions {
 
 #[allow(dead_code)]
 impl Consumptions {
-    pub fn increase(&mut self, id: SubstanceId) {
+    pub fn increase(&mut self, id: SubstanceId, tms: f32) {
         let idx = self
             .keys()
             .as_slice()
@@ -69,8 +69,11 @@ impl Consumptions {
             self.set_values(values);
         } else {
             let mut existing = self.values().as_slice()[idx as usize].clone();
-            existing.set_current(existing.current() + 1);
-            existing.set_doses(existing.doses());
+            let mut doses = existing.doses();
+            doses.push(tms);
+
+            existing.set_current(existing.current() + id.potency());
+            existing.set_doses(doses);
         }
     }
     pub fn decrease(&mut self) {

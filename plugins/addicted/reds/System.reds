@@ -24,6 +24,7 @@ public class System extends ScriptableSystem {
         this.player = null;
     }
     public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
+    public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
 }
 
 public class Consumptions extends IScriptable {

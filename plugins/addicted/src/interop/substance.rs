@@ -9,6 +9,16 @@ pub enum Error {
     NonAddictive,
 }
 
+pub trait Potency {
+    fn potency(&self) -> i32;
+}
+
+impl Potency for SubstanceId {
+    fn potency(&self) -> i32 {
+        1
+    }
+}
+
 #[derive(Default, Clone, PartialEq)]
 #[repr(transparent)]
 /// strongly-typed version of a TweakDbId:
