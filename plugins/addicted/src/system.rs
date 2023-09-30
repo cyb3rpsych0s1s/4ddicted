@@ -25,7 +25,8 @@ impl System {
         info!("consuming {item:#?}");
         if let Some(id) = SubstanceId::try_from(item).ok() {
             info!("item is addictive");
-            self.consumptions().increase(id, self.time_system().get_game_time_stamp());
+            self.consumptions()
+                .increase(id, self.time_system().get_game_time_stamp());
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {

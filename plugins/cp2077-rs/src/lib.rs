@@ -1,4 +1,7 @@
-use red4ext_rs::{types::{TweakDbId, Ref, IScriptable}, prelude::{RefRepr, Strong, redscript_import}};
+use red4ext_rs::{
+    prelude::{redscript_import, RefRepr, Strong},
+    types::{IScriptable, Ref, TweakDbId},
+};
 
 pub const HOUSING: [TweakDbId; 3] = [
     TweakDbId::new("HousingStatusEffect.Rested"),
