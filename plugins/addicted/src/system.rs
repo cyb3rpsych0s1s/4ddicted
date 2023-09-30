@@ -36,9 +36,7 @@ impl System {
             if effect.is_sleep() {
                 let since = self.resting_since();
                 let now = self.time_system().get_game_time();
-                let light = now < since.add_hours(6);
-                info!("slept: since ({since}) vs now ({now})");
-                if light {
+                if now < since.add_hours(6) {
                     return;
                 }
             }
