@@ -33,12 +33,6 @@ public func SearchItems() -> Void {
 }
 
 @addMethod(PlayerPuppet)
-public func Decrease() -> Void {
-    let system = System.GetInstance(this.GetGame());
-    OnStatusEffectNotAppliedOnSpawn(system, t"HousingStatusEffect.Rested");
-}
-
-@addMethod(PlayerPuppet)
 public func Checkup() -> Void {
     let system = System.GetInstance(this.GetGame());
     let consumptions: ref<Consumptions> = system.Consumptions();

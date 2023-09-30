@@ -1,9 +1,9 @@
 use red4ext_rs::prelude::NativeRepr;
 
 /// addiction thresholds
-/// 
+///
 /// V is considered as having reaching next level of addiction when crossed past a threshold.
-/// 
+///
 /// only exception : if V score is above `Clean` but has not yet crossed `Mildly`,
 /// V is considered `Barely` addicted at this point.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -50,7 +50,7 @@ mod tests {
 
         assert_eq!(Threshold::from(20), Threshold::Barely);
         assert_eq!(Threshold::from(1), Threshold::Barely);
-        
+
         assert_eq!(Threshold::from(0), Threshold::Clean);
         assert_eq!(Threshold::from(-1), Threshold::Clean);
     }

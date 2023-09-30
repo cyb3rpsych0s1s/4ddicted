@@ -13,6 +13,7 @@ define_plugin! {
     on_register: {
         register_function!("Addicted.OnIngestedItem", on_ingested_item);
         register_function!("Addicted.OnStatusEffectNotAppliedOnSpawn", on_status_effect_not_applied_on_spawn);
+        register_function!("Addicted.OnSkipTime", on_skip_time);
         register_function!("WriteToFile", write_to_file);
     }
 }
@@ -30,4 +31,8 @@ fn on_ingested_item(system: System, item: ItemId) {
 
 fn on_status_effect_not_applied_on_spawn(system: System, effect: TweakDbId) {
     system.on_status_effect_not_applied_on_spawn(effect);
+}
+
+fn on_skip_time(system: System) {
+    system.on_skip_time();
 }

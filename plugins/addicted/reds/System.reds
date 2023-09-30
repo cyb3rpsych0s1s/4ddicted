@@ -3,6 +3,7 @@ module Addicted
 public class System extends ScriptableSystem {
     private let player: wref<PlayerPuppet>;
     private persistent let consumptions: ref<Consumptions>;
+    private let restingSince: GameTime;
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Addicted.System") as System;
@@ -23,6 +24,9 @@ public class System extends ScriptableSystem {
     private final func OnPlayerDetach(request: ref<PlayerDetachRequest>) -> Void {
         this.player = null;
     }
+    public func RestingSince() -> GameTime { return this.restingSince; }
+    public func OnSkipTime() -> Void { this.restingSince = this.TimeSystem().GetGameTime(); }
+    // imported in natives
     public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
 }
