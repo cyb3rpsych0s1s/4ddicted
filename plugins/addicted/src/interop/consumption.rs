@@ -21,9 +21,9 @@ pub struct Consumptions(Ref<IScriptable>);
 
 #[redscript_import]
 impl Consumption {
-    fn current(&self) -> i32;
+    pub fn current(&self) -> i32;
     fn doses(&self) -> Vec<f32>;
-    fn set_current(&mut self, value: i32) -> ();
+    pub fn set_current(&mut self, value: i32) -> ();
     fn set_doses(&mut self, value: Vec<f32>) -> ();
 }
 
@@ -43,6 +43,19 @@ impl Consumptions {
 }
 
 impl Consumptions {
+    pub fn consumption(&self, id: SubstanceId) -> Option<Consumption> {
+        self.keys()
+            .as_slice()
+            .iter()
+            .enumerate()
+            .find_map(|(idx, key)| {
+                if *key == id {
+                    Some(self.values()[idx].clone())
+                } else {
+                    None
+                }
+            })
+    }
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
         let idx = self
             .keys()

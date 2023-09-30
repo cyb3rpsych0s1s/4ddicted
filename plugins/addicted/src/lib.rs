@@ -1,6 +1,7 @@
 use red4ext_rs::prelude::*;
 use system::System;
 
+mod addiction;
 mod addictive;
 mod interop;
 mod system;
