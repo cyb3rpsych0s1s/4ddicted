@@ -5,6 +5,17 @@ use red4ext_rs::{
 
 use super::{Potency, SubstanceId};
 
+/// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
+pub trait IntoRefs {
+    fn into_refs(self) -> Vec<Ref<IScriptable>>;
+}
+
+impl IntoRefs for Vec<Consumption> {
+    fn into_refs(self) -> Vec<Ref<IScriptable>> {
+        self.into_iter().map(|x| x.0).collect()
+    }
+}
+
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct Consumption(pub Ref<IScriptable>);
@@ -15,6 +26,9 @@ unsafe impl RefRepr for Consumption {
     const CLASS_NAME: &'static str = "Addicted.Consumption";
 }
 
+/// substances consumption.
+/// 
+/// SAFETY: consumptions keys and values must be of same size at all time.
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct Consumptions(Ref<IScriptable>);
@@ -38,33 +52,46 @@ impl Consumptions {
     fn keys(&self) -> Vec<SubstanceId>;
     fn values(&self) -> Vec<Consumption>;
     fn set_keys(&mut self, keys: Vec<SubstanceId>) -> ();
+    /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
     fn set_values(&mut self, values: Vec<Ref<IScriptable>>) -> ();
     fn create_consumption(&self, score: i32) -> Consumption;
 }
 
 impl Consumptions {
-    pub fn consumption(&self, id: SubstanceId) -> Option<Consumption> {
-        self.keys()
-            .as_slice()
-            .iter()
-            .enumerate()
-            .find_map(|(idx, key)| {
-                if *key == id {
-                    Some(self.values()[idx].clone())
-                } else {
-                    None
-                }
-            })
+    /// get index from substance ID, if any.
+    fn position(&self, id: SubstanceId) -> Option<usize> {
+        let keys = self.keys();
+        let mut iter = keys.as_slice().iter().enumerate();
+        loop {
+            match (iter.next(), iter.next_back()) {
+                (None, None) => break None,
+                (_, Some((idx, key))) if *key == id => break Some(idx),
+                (Some((idx, key)), _) if *key == id => break Some(idx),
+                _ => continue,
+            }
+        }
     }
+    /// get consumption by substance ID, if any.
+    pub fn consumption(&self, id: SubstanceId) -> Option<Consumption> {
+        if let Some(idx) = self.position(id) {
+            // SAFETY: keys and values are guaranteed to be of same size.
+            return Some(unsafe { self.values().get_unchecked(idx) }.clone());
+        }
+        None
+    }
+    /// increase consumption for given substance ID.
+    /// 
+    /// if consumed for the first time, create an entry in keys and values.
+    /// otherwise update existing entry in values.
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
-        let idx = self
-            .keys()
-            .as_slice()
-            .iter()
-            .enumerate()
-            .find_map(|(idx, key)| if *key == id { Some(idx as isize) } else { None })
-            .unwrap_or(-1);
-        if idx == -1 {
+        if let Some(idx) = self.position(id.clone()) {
+            let mut existing = self.values().as_slice()[idx as usize].clone();
+            let mut doses = existing.doses();
+            doses.push(tms);
+
+            existing.set_current(existing.current() + id.potency());
+            existing.set_doses(doses);
+        } else {
             let len = self.keys().as_slice().len();
 
             let mut keys = Vec::with_capacity(len + 1);
@@ -76,18 +103,14 @@ impl Consumptions {
             values.extend_from_slice(self.values().as_slice());
             values.push(value);
 
-            let values = values.into_iter().map(|x| x.0).collect();
             self.set_keys(keys);
-            self.set_values(values);
-        } else {
-            let mut existing = self.values().as_slice()[idx as usize].clone();
-            let mut doses = existing.doses();
-            doses.push(tms);
-
-            existing.set_current(existing.current() + id.potency());
-            existing.set_doses(doses);
+            self.set_values(values.into_refs());
         }
     }
+    /// decrease consumption for all substances.
+    /// 
+    /// if greater than zero, decrease consumption score.
+    /// otherwise remove entry from both keys and values.
     pub fn decrease(&mut self) {
         let len = self.keys().as_slice().len();
         if len == 0 {
@@ -116,9 +139,8 @@ impl Consumptions {
                 keys.extend_from_slice(&self.keys().as_slice()[from..]);
                 values.extend_from_slice(&self.values().as_slice()[from..]);
             }
-            let values = values.into_iter().map(|x| x.0).collect();
             self.set_keys(keys);
-            self.set_values(values);
+            self.set_values(values.into_refs());
         }
     }
 }

@@ -138,8 +138,16 @@ mod tests {
         assert_eq!(time.minutes(), 0);
         assert_eq!(time.seconds(), 0);
 
-        let since = GameTime { seconds: 0 }.add_days(9).add_hours(19).add_minutes(12).add_seconds(41);
-        let now = GameTime { seconds: 0 }.add_days(10).add_hours(4).add_minutes(12).add_seconds(41);
+        let since = GameTime { seconds: 0 }
+            .add_days(9)
+            .add_hours(19)
+            .add_minutes(12)
+            .add_seconds(41);
+        let now = GameTime { seconds: 0 }
+            .add_days(10)
+            .add_hours(4)
+            .add_minutes(12)
+            .add_seconds(41);
         assert_eq!(since.add_hours(9), now);
         assert!(since.add_hours(6) < now);
     }
