@@ -32,7 +32,13 @@ public class Consumptions extends IScriptable {
     public func Keys() -> array<TweakDBID> { return this.keys; }
     public func Values() -> array<ref<Consumption>> { return this.values; }
     public func SetKeys(keys: array<TweakDBID>) -> Void { this.keys = keys; }
-    public func SetValues(values: array<ref<Consumption>>) -> Void { this.values = values; }
+    public func SetValues(values: array<ref<IScriptable>>) -> Void {
+        ArrayClear(this.values);
+        this.values = [];
+        for value in values {
+            ArrayPush(this.values, value as Consumption);
+        }
+    }
     public func CreateConsumption(score: Int32) -> ref<Consumption> {
         let consumption = new Consumption();
         consumption.current = score;

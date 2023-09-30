@@ -1,5 +1,7 @@
 import Addicted.System
 import Addicted.OnStatusEffectNotAppliedOnSpawn
+import Addicted.Consumptions
+import Addicted.Consumption
 
 native func WriteToFile(names: array<String>, filename: String) -> Void;
 
@@ -34,4 +36,18 @@ public func SearchItems() -> Void {
 public func Decrease() -> Void {
     let system = System.GetInstance(this.GetGame());
     OnStatusEffectNotAppliedOnSpawn(system, t"HousingStatusEffect.Rested");
+}
+
+@addMethod(PlayerPuppet)
+public func Checkup() -> Void {
+    let system = System.GetInstance(this.GetGame());
+    let consumptions: ref<Consumptions> = system.Consumptions();
+    let keys = consumptions.Keys();
+    let values = consumptions.Values();
+    let idx = 0;
+    for key in keys {
+        let value = values[idx];
+        LogChannel(n"DEBUG", s"key: \(TDBID.ToStringDEBUG(key)), value: \(value.current), [\(ArraySize(value.doses))] doses: \(ToString(value.doses))");
+        idx = idx + 1;
+    }
 }

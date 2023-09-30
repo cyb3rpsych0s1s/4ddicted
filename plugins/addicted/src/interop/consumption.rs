@@ -7,7 +7,7 @@ use super::SubstanceId;
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
-pub struct Consumption(Ref<IScriptable>);
+pub struct Consumption(pub Ref<IScriptable>);
 
 unsafe impl RefRepr for Consumption {
     type Type = Strong;
@@ -38,7 +38,7 @@ impl Consumptions {
     fn keys(&self) -> Vec<SubstanceId>;
     fn values(&self) -> Vec<Consumption>;
     fn set_keys(&mut self, keys: Vec<SubstanceId>) -> ();
-    fn set_values(&mut self, values: Vec<Consumption>) -> ();
+    fn set_values(&mut self, values: Vec<Ref<IScriptable>>) -> ();
     fn create_consumption(&self, score: i32) -> Consumption;
 }
 
@@ -64,6 +64,7 @@ impl Consumptions {
             values.extend_from_slice(self.values().as_slice());
             values.push(value);
 
+            let values = values.into_iter().map(|x| x.0).collect();
             self.set_keys(keys);
             self.set_values(values);
         } else {
@@ -100,6 +101,7 @@ impl Consumptions {
                 keys.extend_from_slice(&self.keys().as_slice()[from..]);
                 values.extend_from_slice(&self.values().as_slice()[from..]);
             }
+            let values = values.into_iter().map(|x| x.0).collect();
             self.set_keys(keys);
             self.set_values(values);
         }
@@ -134,6 +136,7 @@ impl Consumptions {
                         values.extend_from_slice(&self.values().as_slice()[0..idx]);
                         values.extend_from_slice(&self.values().as_slice()[idx + 1..]);
                     }
+                    let values = values.into_iter().map(|x| x.0).collect();
                     self.set_keys(keys);
                     self.set_values(values);
                 }
