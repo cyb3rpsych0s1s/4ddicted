@@ -3,9 +3,9 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use crate::intoxication::Intoxication;
+use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
 
-use super::{Substance, SubstanceId, Threshold};
+use super::{Category, Substance, SubstanceId, Threshold};
 
 /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
 pub trait IntoRefs {
@@ -15,6 +15,24 @@ pub trait IntoRefs {
 impl IntoRefs for Vec<Consumption> {
     fn into_refs(self) -> Vec<Ref<IScriptable>> {
         self.into_iter().map(|x| x.0).collect()
+    }
+}
+
+impl VariousIntoxication for Vec<Consumption> {
+    fn average_threshold(&self) -> Threshold {
+        let len = self.len() as i32;
+        if len == 0 {
+            return Threshold::Clean;
+        }
+        let sum: i32 = self.iter().map(|x| x.threshold() as i32).sum();
+        Threshold::from(sum / len)
+    }
+
+    fn highest_threshold(&self) -> Threshold {
+        self.iter()
+            .map(|x| x.threshold())
+            .max()
+            .unwrap_or(Threshold::Clean)
     }
 }
 
@@ -87,21 +105,23 @@ impl Consumptions {
         }
         None
     }
-    /// get consumptions by substance, if any.
-    pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
-        <&[SubstanceId]>::from(substance)
-            .iter()
+    /// get consumptions by substance ids, if any.
+    #[inline]
+    fn by_ids(&self, ids: &[SubstanceId]) -> Vec<Consumption> {
+        ids.iter()
             .filter_map(|x| self.position(*x))
             .map(|x| self.values()[x].clone())
             .collect()
     }
-    /// get average threshold by substance, across all its related consumptions, if any.
-    pub fn average_threshold(&self, substance: Substance) -> Threshold {
-        let consumptions = self.by_substance(substance);
-        let len = consumptions.len() as i32;
-        if len == 0 { return Threshold::Clean; }
-        let sum: i32 = self.by_substance(substance).iter().map(|x| x.threshold() as i32).sum();
-        Threshold::from(sum/len)
+    /// get consumptions by substance, if any.
+    #[inline]
+    pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
+        self.by_ids(<&[SubstanceId]>::from(substance))
+    }
+    /// get consumptions by category, if any.
+    #[inline]
+    pub fn by_category(&self, category: Category) -> Vec<Consumption> {
+        self.by_ids(<Vec<SubstanceId>>::from(category).as_slice())
     }
     /// increase consumption for given substance ID.
     ///
@@ -171,5 +191,27 @@ impl Consumptions {
             self.set_keys(keys);
             self.set_values(values.into_refs());
         }
+    }
+}
+
+impl Intoxications<Substance> for Consumptions {
+    /// get average threshold by substance, across all its related consumptions, if any.
+    fn average_threshold(&self, by: Substance) -> Threshold {
+        self.by_substance(by).average_threshold()
+    }
+    /// get highest threshold by substance, across all its related consumptions, if any.
+    fn highest_threshold(&self, by: Substance) -> Threshold {
+        self.by_substance(by).highest_threshold()
+    }
+}
+
+impl Intoxications<Category> for Consumptions {
+    /// get average threshold by category, across all its related consumptions, if any.
+    fn average_threshold(&self, by: Category) -> Threshold {
+        self.by_category(by).average_threshold()
+    }
+    /// get highest threshold by category, across all its related consumptions, if any.
+    fn highest_threshold(&self, by: Category) -> Threshold {
+        self.by_category(by).highest_threshold()
     }
 }
