@@ -5,9 +5,9 @@ pub use substance::*;
 mod threshold;
 pub use threshold::*;
 
-use crate::addiction::Addiction;
+use crate::intoxication::Intoxication;
 
-impl Addiction for (Consumptions, SubstanceId) {
+impl Intoxication for (Consumptions, SubstanceId) {
     fn threshold(&self) -> Threshold {
         self.0
             .consumption(self.1.clone())

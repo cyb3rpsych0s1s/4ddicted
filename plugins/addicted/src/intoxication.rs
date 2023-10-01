@@ -1,5 +1,5 @@
 use crate::interop::Threshold;
 
-pub trait Addiction {
+pub trait Intoxication {
     fn threshold(&self) -> Threshold;
 }

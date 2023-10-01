@@ -8,7 +8,7 @@ use crate::addictive::{
     CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
 };
 
-use super::Kind;
+use super::{Kind, Substance};
 
 #[derive(Default, Clone, PartialEq)]
 #[repr(transparent)]
@@ -17,20 +17,20 @@ use super::Kind;
 pub struct SubstanceId(TweakDbId);
 
 impl SubstanceId {
-    pub fn category(&self) -> Kind {
+    pub fn kind(&self) -> Kind {
         match true {
             _ if self.is_blacklace() || self.is_alcoholic() => Kind::Hard,
             _ => Kind::Mild,
         }
     }
     pub fn kicks_in(&self) -> i32 {
-        match self.category() {
+        match self.kind() {
             Kind::Hard => 2,
             Kind::Mild => 1,
         }
     }
     pub fn wean_off(&self) -> i32 {
-        match self.category() {
+        match self.kind() {
             Kind::Hard => 1,
             Kind::Mild => 2,
         }

@@ -2,10 +2,16 @@ use red4ext_rs::prelude::NativeRepr;
 
 mod id;
 pub use id::*;
+mod category;
+pub use category::*;
 mod kind;
 pub use kind::*;
 mod r#type;
 pub use r#type::*;
+mod quality;
+pub use quality::*;
+mod tier;
+pub use tier::*;
 
 use crate::addictive::{Alcoholic, Booster, Healer, Neuro};
 

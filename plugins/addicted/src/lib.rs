@@ -1,9 +1,9 @@
 use red4ext_rs::prelude::*;
 use system::System;
 
-mod addiction;
 mod addictive;
 mod interop;
+mod intoxication;
 mod system;
 
 define_plugin! {

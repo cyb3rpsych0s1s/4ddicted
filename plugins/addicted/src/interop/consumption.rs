@@ -3,7 +3,9 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use super::SubstanceId;
+use crate::intoxication::Intoxication;
+
+use super::{SubstanceId, Threshold};
 
 /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
 pub trait IntoRefs {
@@ -24,6 +26,12 @@ unsafe impl RefRepr for Consumption {
     type Type = Strong;
 
     const CLASS_NAME: &'static str = "Addicted.Consumption";
+}
+
+impl Intoxication for Consumption {
+    fn threshold(&self) -> Threshold {
+        Threshold::from(self.current())
+    }
 }
 
 /// substances consumption.
