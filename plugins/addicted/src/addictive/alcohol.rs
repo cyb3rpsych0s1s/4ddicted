@@ -4,7 +4,9 @@
 //! - all alcohols can be identified through `ConsumableBaseName()` (`ConsumableBaseName.Alcohol`)
 //! - all alcohols triggers `Consume` (`ObjectAction_Record`)
 
-use red4ext_rs::types::{ItemId, TweakDbId};
+use red4ext_rs::types::ItemId;
+
+use crate::interop::SubstanceId;
 
 pub trait Alcoholic {
     fn is_alcoholic(&self) -> bool;
@@ -12,48 +14,51 @@ pub trait Alcoholic {
 
 impl Alcoholic for ItemId {
     fn is_alcoholic(&self) -> bool {
-        ALCOHOL.contains(&self.get_tdbid())
+        if let Ok(substance) = self.clone().try_into() {
+            return ALCOHOL.contains(&substance);
+        }
+        false
     }
 }
 
-pub const ALCOHOL: [TweakDbId; 39] = [
-    TweakDbId::new("Items.TopQualityAlcohol1"),
-    TweakDbId::new("Items.TopQualityAlcohol5"),
-    TweakDbId::new("Items.MediumQualityAlcohol1"),
-    TweakDbId::new("Items.TopQualityAlcohol9"),
-    TweakDbId::new("Items.MediumQualityAlcohol5"),
-    TweakDbId::new("Items.GoodQualityAlcohol1"),
-    TweakDbId::new("Items.GoodQualityAlcohol5"),
-    TweakDbId::new("Items.LowQualityAlcohol3"),
-    TweakDbId::new("Items.NomadsAlcohol1"),
-    TweakDbId::new("Items.LowQualityAlcohol7"),
-    TweakDbId::new("Items.TopQualityAlcohol"),
-    TweakDbId::new("Items.GoodQualityAlcohol"),
-    TweakDbId::new("Items.LowQualityAlcohol"),
-    TweakDbId::new("Items.LowQualityAlcohol6"),
-    TweakDbId::new("Items.LowQualityAlcohol2"),
-    TweakDbId::new("Items.GoodQualityAlcohol4"),
-    TweakDbId::new("Items.TopQualityAlcohol4"),
-    TweakDbId::new("Items.MediumQualityAlcohol4"),
-    TweakDbId::new("Items.TopQualityAlcohol8"),
-    TweakDbId::new("Items.MediumQualityAlcohol"),
-    TweakDbId::new("Items.GoodQualityAlcohol2"),
-    TweakDbId::new("Items.GoodQualityAlcohol6"),
-    TweakDbId::new("Items.MediumQualityAlcohol2"),
-    TweakDbId::new("Items.MediumQualityAlcohol6"),
-    TweakDbId::new("Items.TopQualityAlcohol2"),
-    TweakDbId::new("Items.TopQualityAlcohol6"),
-    TweakDbId::new("Items.NomadsAlcohol2"),
-    TweakDbId::new("Items.LowQualityAlcohol4"),
-    TweakDbId::new("Items.LowQualityAlcohol8"),
-    TweakDbId::new("Items.LowQualityAlcohol5"),
-    TweakDbId::new("Items.LowQualityAlcohol1"),
-    TweakDbId::new("Items.LowQualityAlcohol9"),
-    TweakDbId::new("Items.MediumQualityAlcohol7"),
-    TweakDbId::new("Items.MediumQualityAlcohol3"),
-    TweakDbId::new("Items.TopQualityAlcohol10"),
-    TweakDbId::new("Items.TopQualityAlcohol7"),
-    TweakDbId::new("Items.TopQualityAlcohol3"),
-    TweakDbId::new("Items.Alcohol"),
-    TweakDbId::new("Items.GoodQualityAlcohol3"),
+pub const ALCOHOL: [SubstanceId; 39] = [
+    SubstanceId::new("Items.TopQualityAlcohol1"),
+    SubstanceId::new("Items.TopQualityAlcohol5"),
+    SubstanceId::new("Items.MediumQualityAlcohol1"),
+    SubstanceId::new("Items.TopQualityAlcohol9"),
+    SubstanceId::new("Items.MediumQualityAlcohol5"),
+    SubstanceId::new("Items.GoodQualityAlcohol1"),
+    SubstanceId::new("Items.GoodQualityAlcohol5"),
+    SubstanceId::new("Items.LowQualityAlcohol3"),
+    SubstanceId::new("Items.NomadsAlcohol1"),
+    SubstanceId::new("Items.LowQualityAlcohol7"),
+    SubstanceId::new("Items.TopQualityAlcohol"),
+    SubstanceId::new("Items.GoodQualityAlcohol"),
+    SubstanceId::new("Items.LowQualityAlcohol"),
+    SubstanceId::new("Items.LowQualityAlcohol6"),
+    SubstanceId::new("Items.LowQualityAlcohol2"),
+    SubstanceId::new("Items.GoodQualityAlcohol4"),
+    SubstanceId::new("Items.TopQualityAlcohol4"),
+    SubstanceId::new("Items.MediumQualityAlcohol4"),
+    SubstanceId::new("Items.TopQualityAlcohol8"),
+    SubstanceId::new("Items.MediumQualityAlcohol"),
+    SubstanceId::new("Items.GoodQualityAlcohol2"),
+    SubstanceId::new("Items.GoodQualityAlcohol6"),
+    SubstanceId::new("Items.MediumQualityAlcohol2"),
+    SubstanceId::new("Items.MediumQualityAlcohol6"),
+    SubstanceId::new("Items.TopQualityAlcohol2"),
+    SubstanceId::new("Items.TopQualityAlcohol6"),
+    SubstanceId::new("Items.NomadsAlcohol2"),
+    SubstanceId::new("Items.LowQualityAlcohol4"),
+    SubstanceId::new("Items.LowQualityAlcohol8"),
+    SubstanceId::new("Items.LowQualityAlcohol5"),
+    SubstanceId::new("Items.LowQualityAlcohol1"),
+    SubstanceId::new("Items.LowQualityAlcohol9"),
+    SubstanceId::new("Items.MediumQualityAlcohol7"),
+    SubstanceId::new("Items.MediumQualityAlcohol3"),
+    SubstanceId::new("Items.TopQualityAlcohol10"),
+    SubstanceId::new("Items.TopQualityAlcohol7"),
+    SubstanceId::new("Items.TopQualityAlcohol3"),
+    SubstanceId::new("Items.Alcohol"),
+    SubstanceId::new("Items.GoodQualityAlcohol3"),
 ];

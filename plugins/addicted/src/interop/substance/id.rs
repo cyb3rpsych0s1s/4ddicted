@@ -10,13 +10,27 @@ use crate::addictive::{
 
 use super::Kind;
 
-#[derive(Default, Clone, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq)]
 #[repr(transparent)]
 /// strongly-typed version of a TweakDbId:
 /// ensures that the ID is actually an addictive substance.
 pub struct SubstanceId(TweakDbId);
 
+impl PartialEq<TweakDbId> for SubstanceId {
+    fn eq(&self, other: &TweakDbId) -> bool {
+        self.0.eq(other)
+    }
+}
+impl PartialEq<SubstanceId> for TweakDbId {
+    fn eq(&self, other: &SubstanceId) -> bool {
+        self.eq(&other.0)
+    }
+}
+
 impl SubstanceId {
+    pub(crate) const fn new(str: &str) -> Self {
+        Self(TweakDbId::new(str))
+    }
     pub fn kind(&self) -> Kind {
         match true {
             _ if self.is_blacklace() || self.is_alcoholic() => Kind::Hard,
@@ -59,44 +73,44 @@ impl TryFrom<ItemId> for SubstanceId {
 
 impl Healer for SubstanceId {
     fn is_maxdoc(&self) -> bool {
-        MAX_DOC.contains(&self.0)
+        MAX_DOC.contains(&self)
     }
 
     fn is_bounceback(&self) -> bool {
-        BOUNCE_BACK.contains(&self.0)
+        BOUNCE_BACK.contains(&self)
     }
 
     fn is_healthbooster(&self) -> bool {
-        HEALTH_BOOSTER.contains(&self.0)
+        HEALTH_BOOSTER.contains(&self)
     }
 }
 
 impl Alcoholic for SubstanceId {
     fn is_alcoholic(&self) -> bool {
-        ALCOHOL.contains(&self.0)
+        ALCOHOL.contains(&self)
     }
 }
 
 impl Booster for SubstanceId {
     fn is_stamina_booster(&self) -> bool {
-        STAMINA_BOOSTER.contains(&self.0)
+        STAMINA_BOOSTER.contains(&self)
     }
 
     fn is_capacity_booster(&self) -> bool {
-        CAPACITY_BOOSTER.contains(&self.0)
+        CAPACITY_BOOSTER.contains(&self)
     }
 
     fn is_memory_booster(&self) -> bool {
-        MEMORY_BOOSTER.contains(&self.0)
+        MEMORY_BOOSTER.contains(&self)
     }
 }
 
 impl Neuro for SubstanceId {
     fn is_blacklace(&self) -> bool {
-        BLACK_LACE.contains(&self.0)
+        BLACK_LACE.contains(&self)
     }
 
     fn is_neuroblocker(&self) -> bool {
-        NEURO_BLOCKER.contains(&self.0)
+        NEURO_BLOCKER.contains(&self)
     }
 }

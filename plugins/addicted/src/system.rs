@@ -2,7 +2,7 @@ use cp2077_rs::{GameTime, Housing, TimeSystem, TransactionSystem};
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::interop::{Consumptions, SubstanceId};
+use crate::interop::{Category, Consumptions, SubstanceId};
 use crate::player::PlayerPuppet;
 
 #[derive(Default, Clone)]
@@ -48,8 +48,44 @@ impl System {
                 if now < since.add_hours(6) {
                     return;
                 }
+                if self.slept_under_influence() {
+                    return;
+                }
             }
             self.consumptions().decrease();
         }
+    }
+    pub fn withdrawing_from_substance(&self, id: SubstanceId) -> bool {
+        if let Some(consumption) = self.consumptions().consumption(id) {
+            if let Some(last) = consumption.doses().last() {
+                let last = GameTime::from(*last);
+                let now = self.time_system().get_game_time();
+                return now >= last.add_hours(24);
+            }
+        }
+        false
+    }
+    pub fn withdrawing_from_category(&self, category: Category) -> bool {
+        let ids: Vec<SubstanceId> = category.into();
+        for id in ids {
+            if self.withdrawing_from_substance(id) {
+                return true;
+            }
+        }
+        false
+    }
+    pub fn slept_under_influence(&self) -> bool {
+        let since = self.resting_since();
+        for ref id in self.consumptions().keys() {
+            if let Some(ref consumption) = self.consumptions().consumption(*id) {
+                if let Some(last) = consumption.doses().last() {
+                    let last = GameTime::from(*last);
+                    if since < last.add_hours(2) {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
     }
 }

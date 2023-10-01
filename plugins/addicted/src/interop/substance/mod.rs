@@ -13,7 +13,10 @@ pub use quality::*;
 mod tier;
 pub use tier::*;
 
-use crate::addictive::{Alcoholic, Booster, Healer, Neuro};
+use crate::addictive::{
+    Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK, CAPACITY_BOOSTER,
+    HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
+};
 
 /// represents all potentially addictive consumables found in-game.
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
@@ -64,6 +67,22 @@ impl From<Substance> for Category {
             Substance::BlackLace => Category::BlackLace,
             Substance::CarryCapacityBooster => Category::Anabolics,
             Substance::NeuroBlocker => Category::Neuros,
+        }
+    }
+}
+
+impl From<Substance> for &[SubstanceId] {
+    fn from(value: Substance) -> Self {
+        match value {
+            Substance::Alcohol => &ALCOHOL,
+            Substance::MaxDOC => &MAX_DOC,
+            Substance::BounceBack => &BOUNCE_BACK,
+            Substance::HealthBooster => &HEALTH_BOOSTER,
+            Substance::MemoryBooster => &MEMORY_BOOSTER,
+            Substance::StaminaBooster => &STAMINA_BOOSTER,
+            Substance::BlackLace => &BLACK_LACE,
+            Substance::CarryCapacityBooster => &CAPACITY_BOOSTER,
+            Substance::NeuroBlocker => &NEURO_BLOCKER,
         }
     }
 }

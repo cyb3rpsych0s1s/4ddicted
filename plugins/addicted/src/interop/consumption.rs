@@ -44,7 +44,7 @@ pub struct Consumptions(Ref<IScriptable>);
 #[redscript_import]
 impl Consumption {
     pub fn current(&self) -> i32;
-    fn doses(&self) -> Vec<f32>;
+    pub fn doses(&self) -> Vec<f32>;
     pub fn set_current(&mut self, value: i32) -> ();
     fn set_doses(&mut self, value: Vec<f32>) -> ();
 }
@@ -57,7 +57,7 @@ unsafe impl RefRepr for Consumptions {
 
 #[redscript_import]
 impl Consumptions {
-    fn keys(&self) -> Vec<SubstanceId>;
+    pub fn keys(&self) -> Vec<SubstanceId>;
     fn values(&self) -> Vec<Consumption>;
     fn set_keys(&mut self, keys: Vec<SubstanceId>) -> ();
     /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
