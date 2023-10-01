@@ -19,3 +19,9 @@ impl PlayerPuppet {
         GameObject(self.0)
     }
 }
+
+// #[redscript_import]
+// impl PlayerPuppet {
+//     /// `public func GetPlayerStateMachineBlackboard() -> IBlackboard`
+//     pub fn get_player_state_machine_blackboard(&self) -> IBlackboard;
+// }

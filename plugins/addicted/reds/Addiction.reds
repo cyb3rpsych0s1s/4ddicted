@@ -7,6 +7,9 @@ native func OnIngestedItem(system: ref<System>, item: ItemID) -> Void;
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
 
+@addField(PlayerStateMachineDef)
+public let WithdrawalSymptoms: BlackboardID_Uint;
+
 final static func ProcessUsedItemAction(executor: wref<GameObject>, actionID: TweakDBID, itemID: ItemID) -> Void {
   let actionType: CName = TweakDBInterface.GetObjectActionRecord(actionID).ActionName();
   LogChannel(n"DEBUG", s"process used item action \(NameToString(actionType)) for item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");

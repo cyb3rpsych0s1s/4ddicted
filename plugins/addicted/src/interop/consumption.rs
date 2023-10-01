@@ -192,6 +192,21 @@ impl Consumptions {
             self.set_values(values.into_refs());
         }
     }
+    // pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
+    //     for ref consumption in self.by_substance(substance) {
+    //         if let Some(last) = consumption.doses().last() {
+    //             let last = GameTime::from(*last);
+    //             let now = GameTime::from(
+    //                 SystemTime::now()
+    //                     .duration_since(UNIX_EPOCH)
+    //                     .unwrap()
+    //                     .as_secs_f32(),
+    //             );
+    //             return now >= last.add_hours(24);
+    //         }
+    //     }
+    //     false
+    // }
 }
 
 impl Intoxications<Substance> for Consumptions {

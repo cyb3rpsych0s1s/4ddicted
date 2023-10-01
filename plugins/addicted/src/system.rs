@@ -1,8 +1,10 @@
-use cp2077_rs::{GameTime, Housing, TimeSystem, TransactionSystem};
+use cp2077_rs::{
+    BlackboardIdBool, BlackboardIdUint, GameTime, Housing, TimeSystem, TransactionSystem,
+};
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::interop::{Category, Consumptions, Substance, SubstanceId};
+use crate::interop::{Consumptions, SubstanceId};
 use crate::player::PlayerPuppet;
 
 #[derive(Default, Clone)]
@@ -22,6 +24,8 @@ impl System {
     fn time_system(&self) -> TimeSystem;
     fn transaction_system(&self) -> TransactionSystem;
     fn resting_since(&self) -> GameTime;
+    fn withdrawal_symptoms(&self) -> BlackboardIdUint;
+    fn is_consuming(&self) -> BlackboardIdBool;
 }
 
 impl System {
@@ -37,6 +41,7 @@ impl System {
             );
             self.consumptions()
                 .increase(id, self.time_system().get_game_time_stamp());
+            // self.on_consumed(id);
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {
@@ -48,45 +53,60 @@ impl System {
                 if now < since.add_hours(6) {
                     return;
                 }
-                if self.slept_under_influence() {
-                    return;
-                }
+                // if self.slept_under_influence() {
+                //     return;
+                // }
             }
             self.consumptions().decrease();
+            // self.on_rested();
         }
     }
-    #[allow(dead_code)]
-    pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
-        for ref consumption in self.consumptions().by_substance(substance) {
-            if let Some(last) = consumption.doses().last() {
-                let last = GameTime::from(*last);
-                let now = self.time_system().get_game_time();
-                return now >= last.add_hours(24);
-            }
-        }
-        false
-    }
-    #[allow(dead_code)]
-    pub fn is_withdrawing_from_category(&self, category: Category) -> bool {
-        for substance in <&[Substance]>::from(category).iter() {
-            if self.is_withdrawing_from_substance(*substance) {
-                return true;
-            }
-        }
-        false
-    }
-    pub fn slept_under_influence(&self) -> bool {
-        let since = self.resting_since();
-        for ref id in self.consumptions().keys() {
-            if let Some(ref consumption) = self.consumptions().get(*id) {
-                if let Some(last) = consumption.doses().last() {
-                    let last = GameTime::from(*last);
-                    if since < last.add_hours(2) {
-                        return true;
-                    }
-                }
-            }
-        }
-        false
-    }
+    // #[inline]
+    // pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
+    //     self.consumptions().is_withdrawing_from_substance(substance)
+    // }
+    // pub fn slept_under_influence(&self) -> bool {
+    //     let since = self.resting_since();
+    //     for ref id in self.consumptions().keys() {
+    //         if let Some(ref consumption) = self.consumptions().get(*id) {
+    //             if let Some(last) = consumption.doses().last() {
+    //                 let last = GameTime::from(*last);
+    //                 if since < last.add_hours(2) {
+    //                     return true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     false
+    // }
+    // fn on_consumed(&self, id: SubstanceId) {
+    //     let board = self.player().get_player_state_machine_blackboard();
+    //     let current = board.get_uint(self.withdrawal_symptoms());
+    //     let current = WithdrawalSymptoms::from_bits_truncate(current);
+    //     let symptom = WithdrawalSymptoms::from(id);
+    //     let mut next = current.clone();
+    //     next.set(symptom, false);
+    //     if current != next {
+    //         board.set_uint(self.withdrawal_symptoms(), next.bits(), false);
+    //     }
+    // }
+    // fn on_rested(&self) {
+    //     return;
+    //     let board = self.player().get_player_state_machine_blackboard();
+    //     let current = board.get_uint(self.withdrawal_symptoms());
+    //     let current = WithdrawalSymptoms::from_bits_truncate(current);
+    //     let mut next = WithdrawalSymptoms::empty();
+    //     next.set(
+    //         WithdrawalSymptoms::ALCOHOL,
+    //         self.is_withdrawing_from_substance(Substance::Alcohol),
+    //     );
+    //     next.set(
+    //         WithdrawalSymptoms::MAXDOC,
+    //         self.is_withdrawing_from_substance(Substance::MaxDOC),
+    //     );
+    //     // TODO ...
+    //     if current != next {
+    //         board.set_uint(self.withdrawal_symptoms(), next.bits(), true);
+    //     }
+    // }
 }

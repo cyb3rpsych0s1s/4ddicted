@@ -8,5 +8,6 @@ name = "addicted"
 crate-type = ["cdylib"]
 
 [dependencies]
+bitflags = "2.4.0"
 cp2077-rs = { path = "../cp2077-rs" }
 red4ext-rs.workspace = true

@@ -6,3 +6,5 @@ mod time;
 pub use time::*;
 mod housing;
 pub use housing::*;
+mod board;
+pub use board::*;

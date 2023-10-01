@@ -5,6 +5,7 @@ mod addictive;
 mod interop;
 mod intoxication;
 mod player;
+mod symptoms;
 mod system;
 
 define_plugin! {

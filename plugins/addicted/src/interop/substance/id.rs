@@ -3,12 +3,15 @@ use red4ext_rs::{
     types::{ItemId, TweakDbId},
 };
 
-use crate::addictive::{
-    Addictive, Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK,
-    CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
+use crate::{
+    addictive::{
+        Addictive, Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK,
+        CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
+    },
+    symptoms::WithdrawalSymptoms,
 };
 
-use super::Kind;
+use super::{Kind, Substance};
 
 #[derive(Default, Clone, Copy, PartialEq)]
 #[repr(transparent)]
@@ -24,6 +27,22 @@ impl PartialEq<TweakDbId> for SubstanceId {
 impl PartialEq<SubstanceId> for TweakDbId {
     fn eq(&self, other: &SubstanceId) -> bool {
         self.eq(&other.0)
+    }
+}
+
+impl From<SubstanceId> for WithdrawalSymptoms {
+    fn from(value: SubstanceId) -> Self {
+        match Substance::from(value) {
+            Substance::Alcohol => WithdrawalSymptoms::ALCOHOL,
+            Substance::MaxDOC => WithdrawalSymptoms::MAXDOC,
+            Substance::BounceBack => WithdrawalSymptoms::BOUNCEBACK,
+            Substance::HealthBooster => WithdrawalSymptoms::HEALTHBOOSTER,
+            Substance::MemoryBooster => todo!(),
+            Substance::StaminaBooster => todo!(),
+            Substance::BlackLace => todo!(),
+            Substance::CarryCapacityBooster => todo!(),
+            Substance::NeuroBlocker => todo!(),
+        }
     }
 }
 
