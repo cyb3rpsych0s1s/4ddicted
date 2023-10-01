@@ -4,6 +4,7 @@ use system::System;
 mod addictive;
 mod interop;
 mod intoxication;
+mod player;
 mod system;
 
 define_plugin! {

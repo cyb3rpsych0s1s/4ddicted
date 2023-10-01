@@ -8,7 +8,7 @@ use crate::addictive::{
     CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
 };
 
-use super::{Kind, Substance};
+use super::Kind;
 
 #[derive(Default, Clone, PartialEq)]
 #[repr(transparent)]

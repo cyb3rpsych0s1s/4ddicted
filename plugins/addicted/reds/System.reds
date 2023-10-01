@@ -1,5 +1,8 @@
 module Addicted
 
+import Addicted.Consumptions
+import Addicted.Consumption
+
 public class System extends ScriptableSystem {
     private let player: wref<PlayerPuppet>;
     private persistent let consumptions: ref<Consumptions>;
@@ -28,28 +31,7 @@ public class System extends ScriptableSystem {
     public func OnSkipTime() -> Void { this.restingSince = this.TimeSystem().GetGameTime(); }
     // imported in natives
     public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
+    public func Player() -> ref<PlayerPuppet> { return this.player; }
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
-}
-
-public class Consumptions extends IScriptable {
-    private persistent let keys: array<TweakDBID>;
-    private persistent let values: array<ref<Consumption>>;
-    public func Keys() -> array<TweakDBID> { return this.keys; }
-    public func Values() -> array<ref<Consumption>> { return this.values; }
-    public func SetKeys(keys: array<TweakDBID>) -> Void { this.keys = keys; }
-    public func SetValues(values: array<ref<Consumption>>) -> Void { this.values = values; }
-    public func CreateConsumption(score: Int32) -> ref<Consumption> {
-        let consumption = new Consumption();
-        consumption.current = score;
-        consumption.doses = [];
-        return consumption;
-    }
-}
-public class Consumption extends IScriptable {
-    public persistent let current: Int32;
-    public persistent let doses: array<Float>;
-    public func Current() -> Int32 { return this.current; }
-    public func SetCurrent(value: Int32) -> Void { this.current = value; }
-    public func Doses() -> array<Float> { return this.doses; }
-    public func SetDoses(value: array<Float>) -> Void { this.doses = value; }
+    public func TransactionSystem() -> ref<TransactionSystem> { return GameInstance.GetTransactionSystem(this.GetGameInstance()); }
 }

@@ -1,27 +1,39 @@
 module Addicted
 
-enum Threshold {
-    Clean = 0,
-    Barely = 10,
-    Mildly = 20,
-    Notably = 40,
-    Severely = 60,
+import Addicted.System
+
+native func OnIngestedItem(system: ref<System>, item: ItemID) -> Void;
+
+@addField(PlayerStateMachineDef)
+public let IsConsuming: BlackboardID_Bool;
+
+final static func ProcessUsedItemAction(executor: wref<GameObject>, actionID: TweakDBID, itemID: ItemID) -> Void {
+  let actionType: CName = TweakDBInterface.GetObjectActionRecord(actionID).ActionName();
+  LogChannel(n"DEBUG", s"process used item action \(NameToString(actionType)) for item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
+  if Equals(actionType, n"Consume") || Equals(actionType, n"Drink") || Equals(actionType, n"UseHealCharge") {
+    let system = System.GetInstance(executor.GetGame());
+    OnIngestedItem(system, itemID);
+  }
 }
 
-enum Kind {
-    Mild = 1,
-    Hard = 2,
+// used at all times
+@wrapMethod(ItemActionsHelper)
+public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool) -> Bool {
+  LogChannel(n"DEBUG", s"process item action \(TDBID.ToStringDEBUG(actionID))");
+  let used = wrappedMethod(gi, executor, itemData, actionID, fromInventory);
+  if used {
+    ProcessUsedItemAction(executor, actionID, itemData.GetID());
+  }
+  return used;
 }
 
-enum Substance {
-    Unknown = -1,
-    Alcohol = 1,
-    MaxDOC = 2,     // FirstAidWhiff
-    BounceBack = 3, // BonesMcCoy
-    HealthBooster = 4,
-    MemoryBooster = 5,
-    StaminaBooster = 7,
-    BlackLace = 8,
-    CarryCapacityBooster = 9,
-    NeuroBlocker = 10,
+// used at all times
+@wrapMethod(ItemActionsHelper)
+public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool, quantity: Int32) -> Bool {
+  LogChannel(n"DEBUG", s"process item action \(TDBID.ToStringDEBUG(actionID))");
+  let used = wrappedMethod(gi, executor, itemData, actionID, fromInventory, quantity);
+  if used {
+    ProcessUsedItemAction(executor, actionID, itemData.GetID());
+  }
+  return used;
 }

@@ -15,7 +15,7 @@ pub use alcohol::*;
 
 use red4ext_rs::types::ItemId;
 
-use crate::interop::SubstanceId;
+use crate::interop::{Category, Kind, Quality, SubstanceId, Tier};
 
 /// indicates whether something can be considered as addictive or not.
 pub trait Addictive {
@@ -32,4 +32,11 @@ impl Addictive for SubstanceId {
     fn addictive(&self) -> bool {
         true
     }
+}
+
+pub trait Details {
+    fn tier(&self) -> Tier;
+    fn quality(&self) -> Quality;
+    fn category(&self) -> Category;
+    fn kind(&self) -> Kind;
 }

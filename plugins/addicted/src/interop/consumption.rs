@@ -62,7 +62,7 @@ impl Consumptions {
     fn set_keys(&mut self, keys: Vec<SubstanceId>) -> ();
     /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
     fn set_values(&mut self, values: Vec<Ref<IScriptable>>) -> ();
-    fn create_consumption(&self, score: i32) -> Consumption;
+    fn create_consumption(&self, score: i32, when: f32) -> Consumption;
 }
 
 impl Consumptions {
@@ -106,7 +106,7 @@ impl Consumptions {
             keys.extend_from_slice(self.keys().as_slice());
             keys.push(id.clone());
 
-            let value = self.create_consumption(id.kicks_in());
+            let value = self.create_consumption(id.kicks_in(), tms);
             let mut values = Vec::with_capacity(len + 1);
             values.extend_from_slice(self.values().as_slice());
             values.push(value);

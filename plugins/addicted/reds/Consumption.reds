@@ -1,39 +1,56 @@
 module Addicted
 
-import Addicted.System
-
-native func OnIngestedItem(system: ref<System>, item: ItemID) -> Void;
-
-@addField(PlayerStateMachineDef)
-public let IsConsuming: BlackboardID_Bool;
-
-final static func ProcessUsedItemAction(executor: wref<GameObject>, actionID: TweakDBID, itemID: ItemID) -> Void {
-  let actionType: CName = TweakDBInterface.GetObjectActionRecord(actionID).ActionName();
-  LogChannel(n"DEBUG", s"process used item action \(NameToString(actionType))");
-  if Equals(actionType, n"Consume") || Equals(actionType, n"Drink") || Equals(actionType, n"UseHealCharge") {
-    let system = System.GetInstance(executor.GetGame());
-    OnIngestedItem(system, itemID);
-  }
+public class Consumptions extends IScriptable {
+    private persistent let keys: array<TweakDBID>;
+    private persistent let values: array<ref<Consumption>>;
+    public func Keys() -> array<TweakDBID> { return this.keys; }
+    public func Values() -> array<ref<Consumption>> { return this.values; }
+    public func SetKeys(keys: array<TweakDBID>) -> Void { this.keys = keys; }
+    public func SetValues(values: array<ref<IScriptable>>) -> Void {
+        ArrayClear(this.values);
+        this.values = [];
+        for value in values {
+            ArrayPush(this.values, value as Consumption);
+        }
+    }
+    public func CreateConsumption(score: Int32, when: Float) -> ref<Consumption> {
+        let consumption = new Consumption();
+        consumption.current = score;
+        consumption.doses = [when];
+        return consumption;
+    }
+}
+public class Consumption extends IScriptable {
+    public persistent let current: Int32;
+    public persistent let doses: array<Float>;
+    public func Current() -> Int32 { return this.current; }
+    public func SetCurrent(value: Int32) -> Void { this.current = value; }
+    public func Doses() -> array<Float> { return this.doses; }
+    public func SetDoses(value: array<Float>) -> Void { this.doses = value; }
 }
 
-// used at all times
-@wrapMethod(ItemActionsHelper)
-public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool) -> Bool {
-  LogChannel(n"DEBUG", s"process item action \(TDBID.ToStringDEBUG(actionID))");
-  let used = wrappedMethod(gi, executor, itemData, actionID, fromInventory);
-  if used {
-    ProcessUsedItemAction(executor, actionID, itemData.GetID());
-  }
-  return used;
+enum Threshold {
+    Clean = 0,
+    Barely = 10,
+    Mildly = 20,
+    Notably = 40,
+    Severely = 60,
 }
 
-// used at all times
-@wrapMethod(ItemActionsHelper)
-public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool, quantity: Int32) -> Bool {
-  LogChannel(n"DEBUG", s"process item action \(TDBID.ToStringDEBUG(actionID))");
-  let used = wrappedMethod(gi, executor, itemData, actionID, fromInventory, quantity);
-  if used {
-    ProcessUsedItemAction(executor, actionID, itemData.GetID());
-  }
-  return used;
+enum Kind {
+    Mild = 1,
+    Hard = 2,
+}
+
+enum Substance {
+    Unknown = -1,
+    Alcohol = 1,
+    MaxDOC = 2,     // FirstAidWhiff
+    BounceBack = 3, // BonesMcCoy
+    HealthBooster = 4,
+    MemoryBooster = 5,
+    StaminaBooster = 7,
+    BlackLace = 8,
+    CarryCapacityBooster = 9,
+    NeuroBlocker = 10,
 }

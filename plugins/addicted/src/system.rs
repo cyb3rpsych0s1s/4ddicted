@@ -1,8 +1,9 @@
-use cp2077_rs::{GameTime, Housing, TimeSystem};
+use cp2077_rs::{GameTime, Housing, TimeSystem, TransactionSystem};
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
 use crate::interop::{Consumptions, SubstanceId};
+use crate::player::PlayerPuppet;
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -17,7 +18,9 @@ unsafe impl RefRepr for System {
 #[redscript_import]
 impl System {
     fn consumptions(&self) -> Consumptions;
+    fn player(&self) -> PlayerPuppet;
     fn time_system(&self) -> TimeSystem;
+    fn transaction_system(&self) -> TransactionSystem;
     fn resting_since(&self) -> GameTime;
 }
 
@@ -26,6 +29,12 @@ impl System {
         info!("consuming {item:#?}");
         if let Some(id) = SubstanceId::try_from(item).ok() {
             info!("item is addictive");
+            info!(
+                "item quality: {:#?}",
+                self.transaction_system()
+                    .get_item_data(self.player().as_game_object(), item)
+                    .get_quality()
+            );
             self.consumptions()
                 .increase(id, self.time_system().get_game_time_stamp());
         }

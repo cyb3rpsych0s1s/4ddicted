@@ -20,7 +20,6 @@ use crate::addictive::{Alcoholic, Booster, Healer, Neuro};
 #[repr(i64)]
 pub enum Substance {
     #[default]
-    Unknown = -1,
     Alcohol = 1,
     MaxDOC = 2,     // FirstAidWhiff
     BounceBack = 3, // BonesMcCoy
@@ -48,7 +47,23 @@ impl From<SubstanceId> for Substance {
             _ if value.is_blacklace() => Self::BlackLace,
             _ if value.is_capacity_booster() => Self::CarryCapacityBooster,
             _ if value.is_neuroblocker() => Self::NeuroBlocker,
-            _ => Self::Unknown,
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl From<Substance> for Category {
+    fn from(value: Substance) -> Self {
+        match value {
+            Substance::Alcohol => Category::Alcohol,
+            Substance::MaxDOC => Category::Healers,
+            Substance::BounceBack => Category::Healers,
+            Substance::HealthBooster => Category::Healers,
+            Substance::MemoryBooster => Category::Neuros,
+            Substance::StaminaBooster => Category::Anabolics,
+            Substance::BlackLace => Category::BlackLace,
+            Substance::CarryCapacityBooster => Category::Anabolics,
+            Substance::NeuroBlocker => Category::Neuros,
         }
     }
 }
