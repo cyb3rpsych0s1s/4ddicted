@@ -87,12 +87,21 @@ impl Consumptions {
         }
         None
     }
+    /// get consumptions by substance, if any.
     pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
         <&[SubstanceId]>::from(substance)
             .iter()
             .filter_map(|x| self.position(*x))
             .map(|x| self.values()[x].clone())
             .collect()
+    }
+    /// get average threshold by substance, across all its related consumptions, if any.
+    pub fn average_threshold(&self, substance: Substance) -> Threshold {
+        let consumptions = self.by_substance(substance);
+        let len = consumptions.len() as i32;
+        if len == 0 { return Threshold::Clean; }
+        let sum: i32 = self.by_substance(substance).iter().map(|x| x.threshold() as i32).sum();
+        Threshold::from(sum/len)
     }
     /// increase consumption for given substance ID.
     ///
