@@ -5,6 +5,7 @@
 //! All are processed through `ItemActionsHelper.ProcessItemAction(...)`.
 
 mod healer;
+use cp2077_rs::GameDataQuality;
 pub use healer::*;
 mod booster;
 pub use booster::*;
@@ -15,7 +16,7 @@ pub use alcohol::*;
 
 use red4ext_rs::types::ItemId;
 
-use crate::interop::{Category, Kind, Quality, SubstanceId, Tier};
+use crate::interop::{Category, Kind, SubstanceId, Tier};
 
 /// indicates whether something can be considered as addictive or not.
 pub trait Addictive {
@@ -36,7 +37,7 @@ impl Addictive for SubstanceId {
 
 pub trait Details {
     fn tier(&self) -> Tier;
-    fn quality(&self) -> Quality;
+    fn quality(&self) -> GameDataQuality;
     fn category(&self) -> Category;
     fn kind(&self) -> Kind;
 }

@@ -1,3 +1,5 @@
+mod game;
+pub use game::*;
 mod transaction;
 pub use transaction::*;
 mod time;

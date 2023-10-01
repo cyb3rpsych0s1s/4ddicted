@@ -8,8 +8,6 @@ mod kind;
 pub use kind::*;
 mod r#type;
 pub use r#type::*;
-mod quality;
-pub use quality::*;
 mod tier;
 pub use tier::*;
 
