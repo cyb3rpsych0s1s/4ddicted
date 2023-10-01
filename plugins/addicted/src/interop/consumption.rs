@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use super::{Potency, SubstanceId};
+use super::SubstanceId;
 
 /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
 pub trait IntoRefs {
@@ -27,7 +27,7 @@ unsafe impl RefRepr for Consumption {
 }
 
 /// substances consumption.
-/// 
+///
 /// SAFETY: consumptions keys and values must be of same size at all time.
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -80,7 +80,7 @@ impl Consumptions {
         None
     }
     /// increase consumption for given substance ID.
-    /// 
+    ///
     /// if consumed for the first time, create an entry in keys and values.
     /// otherwise update existing entry in values.
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
@@ -89,16 +89,16 @@ impl Consumptions {
             let mut doses = existing.doses();
             doses.push(tms);
 
-            existing.set_current(existing.current() + id.potency());
+            existing.set_current(existing.current() + id.kicks_in());
             existing.set_doses(doses);
         } else {
             let len = self.keys().as_slice().len();
 
             let mut keys = Vec::with_capacity(len + 1);
             keys.extend_from_slice(self.keys().as_slice());
-            keys.push(id);
+            keys.push(id.clone());
 
-            let value = self.create_consumption(1);
+            let value = self.create_consumption(id.kicks_in());
             let mut values = Vec::with_capacity(len + 1);
             values.extend_from_slice(self.values().as_slice());
             values.push(value);
@@ -108,7 +108,7 @@ impl Consumptions {
         }
     }
     /// decrease consumption for all substances.
-    /// 
+    ///
     /// if greater than zero, decrease consumption score.
     /// otherwise remove entry from both keys and values.
     pub fn decrease(&mut self) {
@@ -117,11 +117,16 @@ impl Consumptions {
             return;
         }
         let mut removables = Vec::with_capacity(len);
-        for (idx, consumption) in self.values().as_mut_slice().iter_mut().enumerate() {
-            if consumption.current() == 0 {
+        for (id, (idx, consumption)) in self
+            .keys()
+            .as_slice()
+            .iter()
+            .zip(self.values().as_mut_slice().iter_mut().enumerate())
+        {
+            if consumption.current() <= 0 {
                 removables.push(idx);
             } else {
-                consumption.set_current(consumption.current() - 1);
+                consumption.set_current(consumption.current() - id.wean_off());
             }
         }
         if removables.len() > 0 {
