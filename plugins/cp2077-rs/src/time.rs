@@ -48,6 +48,17 @@ impl Display for GameTime {
     }
 }
 
+impl From<f32> for GameTime {
+    fn from(value: f32) -> Self {
+        let value = value as u32;
+        Self::default()
+            .add_days(value / DAY)
+            .add_hours(value % DAY / HOUR)
+            .add_minutes(value % DAY % HOUR / MINUTE)
+            .add_seconds(value % MINUTE)
+    }
+}
+
 const SECOND: u32 = 1;
 const MINUTE: u32 = SECOND * 60;
 const HOUR: u32 = MINUTE * 60;
@@ -129,5 +140,18 @@ mod tests {
             .add_seconds(41);
         assert_eq!(since.add_hours(9), now);
         assert!(since.add_hours(6) < now);
+    }
+    #[test]
+    fn conversion() {
+        const DAYS: u32 = 5 * DAY;
+        const HOURS: u32 = 13 * HOUR;
+        const MINUTES: u32 = 50 * MINUTE;
+        const SECONDS: u32 = 43 * SECOND;
+
+        let time = GameTime::from((DAYS + HOURS + MINUTES + SECONDS) as f32);
+        assert_eq!(time.days(), 5);
+        assert_eq!(time.hours(), 13);
+        assert_eq!(time.minutes(), 50);
+        assert_eq!(time.seconds(), 43);
     }
 }
