@@ -2,7 +2,7 @@ use cp2077_rs::{GameTime, Housing, TimeSystem, TransactionSystem};
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::interop::{Category, Consumptions, SubstanceId};
+use crate::interop::{Category, Consumptions, Substance, SubstanceId};
 use crate::player::PlayerPuppet;
 
 #[derive(Default, Clone)]
@@ -55,8 +55,9 @@ impl System {
             self.consumptions().decrease();
         }
     }
-    pub fn withdrawing_from_substance(&self, id: SubstanceId) -> bool {
-        if let Some(consumption) = self.consumptions().consumption(id) {
+    #[allow(dead_code)]
+    pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
+        for ref consumption in self.consumptions().by_substance(substance) {
             if let Some(last) = consumption.doses().last() {
                 let last = GameTime::from(*last);
                 let now = self.time_system().get_game_time();
@@ -65,10 +66,10 @@ impl System {
         }
         false
     }
-    pub fn withdrawing_from_category(&self, category: Category) -> bool {
-        let ids: Vec<SubstanceId> = category.into();
-        for id in ids {
-            if self.withdrawing_from_substance(id) {
+    #[allow(dead_code)]
+    pub fn is_withdrawing_from_category(&self, category: Category) -> bool {
+        for substance in <&[Substance]>::from(category).iter() {
+            if self.is_withdrawing_from_substance(*substance) {
                 return true;
             }
         }
@@ -77,7 +78,7 @@ impl System {
     pub fn slept_under_influence(&self) -> bool {
         let since = self.resting_since();
         for ref id in self.consumptions().keys() {
-            if let Some(ref consumption) = self.consumptions().consumption(*id) {
+            if let Some(ref consumption) = self.consumptions().get(*id) {
                 if let Some(last) = consumption.doses().last() {
                     let last = GameTime::from(*last);
                     if since < last.add_hours(2) {

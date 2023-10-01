@@ -10,7 +10,7 @@ use crate::intoxication::Intoxication;
 impl Intoxication for (Consumptions, SubstanceId) {
     fn threshold(&self) -> Threshold {
         self.0
-            .consumption(self.1.clone())
+            .get(self.1.clone())
             .map(|x| x.current().into())
             .unwrap_or(Threshold::Clean)
     }

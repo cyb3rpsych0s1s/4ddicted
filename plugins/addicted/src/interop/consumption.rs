@@ -5,7 +5,7 @@ use red4ext_rs::{
 
 use crate::intoxication::Intoxication;
 
-use super::{SubstanceId, Threshold};
+use super::{Substance, SubstanceId, Threshold};
 
 /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
 pub trait IntoRefs {
@@ -80,12 +80,19 @@ impl Consumptions {
         }
     }
     /// get consumption by substance ID, if any.
-    pub fn consumption(&self, id: SubstanceId) -> Option<Consumption> {
+    pub fn get(&self, id: SubstanceId) -> Option<Consumption> {
         if let Some(idx) = self.position(id) {
             // SAFETY: keys and values are guaranteed to be of same size.
             return Some(unsafe { self.values().get_unchecked(idx) }.clone());
         }
         None
+    }
+    pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
+        <&[SubstanceId]>::from(substance)
+            .iter()
+            .filter_map(|x| self.position(*x))
+            .map(|x| self.values()[x].clone())
+            .collect()
     }
     /// increase consumption for given substance ID.
     ///
