@@ -249,4 +249,56 @@ mod tests {
         copy[len] = additional;
         assert_eq!(copy.as_slice(), &[1, 2, 3, 4, 5, 6]);
     }
+    #[test]
+    fn removal() {
+        let logic = |slice: &[i32]| {
+            let len = slice.len();
+            let removables: Vec<usize> = slice
+                .iter()
+                .enumerate()
+                .filter_map(|(idx, x)| if *x <= 0 { Some(idx) } else { None })
+                .collect();
+            let mut copy;
+            if removables.len() != len {
+                copy = Vec::with_capacity(len - removables.len());
+                let mut from = 0 as usize;
+                for to in removables {
+                    if to != from {
+                        copy.extend_from_slice(&slice[from..to]);
+                    }
+                    from = to + 1;
+                }
+                if from <= len {
+                    copy.extend_from_slice(&slice[from..]);
+                }
+            } else {
+                copy = vec![];
+            }
+            copy
+        };
+        
+        let slice = [0i32, -1, 2, 4, 0, 1, 0];
+        let copy = logic(&slice);
+        assert_eq!(copy.as_slice(), &[2, 4, 1]);
+
+        let slice = [0i32, 0, 0];
+        let copy = logic(&slice);
+        assert_eq!(copy.as_slice(), &[]);
+
+        let slice = [0i32, 1, 1];
+        let copy = logic(&slice);
+        assert_eq!(copy.as_slice(), &[1, 1]);
+
+        let slice = [1i32, 1, 0];
+        let copy = logic(&slice);
+        assert_eq!(copy.as_slice(), &[1, 1]);
+
+        let slice = [];
+        let copy = logic(&slice);
+        assert_eq!(copy.as_slice(), &[]);
+
+        let slice = [1, 1, 1];
+        let copy = logic(&slice);
+        assert_eq!(copy.as_slice(), &[1i32, 1, 1]);
+    }
 }
