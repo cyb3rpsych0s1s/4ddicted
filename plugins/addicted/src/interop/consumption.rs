@@ -98,7 +98,7 @@ impl Consumptions {
         }
     }
     /// get consumption by substance ID, if any.
-    pub fn get(&self, id: SubstanceId) -> Option<Consumption> {
+    pub fn get_owned(&self, id: SubstanceId) -> Option<Consumption> {
         if let Some(idx) = self.position(id) {
             // SAFETY: keys and values are guaranteed to be of same size.
             return Some(unsafe { self.values().get_unchecked(idx) }.clone());
@@ -106,20 +106,16 @@ impl Consumptions {
         None
     }
     /// get consumptions by substance ids, if any.
-    #[inline]
     fn by_ids(&self, ids: &[SubstanceId]) -> Vec<Consumption> {
         ids.iter()
-            .filter_map(|x| self.position(*x))
-            .map(|x| self.values()[x].clone())
+            .filter_map(|x| self.get_owned(*x))
             .collect()
     }
     /// get consumptions by substance, if any.
-    #[inline]
     pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
         self.by_ids(<&[SubstanceId]>::from(substance))
     }
     /// get consumptions by category, if any.
-    #[inline]
     pub fn by_category(&self, category: Category) -> Vec<Consumption> {
         self.by_ids(<Vec<SubstanceId>>::from(category).as_slice())
     }
@@ -128,8 +124,7 @@ impl Consumptions {
     /// if consumed for the first time, create an entry in keys and values.
     /// otherwise update existing entry in values.
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
-        if let Some(idx) = self.position(id.clone()) {
-            let mut existing = self.values().as_slice()[idx as usize].clone();
+        if let Some(mut existing) = self.get_owned(id) {
             let mut doses = existing.doses();
             doses.push(tms);
 
