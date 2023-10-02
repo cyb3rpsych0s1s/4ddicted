@@ -22,7 +22,7 @@ pub const NEURO_BLOCKER: [SubstanceId; 3] = [
 
 pub trait Neuro {
     fn is_neuro(&self) -> bool {
-        self.is_blacklace() || self.is_neuroblocker() || todo!()
+        self.is_blacklace() || self.is_neuroblocker()
     }
     fn is_blacklace(&self) -> bool;
     fn is_neuroblocker(&self) -> bool;

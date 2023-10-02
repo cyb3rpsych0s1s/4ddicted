@@ -37,11 +37,11 @@ impl From<SubstanceId> for WithdrawalSymptoms {
             Substance::MaxDOC => WithdrawalSymptoms::MAXDOC,
             Substance::BounceBack => WithdrawalSymptoms::BOUNCEBACK,
             Substance::HealthBooster => WithdrawalSymptoms::HEALTHBOOSTER,
-            Substance::MemoryBooster => todo!(),
-            Substance::StaminaBooster => todo!(),
-            Substance::BlackLace => todo!(),
-            Substance::CarryCapacityBooster => todo!(),
-            Substance::NeuroBlocker => todo!(),
+            Substance::MemoryBooster => WithdrawalSymptoms::MEMORYBOOSTER,
+            Substance::StaminaBooster => WithdrawalSymptoms::STAMINABOOSTER,
+            Substance::BlackLace => WithdrawalSymptoms::BLACKLACE,
+            Substance::CarryCapacityBooster => WithdrawalSymptoms::CARRYCAPACITYBOOSTER,
+            Substance::NeuroBlocker => WithdrawalSymptoms::NEUROBLOCKER,
         }
     }
 }
