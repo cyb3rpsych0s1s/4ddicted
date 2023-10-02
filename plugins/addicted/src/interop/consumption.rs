@@ -124,8 +124,11 @@ impl Consumptions {
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
         if let Some(mut existing) = self.get_owned(id) {
             info!("about to update existing consumption");
-            let mut doses = existing.doses();
-            doses.push(tms);
+            let current = existing.doses();
+            let len = current.len();
+            let mut doses = vec![f32::default(); len + 1];
+            doses[..len].clone_from_slice(current.as_slice());
+            doses[len] = tms;
             
             existing.set_current(existing.current() + id.kicks_in());
             existing.set_doses(doses);
@@ -165,10 +168,12 @@ impl Consumptions {
             if consumption.current() <= 0 {
                 removables.push(idx);
             } else {
+                info!("about to decrease existing consumption");
                 consumption.set_current(consumption.current() - id.wean_off());
             }
         }
         if removables.len() > 0 {
+            info!("about to delete existing consumption(s)");
             let mut keys = Vec::with_capacity(len - removables.len());
             let mut values = Vec::with_capacity(len - removables.len());
             let mut from = 0;
