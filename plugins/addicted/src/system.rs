@@ -96,7 +96,7 @@ impl System {
         if current != next {
             board.set_uint(self.withdrawal_symptoms(), next.bits(), false);
         }
-        info!("withdrawal symptoms before {current} after {next}");
+        info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }
     fn update_symptoms(&self) {
         let board = self.player().get_player_state_machine_blackboard();
@@ -113,6 +113,6 @@ impl System {
         if current != next {
             board.set_uint(self.withdrawal_symptoms(), next.bits(), true);
         }
-        info!("withdrawal symptoms before {current} after {next}");
+        info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }
 }
