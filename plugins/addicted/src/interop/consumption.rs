@@ -133,14 +133,14 @@ impl Consumptions {
         } else {
             let len = self.keys().as_slice().len();
 
-            let mut keys = Vec::with_capacity(len + 1);
-            keys.extend_from_slice(self.keys().as_slice());
-            keys.push(id.clone());
+            let mut keys = vec![SubstanceId::default(); len + 1];
+            keys[..len].clone_from_slice(&self.keys().as_slice());
+            keys[len] = id;
 
             let value = self.create_consumption(id.kicks_in(), tms);
-            let mut values = Vec::with_capacity(len + 1);
-            values.extend_from_slice(self.values().as_slice());
-            values.push(value);
+            let mut values = vec![Consumption::default(); len + 1];
+            values[..len].clone_from_slice(self.values().as_slice());
+            values[len] = value;
 
             self.set_keys(keys);
             self.set_values(values.into_refs());
@@ -223,5 +223,19 @@ impl Intoxications<Category> for Consumptions {
     /// get highest threshold by category, across all its related consumptions, if any.
     fn highest_threshold(&self, by: Category) -> Threshold {
         <dyn VariousIntoxication>::highest_threshold(&self.by_category(by))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn concatenate() {
+        let slice = [1,2,3,4,5];
+        let additional = 6;
+        let len = slice.len();
+        let mut copy = vec![i32::default(); len + 1];
+        copy[..len].clone_from_slice(&slice);
+        copy[len] = additional;
+        assert_eq!(copy.as_slice(), &[1,2,3,4,5,6]);
     }
 }
