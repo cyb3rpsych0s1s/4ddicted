@@ -207,21 +207,21 @@ impl Consumptions {
 impl Intoxications<Substance> for Consumptions {
     /// get average threshold by substance, across all its related consumptions, if any.
     fn average_threshold(&self, by: Substance) -> Threshold {
-        self.by_substance(by).average_threshold()
+        <dyn VariousIntoxication>::average_threshold(&self.by_substance(by))
     }
     /// get highest threshold by substance, across all its related consumptions, if any.
     fn highest_threshold(&self, by: Substance) -> Threshold {
-        self.by_substance(by).highest_threshold()
+        <dyn VariousIntoxication>::highest_threshold(&self.by_substance(by))
     }
 }
 
 impl Intoxications<Category> for Consumptions {
     /// get average threshold by category, across all its related consumptions, if any.
     fn average_threshold(&self, by: Category) -> Threshold {
-        self.by_category(by).average_threshold()
+        <dyn VariousIntoxication>::average_threshold(&self.by_category(by))
     }
     /// get highest threshold by category, across all its related consumptions, if any.
     fn highest_threshold(&self, by: Category) -> Threshold {
-        self.by_category(by).highest_threshold()
+        <dyn VariousIntoxication>::highest_threshold(&self.by_category(by))
     }
 }
