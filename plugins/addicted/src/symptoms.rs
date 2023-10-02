@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use bitflags::bitflags;
 
 use crate::interop::Substance;
@@ -38,15 +36,5 @@ impl WithdrawalSymptoms {
             &Self::NEUROBLOCKER => Some(Substance::NeuroBlocker),
             _ => None,
         }
-    }
-}
-
-impl Display for WithdrawalSymptoms {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut buffer = String::from("flags: ");
-        for (name, flag) in WithdrawalSymptoms::all().iter_names() {
-            buffer.push_str(format!("{name} ({}) ", flag.0).as_str());
-        }
-        write!(f, "{buffer}")
     }
 }
