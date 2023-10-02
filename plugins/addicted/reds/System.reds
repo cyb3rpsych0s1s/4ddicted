@@ -12,12 +12,12 @@ public class System extends ScriptableSystem {
         return container.Get(n"Addicted.System") as System;
     }
     private func OnAttach() -> Void {
-        if !IsDefined(this.consumptions) {
+        // if !IsDefined(this.consumptions) {
             let consumptions = new Consumptions();
             consumptions.keys = [];
             consumptions.values = [];
             this.consumptions = consumptions;
-        }
+        // }
     }
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         if IsDefined(request.owner as PlayerPuppet) {
