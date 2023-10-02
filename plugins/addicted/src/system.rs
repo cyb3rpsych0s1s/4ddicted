@@ -42,31 +42,35 @@ impl System {
             );
             self.consumptions()
                 .increase(id, self.time_system().get_game_time_stamp());
-            self.on_consumed(id);
+            self.update_symptom(id);
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {
         if effect.is_housing() {
             info!("housing: {effect:#?}");
+            let mut weanoff = true;
             if effect.is_sleep() {
                 let since = self.resting_since();
                 let now = self.time_system().get_game_time();
                 if now < since.add_hours(6) {
                     info!("light sleep");
-                    return;
+                    weanoff = false;
                 }
                 if self.slept_under_influence() {
                     info!("slept under influence");
-                    return;
+                    weanoff = false;
                 }
             }
-            self.consumptions().decrease();
-            self.on_rested();
+            if weanoff {
+                self.consumptions().decrease();
+            }
+            self.update_symptoms();
         }
     }
     #[inline]
     pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
-        self.consumptions().is_withdrawing_from_substance(substance)
+        self.consumptions()
+            .is_withdrawing_from_substance(substance, self.time_system().get_game_time())
     }
     pub fn slept_under_influence(&self) -> bool {
         let since = self.resting_since();
@@ -82,62 +86,33 @@ impl System {
         }
         false
     }
-    fn on_consumed(&self, id: SubstanceId) {
+    fn update_symptom(&self, id: SubstanceId) {
         let board = self.player().get_player_state_machine_blackboard();
         let current = board.get_uint(self.withdrawal_symptoms());
         let current = WithdrawalSymptoms::from_bits_truncate(current);
         let symptom = WithdrawalSymptoms::from(id);
         let mut next = current.clone();
-        next.set(symptom, false);
+        next.remove(symptom);
         if current != next {
             board.set_uint(self.withdrawal_symptoms(), next.bits(), false);
         }
-        info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
+        info!("withdrawal symptoms before {current} after {next}");
     }
-    fn on_rested(&self) {
+    fn update_symptoms(&self) {
         let board = self.player().get_player_state_machine_blackboard();
         let current = board.get_uint(self.withdrawal_symptoms());
         let current = WithdrawalSymptoms::from_bits_truncate(current);
         let mut next = WithdrawalSymptoms::empty();
-        next.set(
-            WithdrawalSymptoms::ALCOHOL,
-            self.is_withdrawing_from_substance(Substance::Alcohol),
-        );
-        next.set(
-            WithdrawalSymptoms::MAXDOC,
-            self.is_withdrawing_from_substance(Substance::MaxDOC),
-        );
-        next.set(
-            WithdrawalSymptoms::BOUNCEBACK,
-            self.is_withdrawing_from_substance(Substance::BounceBack),
-        );
-        next.set(
-            WithdrawalSymptoms::HEALTHBOOSTER,
-            self.is_withdrawing_from_substance(Substance::HealthBooster),
-        );
-        next.set(
-            WithdrawalSymptoms::MEMORYBOOSTER,
-            self.is_withdrawing_from_substance(Substance::MemoryBooster),
-        );
-        next.set(
-            WithdrawalSymptoms::STAMINABOOSTER,
-            self.is_withdrawing_from_substance(Substance::StaminaBooster),
-        );
-        next.set(
-            WithdrawalSymptoms::BLACKLACE,
-            self.is_withdrawing_from_substance(Substance::BlackLace),
-        );
-        next.set(
-            WithdrawalSymptoms::CARRYCAPACITYBOOSTER,
-            self.is_withdrawing_from_substance(Substance::CarryCapacityBooster),
-        );
-        next.set(
-            WithdrawalSymptoms::NEUROBLOCKER,
-            self.is_withdrawing_from_substance(Substance::NeuroBlocker),
-        );
+        for flag in WithdrawalSymptoms::all().iter() {
+            if let Some(substance) = flag.substance() {
+                if !current.contains(flag) && self.is_withdrawing_from_substance(substance) {
+                    next.insert(flag);
+                }
+            }
+        }
         if current != next {
             board.set_uint(self.withdrawal_symptoms(), next.bits(), true);
         }
-        info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
+        info!("withdrawal symptoms before {current} after {next}");
     }
 }

@@ -76,8 +76,11 @@ impl IBlackboard {
     pub fn get_uint(&self, id: BlackboardIdUint) -> u32;
     /// `public native SetUint(id: BlackboardID_Uint, value: Uint32, opt forceFire: Bool): Void`
     #[redscript(native)]
-    pub fn set_uint(&self, id: BlackboardIdUint, value: u32, force_fire: bool) -> u32;
+    pub fn set_uint(&self, id: BlackboardIdUint, value: u32, force_fire: bool) -> ();
 
+    /// `public native GetBool(id: BlackboardID_Bool): Bool`
+    #[redscript(native)]
+    pub fn get_bool(&self, id: BlackboardIdBool) -> bool;
     /// `public native SetBool(id: BlackboardID_Bool, value: Bool, opt forceFire: Bool): Void`
     #[redscript(native)]
     pub fn set_bool(&self, id: BlackboardIdBool, value: bool, force_fire: bool) -> ();

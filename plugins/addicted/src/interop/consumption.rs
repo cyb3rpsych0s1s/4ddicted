@@ -200,18 +200,12 @@ impl Consumptions {
             self.set_values(values.into_refs());
         }
     }
-    pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
+    pub fn is_withdrawing_from_substance(&self, substance: Substance, at: GameTime) -> bool {
         for ref consumption in self.by_substance(substance) {
             if let Some(last) = consumption.doses().last() {
                 let last = GameTime::from(*last);
-                let now = GameTime::from(
-                    std::time::SystemTime::now()
-                        .duration_since(std::time::UNIX_EPOCH)
-                        .unwrap()
-                        .as_secs_f32(),
-                );
-                info!("last: [{last}] vs now: [{now}]");
-                return now >= last.add_hours(24);
+                info!("last: [{last}] vs now: [{at}]");
+                return at >= last.add_hours(24);
             }
         }
         false
