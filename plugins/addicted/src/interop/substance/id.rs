@@ -29,6 +29,24 @@ impl PartialEq<SubstanceId> for TweakDbId {
         self.eq(&other.0)
     }
 }
+impl PartialEq<SubstanceId> for ItemId {
+    fn eq(&self, other: &SubstanceId) -> bool {
+        self.get_tdbid().eq(&other.0)
+    }
+}
+impl PartialEq<ItemId> for SubstanceId {
+    fn eq(&self, other: &ItemId) -> bool {
+        self.0.eq(&other.get_tdbid())
+    }
+}
+pub trait ContainsItem {
+    fn contains_item(&self, value: &ItemId) -> bool;
+}
+impl<const N: usize> ContainsItem for [SubstanceId; N] {
+    fn contains_item(&self, value: &ItemId) -> bool {
+        self.iter().any(|x| x.0 == value.get_tdbid())
+    }
+}
 
 impl From<SubstanceId> for WithdrawalSymptoms {
     fn from(value: SubstanceId) -> Self {

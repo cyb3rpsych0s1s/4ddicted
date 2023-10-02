@@ -1,6 +1,6 @@
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
-    types::{IScriptable, Ref},
+    types::{IScriptable, Ref}, info,
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
@@ -107,9 +107,7 @@ impl Consumptions {
     }
     /// get consumptions by substance ids, if any.
     fn by_ids(&self, ids: &[SubstanceId]) -> Vec<Consumption> {
-        ids.iter()
-            .filter_map(|x| self.get_owned(*x))
-            .collect()
+        ids.iter().filter_map(|x| self.get_owned(*x)).collect()
     }
     /// get consumptions by substance, if any.
     pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
@@ -125,12 +123,14 @@ impl Consumptions {
     /// otherwise update existing entry in values.
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
         if let Some(mut existing) = self.get_owned(id) {
+            info!("about to update existing consumption");
             let mut doses = existing.doses();
             doses.push(tms);
-
+            
             existing.set_current(existing.current() + id.kicks_in());
             existing.set_doses(doses);
         } else {
+            info!("about to insert new consumption");
             let len = self.keys().as_slice().len();
 
             let mut keys = vec![SubstanceId::default(); len + 1];
@@ -230,12 +230,12 @@ impl Intoxications<Category> for Consumptions {
 mod tests {
     #[test]
     fn concatenate() {
-        let slice = [1,2,3,4,5];
+        let slice = [1, 2, 3, 4, 5];
         let additional = 6;
         let len = slice.len();
         let mut copy = vec![i32::default(); len + 1];
         copy[..len].clone_from_slice(&slice);
         copy[len] = additional;
-        assert_eq!(copy.as_slice(), &[1,2,3,4,5,6]);
+        assert_eq!(copy.as_slice(), &[1, 2, 3, 4, 5, 6]);
     }
 }

@@ -6,7 +6,7 @@
 
 use red4ext_rs::types::ItemId;
 
-use crate::interop::SubstanceId;
+use crate::interop::{ContainsItem, SubstanceId};
 
 pub const BLACK_LACE: [SubstanceId; 2] = [
     SubstanceId::new("Items.BlackLaceV0"),
@@ -30,15 +30,9 @@ pub trait Neuro {
 
 impl Neuro for ItemId {
     fn is_blacklace(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return BLACK_LACE.contains(&substance);
-        }
-        false
+        BLACK_LACE.contains_item(self)
     }
     fn is_neuroblocker(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return NEURO_BLOCKER.contains(&substance);
-        }
-        false
+        NEURO_BLOCKER.contains_item(self)
     }
 }

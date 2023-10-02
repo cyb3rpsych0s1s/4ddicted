@@ -12,7 +12,7 @@ public let WithdrawalSymptoms: BlackboardID_Uint;
 
 final static func ProcessUsedItemAction(executor: wref<GameObject>, actionID: TweakDBID, itemID: ItemID) -> Void {
   let actionType: CName = TweakDBInterface.GetObjectActionRecord(actionID).ActionName();
-  LogChannel(n"DEBUG", s"process used item action \(NameToString(actionType)) for item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
+  // LogChannel(n"DEBUG", s"process used item action \(NameToString(actionType)) for item \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
   if Equals(actionType, n"Consume") || Equals(actionType, n"Drink") || Equals(actionType, n"UseHealCharge") {
     let system = System.GetInstance(executor.GetGame());
     OnIngestedItem(system, itemID);

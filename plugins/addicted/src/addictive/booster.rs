@@ -6,7 +6,7 @@
 
 use red4ext_rs::types::ItemId;
 
-use crate::interop::SubstanceId;
+use crate::interop::{ContainsItem, SubstanceId};
 
 pub const MEMORY_BOOSTER: [SubstanceId; 2] = [
     SubstanceId::new("Items.MemoryBooster"),
@@ -34,23 +34,14 @@ pub trait Booster {
 
 impl Booster for ItemId {
     fn is_stamina_booster(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return STAMINA_BOOSTER.contains(&substance);
-        }
-        false
+        STAMINA_BOOSTER.contains_item(self)
     }
 
     fn is_capacity_booster(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return CAPACITY_BOOSTER.contains(&substance);
-        }
-        false
+        CAPACITY_BOOSTER.contains_item(self)
     }
 
     fn is_memory_booster(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return MEMORY_BOOSTER.contains(&substance);
-        }
-        false
+        MEMORY_BOOSTER.contains_item(self)
     }
 }

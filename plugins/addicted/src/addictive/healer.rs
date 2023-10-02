@@ -6,7 +6,7 @@
 
 use red4ext_rs::types::ItemId;
 
-use crate::interop::SubstanceId;
+use crate::interop::{ContainsItem, SubstanceId};
 
 pub trait Healer {
     /// is this a MaxDOC ?
@@ -62,23 +62,14 @@ pub const HEALTH_BOOSTER: [SubstanceId; 2] = [
 
 impl Healer for ItemId {
     fn is_maxdoc(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return MAX_DOC.contains(&substance);
-        }
-        false
+        MAX_DOC.contains_item(self)
     }
 
     fn is_bounceback(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return BOUNCE_BACK.contains(&substance);
-        }
-        false
+        BOUNCE_BACK.contains_item(self)
     }
 
     fn is_healthbooster(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return HEALTH_BOOSTER.contains(&substance);
-        }
-        false
+        HEALTH_BOOSTER.contains_item(self)
     }
 }

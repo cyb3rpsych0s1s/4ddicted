@@ -6,7 +6,7 @@
 
 use red4ext_rs::types::ItemId;
 
-use crate::interop::SubstanceId;
+use crate::interop::{ContainsItem, SubstanceId};
 
 pub trait Alcoholic {
     fn is_alcoholic(&self) -> bool;
@@ -14,10 +14,7 @@ pub trait Alcoholic {
 
 impl Alcoholic for ItemId {
     fn is_alcoholic(&self) -> bool {
-        if let Ok(substance) = self.clone().try_into() {
-            return ALCOHOL.contains(&substance);
-        }
-        false
+        ALCOHOL.contains_item(self)
     }
 }
 

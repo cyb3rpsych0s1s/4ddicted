@@ -25,7 +25,7 @@ pub trait Addictive {
 
 impl Addictive for ItemId {
     fn addictive(&self) -> bool {
-        SubstanceId::try_from(self.clone()).is_ok()
+        self.is_healer() || self.is_booster() || self.is_neuro() || self.is_alcoholic() || todo!()
     }
 }
 

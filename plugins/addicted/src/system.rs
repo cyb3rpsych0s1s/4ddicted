@@ -4,7 +4,7 @@ use cp2077_rs::{
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::interop::{Consumptions, SubstanceId};
+use crate::interop::Consumptions;
 use crate::player::PlayerPuppet;
 
 #[derive(Default, Clone)]
@@ -31,7 +31,7 @@ impl System {
 impl System {
     pub fn on_ingested_item(&self, item: ItemId) {
         info!("consuming {item:#?}");
-        if let Some(id) = SubstanceId::try_from(item).ok() {
+        if let Some(id) = item.try_into().ok() {
             info!("item is addictive");
             info!(
                 "item quality: {:#?}",
