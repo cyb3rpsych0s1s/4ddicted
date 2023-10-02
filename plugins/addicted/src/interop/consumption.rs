@@ -1,6 +1,6 @@
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
-    types::{IScriptable, Ref}, info,
+    types::{IScriptable, Ref},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
@@ -123,26 +123,34 @@ impl Consumptions {
     /// otherwise update existing entry in values.
     pub fn increase(&mut self, id: SubstanceId, tms: f32) {
         if let Some(mut existing) = self.get_owned(id) {
-            info!("about to update existing consumption");
             let current = existing.doses();
             let len = current.len();
-            let mut doses = vec![f32::default(); len + 1];
-            doses[..len].clone_from_slice(current.as_slice());
+            let mut doses;
+            doses = vec![f32::default(); len + 1];
+            if len > 0 {
+                doses[..len].clone_from_slice(current.as_slice());
+            }
             doses[len] = tms;
-            
+
             existing.set_current(existing.current() + id.kicks_in());
             existing.set_doses(doses);
         } else {
-            info!("about to insert new consumption");
             let len = self.keys().as_slice().len();
 
-            let mut keys = vec![SubstanceId::default(); len + 1];
-            keys[..len].clone_from_slice(&self.keys().as_slice());
-            keys[len] = id;
-
             let value = self.create_consumption(id.kicks_in(), tms);
-            let mut values = vec![Consumption::default(); len + 1];
-            values[..len].clone_from_slice(self.values().as_slice());
+            let mut keys;
+            let mut values;
+
+            keys = vec![SubstanceId::default(); len + 1];
+            keys[len] = id;
+            if len > 0 {
+                keys[..len].clone_from_slice(&self.keys().as_slice());
+            }
+
+            values = vec![Consumption::default(); len + 1];
+            if len > 0 {
+                values[..len].clone_from_slice(self.values().as_slice());
+            }
             values[len] = value;
 
             self.set_keys(keys);
@@ -168,12 +176,10 @@ impl Consumptions {
             if consumption.current() <= 0 {
                 removables.push(idx);
             } else {
-                info!("about to decrease existing consumption");
                 consumption.set_current(consumption.current() - id.wean_off());
             }
         }
         if removables.len() > 0 {
-            info!("about to delete existing consumption(s)");
             let mut keys = Vec::with_capacity(len - removables.len());
             let mut values = Vec::with_capacity(len - removables.len());
             let mut from = 0;

@@ -13,7 +13,7 @@ use crate::{
 
 use super::{Kind, Substance};
 
-#[derive(Default, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 #[repr(transparent)]
 /// strongly-typed version of a TweakDbId:
 /// ensures that the ID is actually an addictive substance.
