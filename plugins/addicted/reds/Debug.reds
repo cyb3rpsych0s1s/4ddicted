@@ -44,4 +44,5 @@ public func Checkup() -> Void {
         LogChannel(n"DEBUG", s"key: \(TDBID.ToStringDEBUG(key)), value: \(value.current), [\(ArraySize(value.doses))] doses: \(ToString(value.doses))");
         idx = idx + 1;
     }
+    if idx == 0 { LogChannel(n"DEBUG", "no consumption!"); }
 }

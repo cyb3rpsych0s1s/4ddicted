@@ -1,6 +1,6 @@
-use cp2077_rs::GameObject;
+use cp2077_rs::{GameObject, IBlackboard};
 use red4ext_rs::{
-    prelude::{RefRepr, Strong},
+    prelude::{redscript_import, RefRepr, Strong},
     types::{IScriptable, Ref},
 };
 
@@ -20,8 +20,8 @@ impl PlayerPuppet {
     }
 }
 
-// #[redscript_import]
-// impl PlayerPuppet {
-//     /// `public func GetPlayerStateMachineBlackboard() -> IBlackboard`
-//     pub fn get_player_state_machine_blackboard(&self) -> IBlackboard;
-// }
+#[redscript_import]
+impl PlayerPuppet {
+    /// `public func GetPlayerStateMachineBlackboard() -> IBlackboard`
+    pub fn get_player_state_machine_blackboard(&self) -> IBlackboard;
+}

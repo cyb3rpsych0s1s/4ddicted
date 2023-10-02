@@ -39,21 +39,25 @@ unsafe impl NativeRepr for BlackboardId {
 }
 
 #[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct BlackboardIdUint(BlackboardId);
+#[repr(C)]
+pub struct BlackboardIdUint {
+    pub unk00: [u8; 8],
+    pub none: Id,
+}
 
 unsafe impl NativeRepr for BlackboardIdUint {
-    const NAME: &'static str = "BlackboardID_Uint";
-    const NATIVE_NAME: &'static str = "gamebbScriptID_Uint32";
+    const NAME: &'static str = "gamebbScriptID_Uint32";
 }
 
 #[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct BlackboardIdBool(BlackboardId);
+#[repr(C)]
+pub struct BlackboardIdBool {
+    pub unk00: [u8; 8],
+    pub none: Id,
+}
 
 unsafe impl NativeRepr for BlackboardIdBool {
-    const NAME: &'static str = "BlackboardID_Bool";
-    const NATIVE_NAME: &'static str = "gamebbScriptID_Bool";
+    const NAME: &'static str = "gamebbScriptID_Bool";
 }
 
 #[derive(Default, Clone)]

@@ -1,4 +1,6 @@
+use cp2077_rs::GameTime;
 use red4ext_rs::{
+    info,
     prelude::{redscript_import, RefRepr, Strong},
     types::{IScriptable, Ref},
 };
@@ -198,21 +200,22 @@ impl Consumptions {
             self.set_values(values.into_refs());
         }
     }
-    // pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
-    //     for ref consumption in self.by_substance(substance) {
-    //         if let Some(last) = consumption.doses().last() {
-    //             let last = GameTime::from(*last);
-    //             let now = GameTime::from(
-    //                 SystemTime::now()
-    //                     .duration_since(UNIX_EPOCH)
-    //                     .unwrap()
-    //                     .as_secs_f32(),
-    //             );
-    //             return now >= last.add_hours(24);
-    //         }
-    //     }
-    //     false
-    // }
+    pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
+        for ref consumption in self.by_substance(substance) {
+            if let Some(last) = consumption.doses().last() {
+                let last = GameTime::from(*last);
+                let now = GameTime::from(
+                    std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_secs_f32(),
+                );
+                info!("last: [{last}] vs now: [{now}]");
+                return now >= last.add_hours(24);
+            }
+        }
+        false
+    }
 }
 
 impl Intoxications<Substance> for Consumptions {
@@ -276,7 +279,7 @@ mod tests {
             }
             copy
         };
-        
+
         let slice = [0i32, -1, 2, 4, 0, 1, 0];
         let copy = logic(&slice);
         assert_eq!(copy.as_slice(), &[2, 4, 1]);
