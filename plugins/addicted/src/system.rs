@@ -1,5 +1,6 @@
 use cp2077_rs::{
-    BlackboardIdBool, BlackboardIdUint, GameTime, Housing, TimeSystem, TransactionSystem, Event,
+    BlackboardIdBool, BlackboardIdUint, DelayCallback, DelaySystem, Downcast, Event, GameTime,
+    Housing, IntoTypedRef, TimeSystem, TransactionSystem, TypedRef,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -22,13 +23,30 @@ unsafe impl RefRepr for System {
 #[repr(transparent)]
 pub struct ConsumeEvent(Ref<IScriptable>);
 
-impl ConsumeEvent {
-    fn as_event(&self) -> Event { Event(self.0.clone()) }
-}
-
 unsafe impl RefRepr for ConsumeEvent {
     type Type = Strong;
     const CLASS_NAME: &'static str = "Addicted.ConsumeEvent";
+}
+
+unsafe impl IntoTypedRef<Event> for ConsumeEvent {
+    fn into_typed_ref(self) -> TypedRef<Event> {
+        TypedRef::new(self.0)
+    }
+}
+
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct ConsumeCallback(Ref<IScriptable>);
+
+unsafe impl RefRepr for ConsumeCallback {
+    type Type = Strong;
+    const CLASS_NAME: &'static str = "Addicted.ConsumeCallback";
+}
+
+unsafe impl IntoTypedRef<DelayCallback> for ConsumeCallback {
+    fn into_typed_ref(self) -> TypedRef<DelayCallback> {
+        TypedRef::new(self.0)
+    }
 }
 
 #[redscript_import]
@@ -37,10 +55,12 @@ impl System {
     fn player(&self) -> PlayerPuppet;
     fn time_system(&self) -> TimeSystem;
     fn transaction_system(&self) -> TransactionSystem;
+    fn delay_system(&self) -> DelaySystem;
     fn resting_since(&self) -> GameTime;
     fn withdrawal_symptoms(&self) -> BlackboardIdUint;
     fn is_consuming(&self) -> BlackboardIdBool;
     fn create_consume_event(&self, message: RedString) -> ConsumeEvent;
+    fn create_consume_callback(&self, message: RedString) -> ConsumeCallback;
 }
 
 impl System {
@@ -57,8 +77,12 @@ impl System {
             self.consumptions()
                 .increase(id, self.time_system().get_game_time_stamp());
             self.update_symptom(id);
-            let evt = self.create_consume_event(RedString::new("Hello from System"));
-            self.player().queue_event(evt.as_event());
+            let message = RedString::new("Hello from System");
+            let evt = self.create_consume_event(message.clone());
+            self.player().queue_event(evt.downcast());
+            let callback = self.create_consume_callback(message);
+            self.delay_system()
+                .delay_callback_next_frame(callback.downcast());
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {

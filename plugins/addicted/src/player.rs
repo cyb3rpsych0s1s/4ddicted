@@ -1,4 +1,4 @@
-use cp2077_rs::{GameObject, IBlackboard, Event};
+use cp2077_rs::{Event, GameObject, IBlackboard};
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
     types::{IScriptable, Ref},

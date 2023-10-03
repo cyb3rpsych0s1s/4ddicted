@@ -12,6 +12,14 @@ class ConsumeEvent extends Event {
     }
 }
 
+class ConsumeCallback extends DelayCallback {
+  public let system: wref<System>;
+  public let message: String;
+  public func Call() -> Void {
+    LogChannel(n"DEBUG", s"received callback: \(this.message)");
+  }
+}
+
 @addMethod(PlayerPuppet)
 protected cb func OnConsumeEvent(evt: ref<ConsumeEvent>) -> Void {
     LogChannel(n"DEBUG", s"received event: \(evt.message)");
@@ -48,7 +56,14 @@ public class System extends ScriptableSystem {
     public func Player() -> ref<PlayerPuppet> { return this.player; }
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
     public func TransactionSystem() -> ref<TransactionSystem> { return GameInstance.GetTransactionSystem(this.GetGameInstance()); }
+    public func DelaySystem() -> ref<DelaySystem> { return GameInstance.GetDelaySystem(this.GetGameInstance()); }
     public func WithdrawalSymptoms() -> BlackboardID_Uint { return GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms; }
     public func IsConsuming() -> BlackboardID_Bool { return GetAllBlackboardDefs().PlayerStateMachine.IsConsuming; }
     func CreateConsumeEvent(message: String) -> ref<ConsumeEvent> { return ConsumeEvent.Create(message); }
+    func CreateConsumeCallback(message: String) -> ref<ConsumeCallback> {
+        let callback: ref<ConsumeCallback> = new ConsumeCallback();
+        callback.system = this;
+        callback.message = message;
+        return callback;
+    }
 }
