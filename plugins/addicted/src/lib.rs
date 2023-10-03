@@ -3,6 +3,7 @@ use red4ext_rs::prelude::*;
 use system::System;
 
 mod addictive;
+mod board;
 mod interop;
 mod intoxication;
 mod player;

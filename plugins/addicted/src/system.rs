@@ -5,6 +5,7 @@ use cp2077_rs::{
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
+use crate::board::CustomBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
 use crate::player::PlayerPuppet;
 use crate::symptoms::WithdrawalSymptoms;
@@ -69,8 +70,8 @@ impl System {
         info!("about to request PSM");
         let psm = defs.player_state_machine();
         info!("about to request custom field (WithdrawalSymptoms)");
-        let field = psm.withdrawal_symptoms();
-        field
+
+        psm.withdrawal_symptoms()
     }
 }
 

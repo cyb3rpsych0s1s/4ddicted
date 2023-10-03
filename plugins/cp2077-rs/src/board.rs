@@ -39,18 +39,6 @@ unsafe impl RefRepr for PlayerStateMachineDef {
     type Type = Strong;
 }
 
-#[cfg(feature = "codeware")]
-impl PlayerStateMachineDef {
-    pub fn withdrawal_symptoms(&self) -> BlackboardIdUint {
-        use red4ext_rs::types::VariantExt;
-        let reflection = Reflection::default();
-        let cls = reflection.get_class(CName::new(Self::CLASS_NAME));
-        let field = cls.get_property(CName::new("WithdrawalSymptoms"));
-        VariantExt::try_get(&field.get_value(VariantExt::new(self.clone())))
-            .expect("prop WithdrawalSymptoms of type BlackboardID_Uint")
-    }
-}
-
 #[derive(Default, Clone)]
 #[repr(C)]
 pub struct Id {
