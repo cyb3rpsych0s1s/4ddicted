@@ -1,6 +1,6 @@
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
-    types::{CName, IScriptable, Ref},
+    types::{CName, IScriptable, Ref, Variant},
 };
 
 #[derive(Default, Clone)]
@@ -39,4 +39,28 @@ impl ReflectionClass {
     /// `public native func GetAlias() -> CName`
     #[redscript(native)]
     pub fn get_alias(&self) -> CName;
+
+    /// `public native func GetProperty(name: CName) -> ref<ReflectionProp>`
+    #[redscript(native)]
+    pub fn get_property(&self, name: CName) -> ReflectionProp;
+}
+
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct ReflectionProp(Ref<IScriptable>);
+
+unsafe impl RefRepr for ReflectionProp {
+    const CLASS_NAME: &'static str = "ReflectionProp";
+    type Type = Strong;
+}
+
+#[redscript_import]
+impl ReflectionProp {
+    /// `public native func GetValue(owner: Variant) -> Variant`
+    #[redscript(native)]
+    pub fn get_value(&self, owner: Variant) -> Variant;
+
+    /// `public native func SetValue(owner: Variant, value: Variant) -> Void`
+    #[redscript(native)]
+    pub fn set_value(&self, owner: Variant, value: Variant) -> ();
 }

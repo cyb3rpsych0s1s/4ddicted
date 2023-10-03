@@ -3,6 +3,8 @@ use red4ext_rs::{
     types::{CName, IScriptable, Ref},
 };
 
+use crate::Reflection;
+
 /// `public static native func GetAllBlackboardDefs() -> AllBlackboardDefinitions`
 #[redscript_global(native)]
 pub fn get_all_blackboard_defs() -> AllBlackboardDefinitions;
@@ -14,6 +16,39 @@ pub struct AllBlackboardDefinitions(Ref<IScriptable>);
 unsafe impl RefRepr for AllBlackboardDefinitions {
     const CLASS_NAME: &'static str = "gamebbAllScriptDefinitions";
     type Type = Strong;
+}
+
+#[cfg(feature = "codeware")]
+impl AllBlackboardDefinitions {
+    pub fn player_state_machine(&self) -> PlayerStateMachineDef {
+        use red4ext_rs::types::VariantExt;
+        let reflection = Reflection::default();
+        let cls = reflection.get_class(CName::new(Self::CLASS_NAME));
+        let field = cls.get_property(CName::new("PlayerStateMachine"));
+        VariantExt::try_get(&field.get_value(VariantExt::new(self.clone())))
+            .expect("prop PlayerStateMachine of type PlayerStateMachineDef")
+    }
+}
+
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct PlayerStateMachineDef(Ref<IScriptable>);
+
+unsafe impl RefRepr for PlayerStateMachineDef {
+    const CLASS_NAME: &'static str = "PlayerStateMachineDef";
+    type Type = Strong;
+}
+
+#[cfg(feature = "codeware")]
+impl PlayerStateMachineDef {
+    pub fn withdrawal_symptoms(&self) -> BlackboardIdUint {
+        use red4ext_rs::types::VariantExt;
+        let reflection = Reflection::default();
+        let cls = reflection.get_class(CName::new(Self::CLASS_NAME));
+        let field = cls.get_property(CName::new("WithdrawalSymptoms"));
+        VariantExt::try_get(&field.get_value(VariantExt::new(self.clone())))
+            .expect("prop WithdrawalSymptoms of type BlackboardID_Uint")
+    }
 }
 
 #[derive(Default, Clone)]

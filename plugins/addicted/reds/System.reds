@@ -61,7 +61,6 @@ public class System extends ScriptableSystem {
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
     public func TransactionSystem() -> ref<TransactionSystem> { return GameInstance.GetTransactionSystem(this.GetGameInstance()); }
     public func DelaySystem() -> ref<DelaySystem> { return GameInstance.GetDelaySystem(this.GetGameInstance()); }
-    public func WithdrawalSymptoms() -> BlackboardID_Uint { return GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms; }
     public func IsConsuming() -> BlackboardID_Bool { return GetAllBlackboardDefs().PlayerStateMachine.IsConsuming; }
     func CreateConsumeEvent(message: String) -> ref<ConsumeEvent> { return ConsumeEvent.Create(message); }
     func CreateConsumeCallback(message: String) -> ref<ConsumeCallback> {
