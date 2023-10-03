@@ -33,6 +33,7 @@ archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
 red_cache_dir       := join(game_dir, "r6", "cache")
 red4ext_game_dir    := join(game_dir, "red4ext", "plugins", lowercase(mod_name))
+red4ext_companion_game_dir := join(game_dir, "red4ext", "plugins", lowercase(mod_companion_name))
 
 # bundle files for release
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -99,11 +100,14 @@ compile:
 [windows]
 build TARGET='debug' LOCALE='en-us': rebuild
     @$folder = '{{red4ext_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{red4ext_companion_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
         Write-Host "target can only be 'debug' or 'release' (default to 'release')"; exit 1; \
     }
-    @if ('{{TARGET}}' -EQ 'debug') { cargo build; } else { cargo build --release; }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo build -p addicted; } else { cargo build -p addicted --release; }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo build -p stupefied; } else { cargo build -p stupefied --release; }
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_companion_name) + ".dll") }}' '{{red4ext_companion_game_dir}}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
@@ -254,6 +258,8 @@ uninstall-cet:
 [windows]
 uninstall-red:
     @$folder = '{{red_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{red_companion_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # 🗑️🗜️   clear out mod tweaks files in game files
