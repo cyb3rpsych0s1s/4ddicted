@@ -6,7 +6,6 @@ mod addictive;
 mod board;
 mod interop;
 mod intoxication;
-mod player;
 mod symptoms;
 mod system;
 

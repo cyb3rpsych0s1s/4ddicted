@@ -4,7 +4,9 @@ version.workspace = true
 edition.workspace = true
 
 [lib]
-crate-type = ["cdylib"]
+name = "stupefied"
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+cp2077-rs = { path = "../cp2077-rs" }
 red4ext-rs.workspace = true

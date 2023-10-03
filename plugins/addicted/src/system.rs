@@ -1,13 +1,12 @@
 use cp2077_rs::{
-    get_all_blackboard_defs, BlackboardIdBool, BlackboardIdUint, DelayCallback, DelaySystem,
-    Downcast, Event, GameTime, Housing, IntoTypedRef, TimeSystem, TransactionSystem, TypedRef,
+    get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem, Downcast, Event,
+    GameTime, Housing, IntoTypedRef, PlayerPuppet, TimeSystem, TransactionSystem, TypedRef,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::board::CustomBoard;
+use crate::board::AddictedBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
-use crate::player::PlayerPuppet;
 use crate::symptoms::WithdrawalSymptoms;
 
 #[derive(Default, Clone)]
@@ -58,20 +57,15 @@ impl System {
     fn transaction_system(&self) -> TransactionSystem;
     fn delay_system(&self) -> DelaySystem;
     fn resting_since(&self) -> GameTime;
-    fn is_consuming(&self) -> BlackboardIdBool;
     fn create_consume_event(&self, message: RedString) -> ConsumeEvent;
     fn create_consume_callback(&self, message: RedString) -> ConsumeCallback;
 }
 
 impl System {
     fn withdrawal_symptoms(&self) -> BlackboardIdUint {
-        info!("about to request blackboard defs");
-        let defs = get_all_blackboard_defs();
-        info!("about to request PSM");
-        let psm = defs.player_state_machine();
-        info!("about to request custom field (WithdrawalSymptoms)");
-
-        psm.withdrawal_symptoms()
+        get_all_blackboard_defs()
+            .player_state_machine()
+            .withdrawal_symptoms()
     }
 }
 
