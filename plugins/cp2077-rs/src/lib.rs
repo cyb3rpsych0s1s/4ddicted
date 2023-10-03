@@ -15,3 +15,8 @@ pub use game::*;
 pub use housing::*;
 pub use time::*;
 pub use transaction::*;
+
+#[cfg(feature = "codeware")]
+mod codeware;
+#[cfg(feature = "codeware")]
+pub use codeware::*;

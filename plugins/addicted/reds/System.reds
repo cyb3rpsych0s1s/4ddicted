@@ -2,6 +2,9 @@ module Addicted
 
 import Addicted.Consumptions
 import Addicted.Consumption
+import Codeware.*
+
+native func TestReflection(reflection: ref<ReflectionClass>) -> Void;
 
 class ConsumeEvent extends Event {
     let message: String;
@@ -40,6 +43,8 @@ public class System extends ScriptableSystem {
             consumptions.values = [];
             this.consumptions = consumptions;
         }
+        let cls = Reflection.GetClass(n"PlayerPuppet");
+        TestReflection(cls);
     }
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         if IsDefined(request.owner as PlayerPuppet) {

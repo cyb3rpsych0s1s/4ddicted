@@ -8,3 +8,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 red4ext-rs.workspace = true
+
+[features]
+default = ["codeware"]
+codeware = []

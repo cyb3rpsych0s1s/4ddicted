@@ -1,3 +1,4 @@
+use cp2077_rs::ReflectionClass;
 use red4ext_rs::prelude::*;
 use system::System;
 
@@ -16,6 +17,7 @@ define_plugin! {
         register_function!("Addicted.OnIngestedItem", System::on_ingested_item);
         register_function!("Addicted.OnStatusEffectNotAppliedOnSpawn", System::on_status_effect_not_applied_on_spawn);
         register_function!("WriteToFile", write_to_file);
+        register_function!("Addicted.TestReflection", test_reflection);
     }
 }
 
@@ -24,4 +26,8 @@ fn write_to_file(names: Vec<String>, filename: String) {
         format!("C:\\Development\\4ddicted\\{filename}.txt"),
         names.join("\n"),
     );
+}
+
+fn test_reflection(cls: ReflectionClass) {
+    info!("reflection: {:#?}", cls.get_alias());
 }
