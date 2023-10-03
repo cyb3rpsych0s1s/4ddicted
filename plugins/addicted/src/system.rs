@@ -64,47 +64,47 @@ impl System {
 }
 
 impl System {
-    pub fn on_ingested_item(&self, item: ItemId) {
+    pub fn on_ingested_item(system: System, item: ItemId) {
         info!("consuming {item:#?}");
         if let Ok(id) = item.try_into() {
             info!("item is addictive");
             info!(
                 "item quality: {:#?}",
-                self.transaction_system()
-                    .get_item_data(self.player().as_game_object(), item)
+                system.transaction_system()
+                    .get_item_data(system.player().as_game_object(), item)
                     .get_quality()
             );
-            self.consumptions()
-                .increase(id, self.time_system().get_game_time_stamp());
-            self.update_symptom(id);
+            system.consumptions()
+                .increase(id, system.time_system().get_game_time_stamp());
+            system.update_symptom(id);
             let message = RedString::new("Hello from System");
-            let evt = self.create_consume_event(message.clone());
-            self.player().queue_event(evt.downcast());
-            let callback = self.create_consume_callback(message);
-            self.delay_system()
+            let evt = system.create_consume_event(message.clone());
+            system.player().queue_event(evt.downcast());
+            let callback = system.create_consume_callback(message);
+            system.delay_system()
                 .delay_callback_next_frame(callback.downcast());
         }
     }
-    pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {
+    pub fn on_status_effect_not_applied_on_spawn(system: System, effect: TweakDbId) {
         if effect.is_housing() {
             info!("housing: {effect:#?}");
             let mut weanoff = true;
             if effect.is_sleep() {
-                let since = self.resting_since();
-                let now = self.time_system().get_game_time();
+                let since: GameTime = system.resting_since();
+                let now = system.time_system().get_game_time();
                 if now < since.add_hours(6) {
                     info!("light sleep");
                     weanoff = false;
                 }
-                if self.slept_under_influence() {
+                if system.slept_under_influence() {
                     info!("slept under influence");
                     weanoff = false;
                 }
             }
             if weanoff {
-                self.consumptions().decrease();
+                system.consumptions().decrease();
             }
-            self.update_symptoms();
+            system.update_symptoms();
         }
     }
     #[inline]
