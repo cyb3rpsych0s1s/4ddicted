@@ -12,12 +12,6 @@ unsafe impl RefRepr for Reflection {
     type Type = Strong;
 }
 
-impl Reflection {
-    pub fn new(self) -> Self {
-        self
-    }
-}
-
 #[redscript_import]
 impl Reflection {
     /// `public static native func GetClass(name: CName) -> ref<ReflectionClass>`
