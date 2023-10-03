@@ -2,8 +2,8 @@ module Stupefied
 
 import Stupefied.System
 
-native func OnConsumingItem(system: ref<System>)
-native func OnStatusEffectApplied(system: ref<System>)
+native func OnConsumingItem(system: ref<System>) -> Void;
+native func OnStatusEffectApplied(system: ref<System>) -> Void;
 
 // catch direct consumption from quick slot
 @wrapMethod(ItemActionsHelper)

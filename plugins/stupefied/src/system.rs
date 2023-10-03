@@ -1,7 +1,8 @@
 use cp2077_rs::{get_all_blackboard_defs, BlackboardIdBool, PlayerPuppet};
 use red4ext_rs::{
+    info,
     prelude::{redscript_import, RefRepr, Strong},
-    types::{IScriptable, Ref}, info,
+    types::{IScriptable, Ref},
 };
 
 use crate::board::StupefiedBoard;
@@ -28,7 +29,10 @@ impl System {
         if !current {
             board.set_bool(self.is_consuming(), true, true);
         }
-        info!("is consuming before {current} after {}", board.get_bool(self.is_consuming()));
+        info!(
+            "is consuming before {current} after {}",
+            board.get_bool(self.is_consuming())
+        );
     }
     /// re-enable voice whenever status effect applied
     /// (when status effect is applied, it means the item has been consumed already)
@@ -38,7 +42,10 @@ impl System {
         if current {
             board.set_bool(self.is_consuming(), false, true);
         }
-        info!("is consuming before {current} after {}", board.get_bool(self.is_consuming()));
+        info!(
+            "is consuming before {current} after {}",
+            board.get_bool(self.is_consuming())
+        );
     }
 }
 
