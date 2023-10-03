@@ -24,16 +24,16 @@ bitflags! {
 
 impl WithdrawalSymptoms {
     pub const fn substance(&self) -> Option<Substance> {
-        match self {
-            &Self::ALCOHOL => Some(Substance::Alcohol),
-            &Self::MAXDOC => Some(Substance::MaxDOC),
-            &Self::BOUNCEBACK => Some(Substance::BounceBack),
-            &Self::HEALTHBOOSTER => Some(Substance::HealthBooster),
-            &Self::MEMORYBOOSTER => Some(Substance::MemoryBooster),
-            &Self::STAMINABOOSTER => Some(Substance::StaminaBooster),
-            &Self::BLACKLACE => Some(Substance::BlackLace),
-            &Self::CARRYCAPACITYBOOSTER => Some(Substance::CarryCapacityBooster),
-            &Self::NEUROBLOCKER => Some(Substance::NeuroBlocker),
+        match *self {
+            Self::ALCOHOL => Some(Substance::Alcohol),
+            Self::MAXDOC => Some(Substance::MaxDOC),
+            Self::BOUNCEBACK => Some(Substance::BounceBack),
+            Self::HEALTHBOOSTER => Some(Substance::HealthBooster),
+            Self::MEMORYBOOSTER => Some(Substance::MemoryBooster),
+            Self::STAMINABOOSTER => Some(Substance::StaminaBooster),
+            Self::BLACKLACE => Some(Substance::BlackLace),
+            Self::CARRYCAPACITYBOOSTER => Some(Substance::CarryCapacityBooster),
+            Self::NEUROBLOCKER => Some(Substance::NeuroBlocker),
             _ => None,
         }
     }

@@ -110,44 +110,44 @@ impl TryFrom<ItemId> for SubstanceId {
 
 impl Healer for SubstanceId {
     fn is_maxdoc(&self) -> bool {
-        MAX_DOC.contains(&self)
+        MAX_DOC.contains(self)
     }
 
     fn is_bounceback(&self) -> bool {
-        BOUNCE_BACK.contains(&self)
+        BOUNCE_BACK.contains(self)
     }
 
     fn is_healthbooster(&self) -> bool {
-        HEALTH_BOOSTER.contains(&self)
+        HEALTH_BOOSTER.contains(self)
     }
 }
 
 impl Alcoholic for SubstanceId {
     fn is_alcoholic(&self) -> bool {
-        ALCOHOL.contains(&self)
+        ALCOHOL.contains(self)
     }
 }
 
 impl Booster for SubstanceId {
     fn is_stamina_booster(&self) -> bool {
-        STAMINA_BOOSTER.contains(&self)
+        STAMINA_BOOSTER.contains(self)
     }
 
     fn is_capacity_booster(&self) -> bool {
-        CAPACITY_BOOSTER.contains(&self)
+        CAPACITY_BOOSTER.contains(self)
     }
 
     fn is_memory_booster(&self) -> bool {
-        MEMORY_BOOSTER.contains(&self)
+        MEMORY_BOOSTER.contains(self)
     }
 }
 
 impl Neuro for SubstanceId {
     fn is_blacklace(&self) -> bool {
-        BLACK_LACE.contains(&self)
+        BLACK_LACE.contains(self)
     }
 
     fn is_neuroblocker(&self) -> bool {
-        NEURO_BLOCKER.contains(&self)
+        NEURO_BLOCKER.contains(self)
     }
 }

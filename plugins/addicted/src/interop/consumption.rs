@@ -146,7 +146,7 @@ impl Consumptions {
             keys = vec![SubstanceId::default(); len + 1];
             keys[len] = id;
             if len > 0 {
-                keys[..len].clone_from_slice(&self.keys().as_slice());
+                keys[..len].clone_from_slice(self.keys().as_slice());
             }
 
             values = vec![Consumption::default(); len + 1];
@@ -181,7 +181,7 @@ impl Consumptions {
                 consumption.set_current(consumption.current() - id.wean_off());
             }
         }
-        if removables.len() > 0 {
+        if !removables.is_empty() {
             let mut keys = Vec::with_capacity(len - removables.len());
             let mut values = Vec::with_capacity(len - removables.len());
             let mut from = 0;
@@ -258,7 +258,7 @@ mod tests {
             let mut copy;
             if removables.len() != len {
                 copy = Vec::with_capacity(len - removables.len());
-                let mut from = 0 as usize;
+                let mut from = 0_usize;
                 for to in removables {
                     if to != from {
                         copy.extend_from_slice(&slice[from..to]);

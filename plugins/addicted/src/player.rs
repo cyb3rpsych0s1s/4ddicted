@@ -15,8 +15,8 @@ unsafe impl RefRepr for PlayerPuppet {
 }
 
 impl PlayerPuppet {
-    pub fn as_game_object(self) -> GameObject {
-        GameObject(self.0)
+    pub fn as_game_object(&mut self) -> GameObject {
+        GameObject(self.0.clone())
     }
 }
 

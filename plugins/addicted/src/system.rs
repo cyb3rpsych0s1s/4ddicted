@@ -66,7 +66,7 @@ impl System {
 impl System {
     pub fn on_ingested_item(&self, item: ItemId) {
         info!("consuming {item:#?}");
-        if let Some(id) = item.try_into().ok() {
+        if let Ok(id) = item.try_into() {
             info!("item is addictive");
             info!(
                 "item quality: {:#?}",
@@ -131,7 +131,7 @@ impl System {
         let current = board.get_uint(self.withdrawal_symptoms());
         let current = WithdrawalSymptoms::from_bits_truncate(current);
         let symptom = WithdrawalSymptoms::from(id);
-        let mut next = current.clone();
+        let mut next = current;
         next.remove(symptom);
         if current != next {
             board.set_uint(self.withdrawal_symptoms(), next.bits(), false);
