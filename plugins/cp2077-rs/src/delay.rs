@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use crate::FromTypedRef;
+use crate::{FromTypedRef, TypedRef};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -33,7 +33,7 @@ unsafe impl RefRepr for DelayCallback {
 }
 
 impl FromTypedRef<DelayCallback> for DelayCallback {
-    fn from_typed_ref(reference: crate::TypedRef<Self>) -> Self {
-        Self(reference.0)
+    fn from_typed_ref(reference: TypedRef<Self>) -> Self {
+        Self(reference.into_inner())
     }
 }

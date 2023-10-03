@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{IScriptable, Ref},
 };
 
-use crate::FromTypedRef;
+use crate::{FromTypedRef, TypedRef};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -21,7 +21,7 @@ impl From<Ref<IScriptable>> for Event {
 }
 
 impl FromTypedRef<Event> for Event {
-    fn from_typed_ref(reference: crate::TypedRef<Self>) -> Self {
-        Self(reference.0)
+    fn from_typed_ref(reference: TypedRef<Self>) -> Self {
+        Self(reference.into_inner())
     }
 }
