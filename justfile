@@ -72,8 +72,8 @@ default:
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
-    @if (!(Test-Path '{{ join(red_game_dir, "Natives") }}'))     { [void](New-Item '{{ join(red_game_dir, "Natives") }}'     -ItemType Directory); Write-Host "Created folder at {{ join(red_game_dir, 'Natives') }}"; }
-    @if (!(Test-Path '{{ join(red_companion_game_dir, "Natives") }}'))     { [void](New-Item '{{ join(red_companion_game_dir, "Natives") }}'     -ItemType Directory); Write-Host "Created folder at {{ join(red_game_dir, 'Natives') }}"; }
+    @$folder = '{{ join(red_game_dir, "Natives") }}';           if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{ join(red_companion_game_dir, "Natives") }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
 
 # 🎨 lint code
 lint:
@@ -238,7 +238,8 @@ bundle_lang LOCALE:
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 [windows]
-uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod uninstall-red4ext
+uninstall: uninstall-red uninstall-red4ext
+# uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod uninstall-red4ext
 
 # 🗑️🎭  clear out mod archive files in game files
 [windows]
@@ -279,8 +280,13 @@ uninstall-redmod:
 uninstall-red4ext:
     @$folder = '{{red4ext_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{red4ext_companion_game_dir}}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 alias nuke := nuclear
+
+delete-bin:
+    rm -Recurse -Force '{{ join(repo_dir, "target") }}'
 
 # 🧨 nuke your game files as a last resort (vanilla reset)
 [windows]
@@ -316,3 +322,6 @@ encode OVERWRITE='false':
 # analyze given file audio settings (please install ffprobe manually)
 analyze FILE:
   ffprobe -i '{{FILE}}' -show_format -probesize 50000000 -analyzeduration 500
+
+# nuke everything and rebuild from scratch
+tabula: delete-bin uninstall clear build
