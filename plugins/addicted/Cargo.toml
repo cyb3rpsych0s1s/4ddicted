@@ -9,6 +9,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 bitflags = "2.4.0"
-cp2077-rs = { path = "../cp2077-rs" }
+cp2077-rs.workspace = true
 stupefied = { path = "../stupefied" }
 red4ext-rs.workspace = true

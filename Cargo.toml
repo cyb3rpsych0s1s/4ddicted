@@ -7,4 +7,5 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace.dependencies]
+cp2077-rs = { path = "./plugins/cp2077-rs" }
 red4ext-rs = { git = "https://github.com/Roms1383/red4ext-rs.git", branch = "qol/ids", features = ["macros"] }

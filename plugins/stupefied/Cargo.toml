@@ -8,5 +8,5 @@ name = "stupefied"
 crate-type = ["cdylib"]
 
 [dependencies]
-cp2077-rs = { path = "../cp2077-rs" }
+cp2077-rs.workspace = true
 red4ext-rs.workspace = true
