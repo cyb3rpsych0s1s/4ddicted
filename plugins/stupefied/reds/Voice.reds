@@ -2,6 +2,9 @@ module Stupefied
 
 import Stupefied.System
 
+@addField(PlayerStateMachineDef)
+public let IsConsuming: BlackboardID_Bool;
+
 native func OnConsumingItem(system: ref<System>) -> Void;
 native func OnStatusEffectApplied(system: ref<System>) -> Void;
 

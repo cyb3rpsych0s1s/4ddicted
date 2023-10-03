@@ -5,9 +5,6 @@ import Addicted.System
 native func OnIngestedItem(system: ref<System>, item: ItemID) -> Void;
 
 @addField(PlayerStateMachineDef)
-public let IsConsuming: BlackboardID_Bool;
-
-@addField(PlayerStateMachineDef)
 public let WithdrawalSymptoms: BlackboardID_Uint;
 
 final static func ProcessUsedItemAction(executor: wref<GameObject>, actionID: TweakDBID, itemID: ItemID) -> Void {
