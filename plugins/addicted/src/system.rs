@@ -134,19 +134,21 @@ impl System {
     }
     fn update_symptom(&self, id: SubstanceId) {
         let board = self.player().get_player_state_machine_blackboard();
-        let current = board.get_uint(self.withdrawal_symptoms());
+        let pin = self.withdrawal_symptoms();
+        let current = board.get_uint(pin.clone());
         let current = WithdrawalSymptoms::from_bits_truncate(current);
         let symptom = WithdrawalSymptoms::from(id);
         let mut next = current;
         next.remove(symptom);
         if current != next {
-            board.set_uint(self.withdrawal_symptoms(), next.bits(), false);
+            board.set_uint(pin.clone(), next.bits(), false);
         }
         info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }
     fn update_symptoms(&self) {
         let board = self.player().get_player_state_machine_blackboard();
-        let current = board.get_uint(self.withdrawal_symptoms());
+        let pin = self.withdrawal_symptoms();
+        let current = board.get_uint(pin.clone());
         let current = WithdrawalSymptoms::from_bits_truncate(current);
         let mut next = WithdrawalSymptoms::empty();
         for flag in WithdrawalSymptoms::all().iter() {
@@ -157,7 +159,7 @@ impl System {
             }
         }
         if current != next {
-            board.set_uint(self.withdrawal_symptoms(), next.bits(), true);
+            board.set_uint(pin.clone(), next.bits(), true);
         }
         info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }

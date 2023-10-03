@@ -25,26 +25,28 @@ impl System {
     /// disable voice whenever consuming item
     pub fn on_consuming_item(self) {
         let board = self.player().get_player_state_machine_blackboard();
-        let current = board.get_bool(self.is_consuming());
+        let pin = self.is_consuming();
+        let current = board.get_bool(pin.clone());
         if !current {
-            board.set_bool(self.is_consuming(), true, true);
+            board.set_bool(pin.clone(), true, true);
         }
         info!(
             "is consuming before {current} after {}",
-            board.get_bool(self.is_consuming())
+            board.get_bool(pin.clone())
         );
     }
     /// re-enable voice whenever status effect applied
     /// (when status effect is applied, it means the item has been consumed already)
     pub fn on_status_effect_applied(self) {
         let board = self.player().get_player_state_machine_blackboard();
-        let current = board.get_bool(self.is_consuming());
+        let pin = self.is_consuming();
+        let current = board.get_bool(pin.clone());
         if current {
-            board.set_bool(self.is_consuming(), false, true);
+            board.set_bool(pin.clone(), false, true);
         }
         info!(
             "is consuming before {current} after {}",
-            board.get_bool(self.is_consuming())
+            board.get_bool(pin.clone())
         );
     }
 }
