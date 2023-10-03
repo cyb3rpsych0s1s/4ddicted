@@ -8,3 +8,5 @@ mod housing;
 pub use housing::*;
 mod board;
 pub use board::*;
+mod event;
+pub use event::*;

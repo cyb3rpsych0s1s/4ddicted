@@ -3,6 +3,20 @@ module Addicted
 import Addicted.Consumptions
 import Addicted.Consumption
 
+class ConsumeEvent extends Event {
+    let message: String;
+    static func Create(message: String) -> ref<ConsumeEvent> {
+        let evt: ref<ConsumeEvent> = new ConsumeEvent();
+        evt.message = message;
+        return evt;
+    }
+}
+
+@addMethod(PlayerPuppet)
+protected cb func OnConsumeEvent(evt: ref<ConsumeEvent>) -> Void {
+    LogChannel(n"DEBUG", s"received event: \(evt.message)");
+}
+
 public class System extends ScriptableSystem {
     private let player: wref<PlayerPuppet>;
     private persistent let consumptions: ref<Consumptions>;
@@ -36,4 +50,5 @@ public class System extends ScriptableSystem {
     public func TransactionSystem() -> ref<TransactionSystem> { return GameInstance.GetTransactionSystem(this.GetGameInstance()); }
     public func WithdrawalSymptoms() -> BlackboardID_Uint { return GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms; }
     public func IsConsuming() -> BlackboardID_Bool { return GetAllBlackboardDefs().PlayerStateMachine.IsConsuming; }
+    func CreateConsumeEvent(message: String) -> ref<ConsumeEvent> { return ConsumeEvent.Create(message); }
 }

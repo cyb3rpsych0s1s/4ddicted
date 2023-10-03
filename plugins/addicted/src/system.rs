@@ -1,5 +1,5 @@
 use cp2077_rs::{
-    BlackboardIdBool, BlackboardIdUint, GameTime, Housing, TimeSystem, TransactionSystem,
+    BlackboardIdBool, BlackboardIdUint, GameTime, Housing, TimeSystem, TransactionSystem, Event,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -18,6 +18,19 @@ unsafe impl RefRepr for System {
     const CLASS_NAME: &'static str = "Addicted.System";
 }
 
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct ConsumeEvent(Ref<IScriptable>);
+
+impl ConsumeEvent {
+    fn as_event(&self) -> Event { Event(self.0.clone()) }
+}
+
+unsafe impl RefRepr for ConsumeEvent {
+    type Type = Strong;
+    const CLASS_NAME: &'static str = "Addicted.ConsumeEvent";
+}
+
 #[redscript_import]
 impl System {
     fn consumptions(&self) -> Consumptions;
@@ -27,6 +40,7 @@ impl System {
     fn resting_since(&self) -> GameTime;
     fn withdrawal_symptoms(&self) -> BlackboardIdUint;
     fn is_consuming(&self) -> BlackboardIdBool;
+    fn create_consume_event(&self, message: RedString) -> ConsumeEvent;
 }
 
 impl System {
@@ -43,6 +57,8 @@ impl System {
             self.consumptions()
                 .increase(id, self.time_system().get_game_time_stamp());
             self.update_symptom(id);
+            let evt = self.create_consume_event(RedString::new("Hello from System"));
+            self.player().queue_event(evt.as_event());
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(&self, effect: TweakDbId) {

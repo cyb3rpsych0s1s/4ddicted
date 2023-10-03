@@ -1,4 +1,4 @@
-use cp2077_rs::{GameObject, IBlackboard};
+use cp2077_rs::{GameObject, IBlackboard, Event};
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
     types::{IScriptable, Ref},
@@ -24,4 +24,8 @@ impl PlayerPuppet {
 impl PlayerPuppet {
     /// `public func GetPlayerStateMachineBlackboard() -> IBlackboard`
     pub fn get_player_state_machine_blackboard(&self) -> IBlackboard;
+
+    /// `public final native func QueueEvent(evt: ref<Event>) -> Void;`
+    #[redscript(native)]
+    pub fn queue_event(&self, evt: Event) -> ();
 }
