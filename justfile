@@ -22,10 +22,12 @@ sounds_repo_dir     := join(repo_dir, "archive", "source", "customSounds")
 resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "resources")
 red4ext_bin_dir     := join(repo_dir, "target")
 red4ext_repo_dir     := join(repo_dir, "plugins", lowercase(mod_name), "reds")
+red4ext_companion_repo_dir := join(repo_dir, "plugins", lowercase(mod_companion_name), "reds")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
 red_game_dir        := join(game_dir, "r6", "scripts", mod_name)
+red_companion_game_dir := join(game_dir, "r6", "scripts", mod_companion_name)
 tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
 archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
@@ -70,6 +72,7 @@ default:
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
     @if (!(Test-Path '{{ join(red_game_dir, "Natives") }}'))     { [void](New-Item '{{ join(red_game_dir, "Natives") }}'     -ItemType Directory); Write-Host "Created folder at {{ join(red_game_dir, 'Natives') }}"; }
+    @if (!(Test-Path '{{ join(red_companion_game_dir, "Natives") }}'))     { [void](New-Item '{{ join(red_companion_game_dir, "Natives") }}'     -ItemType Directory); Write-Host "Created folder at {{ join(red_game_dir, 'Natives') }}"; }
 
 # 🎨 lint code
 lint:
@@ -109,6 +112,7 @@ deploy:
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild: setup
     Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*.reds") }}' '{{ join(red_game_dir, "Natives") }}'
+    Copy-Item -Force -Recurse '{{ join(red4ext_companion_repo_dir, "*.reds") }}' '{{ join(red_companion_game_dir, "Natives") }}'
 
 # 🧾 show logs from CET and RED
 [windows]
@@ -124,12 +128,12 @@ logs:
 # 🧹 clear current cache (r6/cache is not used, only r6/cache/modded matters)
 [windows]
 clear:
-    @if(Test-Path "{{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}" ) { \
-        Write-Host "replacing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
-        cp -Force '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}' '{{ join(red_cache_dir, "modded", "final.redscripts") }}'; \
-        Remove-Item -Force -Path '{{ join(red_cache_dir, "modded", "final.redscripts.bk") }}'; \
+    @if(Test-Path "{{ join(red_cache_dir, 'final.redscripts.bk') }}" ) { \
+        Write-Host "replacing {{ join(red_cache_dir, 'final.redscripts.bk') }} with {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
+        cp -Force '{{ join(red_cache_dir, "final.redscripts.bk") }}' '{{ join(red_cache_dir, "final.redscripts") }}'; \
+        Remove-Item -Force -Path '{{ join(red_cache_dir, "final.redscripts.bk") }}'; \
     } else { \
-        Write-Host "missing {{ join(red_cache_dir, 'modded', 'final.redscripts.bk') }}"; \
+        Write-Host "missing {{ join(red_cache_dir, 'final.redscripts.bk') }}"; \
     }
 
 # 💾 store (or overwrite) logs in latest.log
