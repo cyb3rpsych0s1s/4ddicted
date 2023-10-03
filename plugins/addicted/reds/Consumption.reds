@@ -5,11 +5,11 @@ public class Consumptions extends IScriptable {
     private persistent let values: array<ref<Consumption>>;
     public func Keys() -> array<TweakDBID> { return this.keys; }
     public func Values() -> array<ref<Consumption>> { return this.values; }
-    public func SetKeys(keys: array<TweakDBID>) -> Void {
+    private func SetKeys(keys: array<TweakDBID>) -> Void {
         ArrayResize(this.keys, ArraySize(keys));
         this.keys = keys;
     }
-    public func SetValues(values: array<ref<IScriptable>>) -> Void {
+    private func SetValues(values: array<ref<IScriptable>>) -> Void {
         ArrayResize(this.values, ArraySize(values));
         let idx = 0;
         for value in values {
@@ -17,7 +17,7 @@ public class Consumptions extends IScriptable {
             idx += 1;
         }
     }
-    public func CreateConsumption(score: Int32, when: Float) -> ref<Consumption> {
+    private func CreateConsumption(score: Int32, when: Float) -> ref<Consumption> {
         let consumption = new Consumption();
         consumption.current = score;
         consumption.doses = [when];
@@ -25,12 +25,12 @@ public class Consumptions extends IScriptable {
     }
 }
 public class Consumption extends IScriptable {
-    public persistent let current: Int32;
-    public persistent let doses: array<Float>;
+    private persistent let current: Int32;
+    private persistent let doses: array<Float>;
     public func Current() -> Int32 { return this.current; }
-    public func SetCurrent(value: Int32) -> Void { this.current = value; }
+    private func SetCurrent(value: Int32) -> Void { this.current = value; }
     public func Doses() -> array<Float> { return this.doses; }
-    public func SetDoses(doses: array<Float>) -> Void {
+    private func SetDoses(doses: array<Float>) -> Void {
         ArrayResize(this.doses, ArraySize(doses));
         this.doses = doses;
     }
