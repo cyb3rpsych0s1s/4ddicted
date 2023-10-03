@@ -1,4 +1,4 @@
-use cp2077_rs::ReflectionClass;
+use cp2077_rs::Reflection;
 use red4ext_rs::prelude::*;
 use system::System;
 
@@ -28,6 +28,8 @@ fn write_to_file(names: Vec<String>, filename: String) {
     );
 }
 
-fn test_reflection(cls: ReflectionClass) {
+fn test_reflection() {
+    let anchor = Reflection::default();
+    let cls = anchor.get_class(CName::new("PlayerPuppet"));
     info!("reflection: {:#?}", cls.get_alias());
 }

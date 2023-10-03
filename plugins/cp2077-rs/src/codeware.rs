@@ -3,32 +3,40 @@ use red4ext_rs::{
     types::{CName, IScriptable, Ref},
 };
 
-// #[derive(Default, Clone)]
-// #[repr(transparent)]
-// pub struct Reflection(pub Ref<IScriptable>);
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct Reflection(pub Ref<IScriptable>);
 
-// unsafe impl RefRepr for Reflection {
-//     const CLASS_NAME: &'static str = "App::Reflection";
-//     type Type = Strong;
-// }
+unsafe impl RefRepr for Reflection {
+    const CLASS_NAME: &'static str = "Reflection";
+    type Type = Strong;
+}
 
-// impl Reflection {
-//     pub fn new(self) -> Self { self }
-// }
+impl Reflection {
+    pub fn new(self) -> Self {
+        self
+    }
+}
 
-// #[redscript_import]
-// impl Reflection {
-//     /// `public static native func GetClass(name: CName) -> ref<ReflectionClass>`
-//     #[redscript(native)]
-//     pub fn get_class(name: CName) -> ReflectionClass;
-// }
+#[redscript_import]
+impl Reflection {
+    /// `public static native func GetClass(name: CName) -> ref<ReflectionClass>`
+    #[redscript(native, name = "GetClass")]
+    pub fn inner_get_class(name: CName) -> ReflectionClass;
+}
+
+impl Reflection {
+    pub fn get_class(&self, name: CName) -> ReflectionClass {
+        Self::inner_get_class(name)
+    }
+}
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct ReflectionClass(Ref<IScriptable>);
 
 unsafe impl RefRepr for ReflectionClass {
-    const CLASS_NAME: &'static str = "App::ReflectionClass";
+    const CLASS_NAME: &'static str = "ReflectionClass";
     type Type = Strong;
 }
 
