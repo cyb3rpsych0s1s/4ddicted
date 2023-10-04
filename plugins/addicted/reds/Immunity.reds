@@ -4,6 +4,41 @@ import Addicted.System
 
 native func OnUnequipItem(system: ref<System>, data: ref<EquipmentSystemPlayerData>, equipAreaIndex: Int32, slotIndex: Int32, forceRemove: Bool) -> Void;
 
+@wrapMethod(RipperDocGameController)
+private final func EquipCyberware(itemData: wref<gameItemData>) -> Bool {
+    return wrappedMethod(itemData);
+}
+
+@wrapMethod(RipperDocGameController)
+private final func UnequipCyberware(itemData: wref<gameItemData>, opt skipRefresh: Bool) -> Bool {
+    return wrappedMethod(itemData, skipRefresh);
+}
+
+@wrapMethod(EquipmentSystem)
+public final func OnUnequipRequest(request: ref<UnequipRequest>) -> Void {
+    wrappedMethod(request);
+}
+
+@wrapMethod(EquipmentSystem)
+public final func OnEquipRequest(request: ref<EquipRequest>) -> Void {
+    wrappedMethod(request);
+}
+
+@wrapMethod(EquipmentSystem)
+public final func OnGameplayEquipRequest(request: ref<GameplayEquipRequest>) -> Void {
+    wrappedMethod(request);
+}
+
+@wrapMethod(EquipmentSystemPlayerData)
+public final func EquipItem(itemID: ItemID, opt blockActiveSlotsUpdate: Bool, opt forceEquipWeapon: Bool) -> Void {
+    wrappedMethod(itemID, blockActiveSlotsUpdate, forceEquipWeapon);
+}
+
+@wrapMethod(EquipmentSystemPlayerData)
+private final func EquipItem(itemID: ItemID, slotIndex: Int32, opt blockActiveSlotsUpdate: Bool, opt forceEquipWeapon: Bool) -> Void {
+    wrappedMethod(itemID, slotIndex, blockActiveSlotsUpdate, forceEquipWeapon);
+}
+
 @wrapMethod(EquipmentSystemPlayerData)
 private final func UnequipItem(itemID: ItemID) -> Void {
     wrappedMethod(itemID);
@@ -35,16 +70,6 @@ private final func UnequipItem(equipAreaIndex: Int32, slotIndex: Int32, opt forc
     //         return;
     //     }
     // }
-}
-
-@wrapMethod(EquipmentSystemPlayerData)
-public final func EquipItem(itemID: ItemID, opt blockActiveSlotsUpdate: Bool, opt forceEquipWeapon: Bool) -> Void {
-    wrappedMethod(itemID, blockActiveSlotsUpdate, forceEquipWeapon);
-}
-
-@wrapMethod(EquipmentSystemPlayerData)
-private final func EquipItem(itemID: ItemID, slotIndex: Int32, opt blockActiveSlotsUpdate: Bool, opt forceEquipWeapon: Bool) -> Void {
-    wrappedMethod(itemID, slotIndex, blockActiveSlotsUpdate, forceEquipWeapon);
 }
 
 // no equip counterpart, see above
