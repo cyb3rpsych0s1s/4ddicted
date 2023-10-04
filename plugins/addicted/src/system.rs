@@ -147,10 +147,15 @@ impl System {
     }
     fn update_symptoms(&self) {
         let board = self.player().get_player_state_machine_blackboard();
+        info!("got board");
         let pin = self.withdrawal_symptoms();
+        info!("got def");
         let current = board.get_uint(pin.clone());
+        info!("got withdrawal_symptoms");
         let current = WithdrawalSymptoms::from_bits_truncate(current);
+        info!("truncate bits");
         let mut next = WithdrawalSymptoms::empty();
+        info!("create holder");
         for flag in WithdrawalSymptoms::all().iter() {
             if let Some(substance) = flag.substance() {
                 if !current.contains(flag) && self.is_withdrawing_from_substance(substance) {

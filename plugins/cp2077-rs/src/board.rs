@@ -62,19 +62,21 @@ unsafe impl NativeRepr for BlackboardId {
 }
 
 #[derive(Default, Clone)]
-#[repr(transparent)]
+#[repr(C)]
 pub struct BlackboardIdUint(BlackboardId);
 
 unsafe impl NativeRepr for BlackboardIdUint {
-    const NAME: &'static str = "gamebbScriptID_Uint32";
+    const NAME: &'static str = "BlackboardID_Uint";
+    const NATIVE_NAME: &'static str = "gamebbScriptID_Uint32";
 }
 
 #[derive(Default, Clone)]
-#[repr(transparent)]
+#[repr(C)]
 pub struct BlackboardIdBool(BlackboardId);
 
 unsafe impl NativeRepr for BlackboardIdBool {
-    const NAME: &'static str = "gamebbScriptID_Bool";
+    const NAME: &'static str = "BlackboardID_Bool";
+    const NATIVE_NAME: &'static str = "gamebbScriptID_Bool";
 }
 
 #[derive(Default, Clone)]
@@ -101,4 +103,7 @@ impl IBlackboard {
     /// `public native SetBool(id: BlackboardID_Bool, value: Bool, opt forceFire: Bool): Void`
     #[redscript(native)]
     pub fn set_bool(&self, id: BlackboardIdBool, value: bool, force_fire: bool) -> ();
+    /// `public native SignalBool(id: BlackboardID_Bool): Void`
+    #[redscript(native)]
+    pub fn signal_bool(&self, id: BlackboardIdBool) -> ();
 }

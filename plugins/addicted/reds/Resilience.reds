@@ -15,10 +15,13 @@ private final func Apply() -> Void {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Bool {
-    wrappedMethod(evt);
+    let applied = wrappedMethod(evt);
+
     if !evt.isAppliedOnSpawn {
       let system = System.GetInstance(this.GetGame());
       let id = evt.staticData.GetID();
       OnStatusEffectNotAppliedOnSpawn(system, id);
     }
+
+    return applied;
 }

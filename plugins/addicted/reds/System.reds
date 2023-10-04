@@ -4,8 +4,6 @@ import Addicted.Consumptions
 import Addicted.Consumption
 import Codeware.*
 
-native func TestReflection() -> Void;
-
 class ConsumeEvent extends Event {
     let message: String;
     static func Create(message: String) -> ref<ConsumeEvent> {
@@ -43,7 +41,6 @@ public class System extends ScriptableSystem {
             consumptions.values = [];
             this.consumptions = consumptions;
         }
-        TestReflection();
     }
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         if IsDefined(request.owner as PlayerPuppet) {
