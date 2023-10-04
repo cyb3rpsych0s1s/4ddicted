@@ -1,6 +1,7 @@
 use cp2077_rs::{
-    get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem, Downcast, Event,
-    GameTime, Housing, IntoTypedRef, PlayerPuppet, TimeSystem, TransactionSystem, TypedRef,
+    get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem, Downcast,
+    EquipmentSystem, EquipmentSystemPlayerData, Event, GameTime, Housing, IntoTypedRef,
+    InventoryDataManagerV2, PlayerPuppet, RPGManager, TimeSystem, TransactionSystem, TypedRef,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -111,6 +112,44 @@ impl System {
                 self.consumptions().decrease();
             }
             self.update_symptoms();
+        }
+    }
+    pub fn on_unequip_item(
+        self,
+        data: EquipmentSystemPlayerData,
+        equip_area_index: i32,
+        slot_index: i32,
+        force_remove: bool,
+    ) {
+        use cp2077_rs::IsDefined;
+        let owner = data.get_owner();
+        info!("got owner");
+        if let Ok(mut player) = PlayerPuppet::try_from(owner) {
+            info!("scripted puppet can indeed be converted into player puppet");
+            let item: ItemId = data.get_item_in_equip_slot(equip_area_index, slot_index);
+            info!("got item in slot");
+            let area = EquipmentSystem::get_equip_area_type(item);
+            info!("got equip area");
+            let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
+            info!("checked area");
+            if cyberware {
+                info!("area is indeed a cyberware");
+                let data = RPGManager::get_item_data(
+                    player.clone().get_game(),
+                    player.as_game_object(),
+                    item,
+                );
+                info!("got item data");
+                if !force_remove && data.is_defined() && data.has_tag(CName::new("UnequipBlocked"))
+                {
+                    info!("special condition to bail out");
+                    return;
+                }
+                info!("reached point of interest");
+                // TODO
+                // filter cyberwares of interest
+                // update cyberware status
+            }
         }
     }
     #[inline]

@@ -3,6 +3,8 @@ use red4ext_rs::{
     types::{CName, IScriptable, ItemId, Ref, TweakDbId},
 };
 
+use crate::ScriptedPuppet;
+
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct EquipmentSystem(Ref<IScriptable>);
@@ -59,25 +61,14 @@ unsafe impl RefRepr for EquipmentSystemPlayerData {
     type Type = Strong;
 }
 
-// #[cfg(feature = "codeware")]
-// impl EquipmentSystemPlayerData {
-//     fn equipment(&self) -> SLoadout {
-//         use crate::Reflection;
-//         use red4ext_rs::types::VariantExt;
-//         let reflection = Reflection::default();
-//         let cls = reflection.get_class(CName::new(Self::CLASS_NAME));
-//         let field = cls.get_property(CName::new("m_equipment"));
-//         VariantExt::try_get(&field.get_value(VariantExt::new(self.clone())))
-//             .expect("prop m_equipment of type SLoadout")
-//     }
-// }
-
 #[redscript_import]
 impl EquipmentSystemPlayerData {
     /// `public final const func GetPaperDollEquipAreas() -> array<SEquipArea>`
     pub fn get_paper_doll_equip_areas(&self) -> Vec<SEquipArea>;
     /// `private final const func GetItemInEquipSlot(equipAreaIndex: Int32, slotIndex: Int32) -> ItemID`
     pub fn get_item_in_equip_slot(&self, equip_area_index: i32, slot_index: i32) -> ItemId;
+    /// `public final func GetOwner() -> wref<ScriptedPuppet>`
+    pub fn get_owner(&self) -> ScriptedPuppet;
 }
 
 #[derive(Default, Clone)]

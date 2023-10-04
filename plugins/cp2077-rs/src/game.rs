@@ -1,7 +1,35 @@
+use std::ffi::c_void;
+
 use red4ext_rs::{
     prelude::{redscript_import, NativeRepr, RefRepr, Strong, Weak},
-    types::{IScriptable, Ref, WRef},
+    types::{CName, IScriptable, Ref, WRef},
 };
+
+use crate::defined::IsDefined;
+
+#[derive(Clone)]
+#[repr(C)]
+pub struct GameInstance {
+    instance: *mut c_void,
+    unk8: i8,
+    unk10: i64,
+}
+
+impl Default for GameInstance {
+    fn default() -> Self {
+        Self {
+            instance: std::ptr::null_mut(),
+            unk8: 0,
+            unk10: 0,
+        }
+    }
+}
+
+unsafe impl RefRepr for GameInstance {
+    type Type = Strong;
+
+    const CLASS_NAME: &'static str = "RED4ext::ScriptGameInstance";
+}
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -25,9 +53,19 @@ unsafe impl RefRepr for GameItemData {
 
 #[redscript_import]
 impl GameItemData {
-    /// public final native func GetStatValueByType(type: gamedataStatType) -> Float;
+    /// `public final native func GetStatValueByType(type: gamedataStatType) -> Float;`
     #[redscript(native)]
     fn get_stat_value_by_type(&self, r#type: GameDataStatType) -> f32;
+
+    /// `public final native const func HasTag(tag: CName) -> Bool;`
+    #[redscript(native)]
+    pub fn has_tag(&self, tag: CName) -> bool;
+}
+
+impl IsDefined for GameItemData {
+    fn is_defined(&self) -> bool {
+        !self.0.clone().into_shared().as_ptr().is_null()
+    }
 }
 
 impl GameItemData {
