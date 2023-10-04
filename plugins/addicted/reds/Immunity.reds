@@ -13,13 +13,8 @@ private final func UnequipItem(itemID: ItemID) -> Void {
 private final func UnequipItem(equipAreaIndex: Int32, slotIndex: Int32, opt forceRemove: Bool) -> Void {
     wrappedMethod(equipAreaIndex, slotIndex, forceRemove);
     
-    let item: ItemID = this.m_equipment.equipAreas[equipAreaIndex].equipSlots[slotIndex].itemID;
-    let area: gamedataEquipmentArea = EquipmentSystem.GetEquipAreaType(item);
-    let cyberware = InventoryDataManagerV2.IsEquipmentAreaCyberware(area);
-    let data = RPGManager.GetItemData(this.m_owner.GetGame(), this.m_owner, item);
-    if !forceRemove && IsDefined(data) && data.HasTag(n"UnequipBlocked") {
-        return;
-    };
+    let system = System.GetInstance(this.m_owner.GetGame());
+    OnUnequipItem(system, this, equipAreaIndex, slotIndex, forceRemove);
 
     // if cyberware {
     //     let id = ItemID.GetTDBID(itemID);
