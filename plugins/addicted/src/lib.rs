@@ -3,6 +3,7 @@ use system::System;
 
 mod addictive;
 mod board;
+mod cyberware;
 mod interop;
 mod intoxication;
 mod symptoms;

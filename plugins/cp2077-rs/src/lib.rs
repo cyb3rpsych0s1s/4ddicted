@@ -1,6 +1,7 @@
 mod board;
 mod delay;
 mod downcast;
+mod equipment;
 mod event;
 mod game;
 mod housing;
