@@ -9,6 +9,7 @@ mod housing;
 mod player;
 mod rpg;
 mod time;
+mod tdb;
 mod transaction;
 
 pub use board::*;
@@ -22,6 +23,7 @@ pub use housing::*;
 pub use player::*;
 pub use rpg::*;
 pub use time::*;
+pub use tdb::*;
 pub use transaction::*;
 
 #[cfg(feature = "codeware")]

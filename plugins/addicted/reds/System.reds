@@ -30,17 +30,27 @@ public class System extends ScriptableSystem {
     private let player: wref<PlayerPuppet>;
     private persistent let consumptions: ref<Consumptions>;
     private let restingSince: GameTime;
+    private let ingame: Bool;
+    private let callbacks: wref<CallbackSystem>;
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Addicted.System") as System;
     }
     private func OnAttach() -> Void {
+        this.callbacks = GameInstance.GetCallbackSystem();
+        this.callbacks.RegisterCallback(n"Session/Ready", this, n"OnSessionChanged");
+        this.callbacks.RegisterCallback(n"Session/End", this, n"OnSessionChanged");
         if !IsDefined(this.consumptions) {
             let consumptions = new Consumptions();
             consumptions.keys = [];
             consumptions.values = [];
             this.consumptions = consumptions;
         }
+    }
+    private func OnDetach() -> Void {
+        this.callbacks.UnregisterCallback(n"Session/Ready", this, n"OnSessionChanged");
+        this.callbacks.UnregisterCallback(n"Session/End", this, n"OnSessionChanged");
+        this.callbacks = null;
     }
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         if IsDefined(request.owner as PlayerPuppet) {
@@ -50,9 +60,14 @@ public class System extends ScriptableSystem {
     private final func OnPlayerDetach(request: ref<PlayerDetachRequest>) -> Void {
         this.player = null;
     }
+    private cb func OnSessionChanged(event: ref<GameSessionEvent>) {
+        LogChannel(n"DEBUG", s"on session changed: pre-game: \(ToString(event.IsPreGame())) restored: \(ToString(event.IsRestored()))");
+        this.ingame = !event.IsPreGame();
+    }
     public func RestingSince() -> GameTime { return this.restingSince; }
     public func OnSkipTime() -> Void { this.restingSince = this.TimeSystem().GetGameTime(); }
     // imported in natives
+    public func IsInGame() -> Bool { return this.ingame; }
     public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
     public func Player() -> ref<PlayerPuppet> { return this.player; }
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }

@@ -3,6 +3,8 @@ use red4ext_rs::{
     types::{CName, IScriptable, Ref, Variant},
 };
 
+use crate::IsDefined;
+
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct Reflection(pub Ref<IScriptable>);
@@ -45,6 +47,12 @@ impl ReflectionClass {
     pub fn get_property(&self, name: CName) -> ReflectionProp;
 }
 
+impl IsDefined for ReflectionClass {
+    fn is_defined(&self) -> bool {
+        !self.0.clone().into_shared().as_ptr().is_null()
+    }
+}
+
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct ReflectionProp(Ref<IScriptable>);
@@ -63,4 +71,10 @@ impl ReflectionProp {
     /// `public native func SetValue(owner: Variant, value: Variant) -> Void`
     #[redscript(native)]
     pub fn set_value(&self, owner: Variant, value: Variant) -> ();
+}
+
+impl IsDefined for ReflectionProp {
+    fn is_defined(&self) -> bool {
+        !self.0.clone().into_shared().as_ptr().is_null()
+    }
 }

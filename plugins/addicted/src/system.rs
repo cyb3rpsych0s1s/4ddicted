@@ -126,29 +126,36 @@ impl System {
         info!("got owner");
         if let Ok(mut player) = PlayerPuppet::try_from(owner) {
             info!("scripted puppet can indeed be converted into player puppet");
-            let item: ItemId = data.get_item_in_equip_slot(equip_area_index, slot_index);
-            info!("got item in slot");
-            let area = EquipmentSystem::get_equip_area_type(item);
-            info!("got equip area");
-            let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
-            info!("checked area");
-            if cyberware {
-                info!("area is indeed a cyberware");
-                let data = RPGManager::get_item_data(
-                    player.clone().get_game(),
-                    player.as_game_object(),
-                    item,
-                );
-                info!("got item data");
-                if !force_remove && data.is_defined() && data.has_tag(CName::new("UnequipBlocked"))
-                {
-                    info!("special condition to bail out");
+            if let Some(item) = data.get_item(equip_area_index, slot_index) {
+                info!("got item in slot");
+                if item == ItemId::default() {
                     return;
                 }
-                info!("reached point of interest");
-                // TODO
-                // filter cyberwares of interest
-                // update cyberware status
+                let area = EquipmentSystem::get_instance(player.as_game_object())
+                    .get_equip_area_type(item);
+                info!("got equip area");
+                let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
+                info!("checked area");
+                if cyberware {
+                    info!("area is indeed a cyberware");
+                    let data = RPGManager::get_item_data(
+                        player.clone().get_game(),
+                        player.as_game_object(),
+                        item,
+                    );
+                    info!("got item data");
+                    if !force_remove
+                        && data.is_defined()
+                        && data.has_tag(CName::new("UnequipBlocked"))
+                    {
+                        info!("special condition to bail out");
+                        return;
+                    }
+                    info!("reached point of interest");
+                    // TODO
+                    // filter cyberwares of interest
+                    // update cyberware status
+                }
             }
         }
     }

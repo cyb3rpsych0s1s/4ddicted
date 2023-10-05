@@ -58,7 +58,9 @@ private final func UnequipItem(equipAreaIndex: Int32, slotIndex: Int32, opt forc
     wrappedMethod(equipAreaIndex, slotIndex, forceRemove);
     
     let system = System.GetInstance(this.m_owner.GetGame());
-    OnUnequipItem(system, this, equipAreaIndex, slotIndex, forceRemove);
+    if system.IsInGame() {
+        OnUnequipItem(system, this, equipAreaIndex, slotIndex, forceRemove);
+    }
 
     // if cyberware {
     //     let id = ItemID.GetTDBID(itemID);

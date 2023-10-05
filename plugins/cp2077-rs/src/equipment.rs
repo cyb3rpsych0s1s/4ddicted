@@ -1,9 +1,10 @@
 use red4ext_rs::{
+    info,
     prelude::{redscript_import, NativeRepr, RefRepr, Strong},
-    types::{CName, IScriptable, ItemId, Ref, TweakDbId},
+    types::{CName, IScriptable, ItemId, RedArray, Ref, TweakDbId},
 };
 
-use crate::ScriptedPuppet;
+use crate::{GameObject, ScriptedPuppet, TweakDBInterface, IsDefined};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -16,8 +17,25 @@ unsafe impl RefRepr for EquipmentSystem {
 
 #[redscript_import]
 impl EquipmentSystem {
-    /// `public final static func GetEquipAreaType(item: ItemID) -> gamedataEquipmentArea`
-    pub fn get_equip_area_type(item: ItemId) -> GameDataEquipmentArea;
+    /// `public final static func GetInstance(owner: ref<GameObject>) -> ref<EquipmentSystem>`
+    pub fn get_instance(owner: GameObject) -> EquipmentSystem;
+    // /// `public final static func GetEquipAreaType(item: ItemID) -> gamedataEquipmentArea`
+    // #[redscript(name = "GetEquipAreaType")]
+    // fn inner_get_equip_area_type(item: ItemId) -> GameDataEquipmentArea;
+}
+
+impl EquipmentSystem {
+    /// see [GetEquipAreaType](https://codeberg.org/adamsmasher/cyberpunk/src/commit/20e2051921152b83f1daa57ecadf7f3b3288cf8e/cyberpunk/systems/equipmentSystem.swift#L4229)
+    pub fn get_equip_area_type(&self, item: ItemId) -> GameDataEquipmentArea {
+        let item = TweakDBInterface::get_item_record(item.get_tdbid());
+        if item.is_defined() {
+            let area = item.equip_area();
+            if area.is_defined() && area.get_id() != TweakDbId::default() {
+                return area.r#type();
+            }
+        }
+        GameDataEquipmentArea::Invalid
+    }
 }
 
 #[derive(Default, Clone)]
@@ -66,28 +84,69 @@ impl EquipmentSystemPlayerData {
     /// `public final const func GetPaperDollEquipAreas() -> array<SEquipArea>`
     pub fn get_paper_doll_equip_areas(&self) -> Vec<SEquipArea>;
     /// `private final const func GetItemInEquipSlot(equipAreaIndex: Int32, slotIndex: Int32) -> ItemID`
-    pub fn get_item_in_equip_slot(&self, equip_area_index: i32, slot_index: i32) -> ItemId;
+    fn get_item_in_equip_slot(&self, equip_area_index: i32, slot_index: i32) -> ItemId;
     /// `public final func GetOwner() -> wref<ScriptedPuppet>`
     pub fn get_owner(&self) -> ScriptedPuppet;
+    /// # Safety
+    ///
+    /// on game launch, the method can be called but is uninitialized,
+    /// which can cause UB.
+    ///
+    /// `public GetEquipment(): SLoadout`
+    #[redscript(name = "GetEquipment")]
+    pub unsafe fn get_equipment_unchecked(&self) -> SLoadout;
+    /*
+    Vec
+    Error reason: Unhandled exception
+    Expression: EXCEPTION_ACCESS_VIOLATION (0xC0000005)
+    Message: The thread attempted to read inaccessible data at 0x20.
+    File: <Unknown>(0)
+
+    RedArray
+    Error reason: Unhandled exception
+    Expression: EXCEPTION_ACCESS_VIOLATION (0xC0000005)
+    Message: The thread attempted to read inaccessible data at 0x0.
+    File: <Unknown>(0)
+    */
+}
+
+#[cfg(feature = "codeware")]
+impl EquipmentSystemPlayerData {
+    pub fn get_item(&self, equip_area_index: i32, slot_index: i32) -> Option<ItemId> {
+        info!("about to load loadout");
+        let loadout = unsafe { self.get_equipment_unchecked() };
+        info!("got loadout");
+        if let Some(area) = loadout
+            .equip_areas
+            .as_slice()
+            .get(equip_area_index as usize)
+        {
+            info!("got area");
+            if let Some(slot) = area.equip_slots.as_slice().get(slot_index as usize) {
+                info!("got slot");
+                return Some(slot.item_id);
+            }
+        }
+        None
+    }
 }
 
 #[derive(Default, Clone)]
 #[repr(C)]
 pub struct SLoadout {
-    equip_areas: Vec<SEquipArea>,
-    equipment_sets: Vec<SEquipmentSet>,
+    equip_areas: RedArray<SEquipArea>,
+    equipment_sets: RedArray<SEquipmentSet>,
 }
 
 unsafe impl NativeRepr for SLoadout {
-    const NAME: &'static str = "SLoadout";
-    const NATIVE_NAME: &'static str = "gameSLoadout";
+    const NAME: &'static str = "gameSLoadout";
 }
 
 #[derive(Default, Clone)]
 #[repr(C)]
 pub struct SEquipArea {
     area_type: GameDataEquipmentArea,
-    equip_slots: Vec<SEquipSlot>,
+    equip_slots: RedArray<SEquipSlot>,
     active_index: i32,
 }
 
@@ -180,7 +239,7 @@ unsafe impl RefRepr for IPrereq {
 #[derive(Default, Clone)]
 #[repr(C)]
 pub struct SEquipmentSet {
-    set_items: Vec<SItemInfo>,
+    set_items: RedArray<SItemInfo>,
     set_name: CName,
     set_type: EEquipmentSetType,
 }
