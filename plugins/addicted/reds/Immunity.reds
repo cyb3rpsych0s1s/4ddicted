@@ -87,3 +87,39 @@ private final func UnequipCyberwareParts(cyberwareData: wref<gameItemData>) -> V
     LogChannel(n"DEBUG", s"[EquipmentSystemPlayerData][UnequipCyberwareParts] \(ToString(cyberwareData))");
     wrappedMethod(cyberwareData);
 }
+
+/* 
+
+example on Vik's first meeting:
+
+Basic Kiroshi Optics:
+[RipperDocGameController][EquipCyberware]
+[EquipmentSystem][OnEquipRequest] [gameEquipRequest]
+[EquipmentSystemPlayerData][EquipItem] Items.AdvancedKiroshiOptics_q001_1, 0, false, true
+[EquipmentSystemPlayerData][UnequipItem] 19, 0, false
+
+Ballistic Coprocessor:
+[RipperDocGameController][EquipCyberware]
+[EquipmentSystem][OnEquipRequest] [gameEquipRequest]
+[EquipmentSystemPlayerData][EquipItem] Items.AdvancedPowerGrip_q001_1, 0, false, true
+[EquipmentSystemPlayerData][UnequipItem] 26, 0, false
+
+Subdermal Armor:
+[RipperDocGameController][EquipCyberware] 
+[EquipmentSystem][OnEquipRequest] [gameEquipRequest]
+[EquipmentSystemPlayerData][EquipItem] Items.AdvancedBoringPlating_Q001, 0, false, true
+[EquipmentSystemPlayerData][UnequipItem] 25, 0, false
+
+Subdermal Armor: Upgrade to Tier 1+
+[EquipmentSystemPlayerData][UnequipItem] 25, 0, false
+[EquipmentSystemPlayerData][UnequipCyberwareParts] 
+[EquipmentSystemPlayerData][EquipItem] Items.AdvancedBoringPlatingCommonPlus, 0, false, false
+[EquipmentSystemPlayerData][UnequipItem] 25, 0, false
+
+Threatevac:
+[RipperDocGameController][EquipCyberware] 
+[EquipmentSystem][OnEquipRequest] [gameEquipRequest]
+[EquipmentSystemPlayerData][EquipItem] Items.AdvancedCatchMeIfYouCanCommon, 0, false, true
+[EquipmentSystemPlayerData][UnequipItem] 23, 0, false
+
+*/
