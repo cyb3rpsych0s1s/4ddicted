@@ -1,6 +1,6 @@
 use crate::{defined::IsDefined, Event, GameInstance, GameObject, IBlackboard};
 use red4ext_rs::{
-    prelude::{redscript_import, RefRepr, Strong},
+    prelude::{redscript_import, RefRepr, Strong, Weak},
     types::{CName, IScriptable, Ref, WRef},
 };
 
@@ -40,7 +40,7 @@ pub struct ScriptedPuppet(WRef<IScriptable>);
 
 unsafe impl RefRepr for ScriptedPuppet {
     const CLASS_NAME: &'static str = "ScriptedPuppet";
-    type Type = Strong;
+    type Type = Weak;
 }
 
 impl TryFrom<ScriptedPuppet> for PlayerPuppet {
