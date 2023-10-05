@@ -1,7 +1,8 @@
 use cp2077_rs::{
     get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem, Downcast,
     EquipmentSystem, EquipmentSystemPlayerData, Event, GameTime, Housing, IntoTypedRef,
-    InventoryDataManagerV2, PlayerPuppet, RPGManager, TimeSystem, TransactionSystem, TypedRef,
+    InventoryDataManagerV2, PlayerPuppet, RPGManager, SEquipArea, TimeSystem, TransactionSystem,
+    TweakDBInterface, TypedRef,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -114,51 +115,76 @@ impl System {
             self.update_symptoms();
         }
     }
-    pub fn on_unequip_item(
+    pub fn on_send_paperdoll_update(
         self,
-        data: EquipmentSystemPlayerData,
-        equip_area_index: i32,
-        slot_index: i32,
-        force_remove: bool,
+        _player_data: EquipmentSystemPlayerData,
+        _equipped: bool,
+        _area: SEquipArea,
+        _slot: i32,
+        _force: bool,
     ) {
-        use cp2077_rs::IsDefined;
-        let owner = data.get_owner();
-        info!("got owner");
-        if let Ok(mut player) = PlayerPuppet::try_from(owner) {
-            info!("scripted puppet can indeed be converted into player puppet");
-            if let Some(item) = data.get_item(equip_area_index, slot_index) {
-                info!("got item in slot");
-                if item == ItemId::default() {
-                    return;
-                }
-                let area = EquipmentSystem::get_instance(player.as_game_object())
-                    .get_equip_area_type(item);
-                info!("got equip area");
-                let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
-                info!("checked area");
-                if cyberware {
-                    info!("area is indeed a cyberware");
-                    let data = RPGManager::get_item_data(
-                        player.clone().get_game(),
-                        player.as_game_object(),
-                        item,
-                    );
-                    info!("got item data");
-                    if !force_remove
-                        && data.is_defined()
-                        && data.has_tag(CName::new("UnequipBlocked"))
-                    {
-                        info!("special condition to bail out");
-                        return;
-                    }
-                    info!("reached point of interest");
-                    // TODO
-                    // filter cyberwares of interest
-                    // update cyberware status
-                }
-            }
-        }
+
     }
+    // pub fn on_equip_item(
+    //     self,
+    //     player_data: EquipmentSystemPlayerData,
+    //     item: ItemId,
+    //     slot_index: i32,
+    //     block_active_slots_update: bool,
+    //     force_equip_weapon: bool,
+    // ) {
+    //     let owner = player_data.get_owner();
+    //     if let Ok(mut player) = PlayerPuppet::try_from(owner) {
+    //         let data = RPGManager::get_item_data(player.get_game(), player.as_game_object(), item);
+    //         if player_data.is_equippable(data) { return; }
+    //         let record = TweakDBInterface::get_item_record(item.get_tdbid());
+    //     }
+    // }
+    // pub fn on_unequip_item(
+    //     self,
+    //     player_data: EquipmentSystemPlayerData,
+    //     equip_area_index: i32,
+    //     slot_index: i32,
+    //     force_remove: bool,
+    // ) {
+    //     use cp2077_rs::IsDefined;
+    //     let owner = player_data.get_owner();
+    //     info!("got owner");
+    //     if let Ok(mut player) = PlayerPuppet::try_from(owner) {
+    //         info!("scripted puppet can indeed be converted into player puppet");
+    //         if let Some(item) = player_data.get_item(equip_area_index, slot_index) {
+    //             info!("got item in slot");
+    //             if item == ItemId::default() {
+    //                 return;
+    //             }
+    //             let area = EquipmentSystem::get_instance(player.as_game_object())
+    //                 .get_equip_area_type(item);
+    //             info!("got equip area");
+    //             let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
+    //             info!("checked area");
+    //             if cyberware {
+    //                 info!("area is indeed a cyberware");
+    //                 let data = RPGManager::get_item_data(
+    //                     player.clone().get_game(),
+    //                     player.as_game_object(),
+    //                     item,
+    //                 );
+    //                 info!("got item data");
+    //                 if !force_remove
+    //                     && data.is_defined()
+    //                     && data.has_tag(CName::new("UnequipBlocked"))
+    //                 {
+    //                     info!("special condition to bail out");
+    //                     return;
+    //                 }
+    //                 info!("reached point of interest");
+    //                 // TODO
+    //                 // filter cyberwares of interest
+    //                 // update cyberware status
+    //             }
+    //         }
+    //     }
+    // }
     #[inline]
     pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
         self.consumptions()

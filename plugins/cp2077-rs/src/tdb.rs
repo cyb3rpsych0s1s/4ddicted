@@ -1,6 +1,9 @@
-use red4ext_rs::{types::{Ref, IScriptable, TweakDbId, WRef}, prelude::{RefRepr, Strong, redscript_import, Weak}};
+use red4ext_rs::{
+    prelude::{redscript_import, RefRepr, Strong, Weak},
+    types::{IScriptable, Ref, TweakDbId, WRef},
+};
 
-use crate::{IsDefined, GameDataEquipmentArea};
+use crate::{GameDataEquipmentArea, IsDefined};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]

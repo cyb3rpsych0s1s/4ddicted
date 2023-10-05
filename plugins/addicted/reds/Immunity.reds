@@ -2,7 +2,8 @@ module Addicted
 
 import Addicted.System
 
-native func OnUnequipItem(system: ref<System>, data: ref<EquipmentSystemPlayerData>, equipAreaIndex: Int32, slotIndex: Int32, forceRemove: Bool) -> Void;
+// native func OnUnequipItem(system: ref<System>, data: ref<EquipmentSystemPlayerData>, equipAreaIndex: Int32, slotIndex: Int32, forceRemove: Bool) -> Void;
+native func OnSendPaperdollUpdate(system: ref<System>, data: ref<EquipmentSystemPlayerData>, equipped: Bool, area: SEquipArea, slot: Int32, force: Bool);
 
 @wrapMethod(RipperDocGameController)
 private final func EquipCyberware(itemData: wref<gameItemData>) -> Bool {
@@ -40,6 +41,7 @@ public final func EquipItem(itemID: ItemID, opt blockActiveSlotsUpdate: Bool, op
     wrappedMethod(itemID, blockActiveSlotsUpdate, forceEquipWeapon);
 }
 
+// gets called by other sibling method
 @wrapMethod(EquipmentSystemPlayerData)
 private final func EquipItem(itemID: ItemID, slotIndex: Int32, opt blockActiveSlotsUpdate: Bool, opt forceEquipWeapon: Bool) -> Void {
     LogChannel(n"DEBUG", s"[EquipmentSystemPlayerData][EquipItem] \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID))), \(ToString(slotIndex)), \(ToString(blockActiveSlotsUpdate)), \(ToString(forceEquipWeapon))");
@@ -52,15 +54,16 @@ private final func UnequipItem(itemID: ItemID) -> Void {
     wrappedMethod(itemID);
 }
 
+// gets called by other sibling method
 @wrapMethod(EquipmentSystemPlayerData)
 private final func UnequipItem(equipAreaIndex: Int32, slotIndex: Int32, opt forceRemove: Bool) -> Void {
     LogChannel(n"DEBUG", s"[EquipmentSystemPlayerData][UnequipItem] \(ToString(equipAreaIndex)), \(ToString(slotIndex)), \(ToString(forceRemove))");
     wrappedMethod(equipAreaIndex, slotIndex, forceRemove);
     
-    let system = System.GetInstance(this.m_owner.GetGame());
-    if system.IsInGame() {
-        OnUnequipItem(system, this, equipAreaIndex, slotIndex, forceRemove);
-    }
+    // let system = System.GetInstance(this.m_owner.GetGame());
+    // if system.IsInGame() {
+    //     OnUnequipItem(system, this, equipAreaIndex, slotIndex, forceRemove);
+    // }
 
     // if cyberware {
     //     let id = ItemID.GetTDBID(itemID);
@@ -88,6 +91,18 @@ private final func UnequipItem(equipAreaIndex: Int32, slotIndex: Int32, opt forc
 private final func UnequipCyberwareParts(cyberwareData: wref<gameItemData>) -> Void {
     LogChannel(n"DEBUG", s"[EquipmentSystemPlayerData][UnequipCyberwareParts] \(ToString(cyberwareData))");
     wrappedMethod(cyberwareData);
+}
+
+// presumably unique hook for both
+@wrapMethod(EquipmentSystemPlayerData)
+private final func SendPaperdollUpdate(const area: script_ref<SEquipArea>, equipped: Bool, slot: TweakDBID, opt slotindex: Int32, opt ignoreSlot: Bool, opt force: Bool) -> Void {
+    wrappedMethod(area, equipped, slot, slotindex, ignoreSlot, force);
+
+    let system = System.GetInstance(this.m_owner.GetGame());
+    if system.IsInGame() {
+        let a = Deref(area);
+        OnSendPaperdollUpdate(system, this, equipped, a, slotindex, force);
+    }
 }
 
 /* 

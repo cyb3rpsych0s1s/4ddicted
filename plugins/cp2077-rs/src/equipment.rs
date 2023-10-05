@@ -4,7 +4,7 @@ use red4ext_rs::{
     types::{CName, IScriptable, ItemId, RedArray, Ref, TweakDbId},
 };
 
-use crate::{GameObject, ScriptedPuppet, TweakDBInterface, IsDefined};
+use crate::{GameItemData, GameObject, IsDefined, ScriptedPuppet, TweakDBInterface};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -87,12 +87,14 @@ impl EquipmentSystemPlayerData {
     fn get_item_in_equip_slot(&self, equip_area_index: i32, slot_index: i32) -> ItemId;
     /// `public final func GetOwner() -> wref<ScriptedPuppet>`
     pub fn get_owner(&self) -> ScriptedPuppet;
+    /// `public final const func IsEquippable(itemData: wref<gameItemData>) -> Bool`
+    pub fn is_equippable(&self, data: GameItemData) -> bool;
     /// # Safety
     ///
     /// on game launch, the method can be called but is uninitialized,
     /// which can cause UB.
     ///
-    /// `public GetEquipment(): SLoadout`
+    /// `public final func GetEquipment() -> SLoadout`
     #[redscript(name = "GetEquipment")]
     pub unsafe fn get_equipment_unchecked(&self) -> SLoadout;
     /*
