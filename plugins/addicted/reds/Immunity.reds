@@ -12,7 +12,7 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Bool {
 
 @wrapMethod(RipperDocGameController)
 private final func UnequipCyberware(itemData: wref<gameItemData>, opt skipRefresh: Bool) -> Bool {
-    LogChannel(n"DEBUG", s"[RipperDocGameController][EquipCyberware] \(ToString(itemData)) \(ToString(skipRefresh))");
+    LogChannel(n"DEBUG", s"[RipperDocGameController][UnequipCyberware] \(ToString(itemData)) \(ToString(skipRefresh))");
     return wrappedMethod(itemData, skipRefresh);
 }
 
