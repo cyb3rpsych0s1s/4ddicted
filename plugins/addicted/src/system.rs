@@ -123,7 +123,6 @@ impl System {
         _slot: i32,
         _force: bool,
     ) {
-
     }
     // pub fn on_equip_item(
     //     self,

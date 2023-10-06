@@ -1,5 +1,7 @@
 use cp2077_rs::PlayerPuppet;
-use red4ext_rs::types::ItemId;
+use red4ext_rs::types::{ItemId, TweakDbId};
+
+use crate::preventive::BIOMONITOR;
 
 pub trait SpecificCyberware {
     fn is_biomonitor(&self) -> bool;
@@ -9,15 +11,15 @@ pub trait SpecificCyberware {
 
 impl SpecificCyberware for ItemId {
     fn is_biomonitor(&self) -> bool {
-        todo!()
+        BIOMONITOR.contains(&self.get_tdbid())
     }
 
     fn is_detoxifier(&self) -> bool {
-        todo!()
+        self.get_tdbid() == TweakDbId::new("Items.ToxinCleanser")
     }
 
     fn is_metabolic_editor(&self) -> bool {
-        todo!()
+        self.get_tdbid() == TweakDbId::new("Items.ReverseMetabolicEnhancer")
     }
 }
 
