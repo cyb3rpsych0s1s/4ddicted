@@ -1,9 +1,9 @@
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
-    types::{CName, IScriptable, Ref, ResRef, EntityId},
+    types::{CName, EntityId, IScriptable, Ref, ResRef},
 };
 
-use crate::{Quaternion, Reflection, Vector4};
+use crate::{Quaternion, Reflection, Vector4, Entity};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
@@ -18,10 +18,20 @@ unsafe impl RefRepr for DynamicEntitySystem {
 impl DynamicEntitySystem {
     /// `public native func RegisterListener(tag: CName, target: ref<IScriptable>, function: CName)`
     #[redscript(native)]
-    pub fn register_listener(&mut self, tag: CName, target: Ref<IScriptable>, function: CName) -> ();
+    pub fn register_listener(
+        &mut self,
+        tag: CName,
+        target: Ref<IScriptable>,
+        function: CName,
+    ) -> ();
     /// `public native func UnregisterListener(tag: CName, target: ref<IScriptable>, function: CName)`
     #[redscript(native)]
-    pub fn unregister_listener(&mut self, tag: CName, target: Ref<IScriptable>, function: CName) -> ();
+    pub fn unregister_listener(
+        &mut self,
+        tag: CName,
+        target: Ref<IScriptable>,
+        function: CName,
+    ) -> ();
     /// `public native func CreateEntity(spec: ref<DynamicEntitySpec>) -> EntityID`
     #[redscript(native)]
     pub fn create_entity(&mut self, spec: DynamicEntitySpec) -> EntityId;
@@ -79,4 +89,30 @@ impl DynamicEntitySpec {
         cls.get_property(CName::new("tags"))
             .set_value(VariantExt::new(self.clone()), VariantExt::new(tags));
     }
+}
+
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct GameSessionEvent(Ref<IScriptable>);
+
+#[redscript_import]
+impl GameSessionEvent {
+    /// `public native func IsRestored() -> Bool`
+    #[redscript(native)]
+    pub fn is_restored(&self) -> Entity;
+
+    /// `public native func IsPreGame() -> Bool`
+    #[redscript(native)]
+    pub fn is_pre_game(&self) -> Entity;
+}
+
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct EntityLifecycleEvent(Ref<IScriptable>);
+
+#[redscript_import]
+impl EntityLifecycleEvent {
+    /// `public native func GetEntity() -> wref<Entity>`
+    #[redscript(native)]
+    pub fn get_entity(&self) -> Entity;
 }

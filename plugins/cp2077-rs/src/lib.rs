@@ -1,4 +1,5 @@
 mod board;
+mod component;
 mod defined;
 mod delay;
 mod downcast;
@@ -16,6 +17,7 @@ mod transaction;
 pub use board::*;
 pub use defined::*;
 pub use delay::*;
+pub use component::*;
 pub use downcast::*;
 pub use equipment::*;
 pub use event::*;
