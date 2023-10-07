@@ -70,7 +70,7 @@ impl ReflectionProp {
 
     /// `public native func SetValue(owner: Variant, value: Variant) -> Void`
     #[redscript(native)]
-    pub fn set_value(&self, owner: Variant, value: Variant) -> ();
+    pub fn set_value(&mut self, owner: Variant, value: Variant) -> ();
 }
 
 impl IsDefined for ReflectionProp {

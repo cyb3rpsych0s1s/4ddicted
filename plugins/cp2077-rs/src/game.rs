@@ -31,6 +31,13 @@ unsafe impl RefRepr for GameInstance {
     const CLASS_NAME: &'static str = "RED4ext::ScriptGameInstance";
 }
 
+#[redscript_import]
+impl GameInstance {
+    /// `public static native GetDynamicEntitySystem(self: GameInstance): ref<DynamicEntitySystem>`
+    #[redscript(native)]
+    fn get_dynamic_entity_system(this: GameInstance) -> super::codeware::DynamicEntitySystem;
+}
+
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct GameObject(pub Ref<IScriptable>);

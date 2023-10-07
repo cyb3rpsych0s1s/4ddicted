@@ -1,0 +1,12 @@
+[package]
+name = "possessed"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+name = "possessed"
+crate-type = ["cdylib"]
+
+[dependencies]
+cp2077-rs.workspace = true
+red4ext-rs.workspace = true
