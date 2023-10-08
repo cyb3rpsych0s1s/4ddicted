@@ -11,6 +11,8 @@ public class GimmickComponent extends ScriptableComponent {
     private final func Create(spec: ref<DynamicEntitySpec>) -> EntityID {
         return CreateGimmick(this.owner, spec);
     }
+
+    public final func OnGameAttach() -> Void {}
 }
 
 // look into: idle

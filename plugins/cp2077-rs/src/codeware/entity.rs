@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{CName, EntityId, IScriptable, Ref, ResRef},
 };
 
-use crate::{Quaternion, Reflection, Vector4, Entity};
+use crate::{Entity, Quaternion, Reflection, Vector4};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]

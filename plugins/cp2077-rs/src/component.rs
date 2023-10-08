@@ -1,6 +1,9 @@
-use red4ext_rs::{types::{Ref, IScriptable}, prelude::{RefRepr, Strong}};
+use red4ext_rs::{
+    prelude::{RefRepr, Strong},
+    types::{IScriptable, Ref},
+};
 
-use crate::{TypedRef, FromTypedRef};
+use crate::{FromTypedRef, TypedRef};
 
 #[derive(Default, Clone)]
 #[repr(transparent)]

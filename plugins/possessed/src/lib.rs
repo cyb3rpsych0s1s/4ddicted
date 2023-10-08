@@ -1,7 +1,7 @@
 use red4ext_rs::{define_plugin, register_function};
 
-mod system;
 mod component;
+mod system;
 
 use system::System;
 

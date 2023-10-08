@@ -1,7 +1,9 @@
-use crate::{defined::IsDefined, Event, GameInstance, GameObject, IBlackboard, Vector4, IComponent};
+use crate::{
+    defined::IsDefined, Event, GameInstance, GameObject, IBlackboard, IComponent, Vector4,
+};
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong, Weak},
-    types::{CName, IScriptable, Ref, WRef, ResRef},
+    types::{CName, IScriptable, Ref, ResRef, WRef},
 };
 
 #[derive(Default, Clone)]
@@ -44,7 +46,16 @@ impl PlayerPuppet {
 #[redscript_import]
 impl PlayerPuppet {
     /// `public native func AddComponent(component: ref<IComponent>)`
+    #[redscript(native)]
     pub fn add_component(&mut self, component: IComponent) -> ();
+}
+
+#[cfg(feature = "codeware")]
+#[redscript_import]
+impl PlayerPuppet {
+    /// `public native func AddTag(tag: CName)`
+    #[redscript(native)]
+    pub fn add_tag(&mut self, tag: CName) -> ();
 }
 
 #[derive(Default, Clone)]

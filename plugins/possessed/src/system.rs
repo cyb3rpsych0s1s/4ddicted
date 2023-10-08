@@ -1,4 +1,4 @@
-use cp2077_rs::{EntityLifecycleEvent, GameInstance, PlayerPuppet, Downcast};
+use cp2077_rs::{Downcast, EntityLifecycleEvent, GameInstance, PlayerPuppet};
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong},
     types::{CName, IScriptable, Ref, ResRef},
@@ -6,14 +6,12 @@ use red4ext_rs::{
 
 use crate::component::GimmickComponent;
 
-
 #[derive(Default, Clone)]
 #[repr(transparent)]
 pub struct System(Ref<IScriptable>);
 
 unsafe impl RefRepr for System {
     type Type = Strong;
-
     const CLASS_NAME: &'static str = "Possessed.System";
 }
 
@@ -47,12 +45,21 @@ impl System {
                 == ResRef::new("base\\characters\\entities\\player\\player_ma_fpp.ent")
                     .unwrap()
                 || v == ResRef::new("base\\characters\\entities\\player\\player_fa_fpp.ent")
-                    .unwrap() => {
-                        if let Ok(mut player) = PlayerPuppet::try_from(entity) {
-                            let gimmick = self.get_gimmick();
-                            player.add_component(gimmick.downcast());
-                        }
-                    }
+                    .unwrap() =>
+            {
+                if let Ok(mut player) = PlayerPuppet::try_from(entity) {
+                    let gimmick = self.get_gimmick();
+                    player.add_component(gimmick.downcast());
+                    player.add_tag(CName::new("Possessed"));
+                    let mut system =
+                        GameInstance::get_dynamic_entity_system(GameInstance::default());
+                    system.unregister_listener(
+                        CName::new("Entity/Assemble"),
+                        self.as_iscriptable(),
+                        CName::new("on_entity_assemble"),
+                    );
+                }
+            }
             _ => {}
         }
     }
