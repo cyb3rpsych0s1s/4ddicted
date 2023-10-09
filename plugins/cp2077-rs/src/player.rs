@@ -1,4 +1,4 @@
-use crate::{defined::IsDefined, Event, GameInstance, GameObject, IBlackboard};
+use crate::{defined::IsDefined, EquipmentSystem, Event, GameInstance, GameObject, IBlackboard};
 use red4ext_rs::{
     prelude::{redscript_import, RefRepr, Strong, Weak},
     types::{CName, IScriptable, Ref, WRef},
@@ -32,6 +32,9 @@ impl PlayerPuppet {
     /// `public final native func QueueEvent(evt: ref<Event>) -> Void;`
     #[redscript(native)]
     pub fn queue_event(&self, evt: Event) -> ();
+
+    /// `private final const func GetEquipmentSystem() -> ref<EquipmentSystem>`
+    pub fn get_equipment_system(&self) -> EquipmentSystem;
 }
 
 #[derive(Default, Clone)]

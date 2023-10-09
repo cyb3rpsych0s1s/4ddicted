@@ -10,8 +10,8 @@ impl AddictedBoard for PlayerStateMachineDef {
     fn withdrawal_symptoms(&self) -> BlackboardIdUint {
         use red4ext_rs::types::VariantExt;
         let reflection = Reflection::default();
-        let cls = reflection.get_class(CName::new(Self::CLASS_NAME));
-        let field = cls.get_property(CName::new("WithdrawalSymptoms"));
+        let cls = reflection.get_class(CName::new(Self::CLASS_NAME)).unwrap();
+        let field = cls.get_property(CName::new("WithdrawalSymptoms")).unwrap();
         VariantExt::try_get(&field.get_value(VariantExt::new(self.clone())))
             .expect("prop WithdrawalSymptoms of type BlackboardID_Uint")
     }

@@ -1,6 +1,6 @@
 use cp2077_rs::{
     get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem, Downcast,
-    EquipmentSystem, EquipmentSystemPlayerData, Event, GameTime, Housing, IntoTypedRef,
+    EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameTime, Housing, IntoTypedRef,
     InventoryDataManagerV2, PlayerPuppet, RPGManager, TimeSystem, TransactionSystem, TypedRef,
 };
 use red4ext_rs::prelude::*;
@@ -60,6 +60,7 @@ impl System {
     fn resting_since(&self) -> GameTime;
     fn create_consume_event(&self, message: RedString) -> ConsumeEvent;
     fn create_consume_callback(&self, message: RedString) -> ConsumeCallback;
+    fn get_equip_area_type(&self, item: ItemId) -> GameDataEquipmentArea;
 }
 
 impl System {
@@ -126,29 +127,32 @@ impl System {
         info!("got owner");
         if let Ok(mut player) = PlayerPuppet::try_from(owner) {
             info!("scripted puppet can indeed be converted into player puppet");
-            let item: ItemId = data.get_item_in_equip_slot(equip_area_index, slot_index);
-            info!("got item in slot");
-            let area = EquipmentSystem::get_equip_area_type(item);
-            info!("got equip area");
-            let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
-            info!("checked area");
-            if cyberware {
-                info!("area is indeed a cyberware");
-                let data = RPGManager::get_item_data(
-                    player.clone().get_game(),
-                    player.as_game_object(),
-                    item,
-                );
-                info!("got item data");
-                if !force_remove && data.is_defined() && data.has_tag(CName::new("UnequipBlocked"))
-                {
-                    info!("special condition to bail out");
-                    return;
+            if let Some(item) = data.get_item(equip_area_index, slot_index) {
+                info!("got item in slot");
+                let area = self.get_equip_area_type(item);
+                info!("got equip area ({area:#?})");
+                let cyberware = InventoryDataManagerV2::is_equipment_area_cyberware(area);
+                info!("checked area");
+                if cyberware {
+                    info!("area is indeed a cyberware");
+                    let data = RPGManager::get_item_data(
+                        player.clone().get_game(),
+                        player.as_game_object(),
+                        item,
+                    );
+                    info!("got item data");
+                    if !force_remove
+                        && data.is_defined()
+                        && data.has_tag(CName::new("UnequipBlocked"))
+                    {
+                        info!("special condition to bail out");
+                        return;
+                    }
+                    info!("reached point of interest");
+                    // TODO
+                    // filter cyberwares of interest
+                    // update cyberware status
                 }
-                info!("reached point of interest");
-                // TODO
-                // filter cyberwares of interest
-                // update cyberware status
             }
         }
     }

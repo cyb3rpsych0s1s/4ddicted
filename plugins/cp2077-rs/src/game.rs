@@ -25,10 +25,39 @@ impl Default for GameInstance {
     }
 }
 
-unsafe impl RefRepr for GameInstance {
-    type Type = Strong;
+unsafe impl NativeRepr for GameInstance {
+    const NAME: &'static str = "ScriptGameInstance";
+}
 
-    const CLASS_NAME: &'static str = "RED4ext::ScriptGameInstance";
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct ScriptableSystemsContainer(Ref<IScriptable>);
+
+unsafe impl RefRepr for ScriptableSystemsContainer {
+    type Type = Strong;
+    const CLASS_NAME: &'static str = "gameScriptableSystemsContainer";
+}
+
+#[redscript_import]
+impl ScriptableSystemsContainer {
+    /// `public final native func Get(systemName: CName) -> ref<ScriptableSystem>;`
+    #[redscript(native)]
+    pub fn get(&self, system_name: CName) -> ScriptableSystem;
+}
+
+#[derive(Default, Clone)]
+#[repr(transparent)]
+pub struct ScriptableSystem(Ref<IScriptable>);
+
+unsafe impl RefRepr for ScriptableSystem {
+    type Type = Strong;
+    const CLASS_NAME: &'static str = "gameScriptableSystem";
+}
+
+impl ScriptableSystem {
+    pub fn into_inner(self) -> Ref<IScriptable> {
+        self.0
+    }
 }
 
 #[derive(Default, Clone)]
@@ -39,6 +68,13 @@ unsafe impl RefRepr for GameObject {
     const CLASS_NAME: &'static str = "gameObject";
 
     type Type = Strong;
+}
+
+#[redscript_import]
+impl GameObject {
+    /// `public final native const func GetGame() -> GameInstance;`
+    #[redscript(native)]
+    pub fn get_game(&self) -> GameInstance;
 }
 
 #[derive(Default, Clone)]

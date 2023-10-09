@@ -23,8 +23,8 @@ impl AllBlackboardDefinitions {
     pub fn player_state_machine(&self) -> PlayerStateMachineDef {
         use red4ext_rs::types::VariantExt;
         let reflection = Reflection::default();
-        let cls = reflection.get_class(CName::new(Self::CLASS_NAME));
-        let field = cls.get_property(CName::new("PlayerStateMachine"));
+        let cls = reflection.get_class(CName::new(Self::CLASS_NAME)).unwrap();
+        let field = cls.get_property(CName::new("PlayerStateMachine")).unwrap();
         VariantExt::try_get(&field.get_value(VariantExt::new(self.clone())))
             .expect("prop PlayerStateMachine of type PlayerStateMachineDef")
     }

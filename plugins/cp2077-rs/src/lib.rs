@@ -8,6 +8,7 @@ mod game;
 mod housing;
 mod player;
 mod rpg;
+mod tdb;
 mod time;
 mod transaction;
 
@@ -21,6 +22,7 @@ pub use game::*;
 pub use housing::*;
 pub use player::*;
 pub use rpg::*;
+pub use tdb::*;
 pub use time::*;
 pub use transaction::*;
 

@@ -5,12 +5,14 @@ pub trait IsDefined {
 }
 
 impl<A> IsDefined for Ref<A> {
+    #[inline(always)]
     fn is_defined(&self) -> bool {
         !self.clone().into_shared().as_ptr().is_null()
     }
 }
 
 impl<A> IsDefined for WRef<A> {
+    #[inline(always)]
     fn is_defined(&self) -> bool {
         !self.clone().into_shared().as_ptr().is_null()
     }
