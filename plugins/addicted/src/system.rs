@@ -1,7 +1,8 @@
 use cp2077_rs::{
-    get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem, Downcast,
-    EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameTime, Housing, IntoTypedRef,
-    InventoryDataManagerV2, PlayerPuppet, RPGManager, TimeSystem, TransactionSystem, TypedRef,
+    get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem,
+    EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameTime, Housing,
+    InventoryDataManagerV2, PlayerPuppet, RPGManager, ScriptedPuppet, TimeSystem,
+    TransactionSystem,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -10,57 +11,41 @@ use crate::board::AddictedBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
 use crate::symptoms::WithdrawalSymptoms;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct System(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct System;
 
-unsafe impl RefRepr for System {
-    type Type = Strong;
-
-    const CLASS_NAME: &'static str = "Addicted.System";
+impl ClassType for System {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "Addicted.System";
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct ConsumeEvent(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct ConsumeEvent;
 
-unsafe impl RefRepr for ConsumeEvent {
-    type Type = Strong;
-    const CLASS_NAME: &'static str = "Addicted.ConsumeEvent";
+impl ClassType for ConsumeEvent {
+    type BaseClass = Event;
+    const NAME: &'static str = "Addicted.ConsumeEvent";
 }
 
-unsafe impl IntoTypedRef<Event> for ConsumeEvent {
-    fn into_typed_ref(self) -> TypedRef<Event> {
-        TypedRef::new(self.0)
-    }
-}
+#[derive(Debug)]
+pub struct ConsumeCallback;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct ConsumeCallback(Ref<IScriptable>);
-
-unsafe impl RefRepr for ConsumeCallback {
-    type Type = Strong;
-    const CLASS_NAME: &'static str = "Addicted.ConsumeCallback";
-}
-
-unsafe impl IntoTypedRef<DelayCallback> for ConsumeCallback {
-    fn into_typed_ref(self) -> TypedRef<DelayCallback> {
-        TypedRef::new(self.0)
-    }
+impl ClassType for ConsumeCallback {
+    type BaseClass = DelayCallback;
+    const NAME: &'static str = "Addicted.ConsumeCallback";
 }
 
 #[redscript_import]
 impl System {
-    fn consumptions(&self) -> Consumptions;
-    fn player(&self) -> PlayerPuppet;
-    fn time_system(&self) -> TimeSystem;
-    fn transaction_system(&self) -> TransactionSystem;
-    fn delay_system(&self) -> DelaySystem;
-    fn resting_since(&self) -> GameTime;
-    fn create_consume_event(&self, message: RedString) -> ConsumeEvent;
-    fn create_consume_callback(&self, message: RedString) -> ConsumeCallback;
-    fn get_equip_area_type(&self, item: ItemId) -> GameDataEquipmentArea;
+    fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
+    fn player(self: &Ref<Self>) -> Ref<PlayerPuppet>;
+    fn time_system(self: &Ref<Self>) -> Ref<TimeSystem>;
+    fn transaction_system(self: &Ref<Self>) -> Ref<TransactionSystem>;
+    fn delay_system(self: &Ref<Self>) -> Ref<DelaySystem>;
+    fn resting_since(self: &Ref<Self>) -> GameTime;
+    fn create_consume_event(self: &Ref<Self>, message: RedString) -> Ref<ConsumeEvent>;
+    fn create_consume_callback(self: &Ref<Self>, message: RedString) -> Ref<ConsumeCallback>;
+    fn get_equip_area_type(self: &Ref<Self>, item: ItemId) -> GameDataEquipmentArea;
 }
 
 impl System {
@@ -72,14 +57,21 @@ impl System {
 }
 
 impl System {
-    pub fn on_ingested_item(self, item: ItemId) {
+    pub fn on_ingested_item(self: Ref<Self>, item: ItemId) {
         info!("consuming {item:#?}");
         if let Ok(id) = item.try_into() {
             info!("item is addictive");
             info!(
                 "item quality: {:#?}",
                 self.transaction_system()
-                    .get_item_data(self.player().as_game_object(), item)
+                    .get_item_data(
+                        red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(
+                            red4ext_rs::prelude::Ref::<PlayerPuppet>::upcast(self.player())
+                        ),
+                        item
+                    )
+                    .upgrade()
+                    .expect("couldn't get item data")
                     .get_quality()
             );
             self.consumptions()
@@ -87,13 +79,16 @@ impl System {
             self.update_symptom(id);
             let message = RedString::new("Hello from System");
             let evt = self.create_consume_event(message.clone());
-            self.player().queue_event(evt.downcast());
+            self.player()
+                .queue_event(red4ext_rs::prelude::Ref::<ConsumeEvent>::upcast(evt));
             let callback = self.create_consume_callback(message);
             self.delay_system()
-                .delay_callback_next_frame(callback.downcast());
+                .delay_callback_next_frame(red4ext_rs::prelude::Ref::<ConsumeCallback>::upcast(
+                    callback,
+                ));
         }
     }
-    pub fn on_status_effect_not_applied_on_spawn(self, effect: TweakDbId) {
+    pub fn on_status_effect_not_applied_on_spawn(self: Ref<Self>, effect: TweakDbId) {
         if effect.is_housing() {
             info!("housing: {effect:#?}");
             let mut weanoff = true;
@@ -116,16 +111,15 @@ impl System {
         }
     }
     pub fn on_unequip_item(
-        self,
-        data: EquipmentSystemPlayerData,
+        self: Ref<Self>,
+        data: Ref<EquipmentSystemPlayerData>,
         equip_area_index: i32,
         slot_index: i32,
         force_remove: bool,
     ) {
-        use cp2077_rs::IsDefined;
         let owner = data.get_owner();
         info!("got owner");
-        if let Ok(mut player) = PlayerPuppet::try_from(owner) {
+        if let Some(player) = owner.upgrade() {
             info!("scripted puppet can indeed be converted into player puppet");
             if let Some(item) = data.get_item(equip_area_index, slot_index) {
                 info!("got item in slot");
@@ -136,14 +130,17 @@ impl System {
                 if cyberware {
                     info!("area is indeed a cyberware");
                     let data = RPGManager::get_item_data(
-                        player.clone().get_game(),
-                        player.as_game_object(),
+                        red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(player.clone())
+                            .get_game(),
+                        red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(player),
                         item,
                     );
                     info!("got item data");
                     if !force_remove
-                        && data.is_defined()
-                        && data.has_tag(CName::new("UnequipBlocked"))
+                        && data
+                            .upgrade()
+                            .map(|x| x.has_tag(CName::new("UnequipBlocked")))
+                            .unwrap_or(false)
                     {
                         info!("special condition to bail out");
                         return;
@@ -157,11 +154,11 @@ impl System {
         }
     }
     #[inline]
-    pub fn is_withdrawing_from_substance(&self, substance: Substance) -> bool {
+    pub fn is_withdrawing_from_substance(self: &Ref<Self>, substance: Substance) -> bool {
         self.consumptions()
             .is_withdrawing_from_substance(substance, self.time_system().get_game_time())
     }
-    pub fn slept_under_influence(&self) -> bool {
+    pub fn slept_under_influence(self: &Ref<Self>) -> bool {
         let since = self.resting_since();
         for ref id in self.consumptions().keys() {
             if let Some(ref consumption) = self.consumptions().get_owned(*id) {
@@ -175,7 +172,7 @@ impl System {
         }
         false
     }
-    fn update_symptom(&self, id: SubstanceId) {
+    fn update_symptom(self: &Ref<Self>, id: SubstanceId) {
         let board = self.player().get_player_state_machine_blackboard();
         let pin = self.withdrawal_symptoms();
         let current = board.get_uint(pin.clone());
@@ -188,7 +185,7 @@ impl System {
         }
         info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }
-    fn update_symptoms(&self) {
+    fn update_symptoms(self: &Ref<Self>) {
         let board = self.player().get_player_state_machine_blackboard();
         let pin = self.withdrawal_symptoms();
         let current = board.get_uint(pin.clone());

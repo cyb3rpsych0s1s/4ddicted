@@ -2,6 +2,7 @@
 name = "cp2077-rs"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 
 [lib]
 crate-type = ["cdylib", "rlib"]

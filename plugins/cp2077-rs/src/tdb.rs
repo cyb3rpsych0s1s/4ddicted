@@ -1,17 +1,16 @@
 use red4ext_rs::{
-    prelude::{redscript_import, RefRepr, Strong, Weak},
+    prelude::{redscript_import, ClassType},
     types::{IScriptable, Ref, TweakDbId, WRef},
 };
 
-use crate::{GameDataEquipmentArea, IsDefined};
+use crate::GameDataEquipmentArea;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct TweakDBInterface(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct TweakDBInterface;
 
-unsafe impl RefRepr for TweakDBInterface {
-    const CLASS_NAME: &'static str = "gamedataTweakDBInterface";
-    type Type = Strong;
+impl ClassType for TweakDBInterface {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gamedataTweakDBInterface";
 }
 
 // #[cfg(feature = "codeware")]
@@ -58,49 +57,35 @@ unsafe impl RefRepr for TweakDBInterface {
 //     }
 // }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct ItemRecord(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct ItemRecord;
 
-unsafe impl RefRepr for ItemRecord {
-    const CLASS_NAME: &'static str = "gamedataItem_Record";
-    type Type = Strong;
+impl ClassType for ItemRecord {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gamedataItem_Record";
 }
 
 #[redscript_import]
 impl ItemRecord {
     // `public final native func EquipArea() -> wref<EquipmentArea_Record>`
     #[redscript(native)]
-    pub fn equip_area(&self) -> EquipmentAreaRecord;
+    pub fn equip_area(self: &Ref<Self>) -> WRef<EquipmentAreaRecord>;
 }
 
-impl IsDefined for ItemRecord {
-    fn is_defined(&self) -> bool {
-        !self.0.clone().into_shared().as_ptr().is_null()
-    }
-}
+#[derive(Debug)]
+pub struct EquipmentAreaRecord;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct EquipmentAreaRecord(WRef<IScriptable>);
-
-unsafe impl RefRepr for EquipmentAreaRecord {
-    const CLASS_NAME: &'static str = "gamedataEquipmentArea_Record";
-    type Type = Weak;
-}
-
-impl IsDefined for EquipmentAreaRecord {
-    fn is_defined(&self) -> bool {
-        !self.0.clone().into_shared().as_ptr().is_null()
-    }
+impl ClassType for EquipmentAreaRecord {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gamedataEquipmentArea_Record";
 }
 
 #[redscript_import]
 impl EquipmentAreaRecord {
     /// `public final native func GetID() -> TweakDBID`
     #[redscript(native)]
-    pub fn get_id(&self) -> TweakDbId;
+    pub fn get_id(self: &Ref<Self>) -> TweakDbId;
     /// `public final native func Type() -> gamedataEquipmentArea`
     #[redscript(native)]
-    pub fn r#type(&self) -> GameDataEquipmentArea;
+    pub fn r#type(self: &Ref<Self>) -> GameDataEquipmentArea;
 }

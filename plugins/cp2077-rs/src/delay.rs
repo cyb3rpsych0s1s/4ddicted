@@ -1,39 +1,27 @@
 use red4ext_rs::{
-    prelude::{redscript_import, RefRepr, Strong},
+    prelude::{redscript_import, ClassType},
     types::{IScriptable, Ref},
 };
 
-use crate::{FromTypedRef, TypedRef};
+#[derive(Debug)]
+pub struct DelaySystem;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct DelaySystem(Ref<IScriptable>);
-
-unsafe impl RefRepr for DelaySystem {
-    const CLASS_NAME: &'static str = "gameDelaySystem";
-
-    type Type = Strong;
+impl ClassType for DelaySystem {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameDelaySystem";
 }
 
 #[redscript_import]
 impl DelaySystem {
     /// `public native DelayCallbackNextFrame(delayCallback: DelayCallback): Void`
     #[redscript(native)]
-    pub fn delay_callback_next_frame(&self, callback: DelayCallback) -> ();
+    pub fn delay_callback_next_frame(self: &Ref<Self>, callback: Ref<DelayCallback>) -> ();
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct DelayCallback(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct DelayCallback;
 
-unsafe impl RefRepr for DelayCallback {
-    const CLASS_NAME: &'static str = "gameDelaySystemScriptedDelayCallbackWrapper";
-
-    type Type = Strong;
-}
-
-impl FromTypedRef<DelayCallback> for DelayCallback {
-    fn from_typed_ref(reference: TypedRef<Self>) -> Self {
-        Self(reference.into_inner())
-    }
+impl ClassType for DelayCallback {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameDelaySystemScriptedDelayCallbackWrapper";
 }

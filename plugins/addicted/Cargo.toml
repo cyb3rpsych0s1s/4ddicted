@@ -2,6 +2,7 @@
 name = "addicted"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 
 [lib]
 name = "addicted"

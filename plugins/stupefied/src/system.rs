@@ -1,37 +1,36 @@
 use cp2077_rs::{get_all_blackboard_defs, BlackboardIdBool, PlayerPuppet};
 use red4ext_rs::{
-    prelude::{redscript_import, RefRepr, Strong},
+    prelude::{redscript_import, ClassType},
     types::{IScriptable, Ref},
 };
 
 use crate::board::StupefiedBoard;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct System(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct System;
 
-unsafe impl RefRepr for System {
-    type Type = Strong;
-    const CLASS_NAME: &'static str = "Stupefied.System";
+impl ClassType for System {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "Stupefied.System";
 }
 
 #[redscript_import]
 impl System {
-    fn player(&self) -> PlayerPuppet;
+    fn player(self: &Ref<Self>) -> Ref<PlayerPuppet>;
 }
 
 impl System {
     /// disable voice whenever consuming item
-    pub fn on_consuming_item(self) {
+    pub fn on_consuming_item(self: Ref<Self>) {
         self.update_consuming(true);
     }
     /// re-enable voice whenever status effect applied
     /// (when status effect is applied, it means the item has been consumed already)
-    pub fn on_consumed_item(self) {
+    pub fn on_consumed_item(self: Ref<Self>) {
         self.update_consuming(false);
     }
     #[inline]
-    fn update_consuming(self, value: bool) {
+    fn update_consuming(self: Ref<Self>, value: bool) {
         let board = self.player().get_player_state_machine_blackboard();
         let pin = self.is_consuming();
         let current = board.get_bool(pin.clone());
@@ -42,7 +41,7 @@ impl System {
 }
 
 impl System {
-    fn is_consuming(&self) -> BlackboardIdBool {
+    fn is_consuming(self: &Ref<Self>) -> BlackboardIdBool {
         get_all_blackboard_defs()
             .player_state_machine()
             .is_consuming()

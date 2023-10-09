@@ -1,27 +1,25 @@
 use red4ext_rs::{
     info,
-    prelude::{redscript_import, NativeRepr, RefRepr, Strong},
-    types::{CName, IScriptable, ItemId, RedArray, Ref, TweakDbId},
+    prelude::{redscript_import, ClassType, NativeRepr},
+    types::{CName, IScriptable, ItemId, RedArray, Ref, TweakDbId, WRef},
 };
 
 use crate::ScriptedPuppet;
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct EquipmentSystem(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct EquipmentSystem;
 
-unsafe impl RefRepr for EquipmentSystem {
-    const CLASS_NAME: &'static str = "EquipmentSystem";
-    type Type = Strong;
+impl ClassType for EquipmentSystem {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "EquipmentSystem";
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct InventoryDataManagerV2(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct InventoryDataManagerV2;
 
-unsafe impl RefRepr for InventoryDataManagerV2 {
-    const CLASS_NAME: &'static str = "InventoryDataManagerV2";
-    type Type = Strong;
+impl ClassType for InventoryDataManagerV2 {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "InventoryDataManagerV2";
 }
 
 #[redscript_import]
@@ -47,23 +45,22 @@ impl InventoryDataManagerV2 {
     }
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct EquipmentSystemPlayerData(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct EquipmentSystemPlayerData;
 
-unsafe impl RefRepr for EquipmentSystemPlayerData {
-    const CLASS_NAME: &'static str = "EquipmentSystemPlayerData";
-    type Type = Strong;
+impl ClassType for EquipmentSystemPlayerData {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "EquipmentSystemPlayerData";
 }
 
 #[redscript_import]
 impl EquipmentSystemPlayerData {
     /// `public final const func GetPaperDollEquipAreas() -> array<SEquipArea>`
-    pub fn get_paper_doll_equip_areas(&self) -> Vec<SEquipArea>;
+    pub fn get_paper_doll_equip_areas(self: &Ref<Self>) -> Vec<SEquipArea>;
     // `private final const func GetItemInEquipSlot(equipAreaIndex: Int32, slotIndex: Int32) -> ItemID`
-    // pub fn get_item_in_equip_slot(&self, equip_area_index: i32, slot_index: i32) -> ItemId;
+    // pub fn get_item_in_equip_slot(self: &Ref<Self>, equip_area_index: i32, slot_index: i32) -> ItemId;
     /// `public final func GetOwner() -> wref<ScriptedPuppet>`
-    pub fn get_owner(&self) -> ScriptedPuppet;
+    pub fn get_owner(self: &Ref<Self>) -> WRef<ScriptedPuppet>;
     /// # Safety
     ///
     /// on game launch, the method can be called but is uninitialized,
@@ -71,7 +68,7 @@ impl EquipmentSystemPlayerData {
     ///
     /// `public GetEquipment(): SLoadout`
     #[redscript(name = "GetEquipment")]
-    pub unsafe fn get_equipment_unchecked(&self) -> SLoadout;
+    pub unsafe fn get_equipment_unchecked(self: &Ref<Self>) -> SLoadout;
     /*
     Vec
     Error reason: Unhandled exception
@@ -89,7 +86,7 @@ impl EquipmentSystemPlayerData {
 
 #[cfg(feature = "codeware")]
 impl EquipmentSystemPlayerData {
-    pub fn get_item(&self, equip_area_index: i32, slot_index: i32) -> Option<ItemId> {
+    pub fn get_item(self: &Ref<Self>, equip_area_index: i32, slot_index: i32) -> Option<ItemId> {
         info!("about to load loadout");
         let loadout = unsafe { self.get_equipment_unchecked() };
         info!("got loadout");
@@ -204,13 +201,12 @@ unsafe impl NativeRepr for SEquipSlot {
     const NATIVE_NAME: &'static str = "gameSEquipSlot";
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct IPrereq(Ref<IScriptable>);
+#[derive(Default, Debug, Clone)]
+pub struct IPrereq;
 
-unsafe impl RefRepr for IPrereq {
-    const CLASS_NAME: &'static str = "gameIPrereq";
-    type Type = Strong;
+impl ClassType for IPrereq {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameIPrereq";
 }
 
 #[derive(Default, Clone)]

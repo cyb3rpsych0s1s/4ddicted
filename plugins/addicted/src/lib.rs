@@ -1,3 +1,5 @@
+#![feature(arbitrary_self_types)]
+
 use red4ext_rs::prelude::*;
 use system::System;
 

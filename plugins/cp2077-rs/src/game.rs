@@ -1,11 +1,9 @@
 use std::ffi::c_void;
 
 use red4ext_rs::{
-    prelude::{redscript_import, NativeRepr, RefRepr, Strong, Weak},
-    types::{CName, IScriptable, Ref, WRef},
+    prelude::{redscript_import, ClassType, NativeRepr},
+    types::{CName, IScriptable, Ref},
 };
-
-use crate::defined::IsDefined;
 
 #[derive(Clone)]
 #[repr(C)]
@@ -29,86 +27,69 @@ unsafe impl NativeRepr for GameInstance {
     const NAME: &'static str = "ScriptGameInstance";
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct ScriptableSystemsContainer(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct ScriptableSystemsContainer;
 
-unsafe impl RefRepr for ScriptableSystemsContainer {
-    type Type = Strong;
-    const CLASS_NAME: &'static str = "gameScriptableSystemsContainer";
+impl ClassType for ScriptableSystemsContainer {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameScriptableSystemsContainer";
 }
 
 #[redscript_import]
 impl ScriptableSystemsContainer {
     /// `public final native func Get(systemName: CName) -> ref<ScriptableSystem>;`
     #[redscript(native)]
-    pub fn get(&self, system_name: CName) -> ScriptableSystem;
+    pub fn get(self: &Ref<Self>, system_name: CName) -> Ref<ScriptableSystem>;
+}
+
+#[derive(Debug)]
+pub struct ScriptableSystem;
+
+impl ClassType for ScriptableSystem {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameScriptableSystem";
 }
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
-pub struct ScriptableSystem(Ref<IScriptable>);
+pub struct GameObject;
 
-unsafe impl RefRepr for ScriptableSystem {
-    type Type = Strong;
-    const CLASS_NAME: &'static str = "gameScriptableSystem";
-}
-
-impl ScriptableSystem {
-    pub fn into_inner(self) -> Ref<IScriptable> {
-        self.0
-    }
-}
-
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct GameObject(pub Ref<IScriptable>);
-
-unsafe impl RefRepr for GameObject {
-    const CLASS_NAME: &'static str = "gameObject";
-
-    type Type = Strong;
+impl ClassType for GameObject {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameObject";
 }
 
 #[redscript_import]
 impl GameObject {
     /// `public final native const func GetGame() -> GameInstance;`
     #[redscript(native)]
-    pub fn get_game(&self) -> GameInstance;
+    pub fn get_game(self: &Ref<Self>) -> GameInstance;
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct GameItemData(WRef<IScriptable>);
+#[derive(Debug)]
+pub struct GameItemData;
 
-unsafe impl RefRepr for GameItemData {
-    const CLASS_NAME: &'static str = "gameItemData";
-
-    type Type = Weak;
+impl ClassType for GameItemData {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameItemData";
 }
 
 #[redscript_import]
 impl GameItemData {
     /// `public final native func GetStatValueByType(type: gamedataStatType) -> Float;`
     #[redscript(native)]
-    fn get_stat_value_by_type(&self, r#type: GameDataStatType) -> f32;
+    fn get_stat_value_by_type(self: &Ref<Self>, r#type: GameDataStatType) -> f32;
 
     /// `public final native const func HasTag(tag: CName) -> Bool;`
     #[redscript(native)]
-    pub fn has_tag(&self, tag: CName) -> bool;
-}
-
-impl IsDefined for GameItemData {
-    fn is_defined(&self) -> bool {
-        !self.0.clone().into_shared().as_ptr().is_null()
-    }
+    pub fn has_tag(self: &Ref<Self>, tag: CName) -> bool;
 }
 
 impl GameItemData {
     /// see RPGManager
     ///
     /// `public final static func GetItemQuality(qualityStat: Float) -> gamedataQuality`
-    pub fn get_quality(&self) -> GameDataQuality {
+    pub fn get_quality(self: &Ref<Self>) -> GameDataQuality {
         let stat = self
             .get_stat_value_by_type(GameDataStatType::Quality)
             .round() as u32;

@@ -1,7 +1,7 @@
+#![feature(arbitrary_self_types)]
+
 mod board;
-mod defined;
 mod delay;
-mod downcast;
 mod equipment;
 mod event;
 mod game;
@@ -13,9 +13,7 @@ mod time;
 mod transaction;
 
 pub use board::*;
-pub use defined::*;
 pub use delay::*;
-pub use downcast::*;
 pub use equipment::*;
 pub use event::*;
 pub use game::*;

@@ -214,7 +214,6 @@ dependencies = [
 [[package]]
 name = "red4ext-macros"
 version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=fork/pre-rework-ref-types#665cf40b7dbb0923f11b5c8b3c889ac91ce3cbd1"
 dependencies = [
  "darling",
  "heck",
@@ -226,7 +225,6 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=fork/pre-rework-ref-types#665cf40b7dbb0923f11b5c8b3c889ac91ce3cbd1"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -238,7 +236,6 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=fork/pre-rework-ref-types#665cf40b7dbb0923f11b5c8b3c889ac91ce3cbd1"
 dependencies = [
  "const-crc32",
  "cxx",

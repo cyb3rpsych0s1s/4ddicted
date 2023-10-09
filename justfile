@@ -104,8 +104,8 @@ build TARGET='debug' LOCALE='en-us': rebuild
     @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
         Write-Host "target can only be 'debug' or 'release' (default to 'release')"; exit 1; \
     }
-    @if ('{{TARGET}}' -EQ 'debug') { cargo build -p addicted; } else { cargo build -p addicted --release; }
-    @if ('{{TARGET}}' -EQ 'debug') { cargo build -p stupefied; } else { cargo build -p stupefied --release; }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p addicted; } else { cargo +nightly build -p addicted --release; }
+    @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p stupefied; } else { cargo +nightly build -p stupefied --release; }
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_companion_name) + ".dll") }}' '{{red4ext_companion_game_dir}}'
 

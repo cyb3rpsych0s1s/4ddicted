@@ -1,27 +1,16 @@
 use cp2077_rs::GameTime;
 use red4ext_rs::{
     info,
-    prelude::{redscript_import, RefRepr, Strong},
-    types::{IScriptable, Ref},
+    prelude::{redscript_import, ClassType},
+    types::{IScriptable, Ref, WRef},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
 
 use super::{Category, Substance, SubstanceId, Threshold};
 
-/// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
-pub trait IntoRefs {
-    fn into_refs(self) -> Vec<Ref<IScriptable>>;
-}
-
-impl IntoRefs for Vec<Consumption> {
-    fn into_refs(self) -> Vec<Ref<IScriptable>> {
-        self.into_iter().map(|x| x.0).collect()
-    }
-}
-
-impl VariousIntoxication for Vec<Consumption> {
-    fn average_threshold(&self) -> Threshold {
+impl VariousIntoxication for Vec<Ref<Consumption>> {
+    fn average_threshold(self: Self) -> Threshold {
         let len = self.len() as i32;
         if len == 0 {
             return Threshold::Clean;
@@ -30,7 +19,7 @@ impl VariousIntoxication for Vec<Consumption> {
         Threshold::from(sum / len)
     }
 
-    fn highest_threshold(&self) -> Threshold {
+    fn highest_threshold(self: Self) -> Threshold {
         self.iter()
             .map(|x| x.threshold())
             .max()
@@ -40,16 +29,15 @@ impl VariousIntoxication for Vec<Consumption> {
 
 #[derive(Default, Clone)]
 #[repr(transparent)]
-pub struct Consumption(pub Ref<IScriptable>);
+pub struct Consumption;
 
-unsafe impl RefRepr for Consumption {
-    type Type = Strong;
-
-    const CLASS_NAME: &'static str = "Addicted.Consumption";
+impl ClassType for Consumption {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "Addicted.Consumption";
 }
 
 impl Intoxication for Consumption {
-    fn threshold(&self) -> Threshold {
+    fn threshold(self: &Ref<Consumption>) -> Threshold {
         Threshold::from(self.current())
     }
 }
@@ -57,37 +45,35 @@ impl Intoxication for Consumption {
 /// substances consumption.
 ///
 /// SAFETY: consumptions keys and values must be of same size at all time.
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct Consumptions(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct Consumptions;
 
 #[redscript_import]
 impl Consumption {
-    pub fn current(&self) -> i32;
-    pub fn doses(&self) -> Vec<f32>;
-    pub fn set_current(&mut self, value: i32) -> ();
-    fn set_doses(&mut self, value: Vec<f32>) -> ();
+    pub fn current(self: &Ref<Self>) -> i32;
+    pub fn doses(self: &Ref<Self>) -> Vec<f32>;
+    pub fn set_current(self: &mut Ref<Self>, value: i32) -> ();
+    fn set_doses(self: &mut Ref<Self>, value: Vec<f32>) -> ();
 }
 
-unsafe impl RefRepr for Consumptions {
-    type Type = Strong;
-
-    const CLASS_NAME: &'static str = "Addicted.Consumptions";
+impl ClassType for Consumptions {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "Addicted.Consumptions";
 }
 
 #[redscript_import]
 impl Consumptions {
-    pub fn keys(&self) -> Vec<SubstanceId>;
-    fn values(&self) -> Vec<Consumption>;
-    fn set_keys(&mut self, keys: Vec<SubstanceId>) -> ();
+    pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId>;
+    fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
+    fn set_keys(self: &mut Ref<Self>, keys: Vec<SubstanceId>) -> ();
     /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
-    fn set_values(&mut self, values: Vec<Ref<IScriptable>>) -> ();
-    fn create_consumption(&self, score: i32, when: f32) -> Consumption;
+    fn set_values(self: &mut Ref<Self>, values: Vec<Ref<IScriptable>>) -> ();
+    fn create_consumption(self: &Ref<Self>, score: i32, when: f32) -> Ref<Consumption>;
 }
 
 impl Consumptions {
     /// get index from substance ID, if any.
-    fn position(&self, id: SubstanceId) -> Option<usize> {
+    fn position(self: &Ref<Self>, id: SubstanceId) -> Option<usize> {
         let keys = self.keys();
         let mut iter = keys.as_slice().iter().enumerate();
         loop {
@@ -100,7 +86,7 @@ impl Consumptions {
         }
     }
     /// get consumption by substance ID, if any.
-    pub fn get_owned(&self, id: SubstanceId) -> Option<Consumption> {
+    pub fn get_owned(self: &Ref<Self>, id: SubstanceId) -> Option<Ref<Consumption>> {
         if let Some(idx) = self.position(id) {
             // SAFETY: keys and values are guaranteed to be of same size.
             return Some(unsafe { self.values().get_unchecked(idx) }.clone());
@@ -108,22 +94,22 @@ impl Consumptions {
         None
     }
     /// get consumptions by substance ids, if any.
-    fn by_ids(&self, ids: &[SubstanceId]) -> Vec<Consumption> {
+    fn by_ids(self: &Ref<Self>, ids: &[SubstanceId]) -> Vec<Ref<Consumption>> {
         ids.iter().filter_map(|x| self.get_owned(*x)).collect()
     }
     /// get consumptions by substance, if any.
-    pub fn by_substance(&self, substance: Substance) -> Vec<Consumption> {
+    pub fn by_substance(self: &Ref<Self>, substance: Substance) -> Vec<Ref<Consumption>> {
         self.by_ids(<&[SubstanceId]>::from(substance))
     }
     /// get consumptions by category, if any.
-    pub fn by_category(&self, category: Category) -> Vec<Consumption> {
+    pub fn by_category(self: &Ref<Self>, category: Category) -> Vec<Ref<Consumption>> {
         self.by_ids(<Vec<SubstanceId>>::from(category).as_slice())
     }
     /// increase consumption for given substance ID.
     ///
     /// if consumed for the first time, create an entry in keys and values.
     /// otherwise update existing entry in values.
-    pub fn increase(&mut self, id: SubstanceId, tms: f32) {
+    pub fn increase(self: &mut Ref<Self>, id: SubstanceId, tms: f32) {
         if let Some(mut existing) = self.get_owned(id) {
             let current = existing.doses();
             let len = current.len();
@@ -149,21 +135,37 @@ impl Consumptions {
                 keys[..len].clone_from_slice(self.keys().as_slice());
             }
 
-            values = vec![Consumption::default(); len + 1];
+            values = vec![WRef::<Consumption>::default(); len + 1];
             if len > 0 {
-                values[..len].clone_from_slice(self.values().as_slice());
+                values[..len].clone_from_slice(
+                    self.values()
+                        .as_slice()
+                        .iter()
+                        .map(|x| red4ext_rs::prelude::Ref::<Consumption>::downgrade(&x))
+                        .collect::<Vec<_>>()
+                        .as_slice(),
+                );
             }
-            values[len] = value;
+            values[len] = red4ext_rs::prelude::Ref::<Consumption>::downgrade(&value);
 
             self.set_keys(keys);
-            self.set_values(values.into_refs());
+            self.set_values(
+                values
+                    .into_iter()
+                    .map(|x| {
+                        x.upcast().upgrade().expect(
+                            "Consumption can be upgraded since they were created from valid slice",
+                        )
+                    })
+                    .collect(),
+            );
         }
     }
     /// decrease consumption for all substances.
     ///
     /// if greater than zero, decrease consumption score.
     /// otherwise remove entry from both keys and values.
-    pub fn decrease(&mut self) {
+    pub fn decrease(self: &mut Ref<Self>) {
         let len = self.keys().as_slice().len();
         if len == 0 {
             return;
@@ -197,10 +199,19 @@ impl Consumptions {
                 values.extend_from_slice(&self.values().as_slice()[from..]);
             }
             self.set_keys(keys);
-            self.set_values(values.into_refs());
+            self.set_values(
+                values
+                    .into_iter()
+                    .map(|x| red4ext_rs::prelude::Ref::<Consumption>::upcast(x))
+                    .collect(),
+            );
         }
     }
-    pub fn is_withdrawing_from_substance(&self, substance: Substance, at: GameTime) -> bool {
+    pub fn is_withdrawing_from_substance(
+        self: &Ref<Self>,
+        substance: Substance,
+        at: GameTime,
+    ) -> bool {
         for ref consumption in self.by_substance(substance) {
             if let Some(last) = consumption.doses().last() {
                 let last = GameTime::from(*last);
@@ -214,23 +225,35 @@ impl Consumptions {
 
 impl Intoxications<Substance> for Consumptions {
     /// get average threshold by substance, across all its related consumptions, if any.
-    fn average_threshold(&self, by: Substance) -> Threshold {
-        <dyn VariousIntoxication>::average_threshold(&self.by_substance(by))
+    fn average_threshold(self: &Ref<Self>, by: Substance) -> Threshold
+    where
+        Self: Sized,
+    {
+        VariousIntoxication::average_threshold(self.by_substance(by))
     }
     /// get highest threshold by substance, across all its related consumptions, if any.
-    fn highest_threshold(&self, by: Substance) -> Threshold {
-        <dyn VariousIntoxication>::highest_threshold(&self.by_substance(by))
+    fn highest_threshold(self: &Ref<Self>, by: Substance) -> Threshold
+    where
+        Self: Sized,
+    {
+        VariousIntoxication::highest_threshold(self.by_substance(by))
     }
 }
 
 impl Intoxications<Category> for Consumptions {
     /// get average threshold by category, across all its related consumptions, if any.
-    fn average_threshold(&self, by: Category) -> Threshold {
-        <dyn VariousIntoxication>::average_threshold(&self.by_category(by))
+    fn average_threshold(self: &Ref<Self>, by: Category) -> Threshold
+    where
+        Self: Sized,
+    {
+        VariousIntoxication::average_threshold(self.by_category(by))
     }
     /// get highest threshold by category, across all its related consumptions, if any.
-    fn highest_threshold(&self, by: Category) -> Threshold {
-        <dyn VariousIntoxication>::highest_threshold(&self.by_category(by))
+    fn highest_threshold(self: &Ref<Self>, by: Category) -> Threshold
+    where
+        Self: Sized,
+    {
+        VariousIntoxication::highest_threshold(self.by_category(by))
     }
 }
 

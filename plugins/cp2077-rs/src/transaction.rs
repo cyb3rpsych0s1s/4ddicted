@@ -1,23 +1,25 @@
 use red4ext_rs::{
-    prelude::{redscript_import, RefRepr, Strong},
-    types::{IScriptable, ItemId, Ref},
+    prelude::{redscript_import, ClassType},
+    types::{IScriptable, ItemId, Ref, WRef},
 };
 
 use crate::{GameItemData, GameObject};
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct TransactionSystem(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct TransactionSystem;
 
-unsafe impl RefRepr for TransactionSystem {
-    const CLASS_NAME: &'static str = "gameTransactionSystem";
-
-    type Type = Strong;
+impl ClassType for TransactionSystem {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameTransactionSystem";
 }
 
 #[redscript_import]
 impl TransactionSystem {
     /// `public final native func GetItemData(obj: ref<GameObject>, itemID: ItemID) -> wref<gameItemData>`
     #[redscript(native)]
-    pub fn get_item_data(&self, obj: GameObject, item: ItemId) -> GameItemData;
+    pub fn get_item_data(
+        self: &Ref<Self>,
+        obj: Ref<GameObject>,
+        item: ItemId,
+    ) -> WRef<GameItemData>;
 }

@@ -1,28 +1,26 @@
 use std::fmt::Display;
 
 use red4ext_rs::{
-    prelude::{redscript_import, NativeRepr, RefRepr, Strong},
+    prelude::{redscript_import, ClassType, NativeRepr},
     types::{IScriptable, Ref},
 };
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
-pub struct TimeSystem(Ref<IScriptable>);
+#[derive(Debug)]
+pub struct TimeSystem;
 
-unsafe impl RefRepr for TimeSystem {
-    const CLASS_NAME: &'static str = "gameTimeSystem";
-
-    type Type = Strong;
+impl ClassType for TimeSystem {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gameTimeSystem";
 }
 
 #[redscript_import]
 impl TimeSystem {
     /// `public native GetGameTime(): GameTime`
     #[redscript(native)]
-    pub fn get_game_time(&self) -> GameTime;
+    pub fn get_game_time(self: &Ref<Self>) -> GameTime;
     /// `public native GetGameTimeStamp(): Float`
     #[redscript(native)]
-    pub fn get_game_time_stamp(&self) -> f32;
+    pub fn get_game_time_stamp(self: &Ref<Self>) -> f32;
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
