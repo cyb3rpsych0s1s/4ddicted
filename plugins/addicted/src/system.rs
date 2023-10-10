@@ -74,14 +74,20 @@ impl System {
                     .expect("couldn't get item data")
                     .get_quality()
             );
+            info!("increase");
             self.consumptions()
                 .increase(id, self.time_system().get_game_time_stamp());
+            info!("update symptom");
             self.update_symptom(id);
             let message = RedString::new("Hello from System");
+            info!("create consume event");
             let evt = self.create_consume_event(message.clone());
+            info!("queue consume event");
             self.player()
                 .queue_event(red4ext_rs::prelude::Ref::<ConsumeEvent>::upcast(evt));
+            info!("create consume callback");
             let callback = self.create_consume_callback(message);
+            info!("delay consume callback");
             self.delay_system()
                 .delay_callback_next_frame(red4ext_rs::prelude::Ref::<ConsumeCallback>::upcast(
                     callback,

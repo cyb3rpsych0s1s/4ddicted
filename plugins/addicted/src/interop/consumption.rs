@@ -52,8 +52,8 @@ pub struct Consumptions;
 impl Consumption {
     pub fn current(self: &Ref<Self>) -> i32;
     pub fn doses(self: &Ref<Self>) -> Vec<f32>;
-    pub fn set_current(self: &mut Ref<Self>, value: i32) -> ();
-    fn set_doses(self: &mut Ref<Self>, value: Vec<f32>) -> ();
+    pub fn set_current(self: &Ref<Self>, value: i32) -> ();
+    fn set_doses(self: &Ref<Self>, value: Vec<f32>) -> ();
 }
 
 impl ClassType for Consumptions {
@@ -65,9 +65,8 @@ impl ClassType for Consumptions {
 impl Consumptions {
     pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId>;
     fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
-    fn set_keys(self: &mut Ref<Self>, keys: Vec<SubstanceId>) -> ();
-    /// refactor once [fixed](https://github.com/jac3km4/red4ext-rs/issues/24)
-    fn set_values(self: &mut Ref<Self>, values: Vec<Ref<IScriptable>>) -> ();
+    fn set_keys(self: &Ref<Self>, keys: Vec<SubstanceId>) -> ();
+    fn set_values(self: &Ref<Self>, values: Vec<Ref<IScriptable>>) -> ();
     fn create_consumption(self: &Ref<Self>, score: i32, when: f32) -> Ref<Consumption>;
 }
 
@@ -87,7 +86,12 @@ impl Consumptions {
     }
     /// get consumption by substance ID, if any.
     pub fn get_owned(self: &Ref<Self>, id: SubstanceId) -> Option<Ref<Consumption>> {
+        info!("get owned consumption");
         if let Some(idx) = self.position(id) {
+            info!(
+                "found owned consumption position {idx} out of {} value(s)",
+                self.values().len()
+            );
             // SAFETY: keys and values are guaranteed to be of same size.
             return Some(unsafe { self.values().get_unchecked(idx) }.clone());
         }
@@ -109,8 +113,9 @@ impl Consumptions {
     ///
     /// if consumed for the first time, create an entry in keys and values.
     /// otherwise update existing entry in values.
-    pub fn increase(self: &mut Ref<Self>, id: SubstanceId, tms: f32) {
-        if let Some(mut existing) = self.get_owned(id) {
+    pub fn increase(self: &Ref<Self>, id: SubstanceId, tms: f32) {
+        if let Some(existing) = self.get_owned(id) {
+            info!("increase existing consumption");
             let current = existing.doses();
             let len = current.len();
             let mut doses;
@@ -123,6 +128,7 @@ impl Consumptions {
             existing.set_current(existing.current() + id.kicks_in());
             existing.set_doses(doses);
         } else {
+            info!("create new consumption");
             let len = self.keys().as_slice().len();
 
             let value = self.create_consumption(id.kicks_in(), tms);
@@ -153,9 +159,9 @@ impl Consumptions {
                 values
                     .into_iter()
                     .map(|x| {
-                        x.upcast().upgrade().expect(
+                        red4ext_rs::prelude::Ref::<Consumption>::upcast(x.upgrade().expect(
                             "Consumption can be upgraded since they were created from valid slice",
-                        )
+                        ))
                     })
                     .collect(),
             );
@@ -165,7 +171,7 @@ impl Consumptions {
     ///
     /// if greater than zero, decrease consumption score.
     /// otherwise remove entry from both keys and values.
-    pub fn decrease(self: &mut Ref<Self>) {
+    pub fn decrease(self: &Ref<Self>) {
         let len = self.keys().as_slice().len();
         if len == 0 {
             return;
