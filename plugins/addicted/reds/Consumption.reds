@@ -4,7 +4,11 @@ public class Consumptions extends IScriptable {
     private persistent let keys: array<TweakDBID>;
     private persistent let values: array<ref<Consumption>>;
     public func Keys() -> array<TweakDBID> { return this.keys; }
-    public func Values() -> array<ref<Consumption>> { return this.values; }
+    public func Values() -> array<ref<Consumption>> {
+        for v in this.values {
+            LogChannel(n"DEBUG", s"\(IsDefined(v) ? "defined" : "null")");
+        }
+        return this.values; }
     private func SetKeys(keys: array<TweakDBID>) -> Void {
         ArrayResize(this.keys, ArraySize(keys));
         this.keys = keys;

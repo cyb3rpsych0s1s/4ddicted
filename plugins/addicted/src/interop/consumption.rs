@@ -93,7 +93,12 @@ impl Consumptions {
                 self.values().len()
             );
             // SAFETY: keys and values are guaranteed to be of same size.
-            return Some(unsafe { self.values().get_unchecked(idx) }.clone());
+            return Some(
+                self.values()
+                    .get(idx)
+                    .expect("keys and values should be of the same size, hence consumption should exists")
+                    .clone(),
+            );
         }
         None
     }

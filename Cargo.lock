@@ -213,8 +213,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-macros"
-version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/cloneable-variant#16341e15c01c64f7c258fb3cead758ac689c6568"
+version = "0.4.1"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/cloneable-variant#6afb81544977756aca4d9e51aa45483342eb4d49"
 dependencies = [
  "darling",
  "heck",
@@ -225,8 +225,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-rs"
-version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/cloneable-variant#16341e15c01c64f7c258fb3cead758ac689c6568"
+version = "0.4.1"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/cloneable-variant#6afb81544977756aca4d9e51aa45483342eb4d49"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -237,8 +237,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-sys"
-version = "0.3.3"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/cloneable-variant#16341e15c01c64f7c258fb3cead758ac689c6568"
+version = "0.4.1"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/cloneable-variant#6afb81544977756aca4d9e51aa45483342eb4d49"
 dependencies = [
  "const-crc32",
  "cxx",
