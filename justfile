@@ -98,7 +98,7 @@ compile:
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
-build TARGET='debug' LOCALE='en-us': rebuild
+build TARGET='debug' LOCALE='en-us':
     @$folder = '{{red4ext_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{red4ext_companion_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
@@ -108,6 +108,7 @@ build TARGET='debug' LOCALE='en-us': rebuild
     @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p stupefied; } else { cargo +nightly build -p stupefied --release; }
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_companion_name) + ".dll") }}' '{{red4ext_companion_game_dir}}'
+    @just rebuild
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
