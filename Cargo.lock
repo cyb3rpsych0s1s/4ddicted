@@ -169,18 +169,18 @@ dependencies = [
 
 [[package]]
 name = "num_enum"
-version = "0.6.1"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a015b430d3c108a207fd776d2e2196aaf8b1cf8cf93253e3a097ff3085076a1"
+checksum = "70bf6736f74634d299d00086f02986875b3c2d924781a6a2cb6c201e73da0ceb"
 dependencies = [
  "num_enum_derive",
 ]
 
 [[package]]
 name = "num_enum_derive"
-version = "0.6.1"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96667db765a921f7b295ffee8b60472b686a51d4f21c2ee4ffdb94c7013b65a6"
+checksum = "56ea360eafe1022f7cc56cd7b869ed57330fb2453d0c7831d99b74c65d2f5597"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -214,7 +214,7 @@ dependencies = [
 [[package]]
 name = "red4ext-macros"
 version = "0.5.0"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.0#efab7f21ddd903dab0daf976a3a7bd559d82108d"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/expose-into-ref#b8b083e40617b1df25c9575d129973dbcc455e68"
 dependencies = [
  "darling",
  "heck",
@@ -226,7 +226,7 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.5.0"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.0#efab7f21ddd903dab0daf976a3a7bd559d82108d"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/expose-into-ref#b8b083e40617b1df25c9575d129973dbcc455e68"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -238,7 +238,7 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.5.0"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.0#efab7f21ddd903dab0daf976a3a7bd559d82108d"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/expose-into-ref#b8b083e40617b1df25c9575d129973dbcc455e68"
 dependencies = [
  "const-crc32",
  "cxx",
