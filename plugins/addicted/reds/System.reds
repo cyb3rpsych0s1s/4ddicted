@@ -40,7 +40,9 @@ public class System extends ScriptableSystem {
         this.callbacks = GameInstance.GetCallbackSystem();
         this.callbacks.RegisterCallback(n"Session/Ready", this, n"OnSessionChanged");
         this.callbacks.RegisterCallback(n"Session/End", this, n"OnSessionChanged");
-        if !IsDefined(this.consumptions) {
+        if !IsDefined(this.consumptions)
+           || NotEquals(ArraySize(this.consumptions.keys), ArraySize(this.consumptions.values)) {
+            LogChannel(n"DEBUG", "initializing or resetting corrupted consumptions");
             let consumptions = new Consumptions();
             consumptions.keys = [];
             consumptions.values = [];
