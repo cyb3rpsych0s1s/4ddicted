@@ -1,13 +1,12 @@
 use red4ext_rs::{
-    prelude::{redscript_import, ClassType},
+    prelude::{redscript_import, ClassType, NativeRepr},
     types::{CName, IScriptable, MaybeUninitRef, Ref, ScriptRef, Variant},
 };
 
 #[derive(Debug)]
 pub struct Reflection;
 
-impl ClassType for Reflection {
-    type BaseClass = IScriptable;
+unsafe impl NativeRepr for Reflection {
     const NAME: &'static str = "Reflection";
 }
 
