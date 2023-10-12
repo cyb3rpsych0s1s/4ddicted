@@ -9,4 +9,4 @@ rust-version = "1.72"
 
 [workspace.dependencies]
 cp2077-rs = { path = "./plugins/cp2077-rs" }
-red4ext-rs = { git = "https://github.com/Roms1383/red4ext-rs.git", branch = "chore/cloneable-variant", features = ["macros"] }
+red4ext-rs = { git = "https://github.com/jac3km4/red4ext-rs.git", tag = "v0.5.0", features = ["macros"] }
