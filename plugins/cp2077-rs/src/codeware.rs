@@ -1,6 +1,6 @@
 use red4ext_rs::{
     prelude::{redscript_import, ClassType},
-    types::{CName, IScriptable, Ref, ScriptRef, Variant, WRef},
+    types::{CName, IScriptable, MaybeUninitRef, Ref, ScriptRef, Variant},
 };
 
 #[derive(Debug)]
@@ -15,13 +15,13 @@ impl ClassType for Reflection {
 impl Reflection {
     /// `public static native func GetClass(name: CName) -> ref<ReflectionClass>`
     #[redscript(native, name = "GetClass")]
-    pub fn get_class(name: CName) -> WRef<ReflectionClass>;
+    pub fn get_class(name: CName) -> MaybeUninitRef<ReflectionClass>;
     /// `public static native func GetTypeOf(value: Variant) -> ref<ReflectionType>`
     #[redscript(native, name = "GetTypeOf")]
-    pub fn get_type_of(value: Variant) -> WRef<ReflectionType>;
+    pub fn get_type_of(value: Variant) -> MaybeUninitRef<ReflectionType>;
     /// `public static native func GetGlobalFunction(name: CName) -> ref<ReflectionStaticFunc>`
     #[redscript(native, name = "GetGlobalFunction")]
-    pub fn get_global_function(name: CName) -> WRef<ReflectionStaticFunc>;
+    pub fn get_global_function(name: CName) -> MaybeUninitRef<ReflectionStaticFunc>;
     // `public static native func GetGlobalFunctions() -> array<ref<ReflectionStaticFunc>>`
     #[redscript(native, name = "GetGlobalFunctions")]
     pub fn get_global_functions() -> Vec<Ref<ReflectionStaticFunc>>;
@@ -31,7 +31,7 @@ impl Reflection {
 pub struct ReflectionClass;
 
 impl ClassType for ReflectionClass {
-    type BaseClass = IScriptable;
+    type BaseClass = ReflectionType;
     const NAME: &'static str = "ReflectionClass";
 }
 
@@ -43,15 +43,18 @@ impl ReflectionClass {
 
     /// `public native func GetProperty(name: CName) -> ref<ReflectionProp>`
     #[redscript(native, name = "GetProperty")]
-    pub fn get_property(self: &Ref<Self>, name: CName) -> WRef<ReflectionProp>;
+    pub fn get_property(self: &Ref<Self>, name: CName) -> MaybeUninitRef<ReflectionProp>;
 
     /// `public native func GetStaticFunction(name: CName) -> ref<ReflectionStaticFunc>`
     #[redscript(native, name = "GetStaticFunction")]
-    pub fn get_static_function(self: &Ref<Self>, name: CName) -> WRef<ReflectionStaticFunc>;
+    pub fn get_static_function(
+        self: &Ref<Self>,
+        name: CName,
+    ) -> MaybeUninitRef<ReflectionStaticFunc>;
 
     /// `public native func GetFunction(name: CName) -> ref<ReflectionMemberFunc>`
     #[redscript(native, name = "GetFunction")]
-    pub fn get_function(self: &Ref<Self>, name: CName) -> WRef<ReflectionMemberFunc>;
+    pub fn get_function(self: &Ref<Self>, name: CName) -> MaybeUninitRef<ReflectionMemberFunc>;
 
     /// `public native func GetStaticFunctions() -> array<ref<ReflectionStaticFunc>>`
     #[redscript(native)]
@@ -121,7 +124,7 @@ impl ReflectionFunc {
 
     /// `public native func GetReturnType() -> ref<ReflectionType>`
     #[redscript(native, name = "GetReturnType")]
-    fn get_return_type(self: &Ref<Self>) -> WRef<ReflectionType>;
+    fn get_return_type(self: &Ref<Self>) -> MaybeUninitRef<ReflectionType>;
 }
 
 #[derive(Debug)]

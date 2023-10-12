@@ -15,11 +15,11 @@ impl StupefiedBoard for PlayerStateMachineDef {
         use red4ext_rs::conv::ClassType;
         use red4ext_rs::types::VariantExt;
         let cls = Reflection::get_class(CName::new(Self::NAME))
-            .upgrade()
+            .into_ref()
             .expect("get class PlayerStateMachineDef");
         let field = cls
             .get_property(CName::new("IsConsuming"))
-            .upgrade()
+            .into_ref()
             .expect("get prop IsConsuming on class PlayerStateMachineDef");
         VariantExt::try_take(
             &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<

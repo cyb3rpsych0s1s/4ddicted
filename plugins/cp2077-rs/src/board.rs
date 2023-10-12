@@ -21,11 +21,11 @@ impl AllBlackboardDefinitions {
         use crate::Reflection;
         use red4ext_rs::types::VariantExt;
         let cls = Reflection::get_class(CName::new(Self::NAME))
-            .upgrade()
+            .into_ref()
             .expect("get class AllBlackboardDefinitions");
         let field = cls
             .get_property(CName::new("PlayerStateMachine"))
-            .upgrade()
+            .into_ref()
             .expect("get prop PlayerStateMachine on class AllBlackboardDefinitions");
         VariantExt::try_take(
             &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
