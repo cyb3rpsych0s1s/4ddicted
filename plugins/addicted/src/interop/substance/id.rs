@@ -88,6 +88,7 @@ impl SubstanceId {
     }
 }
 
+#[derive(Debug)]
 pub enum Error {
     NonAddictive,
 }
