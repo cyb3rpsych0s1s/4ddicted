@@ -47,6 +47,13 @@ public class System extends ScriptableSystem {
             this.consumptions = consumptions;
         }
     }
+    private func OnDetach() -> Void {
+        if IsDefined(this.callbacks) {
+            this.callbacks.UnregisterCallback(n"Session/Ready", this, n"OnSessionChanged");
+            this.callbacks.UnregisterCallback(n"Session/End", this, n"OnSessionChanged");
+            this.callbacks = null;
+        }
+    }
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         if IsDefined(request.owner as PlayerPuppet) {
             this.player = request.owner as PlayerPuppet;
