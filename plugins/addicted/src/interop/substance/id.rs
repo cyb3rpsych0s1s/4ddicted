@@ -86,6 +86,9 @@ impl SubstanceId {
             Kind::Mild => 2,
         }
     }
+    pub fn into_inner(self) -> TweakDbId {
+        self.0
+    }
 }
 
 #[derive(Debug)]
