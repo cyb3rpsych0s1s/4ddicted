@@ -21,9 +21,11 @@ impl AddictedBoard for PlayerStateMachineDef {
             .get_property(CName::new("WithdrawalSymptoms"))
             .upgrade()
             .expect("get prop WithdrawalSymptoms for class PlayerStateMachineDef");
-        VariantExt::try_get(&field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
-            PlayerStateMachineDef,
-        >::downgrade(&self))))
+        VariantExt::try_take(
+            &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
+                PlayerStateMachineDef,
+            >::downgrade(&self))),
+        )
         .expect("prop WithdrawalSymptoms of type BlackboardID_Uint")
     }
 }

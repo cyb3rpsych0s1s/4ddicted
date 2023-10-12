@@ -27,9 +27,11 @@ impl AllBlackboardDefinitions {
             .get_property(CName::new("PlayerStateMachine"))
             .upgrade()
             .expect("get prop PlayerStateMachine on class AllBlackboardDefinitions");
-        VariantExt::try_get(&field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
-            AllBlackboardDefinitions,
-        >::downgrade(&self))))
+        VariantExt::try_take(
+            &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
+                AllBlackboardDefinitions,
+            >::downgrade(&self))),
+        )
         .expect("prop PlayerStateMachine of type PlayerStateMachineDef")
     }
 }

@@ -21,9 +21,11 @@ impl StupefiedBoard for PlayerStateMachineDef {
             .get_property(CName::new("IsConsuming"))
             .upgrade()
             .expect("get prop IsConsuming on class PlayerStateMachineDef");
-        VariantExt::try_get(&field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
-            PlayerStateMachineDef,
-        >::downgrade(&self))))
+        VariantExt::try_take(
+            &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
+                PlayerStateMachineDef,
+            >::downgrade(&self))),
+        )
         .expect("prop IsConsuming of type BlackboardID_Bool")
     }
 }

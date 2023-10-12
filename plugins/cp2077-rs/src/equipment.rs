@@ -105,7 +105,7 @@ impl EquipmentSystemPlayerData {
     }
 }
 
-#[derive(Default, Clone)]
+#[derive(Default)]
 #[repr(C)]
 pub struct SLoadout {
     equip_areas: RedArray<SEquipArea>,
@@ -116,7 +116,7 @@ unsafe impl NativeRepr for SLoadout {
     const NAME: &'static str = "gameSLoadout";
 }
 
-#[derive(Default, Clone)]
+#[derive(Default)]
 #[repr(C)]
 pub struct SEquipArea {
     area_type: GameDataEquipmentArea,
@@ -209,7 +209,7 @@ impl ClassType for IPrereq {
     const NAME: &'static str = "gameIPrereq";
 }
 
-#[derive(Default, Clone)]
+#[derive(Default)]
 #[repr(C)]
 pub struct SEquipmentSet {
     set_items: RedArray<SItemInfo>,
