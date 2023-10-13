@@ -38,7 +38,7 @@ impl ClassType for ConsumeCallback {
 #[redscript_import]
 impl System {
     fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
-    fn player(self: &Ref<Self>) -> Ref<PlayerPuppet>;
+    fn player(self: &Ref<Self>) -> WRef<PlayerPuppet>;
     fn time_system(self: &Ref<Self>) -> Ref<TimeSystem>;
     fn transaction_system(self: &Ref<Self>) -> Ref<TransactionSystem>;
     fn delay_system(self: &Ref<Self>) -> Ref<DelaySystem>;
@@ -61,36 +61,38 @@ impl System {
         info!("consuming {item:#?}");
         if let Ok(id) = item.try_into() {
             info!("item is addictive");
-            info!(
-                "item quality: {:#?}",
-                self.transaction_system()
-                    .get_item_data(
-                        red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(
-                            red4ext_rs::prelude::Ref::<PlayerPuppet>::upcast(self.player())
-                        ),
-                        item
-                    )
-                    .upgrade()
-                    .expect("couldn't get item data")
-                    .get_quality()
-            );
-            info!("increase");
-            self.consumptions()
-                .increase(id, self.time_system().get_game_time_stamp());
-            info!("update symptom");
-            self.update_symptom(id);
-            info!("create consume event");
-            let evt = self.create_consume_event(RedString::new("Hello from System"));
-            info!("queue consume event");
-            self.player()
-                .queue_event(red4ext_rs::prelude::Ref::<ConsumeEvent>::upcast(evt));
-            info!("create consume callback");
-            let callback = self.create_consume_callback(RedString::new("Hello from System"));
-            info!("delay consume callback");
-            self.delay_system()
-                .delay_callback_next_frame(red4ext_rs::prelude::Ref::<ConsumeCallback>::upcast(
-                    callback,
-                ));
+            if let Some(player) = self.player().upgrade() {
+                info!(
+                    "item quality: {:#?}",
+                    self.transaction_system()
+                        .get_item_data(
+                            red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(
+                                red4ext_rs::prelude::Ref::<PlayerPuppet>::upcast(player.clone())
+                            ),
+                            item
+                        )
+                        .upgrade()
+                        .expect("couldn't get item data")
+                        .get_quality()
+                );
+                info!("increase");
+                self.consumptions()
+                    .increase(id, self.time_system().get_game_time_stamp());
+                info!("update symptom");
+                self.update_symptom(id);
+                info!("create consume event");
+                let evt = self.create_consume_event(RedString::new("Hello from System"));
+                info!("queue consume event");
+                player
+                    .queue_event(red4ext_rs::prelude::Ref::<ConsumeEvent>::upcast(evt));
+                info!("create consume callback");
+                let callback = self.create_consume_callback(RedString::new("Hello from System"));
+                info!("delay consume callback");
+                self.delay_system()
+                    .delay_callback_next_frame(red4ext_rs::prelude::Ref::<ConsumeCallback>::upcast(
+                        callback,
+                    ));
+            }
         }
     }
     pub fn on_status_effect_not_applied_on_spawn(self: Ref<Self>, effect: TweakDbId) {
@@ -178,34 +180,38 @@ impl System {
         false
     }
     fn update_symptom(self: &Ref<Self>, id: SubstanceId) {
-        let board = self.player().get_player_state_machine_blackboard();
-        let pin = self.withdrawal_symptoms();
-        let current = board.get_uint(pin.clone());
-        let current = WithdrawalSymptoms::from_bits_truncate(current);
-        let symptom = WithdrawalSymptoms::from(id);
-        let mut next = current;
-        next.remove(symptom);
-        if current != next {
-            board.set_uint(pin.clone(), next.bits(), false);
+        if let Some(player) = self.player().upgrade() {
+            let board = player.get_player_state_machine_blackboard();
+            let pin = self.withdrawal_symptoms();
+            let current = board.get_uint(pin.clone());
+            let current = WithdrawalSymptoms::from_bits_truncate(current);
+            let symptom = WithdrawalSymptoms::from(id);
+            let mut next = current;
+            next.remove(symptom);
+            if current != next {
+                board.set_uint(pin.clone(), next.bits(), false);
+            }
+            info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
         }
-        info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }
     fn update_symptoms(self: &Ref<Self>) {
-        let board = self.player().get_player_state_machine_blackboard();
-        let pin = self.withdrawal_symptoms();
-        let current = board.get_uint(pin.clone());
-        let current = WithdrawalSymptoms::from_bits_truncate(current);
-        let mut next = WithdrawalSymptoms::empty();
-        for flag in WithdrawalSymptoms::all().iter() {
-            if let Some(substance) = flag.substance() {
-                if !current.contains(flag) && self.is_withdrawing_from_substance(substance) {
-                    next.insert(flag);
+        if let Some(player) = self.player().upgrade() {
+            let board = player.get_player_state_machine_blackboard();
+            let pin = self.withdrawal_symptoms();
+            let current = board.get_uint(pin.clone());
+            let current = WithdrawalSymptoms::from_bits_truncate(current);
+            let mut next = WithdrawalSymptoms::empty();
+            for flag in WithdrawalSymptoms::all().iter() {
+                if let Some(substance) = flag.substance() {
+                    if !current.contains(flag) && self.is_withdrawing_from_substance(substance) {
+                        next.insert(flag);
+                    }
                 }
             }
+            if current != next {
+                board.set_uint(pin.clone(), next.bits(), true);
+            }
+            info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
         }
-        if current != next {
-            board.set_uint(pin.clone(), next.bits(), true);
-        }
-        info!("withdrawal symptoms before {current:#034b} after {next:#034b}");
     }
 }

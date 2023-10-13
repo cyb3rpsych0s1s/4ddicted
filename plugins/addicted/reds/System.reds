@@ -73,7 +73,7 @@ public class System extends ScriptableSystem {
     public func OnSkipTime() -> Void { this.restingSince = this.TimeSystem().GetGameTime(); }
     // imported in natives
     public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
-    public func Player() -> ref<PlayerPuppet> { return this.player; }
+    public func Player() -> wref<PlayerPuppet> { return this.player; }
     public func GetEquipAreaType(item: ItemID) -> gamedataEquipmentArea {
         LogChannel(n"DEBUG", s"\(TDBID.ToStringDEBUG(ItemID.GetTDBID(item)))");
         return EquipmentSystem.GetEquipAreaType(item); }
