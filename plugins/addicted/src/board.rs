@@ -1,5 +1,8 @@
 use cp2077_rs::{BlackboardIdUint, PlayerStateMachineDef, Reflection};
-use red4ext_rs::types::{CName, Ref};
+use red4ext_rs::types::CName;
+use red4ext_rs::types::VariantExt;
+use red4ext_rs::types::{Ref, Variant};
+use red4ext_rs::conv::ClassType;
 
 pub trait AddictedBoard {
     fn withdrawal_symptoms(self: &Ref<Self>) -> BlackboardIdUint
@@ -12,8 +15,6 @@ impl AddictedBoard for PlayerStateMachineDef {
     where
         Self: Sized,
     {
-        use red4ext_rs::conv::ClassType;
-        use red4ext_rs::types::VariantExt;
         let cls = Reflection::get_class(CName::new(Self::NAME))
             .into_ref()
             .expect("get class PlayerStateMachineDef");
@@ -21,11 +22,9 @@ impl AddictedBoard for PlayerStateMachineDef {
             .get_property(CName::new("WithdrawalSymptoms"))
             .into_ref()
             .expect("get prop WithdrawalSymptoms for class PlayerStateMachineDef");
-        VariantExt::try_take(
-            &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
-                PlayerStateMachineDef,
-            >::downgrade(&self))),
-        )
-        .expect("prop WithdrawalSymptoms of type BlackboardID_Uint")
+        field
+            .get_value(Variant::new(self.clone()))
+            .try_take()
+            .expect("value for prop WithdrawalSymptoms of type BlackboardID_Uint")
     }
 }

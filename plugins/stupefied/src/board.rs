@@ -1,5 +1,9 @@
-use cp2077_rs::{BlackboardIdBool, PlayerStateMachineDef, Reflection};
-use red4ext_rs::types::{CName, Ref};
+use cp2077_rs::Reflection;
+use cp2077_rs::{BlackboardIdBool, PlayerStateMachineDef};
+use red4ext_rs::conv::ClassType;
+use red4ext_rs::types::CName;
+use red4ext_rs::types::VariantExt;
+use red4ext_rs::types::{Ref, Variant};
 
 pub trait StupefiedBoard {
     fn is_consuming(self: &Ref<Self>) -> BlackboardIdBool
@@ -12,8 +16,6 @@ impl StupefiedBoard for PlayerStateMachineDef {
     where
         Self: Sized,
     {
-        use red4ext_rs::conv::ClassType;
-        use red4ext_rs::types::VariantExt;
         let cls = Reflection::get_class(CName::new(Self::NAME))
             .into_ref()
             .expect("get class PlayerStateMachineDef");
@@ -21,11 +23,9 @@ impl StupefiedBoard for PlayerStateMachineDef {
             .get_property(CName::new("IsConsuming"))
             .into_ref()
             .expect("get prop IsConsuming on class PlayerStateMachineDef");
-        VariantExt::try_take(
-            &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
-                PlayerStateMachineDef,
-            >::downgrade(&self))),
-        )
-        .expect("prop IsConsuming of type BlackboardID_Bool")
+        field
+            .get_value(Variant::new(self.clone()))
+            .try_take()
+            .expect("value for prop IsConsuming of type BlackboardID_Bool")
     }
 }

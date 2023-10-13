@@ -19,6 +19,7 @@ impl ClassType for AllBlackboardDefinitions {
 impl AllBlackboardDefinitions {
     pub fn player_state_machine(self: &Ref<Self>) -> Ref<PlayerStateMachineDef> {
         use crate::Reflection;
+        use red4ext_rs::types::Variant;
         use red4ext_rs::types::VariantExt;
         let cls = Reflection::get_class(CName::new(Self::NAME))
             .into_ref()
@@ -27,12 +28,10 @@ impl AllBlackboardDefinitions {
             .get_property(CName::new("PlayerStateMachine"))
             .into_ref()
             .expect("get prop PlayerStateMachine on class AllBlackboardDefinitions");
-        VariantExt::try_take(
-            &mut field.get_value(VariantExt::new(red4ext_rs::prelude::Ref::<
-                AllBlackboardDefinitions,
-            >::downgrade(&self))),
-        )
-        .expect("prop PlayerStateMachine of type PlayerStateMachineDef")
+        field
+            .get_value(Variant::new(self.clone()))
+            .try_take()
+            .expect("value for prop PlayerStateMachine of type PlayerStateMachineDef")
     }
 }
 
