@@ -289,6 +289,9 @@ alias nuke := nuclear
 delete-bin:
     rm -Recurse -Force '{{ join(repo_dir, "target") }}'
 
+delete-lock:
+    rm -Force '{{ join(repo_dir, "Cargo.lock") }}'
+
 # 🧨 nuke your game files as a last resort (vanilla reset)
 [windows]
 nuclear:
@@ -325,4 +328,4 @@ analyze FILE:
   ffprobe -i '{{FILE}}' -show_format -probesize 50000000 -analyzeduration 500
 
 # nuke everything and rebuild from scratch
-tabula: delete-bin uninstall clear build
+tabula: delete-bin delete-lock uninstall clear build
