@@ -214,7 +214,7 @@ dependencies = [
 [[package]]
 name = "red4ext-macros"
 version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#77815cbbe2c305dc17eb274c1142a4d2391d5cf0"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#79ea32b640d41f09d637ee8198cc80b049fd9d74"
 dependencies = [
  "darling",
  "heck",
@@ -226,7 +226,7 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#77815cbbe2c305dc17eb274c1142a4d2391d5cf0"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#79ea32b640d41f09d637ee8198cc80b049fd9d74"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -238,7 +238,7 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#77815cbbe2c305dc17eb274c1142a4d2391d5cf0"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#79ea32b640d41f09d637ee8198cc80b049fd9d74"
 dependencies = [
  "const-crc32",
  "cxx",
