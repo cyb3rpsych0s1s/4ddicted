@@ -57,9 +57,9 @@ dependencies = [
 
 [[package]]
 name = "cxx"
-version = "1.0.107"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbe98ba1789d56fb3db3bee5e032774d4f421b685de7ba703643584ba24effbe"
+checksum = "c390c123d671cc547244943ecad81bdaab756c6ea332d9ca9c1f48d952a24895"
 dependencies = [
  "cc",
  "cxxbridge-flags",
@@ -69,9 +69,9 @@ dependencies = [
 
 [[package]]
 name = "cxx-build"
-version = "1.0.107"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4ce20f6b8433da4841b1dadfb9468709868022d829d5ca1f2ffbda928455ea3"
+checksum = "00d3d3ac9ffb900304edf51ca719187c779f4001bb544f26c4511d621de905cf"
 dependencies = [
  "cc",
  "codespan-reporting",
@@ -84,15 +84,15 @@ dependencies = [
 
 [[package]]
 name = "cxxbridge-flags"
-version = "1.0.107"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20888d9e1d2298e2ff473cee30efe7d5036e437857ab68bbfea84c74dba91da2"
+checksum = "94415827ecfea0f0c74c8cad7d1a86ddb3f05354d6a6ddeda0adee5e875d2939"
 
 [[package]]
 name = "cxxbridge-macro"
-version = "1.0.107"
+version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fa16a70dd58129e4dfffdff535fb1bce66673f7bbeec4a5a1765a504e1ccd84"
+checksum = "e33dbbe9f5621c9247f97ec14213b04f350bff4b6cebefe834c60055db266ecf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -195,9 +195,9 @@ checksum = "dd8b5dd2ae5ed71462c540258bedcb51965123ad7e7ccf4b9a8cafaa4a63576d"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.68"
+version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b1106fec09662ec6dd98ccac0f81cef56984d0b49f75c92d8cbad76e20c005c"
+checksum = "134c189feb4956b20f6f547d2cf727d4c0fe06722b20a0eec87ed445a97f92da"
 dependencies = [
  "unicode-ident",
 ]
@@ -214,7 +214,7 @@ dependencies = [
 [[package]]
 name = "red4ext-macros"
 version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/expose-into-ref#b8b083e40617b1df25c9575d129973dbcc455e68"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#77815cbbe2c305dc17eb274c1142a4d2391d5cf0"
 dependencies = [
  "darling",
  "heck",
@@ -226,7 +226,7 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/expose-into-ref#b8b083e40617b1df25c9575d129973dbcc455e68"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#77815cbbe2c305dc17eb274c1142a4d2391d5cf0"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -238,7 +238,7 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=chore/expose-into-ref#b8b083e40617b1df25c9575d129973dbcc455e68"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#77815cbbe2c305dc17eb274c1142a4d2391d5cf0"
 dependencies = [
  "const-crc32",
  "cxx",
