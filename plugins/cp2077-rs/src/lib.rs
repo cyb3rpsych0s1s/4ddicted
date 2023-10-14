@@ -29,6 +29,7 @@ mod codeware;
 #[cfg(feature = "codeware")]
 pub use codeware::*;
 
+#[derive(Debug)]
 pub enum Error {
     Incompatible,
 }

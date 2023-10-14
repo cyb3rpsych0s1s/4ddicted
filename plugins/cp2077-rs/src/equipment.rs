@@ -22,9 +22,6 @@ impl ClassType for InventoryDataManagerV2 {
     const NAME: &'static str = "InventoryDataManagerV2";
 }
 
-#[redscript_import]
-impl InventoryDataManagerV2 {}
-
 impl InventoryDataManagerV2 {
     /// see [IsEquipmentAreaCyberware](https://codeberg.org/adamsmasher/cyberpunk/src/commit/20e2051921152b83f1daa57ecadf7f3b3288cf8e/cyberpunk/UI/inventory/inventoryDataManagerV2.swift#L3765)
     pub fn is_equipment_area_cyberware(area_type: GameDataEquipmentArea) -> bool {
@@ -201,7 +198,7 @@ unsafe impl NativeRepr for SEquipSlot {
     const NATIVE_NAME: &'static str = "gameSEquipSlot";
 }
 
-#[derive(Default, Debug, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct IPrereq;
 
 impl ClassType for IPrereq {

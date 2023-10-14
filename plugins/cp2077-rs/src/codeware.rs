@@ -3,7 +3,7 @@ use red4ext_rs::{
     types::{CName, IScriptable, MaybeUninitRef, Ref, ScriptRef, Variant},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct Reflection;
 
 unsafe impl NativeRepr for Reflection {

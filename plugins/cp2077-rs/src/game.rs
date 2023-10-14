@@ -50,8 +50,7 @@ impl ClassType for ScriptableSystem {
     const NAME: &'static str = "gameScriptableSystem";
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
+#[derive(Debug)]
 pub struct GameObject;
 
 impl ClassType for GameObject {

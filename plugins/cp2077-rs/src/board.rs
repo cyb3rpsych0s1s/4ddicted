@@ -83,7 +83,7 @@ unsafe impl NativeRepr for BlackboardIdBool {
     const NATIVE_NAME: &'static str = "gamebbScriptID_Bool";
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct IBlackboard;
 
 impl ClassType for IBlackboard {
