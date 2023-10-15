@@ -1,5 +1,10 @@
 module Addicted
 
+public class Increase extends Event {
+    public let id: TweakDBID;
+    public let score: Int32;
+}
+
 public class Consumptions extends IScriptable {
     private persistent let keys: array<TweakDBID>;
     private persistent let values: array<ref<Consumption>>;
@@ -13,7 +18,7 @@ public class Consumptions extends IScriptable {
         ArrayResize(this.keys, ArraySize(keys));
         this.keys = keys;
     }
-    private func SetValues(values: array<ref<IScriptable>>) -> Void {
+    private func SetValues(values: array<ref<Consumption>>) -> Void {
         ArrayResize(this.values, ArraySize(values));
         let idx = 0;
         for value in values {

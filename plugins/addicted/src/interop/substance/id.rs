@@ -98,6 +98,7 @@ pub enum Error {
 
 unsafe impl NativeRepr for SubstanceId {
     const NAME: &'static str = TweakDbId::NAME;
+    const MANGLED_NAME: &'static str = TweakDbId::MANGLED_NAME;
     const NATIVE_NAME: &'static str = TweakDbId::NATIVE_NAME;
 }
 

@@ -2,7 +2,7 @@ use cp2077_rs::GameTime;
 use red4ext_rs::{
     info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, Ref, WRef},
+    types::{IScriptable, Ref},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
@@ -66,7 +66,7 @@ impl Consumptions {
     pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId>;
     fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
     fn set_keys(self: &Ref<Self>, keys: Vec<SubstanceId>) -> ();
-    fn set_values(self: &Ref<Self>, values: Vec<Ref<IScriptable>>) -> ();
+    fn set_values(self: &Ref<Self>, values: Vec<Ref<Consumption>>) -> ();
     fn create_consumption(self: &Ref<Self>, score: i32, when: f32) -> Ref<Consumption>;
 }
 
@@ -134,42 +134,15 @@ impl Consumptions {
             existing.set_doses(doses);
         } else {
             info!("create new consumption");
-            let len = self.keys().as_slice().len();
-
             let value = self.create_consumption(id.kicks_in(), tms);
-            let mut keys;
-            let mut values;
+            let mut keys = self.keys();
+            let mut values = self.values();
 
-            keys = vec![SubstanceId::default(); len + 1];
-            keys[len] = id;
-            if len > 0 {
-                keys[..len].clone_from_slice(self.keys().as_slice());
-            }
-
-            values = vec![WRef::<Consumption>::default(); len + 1];
-            if len > 0 {
-                values[..len].clone_from_slice(
-                    self.values()
-                        .as_slice()
-                        .iter()
-                        .map(|x| red4ext_rs::prelude::Ref::<Consumption>::downgrade(&x))
-                        .collect::<Vec<_>>()
-                        .as_slice(),
-                );
-            }
-            values[len] = red4ext_rs::prelude::Ref::<Consumption>::downgrade(&value);
+            keys.push(id);
+            values.push(value);
 
             self.set_keys(keys);
-            self.set_values(
-                values
-                    .into_iter()
-                    .map(|x| {
-                        red4ext_rs::prelude::Ref::<Consumption>::upcast(x.upgrade().expect(
-                            "Consumption can be upgraded since they were created from valid slice",
-                        ))
-                    })
-                    .collect(),
-            );
+            self.set_values(values);
         }
     }
     /// decrease consumption for all substances.
@@ -197,25 +170,16 @@ impl Consumptions {
         if !removables.is_empty() {
             let mut keys = Vec::with_capacity(len - removables.len());
             let mut values = Vec::with_capacity(len - removables.len());
-            let mut from = 0;
-            for to in removables {
-                if to != from {
-                    keys.extend_from_slice(&self.keys().as_slice()[from..to]);
-                    values.extend_from_slice(&self.values().as_slice()[from..to]);
+            let current_keys = self.keys();
+            let current_values = self.values();
+            for idx in 0..len {
+                if !removables.contains(&idx) {
+                    keys.push(current_keys[idx]);
+                    values.push(current_values[idx].clone());
                 }
-                from = to + 1;
-            }
-            if from <= len {
-                keys.extend_from_slice(&self.keys().as_slice()[from..]);
-                values.extend_from_slice(&self.values().as_slice()[from..]);
             }
             self.set_keys(keys);
-            self.set_values(
-                values
-                    .into_iter()
-                    .map(|x| red4ext_rs::prelude::Ref::<Consumption>::upcast(x))
-                    .collect(),
-            );
+            self.set_values(values);
         }
     }
     pub fn is_withdrawing_from_substance(

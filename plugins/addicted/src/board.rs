@@ -1,8 +1,8 @@
 use cp2077_rs::{BlackboardIdUint, PlayerStateMachineDef, Reflection};
+use red4ext_rs::conv::ClassType;
 use red4ext_rs::types::CName;
 use red4ext_rs::types::VariantExt;
 use red4ext_rs::types::{Ref, Variant};
-use red4ext_rs::conv::ClassType;
 
 pub trait AddictedBoard {
     fn withdrawal_symptoms(self: &Ref<Self>) -> BlackboardIdUint
