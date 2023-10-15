@@ -5,14 +5,14 @@ import Stupefied.System
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
 
-native func OnConsumingItem(system: ref<System>) -> Void;
-native func OnConsumedItem(system: ref<System>) -> Void;
+// native func OnConsumingItem(system: ref<System>) -> Void;
+// native func OnConsumedItem(system: ref<System>) -> Void;
 
 final static func OnUsedQuickSlotItem(executor: wref<GameObject>, actionID: TweakDBID) -> Void {
   let actionType: CName = TweakDBInterface.GetObjectActionRecord(actionID).ActionName();
   if Equals(actionType, n"Consume") || Equals(actionType, n"Drink") || Equals(actionType, n"UseHealCharge") {
-    let system = System.GetInstance(executor.GetGame());
-    OnConsumingItem(system);
+    // let system = System.GetInstance(executor.GetGame());
+    // OnConsumingItem(system);
   }
 }
 
@@ -21,8 +21,8 @@ final static func OnUsedQuickSlotItem(executor: wref<GameObject>, actionID: Twea
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
     let player = executor as PlayerPuppet;
     if IsDefined(player) {
-        let system = System.GetInstance(executor.GetGame());
-        OnConsumingItem(system);
+        // let system = System.GetInstance(executor.GetGame());
+        // OnConsumingItem(system);
     }
 
     wrappedMethod(executor, itemID, fromInventory);
@@ -55,8 +55,8 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     let applied = wrappedMethod(evt);
 
     if !evt.isAppliedOnSpawn {
-        let system = System.GetInstance(this.GetGame());
-        OnConsumedItem(system);
+        // let system = System.GetInstance(this.GetGame());
+        // OnConsumedItem(system);
     }
 
     return applied;
