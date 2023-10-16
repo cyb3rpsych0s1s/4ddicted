@@ -2,12 +2,15 @@ use cp2077_rs::GameTime;
 use red4ext_rs::{
     info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, Ref},
+    types::{IScriptable, RedArray, Ref},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
 
-use super::{Category, Substance, SubstanceId, Threshold};
+use super::{
+    Category, ConsumeAgain, ConsumeOnce, Decrease, Increase, Substance, SubstanceId, Threshold,
+    WeanOff,
+};
 
 impl VariousIntoxication for Vec<Ref<Consumption>> {
     fn average_threshold(self: Self) -> Threshold {
@@ -52,8 +55,6 @@ pub struct Consumptions;
 impl Consumption {
     pub fn current(self: &Ref<Self>) -> i32;
     pub fn doses(self: &Ref<Self>) -> Vec<f32>;
-    pub fn set_current(self: &Ref<Self>, value: i32) -> ();
-    fn set_doses(self: &Ref<Self>, value: Vec<f32>) -> ();
 }
 
 impl ClassType for Consumptions {
@@ -64,10 +65,10 @@ impl ClassType for Consumptions {
 #[redscript_import]
 impl Consumptions {
     pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId>;
-    fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
-    fn set_keys(self: &Ref<Self>, keys: Vec<SubstanceId>) -> ();
-    fn set_values(self: &Ref<Self>, values: Vec<Ref<Consumption>>) -> ();
-    fn create_consumption(self: &Ref<Self>, score: i32, when: f32) -> Ref<Consumption>;
+    pub fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
+    pub fn on_consume_once(self: &Ref<Self>, once: ConsumeOnce) -> ();
+    pub fn on_consume_again(self: &Ref<Self>, again: ConsumeAgain) -> ();
+    pub fn on_wean_off(self: &Ref<Self>, off: WeanOff) -> ();
 }
 
 impl Consumptions {
@@ -119,30 +120,26 @@ impl Consumptions {
     /// if consumed for the first time, create an entry in keys and values.
     /// otherwise update existing entry in values.
     pub fn increase(self: &Ref<Self>, id: SubstanceId, tms: f32) {
-        if let Some(existing) = self.get_owned(id) {
+        if let Some(which) = self.position(id) {
             info!("increase existing consumption");
-            let current = existing.doses();
-            let len = current.len();
-            let mut doses;
-            doses = vec![f32::default(); len + 1];
-            if len > 0 {
-                doses[..len].clone_from_slice(current.as_slice());
-            }
-            doses[len] = tms;
-
-            existing.set_current(existing.current() + id.kicks_in());
-            existing.set_doses(doses);
+            let again = ConsumeAgain {
+                which: which as u32,
+                increase: Increase {
+                    score: id.kicks_in(),
+                    when: tms,
+                },
+            };
+            self.on_consume_again(again);
         } else {
             info!("create new consumption");
-            let value = self.create_consumption(id.kicks_in(), tms);
-            let mut keys = self.keys();
-            let mut values = self.values();
-
-            keys.push(id);
-            values.push(value);
-
-            self.set_keys(keys);
-            self.set_values(values);
+            let once = ConsumeOnce {
+                id: id.into_inner(),
+                increase: Increase {
+                    score: id.kicks_in(),
+                    when: tms,
+                },
+            };
+            self.on_consume_once(once);
         }
     }
     /// decrease consumption for all substances.
@@ -150,36 +147,31 @@ impl Consumptions {
     /// if greater than zero, decrease consumption score.
     /// otherwise remove entry from both keys and values.
     pub fn decrease(self: &Ref<Self>) {
-        let len = self.keys().as_slice().len();
-        if len == 0 {
-            return;
-        }
-        let mut removables = Vec::with_capacity(len);
-        for (id, (idx, consumption)) in self
-            .keys()
-            .as_slice()
-            .iter()
-            .zip(self.values().as_mut_slice().iter_mut().enumerate())
-        {
-            if consumption.current() <= 0 {
-                removables.push(idx);
-            } else {
-                consumption.set_current(consumption.current() - id.wean_off());
+        let keys = self.keys();
+        let values = self.values();
+        let mut decrease = Vec::with_capacity(values.len());
+        for (idx, (key, value)) in keys.iter().zip(values.iter()).enumerate() {
+            if value.current() > 0 {
+                let doses = value.doses();
+                let size = doses.len();
+                let shrink = size > 100;
+                let doses = if shrink {
+                    let starts = size - 100 - 1;
+                    doses[starts..].to_vec()
+                } else {
+                    Vec::with_capacity(0)
+                };
+                decrease.push(Decrease {
+                    which: idx as u32,
+                    score: key.wean_off(),
+                    doses: RedArray::from_sized_iter(doses.into_iter()),
+                })
             }
         }
-        if !removables.is_empty() {
-            let mut keys = Vec::with_capacity(len - removables.len());
-            let mut values = Vec::with_capacity(len - removables.len());
-            let current_keys = self.keys();
-            let current_values = self.values();
-            for idx in 0..len {
-                if !removables.contains(&idx) {
-                    keys.push(current_keys[idx]);
-                    values.push(current_values[idx].clone());
-                }
-            }
-            self.set_keys(keys);
-            self.set_values(values);
+        if decrease.len() > 0 {
+            self.on_wean_off(WeanOff {
+                decrease: RedArray::from_sized_iter(decrease.into_iter()),
+            })
         }
     }
     pub fn is_withdrawing_from_substance(

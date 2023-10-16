@@ -62,19 +62,19 @@ impl System {
         if let Ok(id) = item.try_into() {
             info!("item is addictive");
             if let Some(player) = self.player().upgrade() {
-                info!(
-                    "item quality: {:#?}",
-                    self.transaction_system()
-                        .get_item_data(
-                            red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(
-                                red4ext_rs::prelude::Ref::<PlayerPuppet>::upcast(player.clone())
-                            ),
-                            item
-                        )
-                        .upgrade()
-                        .expect("couldn't get item data")
-                        .get_quality()
-                );
+                // info!(
+                //     "item quality: {:#?}",
+                //     self.transaction_system()
+                //         .get_item_data(
+                //             red4ext_rs::prelude::Ref::<ScriptedPuppet>::upcast(
+                //                 red4ext_rs::prelude::Ref::<PlayerPuppet>::upcast(player.clone())
+                //             ),
+                //             item
+                //         )
+                //         .upgrade()
+                //         .expect("couldn't get item data")
+                //         .get_quality()
+                // );
                 info!("increase");
                 self.consumptions()
                     .increase(id, self.time_system().get_game_time_stamp());
@@ -83,15 +83,14 @@ impl System {
                 info!("create consume event");
                 let evt = self.create_consume_event(RedString::new("Hello from System"));
                 info!("queue consume event");
-                player
-                    .queue_event(red4ext_rs::prelude::Ref::<ConsumeEvent>::upcast(evt));
+                player.queue_event(red4ext_rs::prelude::Ref::<ConsumeEvent>::upcast(evt));
                 info!("create consume callback");
                 let callback = self.create_consume_callback(RedString::new("Hello from System"));
                 info!("delay consume callback");
                 self.delay_system()
-                    .delay_callback_next_frame(red4ext_rs::prelude::Ref::<ConsumeCallback>::upcast(
-                        callback,
-                    ));
+                    .delay_callback_next_frame(
+                        red4ext_rs::prelude::Ref::<ConsumeCallback>::upcast(callback),
+                    );
             }
         }
     }
