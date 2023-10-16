@@ -1,3 +1,5 @@
+use std::mem::ManuallyDrop;
+
 use cp2077_rs::GameTime;
 use red4ext_rs::{
     info,
@@ -72,6 +74,7 @@ impl Consumptions {
 }
 
 impl Consumptions {
+    const MAX_DOSES_LENGTH: usize = 100;
     /// get index from substance ID, if any.
     fn position(self: &Ref<Self>, id: SubstanceId) -> Option<usize> {
         let keys = self.keys();
@@ -87,12 +90,7 @@ impl Consumptions {
     }
     /// get consumption by substance ID, if any.
     pub fn get_owned(self: &Ref<Self>, id: SubstanceId) -> Option<Ref<Consumption>> {
-        info!("get owned consumption");
         if let Some(idx) = self.position(id) {
-            info!(
-                "found owned consumption position {idx} out of {} value(s)",
-                self.values().len()
-            );
             // SAFETY: keys and values are guaranteed to be of same size.
             return Some(
                 self.values()
@@ -154,9 +152,9 @@ impl Consumptions {
             if value.current() > 0 {
                 let doses = value.doses();
                 let size = doses.len();
-                let shrink = size > 100;
+                let shrink = size > Self::MAX_DOSES_LENGTH;
                 let doses = if shrink {
-                    let starts = size - 100 - 1;
+                    let starts = size - Self::MAX_DOSES_LENGTH;
                     doses[starts..].to_vec()
                 } else {
                     Vec::with_capacity(0)
@@ -164,13 +162,14 @@ impl Consumptions {
                 decrease.push(Decrease {
                     which: idx as u32,
                     score: key.wean_off(),
-                    doses: RedArray::from_sized_iter(doses.into_iter()),
+                    doses: ManuallyDrop::new(RedArray::from_sized_iter(doses.into_iter())),
                 })
             }
         }
         if decrease.len() > 0 {
+            decrease.shrink_to_fit();
             self.on_wean_off(WeanOff {
-                decrease: RedArray::from_sized_iter(decrease.into_iter()),
+                decrease: ManuallyDrop::new(RedArray::from_sized_iter(decrease.into_iter())),
             })
         }
     }

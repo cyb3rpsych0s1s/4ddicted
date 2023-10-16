@@ -1,4 +1,9 @@
-use red4ext_rs::{prelude::NativeRepr, types::{RedArray, TweakDbId}};
+use std::mem::ManuallyDrop;
+
+use red4ext_rs::{
+    prelude::NativeRepr,
+    types::{RedArray, TweakDbId},
+};
 
 #[derive(Default, Clone, Copy)]
 #[repr(C)]
@@ -7,7 +12,7 @@ pub struct Increase {
     pub when: f32,
 }
 unsafe impl NativeRepr for Increase {
-    const NAME: &'static str = "Addicted.Increase";
+    const NAME: &'static str = "Increase";
 }
 
 #[derive(Default)]
@@ -15,10 +20,10 @@ unsafe impl NativeRepr for Increase {
 pub struct Decrease {
     pub which: u32,
     pub score: i32,
-    pub doses: RedArray<f32>,
+    pub doses: ManuallyDrop<RedArray<f32>>,
 }
 unsafe impl NativeRepr for Decrease {
-    const NAME: &'static str = "Addicted.Decrease";
+    const NAME: &'static str = "Decrease";
 }
 
 #[derive(Default, Clone, Copy)]
@@ -28,7 +33,7 @@ pub struct ConsumeOnce {
     pub increase: Increase,
 }
 unsafe impl NativeRepr for ConsumeOnce {
-    const NAME: &'static str = "Addicted.ConsumeOnce";
+    const NAME: &'static str = "ConsumeOnce";
 }
 
 #[derive(Default, Clone, Copy)]
@@ -38,14 +43,14 @@ pub struct ConsumeAgain {
     pub increase: Increase,
 }
 unsafe impl NativeRepr for ConsumeAgain {
-    const NAME: &'static str = "Addicted.ConsumeAgain";
+    const NAME: &'static str = "ConsumeAgain";
 }
 
 #[derive(Default)]
 #[repr(C)]
 pub struct WeanOff {
-    pub decrease: RedArray<Decrease>,
+    pub decrease: ManuallyDrop<RedArray<Decrease>>,
 }
 unsafe impl NativeRepr for WeanOff {
-    const NAME: &'static str = "Addicted.WeanOff";
+    const NAME: &'static str = "WeanOff";
 }
