@@ -4,10 +4,13 @@ use cp2077_rs::GameTime;
 use red4ext_rs::{
     info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, Ref, RedArray},
+    types::{IScriptable, RedArray, Ref}, call,
 };
 
-use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
+use crate::{
+    interop::CrossThresholdEvent,
+    intoxication::{Intoxication, Intoxications, VariousIntoxication},
+};
 
 use super::{
     Category, ConsumeAgain, ConsumeOnce, Decrease, Increase, Substance, SubstanceId, Threshold,
@@ -74,6 +77,12 @@ impl Consumptions {
 }
 
 impl Consumptions {
+    pub fn notify(self: &Ref<Self>, former: Threshold, latter: Threshold) {
+        call!(self, "Notify;ThresholdThreshold" (former, latter) -> ());
+    }
+}
+
+impl Consumptions {
     const MAX_DOSES_LENGTH: usize = 100;
     /// get index from substance ID, if any.
     fn position(self: &Ref<Self>, id: SubstanceId) -> Option<usize> {
@@ -127,7 +136,13 @@ impl Consumptions {
                     when: tms,
                 },
             };
+            let former = self.values()[which].threshold();
             self.on_consume_again(again);
+            let latter = self.values()[which].threshold();
+            // if former != Threshold::Clean && former != latter {
+            // self.fire_callbacks(self.create_cross_threshold_event(former, latter));
+            self.notify(former, latter);
+            // }
         } else {
             info!("create new consumption");
             let once = ConsumeOnce {

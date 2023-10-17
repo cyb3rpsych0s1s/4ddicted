@@ -3,6 +3,7 @@ module Addicted
 public class Consumptions extends IScriptable {
     private persistent let keys: array<TweakDBID>;
     private persistent let values: array<ref<Consumption>>;
+    private let observers: array<Notify>;
     private func Keys() -> array<TweakDBID> { return this.keys; }
     private func Values() -> array<ref<Consumption>> {
         for v in this.values {
@@ -32,6 +33,35 @@ public class Consumptions extends IScriptable {
             consumption.current = consumption.current - decrease.score;
             if ArraySize(decrease.doses) > 0 { consumption.doses = decrease.doses; }
         }
+    }
+    public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
+        ArrayPush(this.observers, new Notify(target, function));
+    }
+    public func UnregisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
+        let idx = ArraySize(this.observers) - 1;
+        while idx > -1 {
+            let observer = this.observers[idx];
+            if observer.target == target && Equals(observer.function, function) {
+                ArrayErase(this.observers, idx);
+            }
+            idx = idx - 1;
+        }
+    }
+    private func FireCallbacks(event: ref<CrossThresholdEvent>) {
+        for observer in this.observers {
+            if IsDefined(observer.target) {
+                Reflection.GetClassOf(observer.target)
+                    .GetFunction(observer.function)
+                    .Call(observer.target, [event]);
+            }
+        }
+    }
+    // func CreateCrossThresholdEvent(former: Threshold, latter: Threshold) -> ref<CrossThresholdEvent> {
+    //     return CrossThresholdEvent.Create(former, latter);
+    // }
+    private func Notify(former: Threshold, latter: Threshold) -> Void {
+        let evt: ref<CrossThresholdEvent> = CrossThresholdEvent.Create(former, latter);
+        this.FireCallbacks(evt);
     }
 }
 public class Consumption extends IScriptable {

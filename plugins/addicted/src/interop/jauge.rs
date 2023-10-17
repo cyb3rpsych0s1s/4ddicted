@@ -2,7 +2,7 @@ use std::mem::ManuallyDrop;
 
 use red4ext_rs::{
     prelude::NativeRepr,
-    types::{TweakDbId, RedArray},
+    types::{RedArray, TweakDbId},
 };
 
 #[derive(Default, Clone, Copy)]

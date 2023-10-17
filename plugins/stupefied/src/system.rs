@@ -1,23 +1,18 @@
-use cp2077_rs::{get_all_blackboard_defs, BlackboardIdBool, PlayerPuppet};
-use red4ext_rs::{
-    prelude::{redscript_import, ClassType},
-    types::{IScriptable, Ref},
-};
-
-use crate::board::StupefiedBoard;
+use cp2077_rs::PlayerPuppet;
+use red4ext_rs::{prelude::{ClassType, redscript_import}, types::{IScriptable, Ref}};
 
 #[derive(Debug)]
-pub struct System;
+pub struct CompanionSystem;
 
-impl ClassType for System {
+impl ClassType for CompanionSystem {
     type BaseClass = IScriptable;
-    const NAME: &'static str = "Stupefied.System";
+    const NAME: &'static str = "Stupefied.CompanionSystem";
 }
 
-// #[redscript_import]
-// impl System {
-//     fn player(self: &Ref<Self>) -> Ref<PlayerPuppet>;
-// }
+#[redscript_import]
+impl CompanionSystem {
+    fn player(self: &Ref<Self>) -> Ref<PlayerPuppet>;
+}
 
 // impl System {
 //     /// disable voice whenever consuming item

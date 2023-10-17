@@ -1,12 +1,12 @@
 module Stupefied
 
-import Stupefied.System
+import Stupefied.CompanionSystem
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
 
-// native func OnConsumingItem(system: ref<System>) -> Void;
-// native func OnConsumedItem(system: ref<System>) -> Void;
+// native func OnConsumingItem(system: ref<CompanionSystem>) -> Void;
+// native func OnConsumedItem(system: ref<CompanionSystem>) -> Void;
 
 final static func OnUsedQuickSlotItem(executor: wref<GameObject>, actionID: TweakDBID) -> Void {
   let actionType: CName = TweakDBInterface.GetObjectActionRecord(actionID).ActionName();

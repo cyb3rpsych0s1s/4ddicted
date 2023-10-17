@@ -1,7 +1,6 @@
 #![feature(arbitrary_self_types)]
 
-use red4ext_rs::{define_plugin, register_function};
-use system::System;
+use red4ext_rs::define_plugin;
 
 mod board;
 mod system;

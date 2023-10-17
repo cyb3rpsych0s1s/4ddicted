@@ -68,6 +68,12 @@ public class System extends ScriptableSystem {
         LogChannel(n"DEBUG", s"on session changed: pre-game: \(ToString(event.IsPreGame())) restored: \(ToString(event.IsRestored()))");
         this.ingame = !event.IsPreGame();
     }
+    public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
+        this.consumptions.RegisterCallback(target, function);
+    }
+    public func UnregisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
+        this.consumptions.UnregisterCallback(target, function);
+    }
     public func IsInGame() -> Bool { return this.ingame; }
     public func RestingSince() -> GameTime { return this.restingSince; }
     public func OnSkipTime() -> Void { this.restingSince = this.TimeSystem().GetGameTime(); }

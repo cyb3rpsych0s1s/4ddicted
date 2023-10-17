@@ -20,3 +20,8 @@ struct ConsumeAgain {
 struct WeanOff {
     let decrease: array<Decrease>;
 }
+
+struct Notify {
+    let target: wref<ScriptableSystem>;
+    let function: CName;
+}
