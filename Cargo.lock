@@ -213,8 +213,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-macros"
-version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#2bbf70d611f9a42d20c4d6c4c2981479cca76910"
+version = "0.5.1"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=fixes-cleanup#81fdbf9c39999d55f384f7c132f631143e6a0fd2"
 dependencies = [
  "darling",
  "heck",
@@ -225,8 +225,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-rs"
-version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#2bbf70d611f9a42d20c4d6c4c2981479cca76910"
+version = "0.5.1"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=fixes-cleanup#81fdbf9c39999d55f384f7c132f631143e6a0fd2"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -237,8 +237,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-sys"
-version = "0.5.0"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/third-party#2bbf70d611f9a42d20c4d6c4c2981479cca76910"
+version = "0.5.1"
+source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=fixes-cleanup#81fdbf9c39999d55f384f7c132f631143e6a0fd2"
 dependencies = [
  "const-crc32",
  "cxx",
