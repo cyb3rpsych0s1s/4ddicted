@@ -1,10 +1,8 @@
-use std::mem::ManuallyDrop;
-
 use cp2077_rs::GameTime;
 use red4ext_rs::{
     info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, RedArray, Ref},
+    types::{IScriptable, Ref, RedArray},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
@@ -162,14 +160,14 @@ impl Consumptions {
                 decrease.push(Decrease {
                     which: idx as u32,
                     score: key.wean_off(),
-                    doses: ManuallyDrop::new(RedArray::from_sized_iter(doses.into_iter())),
+                    doses: RedArray::from_sized_iter(doses.into_iter()),
                 })
             }
         }
         if decrease.len() > 0 {
             decrease.shrink_to_fit();
             self.on_wean_off(WeanOff {
-                decrease: ManuallyDrop::new(RedArray::from_sized_iter(decrease.into_iter())),
+                decrease: RedArray::from_sized_iter(decrease.into_iter()),
             })
         }
     }
