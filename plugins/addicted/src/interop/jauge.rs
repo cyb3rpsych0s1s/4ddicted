@@ -12,7 +12,7 @@ pub struct Increase {
     pub when: f32,
 }
 unsafe impl NativeRepr for Increase {
-    const NAME: &'static str = "Increase";
+    const NAME: &'static str = "Addicted.Increase";
 }
 
 #[derive(Default)]
@@ -23,7 +23,7 @@ pub struct Decrease {
     pub doses: ManuallyDrop<RedArray<f32>>,
 }
 unsafe impl NativeRepr for Decrease {
-    const NAME: &'static str = "Decrease";
+    const NAME: &'static str = "Addicted.Decrease";
 }
 
 #[derive(Default, Clone, Copy)]
@@ -33,7 +33,7 @@ pub struct ConsumeOnce {
     pub increase: Increase,
 }
 unsafe impl NativeRepr for ConsumeOnce {
-    const NAME: &'static str = "ConsumeOnce";
+    const NAME: &'static str = "Addicted.ConsumeOnce";
 }
 
 #[derive(Default, Clone, Copy)]
@@ -43,7 +43,7 @@ pub struct ConsumeAgain {
     pub increase: Increase,
 }
 unsafe impl NativeRepr for ConsumeAgain {
-    const NAME: &'static str = "ConsumeAgain";
+    const NAME: &'static str = "Addicted.ConsumeAgain";
 }
 
 #[derive(Default)]
@@ -52,5 +52,5 @@ pub struct WeanOff {
     pub decrease: ManuallyDrop<RedArray<Decrease>>,
 }
 unsafe impl NativeRepr for WeanOff {
-    const NAME: &'static str = "WeanOff";
+    const NAME: &'static str = "Addicted.WeanOff";
 }

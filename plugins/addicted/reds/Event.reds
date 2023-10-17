@@ -12,3 +12,8 @@ public class CrossThresholdEvent extends Event {
         return me;
     }
 }
+
+struct Notify {
+    let target: wref<ScriptableSystem>;
+    let function: CName;
+}

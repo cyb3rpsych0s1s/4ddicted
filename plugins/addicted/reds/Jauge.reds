@@ -1,4 +1,4 @@
-// native structs needs to be on root-level namespace, until redscript compiler allows nested namespace.
+module Addicted
 
 struct Increase {
     let score: Int32;
@@ -19,9 +19,4 @@ struct ConsumeAgain {
 }
 struct WeanOff {
     let decrease: array<Decrease>;
-}
-
-struct Notify {
-    let target: wref<ScriptableSystem>;
-    let function: CName;
 }

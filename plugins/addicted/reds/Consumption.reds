@@ -56,9 +56,6 @@ public class Consumptions extends IScriptable {
             }
         }
     }
-    // func CreateCrossThresholdEvent(former: Threshold, latter: Threshold) -> ref<CrossThresholdEvent> {
-    //     return CrossThresholdEvent.Create(former, latter);
-    // }
     private func Notify(former: Threshold, latter: Threshold) -> Void {
         let evt: ref<CrossThresholdEvent> = CrossThresholdEvent.Create(former, latter);
         this.FireCallbacks(evt);

@@ -2,15 +2,12 @@ use std::mem::ManuallyDrop;
 
 use cp2077_rs::GameTime;
 use red4ext_rs::{
-    info,
+    call, info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, RedArray, Ref}, call,
+    types::{IScriptable, RedArray, Ref},
 };
 
-use crate::{
-    interop::CrossThresholdEvent,
-    intoxication::{Intoxication, Intoxications, VariousIntoxication},
-};
+use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
 
 use super::{
     Category, ConsumeAgain, ConsumeOnce, Decrease, Increase, Substance, SubstanceId, Threshold,
@@ -71,12 +68,18 @@ impl ClassType for Consumptions {
 impl Consumptions {
     pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId>;
     pub fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
-    pub fn on_consume_once(self: &Ref<Self>, once: ConsumeOnce) -> ();
-    pub fn on_consume_again(self: &Ref<Self>, again: ConsumeAgain) -> ();
-    pub fn on_wean_off(self: &Ref<Self>, off: WeanOff) -> ();
 }
 
 impl Consumptions {
+    pub fn on_consume_once(self: &Ref<Self>, once: ConsumeOnce) {
+        call!(self, "OnConsumeOnce;ConsumeOnce" (once) -> ());
+    }
+    pub fn on_consume_again(self: &Ref<Self>, again: ConsumeAgain) {
+        call!(self, "OnConsumeAgain;ConsumeAgain" (again) -> ());
+    }
+    pub fn on_wean_off(self: &Ref<Self>, off: WeanOff) {
+        call!(self, "OnWeanOff;WeanOff" (off) -> ());
+    }
     pub fn notify(self: &Ref<Self>, former: Threshold, latter: Threshold) {
         call!(self, "Notify;ThresholdThreshold" (former, latter) -> ());
     }

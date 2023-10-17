@@ -1,5 +1,8 @@
 use cp2077_rs::PlayerPuppet;
-use red4ext_rs::{prelude::{ClassType, redscript_import}, types::{IScriptable, Ref}};
+use red4ext_rs::{
+    prelude::{redscript_import, ClassType},
+    types::{IScriptable, Ref},
+};
 
 #[derive(Debug)]
 pub struct CompanionSystem;

@@ -1,8 +1,5 @@
 use cp2077_rs::Event;
-use red4ext_rs::{
-    prelude::ClassType,
-    types::Ref,
-};
+use red4ext_rs::prelude::ClassType;
 
 #[derive(Debug)]
 pub struct CrossThresholdEvent;
