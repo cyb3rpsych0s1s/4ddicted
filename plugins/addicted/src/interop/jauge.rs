@@ -1,3 +1,5 @@
+use std::mem::ManuallyDrop;
+
 use red4ext_rs::{
     prelude::NativeRepr,
     types::{TweakDbId, RedArray},
@@ -18,7 +20,7 @@ unsafe impl NativeRepr for Increase {
 pub struct Decrease {
     pub which: u32,
     pub score: i32,
-    pub doses: RedArray<f32>,
+    pub doses: ManuallyDrop<RedArray<f32>>,
 }
 unsafe impl NativeRepr for Decrease {
     const NAME: &'static str = "Decrease";
@@ -47,7 +49,7 @@ unsafe impl NativeRepr for ConsumeAgain {
 #[derive(Default)]
 #[repr(C)]
 pub struct WeanOff {
-    pub decrease: RedArray<Decrease>,
+    pub decrease: ManuallyDrop<RedArray<Decrease>>,
 }
 unsafe impl NativeRepr for WeanOff {
     const NAME: &'static str = "WeanOff";
