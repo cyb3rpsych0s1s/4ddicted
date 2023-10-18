@@ -214,7 +214,7 @@ dependencies = [
 [[package]]
 name = "red4ext-macros"
 version = "0.5.1"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.1#0e251be2c56a527accc60a309127ec1375c93ad5"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=b35c54b#b35c54b92d6298f06617a7edcb7a946b3f9add86"
 dependencies = [
  "darling",
  "heck",
@@ -226,7 +226,7 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.5.1"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.1#0e251be2c56a527accc60a309127ec1375c93ad5"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=b35c54b#b35c54b92d6298f06617a7edcb7a946b3f9add86"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -238,7 +238,7 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.5.1"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.1#0e251be2c56a527accc60a309127ec1375c93ad5"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=b35c54b#b35c54b92d6298f06617a7edcb7a946b3f9add86"
 dependencies = [
  "const-crc32",
  "cxx",
