@@ -19,12 +19,6 @@ use super::{Kind, Substance};
 /// ensures that the ID is actually an addictive substance.
 pub struct SubstanceId(TweakDbId);
 
-#[derive(Debug, Default, Clone, Copy, PartialEq)]
-#[repr(transparent)]
-/// strongly-typed version of a TweakDbId:
-/// ensures that the ID is actually an addictive substance status effect.
-pub struct SubstanceEffectId(TweakDbId);
-
 impl PartialEq<TweakDbId> for SubstanceId {
     fn eq(&self, other: &TweakDbId) -> bool {
         self.0.eq(other)

@@ -20,6 +20,7 @@ define_plugin! {
         register_function!("Addicted.OnStatusEffectNotAppliedOnSpawn", System::on_status_effect_not_applied_on_spawn);
         register_function!("Addicted.OnUnequipItem", System::on_unequip_item);
         register_function!("Addicted.OnProcessStatusEffect", System::on_process_status_effect);
+        register_function!("Addicted.IsLosingPotency", System::is_losing_potency);
         register_function!("WriteToFile", write_to_file);
     }
 }

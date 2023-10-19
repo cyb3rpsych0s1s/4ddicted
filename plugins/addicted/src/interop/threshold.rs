@@ -21,6 +21,12 @@ unsafe impl NativeRepr for Threshold {
     const NAME: &'static str = "Addicted.Threshold";
 }
 
+impl Threshold {
+    pub fn is_serious(self) -> bool {
+        matches!(self, Self::Notably | Self::Severely)
+    }
+}
+
 impl From<i32> for Threshold {
     fn from(value: i32) -> Self {
         match value as i64 {

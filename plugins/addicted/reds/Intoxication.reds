@@ -31,6 +31,7 @@ BaseStatusEffect.BonesMcCoy70VEpic
 */
 
 native func OnProcessStatusEffect(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Void;
+native func IsLosingPotency(system: ref<System>, item: ItemID) -> Bool;
 
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {

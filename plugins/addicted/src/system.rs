@@ -7,7 +7,7 @@ use cp2077_rs::{
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::addictive::Healer;
+use crate::addictive::{Healer, Neuro};
 use crate::board::AddictedBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
 use crate::symptoms::WithdrawalSymptoms;
@@ -160,11 +160,7 @@ impl System {
             }
         }
     }
-    pub fn on_process_status_effect(
-        mut action_effects: Vec<
-            WRef<ObjectActionEffectRecord>,
-        >,
-    ) {
+    pub fn on_process_status_effect(mut action_effects: Vec<WRef<ObjectActionEffectRecord>>) {
         let mut replacements = Vec::with_capacity(action_effects.len());
         for (idx, effect) in action_effects.iter().enumerate() {
             if let Some(effect) = effect.clone().upgrade() {
@@ -186,6 +182,13 @@ impl System {
                 red4ext_rs::prelude::Ref::<ObjectActionEffectRecord>::downgrade(action).to_owned(),
             );
         }
+    }
+    pub fn is_losing_potency(self: Ref<Self>, item: ItemId) -> bool {
+        if let Some(substance) = SubstanceId::try_from(item).ok() {
+            return (substance.is_healer() || substance.is_neuroblocker())
+                && self.consumptions().is_addicted(substance.category());
+        }
+        false
     }
     #[inline]
     pub fn is_withdrawing_from_substance(self: &Ref<Self>, substance: Substance) -> bool {

@@ -203,6 +203,9 @@ impl Consumptions {
         }
         false
     }
+    pub fn is_addicted(self: &Ref<Self>, category: Category) -> bool {
+        self.highest_threshold(category).is_serious()
+    }
 }
 
 impl Intoxications<Substance> for Consumptions {

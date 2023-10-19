@@ -5,7 +5,7 @@ use crate::addictive::{
     HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
 };
 
-use super::SubstanceId;
+use super::{Category, SubstanceId};
 
 /// represents all potentially addictive consumables found in-game.
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
@@ -25,6 +25,27 @@ pub enum Substance {
 
 unsafe impl NativeRepr for Substance {
     const NAME: &'static str = "Addicted.Substance";
+}
+
+impl SubstanceId {
+    pub fn category(&self) -> Category {
+        if self.is_alcoholic() {
+            return Category::Alcohol;
+        }
+        if self.is_capacity_booster() || self.is_stamina_booster() {
+            return Category::Anabolics;
+        }
+        if self.is_blacklace() {
+            return Category::BlackLace;
+        }
+        if self.is_healer() {
+            return Category::Healers;
+        }
+        if self.is_neuro() {
+            return Category::Neuros;
+        }
+        unreachable!()
+    }
 }
 
 impl From<SubstanceId> for Substance {

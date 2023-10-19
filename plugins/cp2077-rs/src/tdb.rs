@@ -72,11 +72,32 @@ impl EquipmentAreaRecord {
 }
 
 #[derive(Debug)]
+pub struct StatusEffectRecord;
+
+impl ClassType for StatusEffectRecord {
+    type BaseClass = TweakDbRecord;
+    const NAME: &'static str = "gamedataStatusEffect_Record";
+}
+
+impl StatusEffectRecord {
+    pub fn get_id(self: &Ref<Self>) -> TweakDbId {
+        red4ext_rs::prelude::Ref::<StatusEffectRecord>::upcast(self.clone()).get_id()
+    }
+}
+
+#[derive(Debug)]
 pub struct ObjectActionEffectRecord;
 
 impl ClassType for ObjectActionEffectRecord {
     type BaseClass = TweakDbRecord;
     const NAME: &'static str = "gamedataObjectActionEffect_Record";
+}
+
+#[redscript_import]
+impl ObjectActionEffectRecord {
+    /// `public final native func StatusEffect() -> wref<StatusEffect_Record>`
+    #[redscript(native)]
+    pub fn status_effect(self: &Ref<Self>) -> WRef<StatusEffectRecord>;
 }
 
 impl ObjectActionEffectRecord {
