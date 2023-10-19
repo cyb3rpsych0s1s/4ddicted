@@ -13,7 +13,7 @@ use super::{
 };
 
 impl VariousIntoxication for Vec<Ref<Consumption>> {
-    fn average_threshold(self: Self) -> Threshold {
+    fn average_threshold(self) -> Threshold {
         let len = self.len() as i32;
         if len == 0 {
             return Threshold::Clean;
@@ -22,7 +22,7 @@ impl VariousIntoxication for Vec<Ref<Consumption>> {
         Threshold::from(sum / len)
     }
 
-    fn highest_threshold(self: Self) -> Threshold {
+    fn highest_threshold(self) -> Threshold {
         self.iter()
             .map(|x| x.threshold())
             .max()
@@ -182,7 +182,7 @@ impl Consumptions {
                 })
             }
         }
-        if decrease.len() > 0 {
+        if !decrease.is_empty() {
             decrease.shrink_to_fit();
             self.on_wean_off(WeanOff {
                 decrease: RedArray::from_sized_iter(decrease.into_iter()),

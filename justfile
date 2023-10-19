@@ -74,6 +74,7 @@ default:
 setup:
     @$folder = '{{ join(red_game_dir, "Natives") }}';           if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{ join(red_companion_game_dir, "Natives") }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{tweak_game_dir}}';                            if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
 
 # 🎨 lint code
 lint:
@@ -116,6 +117,7 @@ deploy:
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild: setup
+    Copy-Item -Force -Recurse '{{ join(repo_dir, "tweaks", "*.yml") }}' '{{tweak_game_dir}}'
     Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*.reds") }}' '{{ join(red_game_dir, "Natives") }}'
     Copy-Item -Force -Recurse '{{ join(red4ext_companion_repo_dir, "*.reds") }}' '{{ join(red_companion_game_dir, "Natives") }}'
 
@@ -329,3 +331,8 @@ analyze FILE:
 
 # nuke everything and rebuild from scratch
 tabula: delete-bin delete-lock uninstall clear build
+
+format:
+    cargo fix --allow-dirty --allow-staged
+    cargo fmt --all
+    cargo clippy --fix --allow-dirty --allow-staged

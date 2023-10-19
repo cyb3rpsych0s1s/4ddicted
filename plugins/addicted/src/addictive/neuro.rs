@@ -4,7 +4,7 @@
 //! - all neuros can be identified through `ItemCategory()` (`gamedataItemCategory.Consumable`)
 //! - all neuros triggers `Consume` (`ObjectAction_Record`)
 
-use red4ext_rs::types::ItemId;
+use red4ext_rs::types::{ItemId, TweakDbId};
 
 use crate::interop::{ContainsItem, SubstanceId};
 
@@ -34,5 +34,14 @@ impl Neuro for ItemId {
     }
     fn is_neuroblocker(&self) -> bool {
         NEURO_BLOCKER.contains_item(self)
+    }
+}
+
+impl Neuro for TweakDbId {
+    fn is_blacklace(&self) -> bool {
+        BLACK_LACE.contains_id(self)
+    }
+    fn is_neuroblocker(&self) -> bool {
+        NEURO_BLOCKER.contains_id(self)
     }
 }

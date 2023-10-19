@@ -4,7 +4,7 @@
 //! - all boosters can be identified through `ConsumableBaseName()` (`ConsumableBaseName.Booster` and so on)
 //! - all boosters triggers `Consume` (`ObjectAction_Record`)
 
-use red4ext_rs::types::ItemId;
+use red4ext_rs::types::{ItemId, TweakDbId};
 
 use crate::interop::{ContainsItem, SubstanceId};
 
@@ -43,5 +43,19 @@ impl Booster for ItemId {
 
     fn is_memory_booster(&self) -> bool {
         MEMORY_BOOSTER.contains_item(self)
+    }
+}
+
+impl Booster for TweakDbId {
+    fn is_stamina_booster(&self) -> bool {
+        STAMINA_BOOSTER.contains_id(self)
+    }
+
+    fn is_capacity_booster(&self) -> bool {
+        CAPACITY_BOOSTER.contains_id(self)
+    }
+
+    fn is_memory_booster(&self) -> bool {
+        MEMORY_BOOSTER.contains_id(self)
     }
 }

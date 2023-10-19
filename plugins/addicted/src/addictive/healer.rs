@@ -4,7 +4,7 @@
 //! - all healers can be identified through `ConsumableBaseName()` (`ConsumableBaseName.Alcohol`)
 //! - all healers triggers `Consume` but also a special `UseHealCharge` (`ObjectAction_Record`)
 
-use red4ext_rs::types::ItemId;
+use red4ext_rs::types::{ItemId, TweakDbId};
 
 use crate::interop::{ContainsItem, SubstanceId};
 
@@ -71,5 +71,19 @@ impl Healer for ItemId {
 
     fn is_healthbooster(&self) -> bool {
         HEALTH_BOOSTER.contains_item(self)
+    }
+}
+
+impl Healer for TweakDbId {
+    fn is_maxdoc(&self) -> bool {
+        MAX_DOC.contains_id(self)
+    }
+
+    fn is_bounceback(&self) -> bool {
+        BOUNCE_BACK.contains_id(self)
+    }
+
+    fn is_healthbooster(&self) -> bool {
+        HEALTH_BOOSTER.contains_id(self)
     }
 }

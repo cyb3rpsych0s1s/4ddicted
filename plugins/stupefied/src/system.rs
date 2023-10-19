@@ -1,7 +1,8 @@
-use cp2077_rs::{PlayerPuppet, BlackboardIdBool, get_all_blackboard_defs};
+use cp2077_rs::{get_all_blackboard_defs, BlackboardIdBool, PlayerPuppet};
 use red4ext_rs::{
+    info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, Ref}, info,
+    types::{IScriptable, Ref},
 };
 
 use crate::board::StupefiedBoard;

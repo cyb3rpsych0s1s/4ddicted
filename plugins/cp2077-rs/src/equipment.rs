@@ -25,20 +25,20 @@ impl ClassType for InventoryDataManagerV2 {
 impl InventoryDataManagerV2 {
     /// see [IsEquipmentAreaCyberware](https://codeberg.org/adamsmasher/cyberpunk/src/commit/20e2051921152b83f1daa57ecadf7f3b3288cf8e/cyberpunk/UI/inventory/inventoryDataManagerV2.swift#L3765)
     pub fn is_equipment_area_cyberware(area_type: GameDataEquipmentArea) -> bool {
-        match area_type {
+        matches!(
+            area_type,
             GameDataEquipmentArea::AbilityCW
-            | GameDataEquipmentArea::NervousSystemCW
-            | GameDataEquipmentArea::MusculoskeletalSystemCW
-            | GameDataEquipmentArea::IntegumentarySystemCW
-            | GameDataEquipmentArea::ImmuneSystemCW
-            | GameDataEquipmentArea::LegsCW
-            | GameDataEquipmentArea::EyesCW
-            | GameDataEquipmentArea::CardiovascularSystemCW
-            | GameDataEquipmentArea::HandsCW
-            | GameDataEquipmentArea::ArmsCW
-            | GameDataEquipmentArea::SystemReplacementCW => true,
-            _ => false,
-        }
+                | GameDataEquipmentArea::NervousSystemCW
+                | GameDataEquipmentArea::MusculoskeletalSystemCW
+                | GameDataEquipmentArea::IntegumentarySystemCW
+                | GameDataEquipmentArea::ImmuneSystemCW
+                | GameDataEquipmentArea::LegsCW
+                | GameDataEquipmentArea::EyesCW
+                | GameDataEquipmentArea::CardiovascularSystemCW
+                | GameDataEquipmentArea::HandsCW
+                | GameDataEquipmentArea::ArmsCW
+                | GameDataEquipmentArea::SystemReplacementCW
+        )
     }
 }
 

@@ -19,6 +19,12 @@ use super::{Kind, Substance};
 /// ensures that the ID is actually an addictive substance.
 pub struct SubstanceId(TweakDbId);
 
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
+#[repr(transparent)]
+/// strongly-typed version of a TweakDbId:
+/// ensures that the ID is actually an addictive substance status effect.
+pub struct SubstanceEffectId(TweakDbId);
+
 impl PartialEq<TweakDbId> for SubstanceId {
     fn eq(&self, other: &TweakDbId) -> bool {
         self.0.eq(other)
@@ -40,11 +46,14 @@ impl PartialEq<ItemId> for SubstanceId {
     }
 }
 pub trait ContainsItem {
-    fn contains_item(&self, value: &ItemId) -> bool;
+    fn contains_item(&self, value: &ItemId) -> bool {
+        self.contains_id(&value.get_tdbid())
+    }
+    fn contains_id(&self, value: &TweakDbId) -> bool;
 }
 impl<const N: usize> ContainsItem for [SubstanceId; N] {
-    fn contains_item(&self, value: &ItemId) -> bool {
-        self.iter().any(|x| x.0 == value.get_tdbid())
+    fn contains_id(&self, value: &TweakDbId) -> bool {
+        self.iter().any(|x| &x.0 == value)
     }
 }
 
@@ -108,6 +117,17 @@ impl TryFrom<ItemId> for SubstanceId {
     fn try_from(value: ItemId) -> Result<Self, Self::Error> {
         if value.addictive() {
             return Ok(Self(value.get_tdbid()));
+        }
+        Err(Error::NonAddictive)
+    }
+}
+
+impl TryFrom<TweakDbId> for SubstanceId {
+    type Error = Error;
+
+    fn try_from(value: TweakDbId) -> Result<Self, Self::Error> {
+        if value.addictive() {
+            return Ok(Self(value));
         }
         Err(Error::NonAddictive)
     }

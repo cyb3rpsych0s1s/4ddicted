@@ -9,10 +9,10 @@ pub trait Intoxication: Sized {
 }
 
 pub trait VariousIntoxication {
-    fn average_threshold(self: Self) -> Threshold
+    fn average_threshold(self) -> Threshold
     where
         Self: Sized;
-    fn highest_threshold(self: Self) -> Threshold
+    fn highest_threshold(self) -> Threshold
     where
         Self: Sized;
 }

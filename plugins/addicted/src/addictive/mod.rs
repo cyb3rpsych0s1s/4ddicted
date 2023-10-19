@@ -14,7 +14,7 @@ pub use neuro::*;
 mod alcohol;
 pub use alcohol::*;
 
-use red4ext_rs::types::ItemId;
+use red4ext_rs::types::{ItemId, TweakDbId};
 
 use crate::interop::{Category, Kind, SubstanceId, Tier};
 
@@ -24,6 +24,12 @@ pub trait Addictive {
 }
 
 impl Addictive for ItemId {
+    fn addictive(&self) -> bool {
+        self.get_tdbid().addictive()
+    }
+}
+
+impl Addictive for TweakDbId {
     fn addictive(&self) -> bool {
         self.is_healer() || self.is_booster() || self.is_neuro() || self.is_alcoholic() || todo!()
     }

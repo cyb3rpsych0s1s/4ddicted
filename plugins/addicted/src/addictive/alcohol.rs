@@ -4,7 +4,7 @@
 //! - all alcohols can be identified through `ConsumableBaseName()` (`ConsumableBaseName.Alcohol`)
 //! - all alcohols triggers `Consume` (`ObjectAction_Record`)
 
-use red4ext_rs::types::ItemId;
+use red4ext_rs::types::{ItemId, TweakDbId};
 
 use crate::interop::{ContainsItem, SubstanceId};
 
@@ -15,6 +15,12 @@ pub trait Alcoholic {
 impl Alcoholic for ItemId {
     fn is_alcoholic(&self) -> bool {
         ALCOHOL.contains_item(self)
+    }
+}
+
+impl Alcoholic for TweakDbId {
+    fn is_alcoholic(&self) -> bool {
+        ALCOHOL.contains_id(self)
     }
 }
 

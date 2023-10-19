@@ -6,18 +6,40 @@ use red4ext_rs::{
 use crate::GameDataEquipmentArea;
 
 #[derive(Debug)]
-pub struct TweakDBInterface;
+pub struct TweakDbInterface;
 
-impl ClassType for TweakDBInterface {
+impl ClassType for TweakDbInterface {
     type BaseClass = IScriptable;
     const NAME: &'static str = "gamedataTweakDBInterface";
+}
+
+#[redscript_import]
+impl TweakDbInterface {
+    /// public final static native func GetObjectActionEffectRecord(path: TweakDBID) -> ref<ObjectActionEffect_Record>
+    #[redscript(native)]
+    pub fn get_object_action_effect_record(path: TweakDbId) -> Ref<ObjectActionEffectRecord>;
+}
+
+#[derive(Debug)]
+pub struct TweakDbRecord;
+
+impl ClassType for TweakDbRecord {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "gamedataTweakDBRecord";
+}
+
+#[redscript_import]
+impl TweakDbRecord {
+    /// `public final native func GetID() -> TweakDBID`
+    #[redscript(native)]
+    pub fn get_id(self: &Ref<Self>) -> TweakDbId;
 }
 
 #[derive(Debug)]
 pub struct ItemRecord;
 
 impl ClassType for ItemRecord {
-    type BaseClass = IScriptable;
+    type BaseClass = TweakDbRecord;
     const NAME: &'static str = "gamedataItem_Record";
 }
 
@@ -32,16 +54,33 @@ impl ItemRecord {
 pub struct EquipmentAreaRecord;
 
 impl ClassType for EquipmentAreaRecord {
-    type BaseClass = IScriptable;
+    type BaseClass = TweakDbRecord;
     const NAME: &'static str = "gamedataEquipmentArea_Record";
 }
 
 #[redscript_import]
 impl EquipmentAreaRecord {
-    /// `public final native func GetID() -> TweakDBID`
-    #[redscript(native)]
-    pub fn get_id(self: &Ref<Self>) -> TweakDbId;
     /// `public final native func Type() -> gamedataEquipmentArea`
     #[redscript(native)]
     pub fn r#type(self: &Ref<Self>) -> GameDataEquipmentArea;
+}
+
+impl EquipmentAreaRecord {
+    pub fn get_id(self: &Ref<Self>) -> TweakDbId {
+        red4ext_rs::prelude::Ref::<EquipmentAreaRecord>::upcast(self.clone()).get_id()
+    }
+}
+
+#[derive(Debug)]
+pub struct ObjectActionEffectRecord;
+
+impl ClassType for ObjectActionEffectRecord {
+    type BaseClass = TweakDbRecord;
+    const NAME: &'static str = "gamedataObjectActionEffect_Record";
+}
+
+impl ObjectActionEffectRecord {
+    pub fn get_id(self: &Ref<Self>) -> TweakDbId {
+        red4ext_rs::prelude::Ref::<ObjectActionEffectRecord>::upcast(self.clone()).get_id()
+    }
 }
