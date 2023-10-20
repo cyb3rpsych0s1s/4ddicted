@@ -22,6 +22,11 @@ define_plugin! {
         register_function!("Addicted.OnProcessStatusEffect", System::on_process_status_effect);
         register_function!("Addicted.IsLosingPotency", System::is_losing_potency);
         register_function!("WriteToFile", write_to_file);
+
+        #[cfg(debug_assertions)]
+        register_function!("TestApplyStatus", test_apply_status);
+        #[cfg(debug_assertions)]
+        register_function!("TestRemoveStatus", test_remove_status);
     }
 }
 
@@ -30,4 +35,28 @@ fn write_to_file(names: Vec<String>, filename: String) {
         format!("C:\\Development\\4ddicted\\{filename}.txt"),
         names.join("\n"),
     );
+}
+
+#[cfg(debug_assertions)]
+fn test_apply_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
+    let id = if status.is_empty() {
+        TweakDbId::new("BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0")
+    } else {
+        TweakDbId::new(status.as_str())
+    };
+    info!("upcasting");
+    let handle = player.upcast().upcast();
+    info!("handle is {:#?}", handle.clone().into_repr());
+    info!("applying");
+    cp2077_rs::StatusEffectHelper::apply_status_effect(handle, id, 3.);
+}
+#[cfg(debug_assertions)]
+fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
+    let id = if status.is_empty() {
+        TweakDbId::new("BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0")
+    } else {
+        TweakDbId::new(status.as_str())
+    };
+    let handle = player.upcast().upcast();
+    cp2077_rs::StatusEffectHelper::remove_status_effect(handle, id, 1);
 }
