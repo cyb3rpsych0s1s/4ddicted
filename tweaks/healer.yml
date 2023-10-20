@@ -18,16 +18,16 @@ UIIcon.$(threshold)Weakened$(consumable):
 
 BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
   $instances:
-    - { threshold: Notably,  intensity: mildly, version: '', value: 0.6 }
-    - { threshold: Severely, intensity: piddly, version: '', value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: V0, value: 0.6 }
-    - { threshold: Severely, intensity: piddly, version: V0, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: V1, value: 0.6 }
-    - { threshold: Severely, intensity: piddly, version: V1, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: V2, value: 0.6 }
-    - { threshold: Severely, intensity: piddly, version: V2, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: VEpic, value: 0.6 }
-    - { threshold: Severely, intensity: piddly, version: VEpic, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: '',        value: 0.6 }
+    - { threshold: Severely, intensity: piddly, version: '',        value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V0,        value: 0.6 }
+    - { threshold: Severely, intensity: piddly, version: V0,        value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V1,        value: 0.6 }
+    - { threshold: Severely, intensity: piddly, version: V1,        value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V2,        value: 0.6 }
+    - { threshold: Severely, intensity: piddly, version: V2,        value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: VEpic,     value: 0.6 }
+    - { threshold: Severely, intensity: piddly, version: VEpic,     value: 0.3 }
     - { threshold: Notably,  intensity: mildly, version: VUncommon, value: 0.6 }
     - { threshold: Severely, intensity: piddly, version: VUncommon, value: 0.3 }
   $base: BaseStatusEffect.FirstAidWhiff$(version)
@@ -42,10 +42,33 @@ BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
                 - $base: BaseStatusEffect.FirstAidWhiff_inline4
                   value: $(value)
         - Effectors.UsedHealingItemOrCyberwareEffector
-  VFX:
-    - $type: StatusEffectFX_Record
-      name: $(intensity)_splinter_buff
-      shouldReapply: false
   uiData:
     $base: BaseStatusEffect.FirstAidWhiffV0_inline5
     iconPath: $(threshold)WeakenedFirstAidWhiff
+# TODO: add once VFX archive ready
+# VFX:
+#   - $type: StatusEffectFX_Record
+#     name: $(intensity)_splinter_buff
+#     shouldReapply: false
+
+# object action effects
+
+## 'Items.XXX' ConsumableItem_Record
+##    objectActions [ItemAction_Record]
+##       completionEffects [ObjectActionEffect_Record]
+##           statusEffect
+
+Items.$(threshold)WeakenedActionEffect$(consumable)$(version):
+  $instances:
+    - { threshold: Notably,  consumable: FirstAidWhiff, tier: V0,          version: V0        }
+    - { threshold: Severely, consumable: FirstAidWhiff, tier: V0,          version: V0        }
+    - { threshold: Notably,  consumable: FirstAidWhiff, tier: V1,          version: V1        }
+    - { threshold: Severely, consumable: FirstAidWhiff, tier: V1,          version: V1        }
+    - { threshold: Notably,  consumable: FirstAidWhiff, tier: V2,          version: V2        }
+    - { threshold: Severely, consumable: FirstAidWhiff, tier: V2,          version: V2        }
+    - { threshold: Notably,  consumable: FirstAidWhiff, tier: VUncommon,   version: VUncommon }
+    - { threshold: Severely, consumable: FirstAidWhiff, tier: VUncommon,   version: VUncommon }
+    - { threshold: Notably,  consumable: FirstAidWhiff, tier: VEpic,       version: VEpic     }
+    - { threshold: Severely, consumable: FirstAidWhiff, tier: VEpic,       version: VEpic     }
+  $base: Items.$(consumable)$(version)_inline3
+  statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(tier)
