@@ -1,6 +1,7 @@
 use red4ext_rs::{
-    prelude::{redscript_import, ClassType},
-    types::{IScriptable, Ref, TweakDbId, WRef}, call,
+    call,
+    prelude::ClassType,
+    types::{IScriptable, TweakDbId, WRef},
 };
 
 use crate::GameObject;
