@@ -87,6 +87,46 @@ BaseStatusEffect.$(threshold)WeakenedBonesMcCoy70$(version):
 #     name: $(intensity)_reflex_buster
 #     shouldReapply: false
 
+## health booster
+
+BaseStatusEffect.$(threshold)WeakenedHealthBooster:
+  $instances:
+    - { threshold: Notably,  value: 1.07, modifier: 7 }
+    - { threshold: Severely, value: 1.03, modifier: 3 }
+  $base: BaseStatusEffect.HealthBooster
+  packages:
+    - $base: BaseStatusEffect.HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: $(value)
+  uiData:
+    $base: BaseStatusEffect.HealthBooster_inline2
+    iconPath: $(threshold)WeakenedHealthBooster
+    intValues: [ $(modifier) ]
+
+BaseStatusEffect.Blackmarket_$(threshold)WeakenedHealthBooster:
+  $instances:
+    - { threshold: Notably,  health: 1.13, regen: -0.4, modifiers: [13, 40] }
+    - { threshold: Severely, health: 1.08, regen: -0.2, modifiers: [8, 20] }
+  $base: BaseStatusEffect.Blackmarket_HealthBooster
+  packages:
+    - $base: BaseStatusEffect.Blackmarket_HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: $(health)
+        - $type: ConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.StaminaRegenRateMult
+          value: $(regen)
+  uiData:
+    $base: BaseStatusEffect.Blackmarket_HealthBooster_inline3
+    iconPath: $(threshold)WeakenedHealthBooster
+    intValues: $(modifiers)
+
 # object action effects
 
 ## 'Items.XXX' ConsumableItem_Record
