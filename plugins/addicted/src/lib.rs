@@ -40,20 +40,17 @@ fn write_to_file(names: Vec<String>, filename: String) {
 #[cfg(debug_assertions)]
 fn test_apply_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     let id = if status.is_empty() {
-        TweakDbId::new("BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0")
+        TweakDbId::new("BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0")
     } else {
         TweakDbId::new(status.as_str())
     };
-    info!("upcasting");
     let handle = player.upcast().upcast();
-    info!("handle is {:#?}", handle.clone().into_repr());
-    info!("applying");
     cp2077_rs::StatusEffectHelper::apply_status_effect(handle, id, 3.);
 }
 #[cfg(debug_assertions)]
 fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     let id = if status.is_empty() {
-        TweakDbId::new("BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0")
+        TweakDbId::new("BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0")
     } else {
         TweakDbId::new(status.as_str())
     };
