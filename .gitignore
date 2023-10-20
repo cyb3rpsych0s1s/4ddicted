@@ -12,7 +12,9 @@ scripts/*
 /archive/source/customSounds/**/*.mp3
 /archive/source/resources/info.json
 /archives/**/*.cpmodproj
+/archives/**/*.zip
 /archives/**/layout.xml
+/archives/**/install_log.xml
 /archives/**/packed
 /archives/*.archive
 /target
