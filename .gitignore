@@ -13,6 +13,7 @@ scripts/*
 /archive/source/resources/info.json
 /archives/**/*.cpmodproj
 /archives/**/packed
+/archives/*.archive
 /target
 /researches
 
