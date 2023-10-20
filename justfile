@@ -93,6 +93,10 @@ import:
 #     Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
 #     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
 
+pack:
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Icons") }}'
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.VFX") }}'
+
 # 🔛 just compile to check (without building)
 compile:
     {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
@@ -110,7 +114,7 @@ build TARGET='debug' LOCALE='en-us':
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_companion_name) + ".dll") }}' '{{red4ext_companion_game_dir}}'
     @just rebuild
-    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{ join(archive_game_dir) }}'
+    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
 
 deploy:
     cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
