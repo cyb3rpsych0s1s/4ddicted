@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use red4ext_rs::{
     prelude::NativeRepr,
     types::{ItemId, TweakDbId},
@@ -8,16 +10,24 @@ use crate::{
         Addictive, Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK,
         CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
     },
+    interop::Threshold,
+    lessen::Lessen,
     symptoms::WithdrawalSymptoms,
 };
 
 use super::{Kind, Substance};
 
-#[derive(Debug, Default, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
 /// strongly-typed version of a TweakDbId:
 /// ensures that the ID is actually an addictive substance.
-pub struct SubstanceId(TweakDbId);
+pub struct SubstanceId(pub(crate) TweakDbId);
+
+impl Hash for SubstanceId {
+    fn hash<H: std::hash::Hasher>(&self, _state: &mut H) {
+        todo!()
+    }
+}
 
 impl PartialEq<TweakDbId> for SubstanceId {
     fn eq(&self, other: &TweakDbId) -> bool {
@@ -70,6 +80,9 @@ impl From<SubstanceId> for WithdrawalSymptoms {
 impl SubstanceId {
     pub(crate) const fn new(str: &str) -> Self {
         Self(TweakDbId::new(str))
+    }
+    pub(crate) const fn new_from(bits: u64) -> Self {
+        Self(TweakDbId::from_u64(bits))
     }
     pub fn kind(&self) -> Kind {
         match true {
@@ -168,5 +181,34 @@ impl Neuro for SubstanceId {
 
     fn is_neuroblocker(&self) -> bool {
         NEURO_BLOCKER.contains(self)
+    }
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
+#[repr(transparent)]
+/// strongly-typed version of a TweakDbId:
+/// ensures that the ID is actually an addictive substance's status effect.
+pub struct EffectId(TweakDbId);
+
+unsafe impl NativeRepr for EffectId {
+    const NAME: &'static str = TweakDbId::NAME;
+    const MANGLED_NAME: &'static str = TweakDbId::MANGLED_NAME;
+    const NATIVE_NAME: &'static str = TweakDbId::NATIVE_NAME;
+}
+
+impl EffectId {
+    pub(crate) const fn new(str: &str) -> Self {
+        Self(TweakDbId::new(str))
+    }
+}
+
+impl Lessen for EffectId {
+    fn lessen(&self, threshold: Threshold) -> Self {
+        match threshold {
+            Threshold::Notably if self == &EffectId::new("BaseStatusEffect.Something") => {
+                EffectId::new("BaseStatusEffect.SomethingWeakened")
+            }
+            _ => *self,
+        }
     }
 }

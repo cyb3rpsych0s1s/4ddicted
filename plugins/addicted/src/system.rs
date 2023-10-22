@@ -184,7 +184,7 @@ impl System {
         }
     }
     pub fn is_losing_potency(self: Ref<Self>, item: ItemId) -> bool {
-        if let Some(substance) = SubstanceId::try_from(item).ok() {
+        if let Ok(substance) = SubstanceId::try_from(item) {
             return (substance.is_healer() || substance.is_neuroblocker())
                 && self.consumptions().is_addicted(substance.category());
         }

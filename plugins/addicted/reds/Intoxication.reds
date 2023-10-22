@@ -50,24 +50,25 @@ protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<O
     LogChannel(n"DEBUG", "[UseHealChargeAction] ProcessStatusEffects...");
     let i: Int32;
     i = 0;
-    LogChannel(n"DEBUG", "------------------BEFORE---------------------");
+    // LogChannel(n"DEBUG", "------------------BEFORE---------------------");
     while i < ArraySize(Deref(actionEffects)) {
         LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
         i += 1;
     }
-    i = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.FirstAidWhiffVEpic" {
-            Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"BaseStatusEffect.BlackLaceV1");
-        }
-        i += 1;
-    }
-    i = 0;
-    LogChannel(n"DEBUG", "------------------AFTER----------------------");
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
-        i += 1;
-    }
+    // i = 0;
+    // while i < ArraySize(Deref(actionEffects)) {
+    //     if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.FirstAidWhiffVEpic" {
+    //         Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"BaseStatusEffect.BlackLaceV1");
+    //     }
+    //     i += 1;
+    // }
+    // i = 0;
+    // LogChannel(n"DEBUG", "------------------AFTER----------------------");
+    // while i < ArraySize(Deref(actionEffects)) {
+    //     LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
+    //     i += 1;
+    // }
+    LogChannel(n"DEBUG", "---------------------------------------------");
     wrappedMethod(actionEffects, gameInstance);
 }
 

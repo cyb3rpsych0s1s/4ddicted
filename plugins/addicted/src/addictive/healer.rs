@@ -87,3 +87,30 @@ impl Healer for TweakDbId {
         HEALTH_BOOSTER.contains_id(self)
     }
 }
+
+/// all status effects variants
+pub mod effects {
+    use crate::interop::EffectId;
+
+    pub const MAX_DOC: [EffectId; 6] = [
+        EffectId::new("BaseStatusEffect.FirstAidWhiff"), // this one is unused
+        EffectId::new("BaseStatusEffect.FirstAidWhiffV0"),
+        EffectId::new("BaseStatusEffect.FirstAidWhiffV1"),
+        EffectId::new("BaseStatusEffect.FirstAidWhiffV2"),
+        EffectId::new("BaseStatusEffect.FirstAidWhiffVEpic"),
+        EffectId::new("BaseStatusEffect.FirstAidWhiffVUncommon"),
+    ];
+
+    pub const BOUNCE_BACK: [EffectId; 5] = [
+        EffectId::new("BaseStatusEffect.BonesMcCoy70V0"),
+        EffectId::new("BaseStatusEffect.BonesMcCoy70V1"),
+        EffectId::new("BaseStatusEffect.BonesMcCoy70V2"),
+        EffectId::new("BaseStatusEffect.BonesMcCoy70VEpic"),
+        EffectId::new("BaseStatusEffect.BonesMcCoy70VUncommon"),
+    ];
+
+    pub const HEALTH_BOOSTER: [EffectId; 2] = [
+        EffectId::new("BaseStatusEffect.HealthBooster"),
+        EffectId::new("BaseStatusEffect.Blackmarket_HealthBooster"),
+    ];
+}
