@@ -14,4 +14,6 @@ const-str.workspace = true
 cp2077-rs.workspace = true
 phf.workspace = true
 stupefied = { path = "../stupefied" }
+quote = "1.0.33"
+syn = "2.0.38"
 red4ext-rs.workspace = true

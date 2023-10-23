@@ -12,6 +12,7 @@ mod cyberware;
 mod interop;
 mod intoxication;
 mod lessen;
+mod macros;
 mod symptoms;
 mod system;
 

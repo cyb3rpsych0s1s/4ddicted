@@ -10,8 +10,10 @@ dependencies = [
  "const-str",
  "cp2077-rs",
  "phf",
+ "quote",
  "red4ext-rs",
  "stupefied",
+ "syn 2.0.38",
 ]
 
 [[package]]

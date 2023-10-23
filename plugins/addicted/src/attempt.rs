@@ -213,7 +213,7 @@ mod with_consts {
             match TDBID {
                 1234u64 => crate::interop::Category::Healers,
                 7891u64 => crate::interop::Category::Healers,
-                _ => todo!()
+                _ => todo!(),
             }
         }
     }
