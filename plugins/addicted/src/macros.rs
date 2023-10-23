@@ -20,21 +20,8 @@ macro_rules! count_tts {
     ($odd:tt $($a:tt $b:tt)*) => { (count_tts!($($a)*) << 1) | 1 };
     ($($a:tt $even:tt)*) => { count_tts!($($a)*) << 1 };
 }
-macro_rules! consumable {
-    ($consumable: ident, $struct: ident: [$({ $id: literal }),+ $(,)?]) => {
-        pub const $consumable: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
-            $(crate::interop::SubstanceId::new($id)),+
-        ];
-        // pub struct $struct;
-        // impl private::Sealed for $struct {}
-        // impl Definable for $struct {}
-        // impl $struct {
-        //     pub fn ids(&self) -> &[crate::interop::SubstanceId] { &$consumable }
-        // }
-    };
-}
-macro_rules! category {
-    ($trait: ident, $group_method: ident: {
+macro_rules! categories {
+    ($trait: ident, $consumables: ident, $group_method: ident: {
         $($consumable: ident, $struct: ident, $method: ident: [$({ $id: literal }),+ $(,)?]),+ $(,)?
     }) => {
         pub trait $trait {
@@ -43,15 +30,21 @@ macro_rules! category {
                 $(self.$method() ||)+ false
             }
         }
-        $(consumable!($consumable, $struct: [$({ $id }),+]);)+
+        pub const $consumables: [crate::interop::SubstanceId; count_tts!($($($id)+)+)] = [
+            $($(crate::interop::SubstanceId::new($id)),+),+
+        ];
+        $(
+            pub const $consumable: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
+                $(crate::interop::SubstanceId::new($id)),+
+            ]; 
+        )+
         impl $trait for crate::interop::SubstanceId {
             $(fn $method(&self) -> bool { $consumable.contains(self) })+
         }
     };
 }
-// consumable!(MAX_DOC, MaxDOC: [{"Items.CPO_FirstAidWhiff"}]);
-category!(
-    Healer, is_healer: {
+categories!(
+    Healer, HEALER, is_healer: {
         MAX_DOC, MaxDOC, is_maxdoc: [
             {"Items.CPO_FirstAidWhiff"},
             {"Items.FirstAidWhiffV0"},
