@@ -21,9 +21,9 @@ macro_rules! count_tts {
     ($($a:tt $even:tt)*) => { count_tts!($($a)*) << 1 };
 }
 macro_rules! healers {
-    ($({ $id: ident, $ty: literal }),+ $(,)?) => {
-        pub const HEALER: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
-            $(crate::interop::SubstanceId::new(::const_str::concat!("Items.", ::std::stringify!($id)))),+
+    ($($ty: literal: [$({ $id: ident }),+ $(,)?]),+ $(,)?) => {
+        pub const HEALER: [crate::interop::SubstanceId; count_tts!($($($id)+)+)] = [
+            $($(crate::interop::SubstanceId::new(::const_str::concat!("Items.", ::std::stringify!($id)))),+),+
         ];
         impl Into<::red4ext_rs::types::ItemId> for crate::interop::SubstanceId {
             fn into(self) -> ::red4ext_rs::types::ItemId {
@@ -38,19 +38,19 @@ macro_rules! healers {
         impl crate::addictive::Healer for crate::interop::SubstanceId {
             fn is_maxdoc(&self) -> bool {
                 match self {
-                    $(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "MaxDOC",)+
+                    $($(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "MaxDOC",)+)+
                     _ => false,
                 }
             }
             fn is_bounceback(&self) -> bool {
                 match self {
-                    $(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "BounceBack",)+
+                    $($(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "BounceBack",)+)+
                     _ => false,
                 }
             }
             fn is_healthbooster(&self) -> bool {
                 match self {
-                    $(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "HealthBooster",)+
+                    $($(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "HealthBooster",)+)+
                     _ => false,
                 }
             }
@@ -58,10 +58,12 @@ macro_rules! healers {
     };
 }
 healers!(
-    {FirstAidWhiffV0, "MaxDOC"},
-    {FirstAidWhiffV1, "MaxDOC"},
-    {FirstAidWhiffV2, "MaxDOC"},
-    {BonesMcCoy70V0, "BounceBack"},
+    "MaxDOC": [
+        {FirstAidWhiffV0},
+        {FirstAidWhiffV1},
+        {FirstAidWhiffV2}
+    ],
+    "BounceBack": [{BonesMcCoy70V0}],
 );
 // macro_rules! count_tts {
 //     () => { 0 };
