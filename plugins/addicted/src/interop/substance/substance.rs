@@ -1,11 +1,8 @@
 use red4ext_rs::prelude::NativeRepr;
 
-use crate::{
-    addictive::{
-        Alcoholic, Booster, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK, CAPACITY_BOOSTER,
-        HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
-    },
-    macros::Healer,
+use crate::addictive::{
+    Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK, CAPACITY_BOOSTER,
+    HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
 };
 
 use super::{Category, SubstanceId};

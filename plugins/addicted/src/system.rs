@@ -7,10 +7,9 @@ use cp2077_rs::{
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
-use crate::addictive::Neuro;
+use crate::addictive::{Healer, Neuro};
 use crate::board::AddictedBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
-use crate::macros::Healer;
 use crate::symptoms::WithdrawalSymptoms;
 
 #[derive(Debug)]

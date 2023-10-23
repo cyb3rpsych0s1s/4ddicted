@@ -6,23 +6,20 @@
 
 use red4ext_rs::types::{ItemId, TweakDbId};
 
-use crate::{
-    interop::{ContainsItem, SubstanceId},
-    macros::Healer,
-};
+use crate::interop::{ContainsItem, SubstanceId};
 
-// pub trait Healer {
-//     /// is this a MaxDOC ?
-//     fn is_maxdoc(&self) -> bool;
-//     /// is this a BounceBack ?
-//     fn is_bounceback(&self) -> bool;
-//     /// is this a Health Booster ?
-//     fn is_healthbooster(&self) -> bool;
-//     /// is this a healer ?
-//     fn is_healer(&self) -> bool {
-//         self.is_maxdoc() || self.is_bounceback() || self.is_healthbooster()
-//     }
-// }
+pub trait Healer {
+    /// is this a MaxDOC ?
+    fn is_maxdoc(&self) -> bool;
+    /// is this a BounceBack ?
+    fn is_bounceback(&self) -> bool;
+    /// is this a Health Booster ?
+    fn is_healthbooster(&self) -> bool;
+    /// is this a healer ?
+    fn is_healer(&self) -> bool {
+        self.is_maxdoc() || self.is_bounceback() || self.is_healthbooster()
+    }
+}
 
 /// all MaxDOC variants from vanilla game
 ///

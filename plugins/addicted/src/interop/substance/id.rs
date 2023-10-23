@@ -7,8 +7,8 @@ use red4ext_rs::{
 
 use crate::{
     addictive::{
-        Addictive, Alcoholic, Booster, Neuro, ALCOHOL, BLACK_LACE, CAPACITY_BOOSTER,
-        MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
+        Addictive, Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK,
+        CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
     },
     interop::Threshold,
     lessen::Lessen,
@@ -140,19 +140,19 @@ impl TryFrom<TweakDbId> for SubstanceId {
     }
 }
 
-// impl Healer for SubstanceId {
-//     fn is_maxdoc(&self) -> bool {
-//         MAX_DOC.contains(self)
-//     }
+impl Healer for SubstanceId {
+    fn is_maxdoc(&self) -> bool {
+        MAX_DOC.contains(self)
+    }
 
-//     fn is_bounceback(&self) -> bool {
-//         BOUNCE_BACK.contains(self)
-//     }
+    fn is_bounceback(&self) -> bool {
+        BOUNCE_BACK.contains(self)
+    }
 
-//     fn is_healthbooster(&self) -> bool {
-//         HEALTH_BOOSTER.contains(self)
-//     }
-// }
+    fn is_healthbooster(&self) -> bool {
+        HEALTH_BOOSTER.contains(self)
+    }
+}
 
 impl Alcoholic for SubstanceId {
     fn is_alcoholic(&self) -> bool {
