@@ -6,7 +6,6 @@ use red4ext_rs::prelude::*;
 use system::System;
 
 mod addictive;
-mod attempt;
 mod board;
 mod cyberware;
 mod interop;

@@ -7,8 +7,8 @@ use red4ext_rs::{
 
 use crate::{
     addictive::{
-        Addictive, Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK,
-        CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
+        Addictive, Alcoholic, Booster, Neuro, ALCOHOL, BLACK_LACE, CAPACITY_BOOSTER,
+        MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
     },
     interop::Threshold,
     lessen::Lessen,

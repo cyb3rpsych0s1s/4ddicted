@@ -20,105 +20,67 @@ macro_rules! count_tts {
     ($odd:tt $($a:tt $b:tt)*) => { (count_tts!($($a)*) << 1) | 1 };
     ($($a:tt $even:tt)*) => { count_tts!($($a)*) << 1 };
 }
-macro_rules! healers {
-    ($($ty: literal: [$({ $id: ident }),+ $(,)?]),+ $(,)?) => {
-        pub const HEALER: [crate::interop::SubstanceId; count_tts!($($($id)+)+)] = [
-            $($(crate::interop::SubstanceId::new(::const_str::concat!("Items.", ::std::stringify!($id)))),+),+
+macro_rules! consumable {
+    ($consumable: ident, $struct: ident: [$({ $id: literal }),+ $(,)?]) => {
+        pub const $consumable: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
+            $(crate::interop::SubstanceId::new($id)),+
         ];
-        impl Into<::red4ext_rs::types::ItemId> for crate::interop::SubstanceId {
-            fn into(self) -> ::red4ext_rs::types::ItemId {
-                ::red4ext_rs::types::ItemId::new_from(self.0)
+        // pub struct $struct;
+        // impl private::Sealed for $struct {}
+        // impl Definable for $struct {}
+        // impl $struct {
+        //     pub fn ids(&self) -> &[crate::interop::SubstanceId] { &$consumable }
+        // }
+    };
+}
+macro_rules! category {
+    ($trait: ident, $group_method: ident: {
+        $($consumable: ident, $struct: ident, $method: ident: [$({ $id: literal }),+ $(,)?]),+ $(,)?
+    }) => {
+        pub trait $trait {
+            $(fn $method(&self) -> bool;)+
+            fn $group_method(&self) -> bool {
+                $(self.$method() ||)+ false
             }
         }
-        impl Into<::red4ext_rs::types::TweakDbId> for crate::interop::SubstanceId {
-            fn into(self) -> ::red4ext_rs::types::TweakDbId {
-                self.0
-            }
-        }
-        impl crate::addictive::Healer for crate::interop::SubstanceId {
-            fn is_maxdoc(&self) -> bool {
-                match self {
-                    $($(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "MaxDOC",)+)+
-                    _ => false,
-                }
-            }
-            fn is_bounceback(&self) -> bool {
-                match self {
-                    $($(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "BounceBack",)+)+
-                    _ => false,
-                }
-            }
-            fn is_healthbooster(&self) -> bool {
-                match self {
-                    $($(v if v == &Self::new(::const_str::concat!("Items.", ::std::stringify!($id))) => $ty == "HealthBooster",)+)+
-                    _ => false,
-                }
-            }
+        $(consumable!($consumable, $struct: [$({ $id }),+]);)+
+        impl $trait for crate::interop::SubstanceId {
+            $(fn $method(&self) -> bool { $consumable.contains(self) })+
         }
     };
 }
-healers!(
-    "MaxDOC": [
-        {FirstAidWhiffV0},
-        {FirstAidWhiffV1},
-        {FirstAidWhiffV2}
-    ],
-    "BounceBack": [{BonesMcCoy70V0}],
+// consumable!(MAX_DOC, MaxDOC: [{"Items.CPO_FirstAidWhiff"}]);
+category!(
+    Healer, is_healer: {
+        MAX_DOC, MaxDOC, is_maxdoc: [
+            {"Items.CPO_FirstAidWhiff"},
+            {"Items.FirstAidWhiffV0"},
+            {"Items.FirstAidWhiffV1"},
+            {"Items.FirstAidWhiffV2"},
+            {"Items.FirstAidWhiffVCommonPlus"},
+            {"Items.FirstAidWhiffVEpic"},
+            {"Items.FirstAidWhiffVEpicPlus"},
+            {"Items.FirstAidWhiffVLegendaryPlus"},
+            {"Items.FirstAidWhiffVRarePlus"},
+            {"Items.FirstAidWhiffVUncommon"},
+            {"Items.FirstAidWhiffVUncommonPlus"},
+            {"Items.TTReanimatorTutorial"},
+        ],
+        BOUNCE_BACK, BounceBack, is_bounceback: [
+            {"Items.BonesMcCoy70V0"},
+            {"Items.BonesMcCoy70V1"},
+            {"Items.BonesMcCoy70V2"},
+            {"Items.BonesMcCoy70VCommonPlus"},
+            {"Items.BonesMcCoy70VEpic"},
+            {"Items.BonesMcCoy70VEpicPlus"},
+            {"Items.BonesMcCoy70VLegendaryPlus"},
+            {"Items.BonesMcCoy70VRarePlus"},
+            {"Items.BonesMcCoy70VUncommon"},
+            {"Items.BonesMcCoy70VUncommonPlus"},
+        ],
+        HEALTH_BOOSTER, HealthBooster, is_healthbooster: [
+            {"Items.HealthBooster"},
+            {"Items.Blackmarket_HealthBooster"},
+        ],
+    }
 );
-// macro_rules! count_tts {
-//     () => { 0 };
-//     ($odd:tt $($a:tt $b:tt)*) => { (count_tts!($($a)*) << 1) | 1 };
-//     ($($a:tt $even:tt)*) => { count_tts!($($a)*) << 1 };
-// }
-// macro_rules! substance {
-//     ($id: ident, $category: expr, $quality: expr) => {
-//         substance!($id, $category, $quality, $id);
-//     };
-//     ($id: ident, $category: expr, $quality: expr, $effect: ident) => {
-//         pub struct $id;
-//         impl $id {
-//             const SUBSTANCE_ID: crate::interop::SubstanceId =
-//                 crate::interop::SubstanceId::new(::const_str::concat!("Items.", stringify!($id)));
-//             const EFFECT_ID: crate::interop::EffectId = crate::interop::EffectId::new(
-//                 ::const_str::concat!("BaseStatusEffect.", stringify!($effect)),
-//             );
-//         }
-//         impl Category for $id {
-//             #[inline]
-//             fn category(&self) -> crate::interop::Category {
-//                 $category
-//             }
-//         }
-//         impl Quality for $id {
-//             #[inline]
-//             fn quality(&self) -> ::cp2077_rs::GameDataQuality {
-//                 $quality
-//             }
-//         }
-//     };
-// }
-// macro_rules! healers {
-//     ($({ $id: ident, $quality: expr $(, $effect: ident)? }),+ $(,)?) => {
-//         $(substance!($id, crate::interop::Category::Healers, $quality $(, $effect)?);)+
-//         pub const HEALER: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
-//             $($id::SUBSTANCE_ID),+
-//         ];
-//     };
-// }
-// macro_rules! alcohols {
-//     ($({ $id: ident, $quality: expr $(, $effect: ident)? }),+ $(,)?) => {
-//         $(substance!($id, crate::interop::Category::Alcohol, $quality $(, $effect)?);)+
-//         pub const ALCOHOL: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
-//             $($id::SUBSTANCE_ID),+
-//         ];
-//     };
-// }
-//
-// healers!(
-//     { FirstAidWhiffV0, ::cp2077_rs::GameDataQuality::Common },
-//     { FirstAidWhiffV1, ::cp2077_rs::GameDataQuality::Rare },
-//     { FirstAidWhiffVCommonPlus, ::cp2077_rs::GameDataQuality::Rare, FirstAidWhiffV0 },
-// );
-// alcohols!(
-//     { TopQualityAlcohol1, ::cp2077_rs::GameDataQuality::Common },
-// );

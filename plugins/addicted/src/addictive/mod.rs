@@ -16,7 +16,7 @@ pub use alcohol::*;
 
 use red4ext_rs::types::{ItemId, TweakDbId};
 
-use crate::interop::SubstanceId;
+use crate::{interop::SubstanceId, macros::Healer};
 
 /// indicates whether something can be considered as addictive or not.
 pub trait Addictive {

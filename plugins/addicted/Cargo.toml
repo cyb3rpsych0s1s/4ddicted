@@ -10,6 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 bitflags = "2.4.0"
+casey = "0.4.0"
 const-str.workspace = true
 cp2077-rs.workspace = true
 phf.workspace = true
