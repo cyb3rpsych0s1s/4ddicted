@@ -43,6 +43,20 @@ macro_rules! categories {
         }
     };
 }
+macro_rules! simple_category {
+    ($trait: ident, $consumables: ident, $group_method: ident: [$({ $id: literal }),+ $(,)?]) => {
+        pub trait $trait {
+            fn $group_method(&self) -> bool;
+        }
+        pub const $consumables: [crate::interop::SubstanceId; count_tts!($($id)+)] = [
+            $(crate::interop::SubstanceId::new($id)),+
+        ];
+        impl $trait for crate::interop::SubstanceId {
+            fn $group_method(&self) -> bool { $consumables.contains(self) }
+        }
+    };
+}
+simple_category!(Alcoholic, ALCOHOL, is_alcoholic: [{"Items.TopQualityAlcohol1"}]);
 categories!(
     Healer, HEALER, is_healer: {
         MAX_DOC, MaxDOC, is_maxdoc: [
