@@ -140,19 +140,19 @@ impl TryFrom<TweakDbId> for SubstanceId {
     }
 }
 
-impl Healer for SubstanceId {
-    fn is_maxdoc(&self) -> bool {
-        MAX_DOC.contains(self)
-    }
+// impl Healer for SubstanceId {
+//     fn is_maxdoc(&self) -> bool {
+//         MAX_DOC.contains(self)
+//     }
 
-    fn is_bounceback(&self) -> bool {
-        BOUNCE_BACK.contains(self)
-    }
+//     fn is_bounceback(&self) -> bool {
+//         BOUNCE_BACK.contains(self)
+//     }
 
-    fn is_healthbooster(&self) -> bool {
-        HEALTH_BOOSTER.contains(self)
-    }
-}
+//     fn is_healthbooster(&self) -> bool {
+//         HEALTH_BOOSTER.contains(self)
+//     }
+// }
 
 impl Alcoholic for SubstanceId {
     fn is_alcoholic(&self) -> bool {
