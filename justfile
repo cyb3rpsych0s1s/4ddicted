@@ -99,13 +99,11 @@ pack:
     Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Icons", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Icons.archive") }}' -Force
     {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.VFX", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.VFX") }}'
     Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.VFX", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.VFX.archive") }}' -Force
+    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
 
 # 🔛 just compile to check (without building)
 compile:
     {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
-
-catalog:
-    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
