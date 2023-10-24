@@ -46,3 +46,35 @@ public func Checkup() -> Void {
     }
     if idx == 0 { LogChannel(n"DEBUG", "no consumption!"); }
 }
+
+// [C] ui data: icon path asskick, ID Items.Blackmarket_HealthBooster, record ID Items.Blackmarket_HealthBooster
+// [C] ui data: icon path ram_nugs, ID Items.Blackmarket_MemoryBooster, record ID Items.Blackmarket_MemoryBooster
+// [C] ui data: icon path ol_donkey, ID Items.Blackmarket_CarryCapacityBooster, record ID Items.Blackmarket_CarryCapacityBooster
+// [C] ui data: icon path stamina_tube, ID Items.Blackmarket_StaminaBooster, record ID Items.Blackmarket_StaminaBooster
+// try like: SearchIconOwner("asskick");
+public func SearchIconOwner(name: String) -> Void {
+    let ses = TweakDBInterface.GetRecords(n"StatusEffectUIData");
+    let se: ref<StatusEffectUIData_Record>;
+    for record in ses {
+        se = record as StatusEffectUIData_Record;
+        if Equals(se.IconPath(), name) { LogChannel(n"DEBUG", s"[SE] ui data: icon path \(se.IconPath()), ID \(TDBID.ToStringDEBUG(se.GetID())), record ID \(TDBID.ToStringDEBUG(se.GetRecordID()))"); }
+    }
+    let glps = TweakDBInterface.GetRecords(n"GameplayLogicPackageUIData");
+    let glp: ref<GameplayLogicPackageUIData_Record>;
+    for record in glps {
+        glp = record as GameplayLogicPackageUIData_Record;
+        if Equals(glp.IconPath(), StringToName(name)) { LogChannel(n"DEBUG", s"[GLP] ui data: icon path \(glp.IconPath()), ID \(TDBID.ToStringDEBUG(glp.GetID())), record ID \(TDBID.ToStringDEBUG(glp.GetRecordID()))"); }
+    }
+    let is = TweakDBInterface.GetRecords(n"Item");
+    let i: ref<Item_Record>;
+    for record in is {
+        i = record as Item_Record;
+        if Equals(i.IconPath(), name) { LogChannel(n"DEBUG", s"[I] ui data: icon path \(i.IconPath()), ID \(TDBID.ToStringDEBUG(i.GetID())), record ID \(TDBID.ToStringDEBUG(i.GetRecordID()))"); }
+    }
+    let cs = TweakDBInterface.GetRecords(n"ConsumableItem");
+    let c: ref<ConsumableItem_Record>;
+    for record in cs {
+        c = record as ConsumableItem_Record;
+        if Equals(c.IconPath(), name) { LogChannel(n"DEBUG", s"[C] ui data: icon path \(c.IconPath()), ID \(TDBID.ToStringDEBUG(c.GetID())), record ID \(TDBID.ToStringDEBUG(c.GetRecordID()))"); }
+    }
+}

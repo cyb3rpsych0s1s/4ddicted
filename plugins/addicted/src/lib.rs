@@ -30,6 +30,8 @@ define_plugin! {
         register_function!("TestApplyStatus", test_apply_status);
         #[cfg(debug_assertions)]
         register_function!("TestRemoveStatus", test_remove_status);
+        // #[cfg(debug_assertions)]
+        // register_function!("SearchIconOwner", search_icon_owner);
     }
 }
 
@@ -39,6 +41,19 @@ fn write_to_file(names: Vec<String>, filename: String) {
         names.join("\n"),
     );
 }
+
+// #[cfg(debug_assertions)]
+// fn search_icon_owner(name: CName) {
+//     use cp2077_rs::{StatusEffectUIDataRecord, TweakDbInterface, TweakDbRecord};
+//     for ui_data in TweakDbInterface::get_records(CName::new("StatusEffectUIData"))
+//         .iter()
+//         // .map(|x| unsafe {
+//         //     std::mem::transmute::<Ref<TweakDbRecord>, Ref<StatusEffectUIDataRecord>>(x.clone())
+//         // })
+//     {
+//         info!("status UI data: id {:#?}, record id {:#?}", ui_data.get_id(), ui_data.get_record_id());
+//     }
+// }
 
 #[cfg(debug_assertions)]
 fn test_apply_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
