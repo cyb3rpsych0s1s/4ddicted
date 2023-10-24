@@ -2,7 +2,7 @@ use cp2077_rs::{
     get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem,
     EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameTime, Housing,
     InventoryDataManagerV2, ObjectActionEffectRecord, PlayerPuppet, RPGManager, ScriptedPuppet,
-    TimeSystem, TransactionSystem, TweakDbInterface,
+    TimeSystem, TransactionSystem, TweakDbInterface, GameInstance,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -38,7 +38,7 @@ impl ClassType for ConsumeCallback {
 
 #[redscript_import]
 impl System {
-    fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
+    pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
     fn player(self: &Ref<Self>) -> WRef<PlayerPuppet>;
     fn time_system(self: &Ref<Self>) -> Ref<TimeSystem>;
     fn transaction_system(self: &Ref<Self>) -> Ref<TransactionSystem>;
@@ -47,6 +47,13 @@ impl System {
     fn create_consume_event(self: &Ref<Self>, message: RedString) -> Ref<ConsumeEvent>;
     fn create_consume_callback(self: &Ref<Self>, message: RedString) -> Ref<ConsumeCallback>;
     fn get_equip_area_type(self: &Ref<Self>, item: ItemId) -> GameDataEquipmentArea;
+}
+
+impl System {
+    /// workaround for issue with `GameInstance`/`ScriptGameInstance` (possibly `System`'s namespace too)
+    pub fn get_instance(instance: GameInstance) -> Ref<Self> {
+        call!("Addicted.System::GetInstance;GameInstance" (instance) -> Ref<Self>)
+    }
 }
 
 impl System {

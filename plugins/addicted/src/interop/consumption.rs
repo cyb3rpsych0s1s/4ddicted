@@ -69,15 +69,19 @@ impl Consumptions {
 }
 
 impl Consumptions {
+    /// workaround for unsupported namespace with native struct
     pub fn on_consume_once(self: &Ref<Self>, once: ConsumeOnce) {
         call!(self, "OnConsumeOnce;ConsumeOnce" (once) -> ());
     }
+    /// workaround for unsupported namespace with native struct
     pub fn on_consume_again(self: &Ref<Self>, again: ConsumeAgain) {
         call!(self, "OnConsumeAgain;ConsumeAgain" (again) -> ());
     }
+    /// workaround for unsupported namespace with native struct
     pub fn on_wean_off(self: &Ref<Self>, off: WeanOff) {
         call!(self, "OnWeanOff;WeanOff" (off) -> ());
     }
+    /// workaround for unsupported namespace with native struct
     pub fn notify(self: &Ref<Self>, former: Threshold, latter: Threshold) {
         call!(self, "Notify;ThresholdThreshold" (former, latter) -> ());
     }

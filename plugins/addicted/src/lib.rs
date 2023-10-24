@@ -30,8 +30,8 @@ define_plugin! {
         register_function!("TestApplyStatus", test_apply_status);
         #[cfg(debug_assertions)]
         register_function!("TestRemoveStatus", test_remove_status);
-        // #[cfg(debug_assertions)]
-        // register_function!("SearchIconOwner", search_icon_owner);
+        #[cfg(debug_assertions)]
+        register_function!("SetConsumptions", set_consumptions);
     }
 }
 
@@ -42,19 +42,11 @@ fn write_to_file(names: Vec<String>, filename: String) {
     );
 }
 
-// #[cfg(debug_assertions)]
-// fn search_icon_owner(name: CName) {
-//     use cp2077_rs::{StatusEffectUIDataRecord, TweakDbInterface, TweakDbRecord};
-//     for ui_data in TweakDbInterface::get_records(CName::new("StatusEffectUIData"))
-//         .iter()
-//         // .map(|x| unsafe {
-//         //     std::mem::transmute::<Ref<TweakDbRecord>, Ref<StatusEffectUIDataRecord>>(x.clone())
-//         // })
-//     {
-//         info!("status UI data: id {:#?}, record id {:#?}", ui_data.get_id(), ui_data.get_record_id());
-//     }
-// }
-
+/// usage:
+/// 
+/// ```lua
+/// TestApplyStatus(Game.GetPlayer(), "BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0");
+/// ```
 #[cfg(debug_assertions)]
 fn test_apply_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     let id = if status.is_empty() {
@@ -65,6 +57,11 @@ fn test_apply_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     let handle = player.upcast().upcast();
     cp2077_rs::StatusEffectHelper::apply_status_effect(handle, id, 3.);
 }
+/// usage:
+/// 
+/// ```lua
+/// TestRemoveStatus(Game.GetPlayer(), "BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0");
+/// ```
 #[cfg(debug_assertions)]
 fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     let id = if status.is_empty() {
@@ -74,4 +71,21 @@ fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     };
     let handle = player.upcast().upcast();
     cp2077_rs::StatusEffectHelper::remove_status_effect(handle, id, 1);
+}
+/// usage:
+/// 
+/// ```lua
+/// SetConsumptions(Game.GetPlayer(), "Items.FirstAidWhiffVEpicPlus", 41);
+/// ```
+#[cfg(debug_assertions)]
+fn set_consumptions(player: WRef<cp2077_rs::PlayerPuppet>, id: String, threshold: i32) {
+    use interop::SubstanceId;
+    if let Some(player) = player.upgrade() {
+        let instance = player.get_game();
+        let system = System::get_instance(instance);
+        if let Ok(id) = SubstanceId::try_from(TweakDbId::new(id.as_str())) {
+            let consumptions = system.consumptions();
+            call!(consumptions, "SetConsumptions;TweakDBIDInt32" (id, threshold) -> ());
+        }
+    }
 }

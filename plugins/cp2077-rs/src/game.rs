@@ -24,7 +24,8 @@ impl Default for GameInstance {
 }
 
 unsafe impl NativeRepr for GameInstance {
-    const NAME: &'static str = "ScriptGameInstance";
+    const NAME: &'static str = "GameInstance";
+    const NATIVE_NAME: &'static str = "ScriptGameInstance";
 }
 
 #[derive(Debug)]
@@ -55,7 +56,9 @@ pub struct GameObject;
 
 impl ClassType for GameObject {
     type BaseClass = IScriptable;
-    const NAME: &'static str = "gameObject";
+    const NAME: &'static str = "GameObject";
+    /// required when `GameObject` expected in signature yet `whandle:gameObject` expected when performing `call!`
+    const NATIVE_NAME: &'static str = "gameObject";
 }
 
 #[redscript_import]

@@ -34,6 +34,24 @@ public class Consumptions extends IScriptable {
             if ArraySize(decrease.doses) > 0 { consumption.doses = decrease.doses; }
         }
     }
+    private func SetConsumptions(id: TweakDBID, threshold: Int32) -> Void {
+        let idx: Int32 = 0;
+        let found: Int32 = -1;
+        for key in this.keys {
+            if Equals(key, id) { found = idx; }
+            idx += 1;
+        }
+        let consumption: ref<Consumption> = new Consumption();
+        consumption.current = threshold;
+        if found == -1 {
+            consumption.doses = [];
+            ArrayPush(this.keys, id);
+            ArrayPush(this.values, consumption);
+        } else {
+            consumption.doses = this.values[found].doses;
+            this.values[found] = consumption;
+        }
+    }
     public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
         ArrayPush(this.observers, new Notify(target, function));
     }
