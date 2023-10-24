@@ -117,7 +117,7 @@ impl Consumptions {
     }
     /// get consumptions by substance, if any.
     pub fn by_substance(self: &Ref<Self>, substance: Substance) -> Vec<Ref<Consumption>> {
-        self.by_ids(<&[SubstanceId]>::from(substance))
+        self.by_ids(<Vec<SubstanceId>>::from(substance).as_slice())
     }
     /// get consumptions by category, if any.
     pub fn by_category(self: &Ref<Self>, category: Category) -> Vec<Ref<Consumption>> {

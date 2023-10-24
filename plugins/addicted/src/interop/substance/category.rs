@@ -42,23 +42,23 @@ impl From<Category> for Vec<SubstanceId> {
     fn from(value: Category) -> Self {
         match value {
             Category::Healers => MAX_DOC
-                .iter()
-                .chain(BOUNCE_BACK.iter())
-                .chain(HEALTH_BOOSTER.iter())
-                .map(Clone::clone)
+                .keys()
+                .chain(BOUNCE_BACK.keys())
+                .chain(HEALTH_BOOSTER.keys())
+                .cloned()
                 .collect::<Vec<_>>(),
             Category::Anabolics => STAMINA_BOOSTER
-                .iter()
-                .chain(CAPACITY_BOOSTER.iter())
-                .map(Clone::clone)
+                .keys()
+                .chain(CAPACITY_BOOSTER.keys())
+                .cloned()
                 .collect::<Vec<_>>(),
             Category::Neuros => MEMORY_BOOSTER
-                .iter()
-                .chain(NEURO_BLOCKER.iter())
-                .map(Clone::clone)
+                .keys()
+                .chain(NEURO_BLOCKER.keys())
+                .cloned()
                 .collect::<Vec<_>>(),
-            Category::Alcohol => ALCOHOL.to_vec(),
-            Category::BlackLace => BLACK_LACE.to_vec(),
+            Category::Alcohol => ALCOHOL.keys().cloned().collect(),
+            Category::BlackLace => BLACK_LACE.keys().cloned().collect(),
         }
     }
 }

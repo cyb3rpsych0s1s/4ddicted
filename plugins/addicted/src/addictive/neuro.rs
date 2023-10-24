@@ -6,19 +6,25 @@
 
 use red4ext_rs::types::{ItemId, TweakDbId};
 
-use crate::interop::{ContainsItem, SubstanceId};
+use crate::{interop::ContainsItem, reference};
 
-pub const BLACK_LACE: [SubstanceId; 2] = [
-    SubstanceId::new("Items.BlackLaceV0"),
-    SubstanceId::new("Items.BlackLaceV1"),
-];
+reference!(
+    name: BLACK_LACE, substance: BlackLace, kind: Hard, category: BlackLace,
+    [
+        key: "Items.BlackLaceV0", quality: Rare, effect: ("BaseStatusEffect.BlackLaceV0"),
+        key: "Items.BlackLaceV1", quality: Epic, effect: ("BaseStatusEffect.BlackLaceV1"),
+    ]
+);
 
-/// specific to WannabeEdgerunner
-pub const NEURO_BLOCKER: [SubstanceId; 3] = [
-    SubstanceId::new("Items.ripperdoc_med"),
-    SubstanceId::new("Items.ripperdoc_med_common"),
-    SubstanceId::new("Items.ripperdoc_med_uncommon"),
-];
+// "specific to WannabeEdgerunner"
+reference!(
+    name: NEURO_BLOCKER, substance: BlackLace, kind: Hard, category: BlackLace,
+    [
+        key: "Items.ripperdoc_med", quality: Rare, effect: ("BaseStatusEffect.ripperdoc_med"),
+        key: "Items.ripperdoc_med_common", quality: Common, effect: ("BaseStatusEffect.ripperdoc_med_common"),
+        key: "Items.ripperdoc_med_uncommon", quality: Uncommon, effect: ("BaseStatusEffect.ripperdoc_med_uncommon"),
+    ]
+);
 
 pub trait Neuro {
     fn is_neuro(&self) -> bool {

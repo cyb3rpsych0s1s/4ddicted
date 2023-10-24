@@ -6,22 +6,31 @@
 
 use red4ext_rs::types::{ItemId, TweakDbId};
 
-use crate::interop::{ContainsItem, SubstanceId};
+use crate::{interop::ContainsItem, reference};
 
-pub const MEMORY_BOOSTER: [SubstanceId; 2] = [
-    SubstanceId::new("Items.MemoryBooster"),
-    SubstanceId::new("Items.Blackmarket_MemoryBooster"),
-];
+reference!(
+    name: MEMORY_BOOSTER, substance: MemoryBooster, kind: Mild, category: Neuros,
+    [
+        key: "Items.MemoryBooster", quality: Uncommon, effect: ("BaseStatusEffect.MemoryBooster"),
+        key: "Items.Blackmarket_MemoryBooster", quality: Epic, effect: ("BaseStatusEffect.Blackmarket_MemoryBooster"),
+    ]
+);
 
-pub const STAMINA_BOOSTER: [SubstanceId; 2] = [
-    SubstanceId::new("Items.StaminaBooster"),
-    SubstanceId::new("Items.Blackmarket_StaminaBooster"),
-];
+reference!(
+    name: STAMINA_BOOSTER, substance: StaminaBooster, kind: Mild, category: Anabolics,
+    [
+        key: "Items.StaminaBooster", quality: Uncommon, effect: ("BaseStatusEffect.StaminaBooster"),
+        key: "Items.Blackmarket_StaminaBooster", quality: Epic, effect: ("BaseStatusEffect.Blackmarket_StaminaBooster"),
+    ]
+);
 
-pub const CAPACITY_BOOSTER: [SubstanceId; 2] = [
-    SubstanceId::new("Items.CarryCapacityBooster"),
-    SubstanceId::new("Items.Blackmarket_CarryCapacityBooster"),
-];
+reference!(
+    name: CAPACITY_BOOSTER, substance: CarryCapacityBooster, kind: Mild, category: Anabolics,
+    [
+        key: "Items.CarryCapacityBooster", quality: Uncommon, effect: ("BaseStatusEffect.CarryCapacityBooster"),
+        key: "Items.Blackmarket_CarryCapacityBooster", quality: Epic, effect: ("BaseStatusEffect.Blackmarket_CarryCapacityBooster"),
+    ]
+);
 
 pub trait Booster {
     fn is_booster(&self) -> bool {

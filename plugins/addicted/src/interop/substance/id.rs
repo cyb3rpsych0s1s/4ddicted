@@ -11,7 +11,6 @@ use crate::{
         CAPACITY_BOOSTER, HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
     },
     interop::Threshold,
-    lessen::Lessen,
     symptoms::WithdrawalSymptoms,
 };
 
@@ -24,8 +23,14 @@ use super::{Kind, Substance};
 pub struct SubstanceId(pub(crate) TweakDbId);
 
 impl Hash for SubstanceId {
-    fn hash<H: std::hash::Hasher>(&self, _state: &mut H) {
-        todo!()
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.as_u64().hash(state)
+    }
+}
+
+impl phf::PhfHash for SubstanceId {
+    fn phf_hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.0.as_u64().hash(state)
     }
 }
 
@@ -80,9 +85,6 @@ impl From<SubstanceId> for WithdrawalSymptoms {
 impl SubstanceId {
     pub(crate) const fn new(str: &str) -> Self {
         Self(TweakDbId::new(str))
-    }
-    pub(crate) const fn new_from(bits: u64) -> Self {
-        Self(TweakDbId::from_u64(bits))
     }
     pub fn kind(&self) -> Kind {
         match true {
@@ -142,45 +144,45 @@ impl TryFrom<TweakDbId> for SubstanceId {
 
 impl Healer for SubstanceId {
     fn is_maxdoc(&self) -> bool {
-        MAX_DOC.contains(self)
+        MAX_DOC.contains_key(self)
     }
 
     fn is_bounceback(&self) -> bool {
-        BOUNCE_BACK.contains(self)
+        BOUNCE_BACK.contains_key(self)
     }
 
     fn is_healthbooster(&self) -> bool {
-        HEALTH_BOOSTER.contains(self)
+        HEALTH_BOOSTER.contains_key(self)
     }
 }
 
 impl Alcoholic for SubstanceId {
     fn is_alcoholic(&self) -> bool {
-        ALCOHOL.contains(self)
+        ALCOHOL.contains_key(self)
     }
 }
 
 impl Booster for SubstanceId {
     fn is_stamina_booster(&self) -> bool {
-        STAMINA_BOOSTER.contains(self)
+        STAMINA_BOOSTER.contains_key(self)
     }
 
     fn is_capacity_booster(&self) -> bool {
-        CAPACITY_BOOSTER.contains(self)
+        CAPACITY_BOOSTER.contains_key(self)
     }
 
     fn is_memory_booster(&self) -> bool {
-        MEMORY_BOOSTER.contains(self)
+        MEMORY_BOOSTER.contains_key(self)
     }
 }
 
 impl Neuro for SubstanceId {
     fn is_blacklace(&self) -> bool {
-        BLACK_LACE.contains(self)
+        BLACK_LACE.contains_key(self)
     }
 
     fn is_neuroblocker(&self) -> bool {
-        NEURO_BLOCKER.contains(self)
+        NEURO_BLOCKER.contains_key(self)
     }
 }
 
@@ -198,17 +200,67 @@ unsafe impl NativeRepr for EffectId {
 
 impl EffectId {
     pub(crate) const fn new(str: &str) -> Self {
-        Self(TweakDbId::new(str))
+        EffectId(TweakDbId::new(str))
     }
 }
 
-impl Lessen for EffectId {
-    fn lessen(&self, threshold: Threshold) -> Self {
-        match threshold {
-            Threshold::Notably if self == &EffectId::new("BaseStatusEffect.Something") => {
-                EffectId::new("BaseStatusEffect.SomethingWeakened")
+/// see WolvenKit: Items => BaseStatusEffect
+macro_rules! effect {
+    ($({$id: literal $(, $related: literal)?}),+ $(,)?) => {
+        impl crate::interop::SubstanceId {
+            pub fn effect(&self) -> crate::interop::EffectId {
+                match self.0 {
+                    $(v if v == TweakDbId::new(&format!("Items.{}", $id)) => {
+                        #[allow(unused_mut, unused_assignments)]
+                        let mut suffix = $id;
+                        $(suffix = $related;)?
+                        EffectId(TweakDbId::new(&format!("BaseStatusEffect.{}", suffix)))
+                    }),+
+                    _ => unreachable!(),
+                }
             }
-            _ => *self,
         }
-    }
+        impl crate::lessen::Lessen for crate::interop::EffectId {
+            fn lessen(&self, threshold: Threshold) -> Self {
+                if !threshold.is_serious() { return self.clone() }
+                let prefix = if threshold == Threshold::Severely { "Severely" } else { "Notably" };
+                match self.0 {
+                    $(v if v == TweakDbId::new(&format!("BaseStatusEffect.{}", $id)) => {
+                        #[allow(unused_mut, unused_assignments)]
+                        let mut suffix = $id;
+                        $(suffix = $related;)?
+                        EffectId(TweakDbId::new(&format!("BaseStatusEffect.{}Weakened{}", prefix, suffix)))
+                    }),+
+                    _ => unreachable!(),
+                }
+            }
+        }
+    };
 }
+
+effect!(
+    {"FirstAidWhiffV0"},
+    {"FirstAidWhiffV1"},
+    {"FirstAidWhiffV2"},
+    {"FirstAidWhiffVCommonPlus", "FirstAidWhiffV0"},
+    {"FirstAidWhiffVUncommon"},
+    {"FirstAidWhiffVUncommonPlus", "FirstAidWhiffVUncommon"},
+    {"FirstAidWhiffVRarePlus", "FirstAidWhiffV1"},
+    {"FirstAidWhiffVEpic"},
+    {"FirstAidWhiffVEpicPlus", "FirstAidWhiffVEpic"},
+    {"FirstAidWhiffVLegendaryPlus", "FirstAidWhiffV2"},
+);
+
+// TODO: move inside macro
+// impl Lessen for EffectId {
+//     fn lessen(&self, threshold: Threshold) -> Self {
+//         match threshold {
+//             // Threshold::Notably if self == &EffectId::new("BaseStatusEffect.Something") => {
+//             //     EffectId::new("BaseStatusEffect.SomethingWeakened")
+//             // }
+//             // Threshold::Severely => {}
+//             // Threshold::Notably => {}
+//             _ => *self,
+//         }
+//     }
+// }
