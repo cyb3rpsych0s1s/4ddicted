@@ -43,7 +43,7 @@ fn write_to_file(names: Vec<String>, filename: String) {
 }
 
 /// usage:
-/// 
+///
 /// ```lua
 /// TestApplyStatus(Game.GetPlayer(), "BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0");
 /// ```
@@ -58,7 +58,7 @@ fn test_apply_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     cp2077_rs::StatusEffectHelper::apply_status_effect(handle, id, 3.);
 }
 /// usage:
-/// 
+///
 /// ```lua
 /// TestRemoveStatus(Game.GetPlayer(), "BaseStatusEffect.NotablyWeakenedBonesMcCoy70V0");
 /// ```
@@ -73,19 +73,33 @@ fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     cp2077_rs::StatusEffectHelper::remove_status_effect(handle, id, 1);
 }
 /// usage:
-/// 
+///
 /// ```lua
 /// SetConsumptions(Game.GetPlayer(), "Items.FirstAidWhiffVEpicPlus", 41);
 /// ```
 #[cfg(debug_assertions)]
 fn set_consumptions(player: WRef<cp2077_rs::PlayerPuppet>, id: String, threshold: i32) {
+    use crate::interop::Consumption;
     use interop::SubstanceId;
     if let Some(player) = player.upgrade() {
         let instance = player.get_game();
-        let system = System::get_instance(instance);
-        if let Ok(id) = SubstanceId::try_from(TweakDbId::new(id.as_str())) {
+        let mut system = System::get_instance(instance);
+        if let Ok(ref id) = SubstanceId::try_from(TweakDbId::new(id.as_str())) {
             let consumptions = system.consumptions();
-            call!(consumptions, "SetConsumptions;TweakDBIDInt32" (id, threshold) -> ());
+            // call!(consumptions, "SetConsumptions;TweakDBIDInt32" (id, threshold) -> ());
+            let mut keys = consumptions.keys();
+            let mut values = consumptions.values();
+            if let Some(position) = keys.iter().position(|x| x == id) {
+                let consumption = Consumption::create(threshold);
+                values[position] = consumption;
+                system.set_values(values);
+            } else {
+                let consumption = Consumption::create(threshold);
+                keys.push(*id);
+                values.push(consumption);
+                system.set_keys(keys);
+                system.set_values(values);
+            }
         }
     }
 }

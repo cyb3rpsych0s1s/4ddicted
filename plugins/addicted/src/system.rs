@@ -1,15 +1,15 @@
 use cp2077_rs::{
     get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem,
-    EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameTime, Housing,
-    InventoryDataManagerV2, ObjectActionEffectRecord, PlayerPuppet, RPGManager, ScriptedPuppet,
-    TimeSystem, TransactionSystem, TweakDbInterface, GameInstance,
+    EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameInstance, GameTime, Housing,
+    InventoryDataManagerV2, ObjectActionEffectRecord, PlayerPuppet, RPGManager, Reflection,
+    ScriptedPuppet, TimeSystem, TransactionSystem, TweakDbInterface,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
 
 use crate::addictive::{Healer, Neuro};
 use crate::board::AddictedBoard;
-use crate::interop::{Consumptions, Substance, SubstanceId};
+use crate::interop::{Consumption, Consumptions, Substance, SubstanceId};
 use crate::symptoms::WithdrawalSymptoms;
 
 #[derive(Debug)]
@@ -53,6 +53,36 @@ impl System {
     /// workaround for issue with `GameInstance`/`ScriptGameInstance` (possibly `System`'s namespace too)
     pub fn get_instance(instance: GameInstance) -> Ref<Self> {
         call!("Addicted.System::GetInstance;GameInstance" (instance) -> Ref<Self>)
+    }
+    pub fn set_keys(self: &mut Ref<Self>, values: Vec<SubstanceId>) {
+        let consumptions = self.consumptions();
+        let cls = Reflection::get_class(CName::new(Consumptions::NAME))
+            .into_ref()
+            .expect("get class Addicted.Consumptions");
+        let field = cls
+            .get_property(CName::new("keys"))
+            .into_ref()
+            .expect("get prop keys for class Addicted.Consumptions");
+        field.set_value(
+            Variant::new(consumptions),
+            Variant::new(RedArray::from_sized_iter(values.into_iter())),
+        );
+    }
+    pub fn set_values(self: &mut Ref<Self>, values: Vec<Ref<Consumption>>) {
+        let consumptions = self.consumptions();
+        let cls = Reflection::get_class(CName::new(Consumptions::NAME))
+            .into_ref()
+            .expect("get class Addicted.Consumptions");
+        let field = cls
+            .get_property(CName::new("values"))
+            .into_ref()
+            .expect("get prop values for class Addicted.Consumptions");
+        field.set_value(
+            Variant::new(consumptions),
+            Variant::new(RedArray::from_sized_iter(values.into_iter().map(|x| {
+                red4ext_rs::prelude::Ref::<Consumption>::into_maybe_uninit(x)
+            }))),
+        );
     }
 }
 

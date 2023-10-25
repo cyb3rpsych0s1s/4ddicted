@@ -84,6 +84,12 @@ public class Consumption extends IScriptable {
     private persistent let doses: array<Float>;
     private func Current() -> Int32 { return this.current; }
     private func Doses() -> array<Float> { return this.doses; }
+    private final static func Create(score: Int32) -> ref<Consumption> {
+        let instance = new Consumption();
+        instance.current = score;
+        instance.doses = [];
+        return instance;
+    }
 }
 
 enum Threshold {

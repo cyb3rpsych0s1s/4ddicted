@@ -1,5 +1,5 @@
 use red4ext_rs::{
-    prelude::{ClassType, redscript_import},
+    prelude::{redscript_import, ClassType},
     types::{IScriptable, TweakDbId, WRef},
 };
 

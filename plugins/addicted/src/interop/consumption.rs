@@ -57,6 +57,12 @@ impl Consumption {
     pub fn doses(self: &Ref<Self>) -> Vec<f32>;
 }
 
+impl Consumption {
+    pub fn create(score: i32) -> Ref<Self> {
+        call!("Addicted.Consumption::Create;Int32" (score) -> Ref<Self>)
+    }
+}
+
 impl ClassType for Consumptions {
     type BaseClass = IScriptable;
     const NAME: &'static str = "Addicted.Consumptions";
