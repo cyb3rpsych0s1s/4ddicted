@@ -2,7 +2,7 @@ use cp2077_rs::{GameTime, Reflection};
 use red4ext_rs::{
     call, info,
     prelude::{redscript_import, ClassType},
-    types::{CName, IScriptable, RedArray, Ref, Variant, VariantExt},
+    types::{CName, IScriptable, MaybeUninitRef, RedArray, Ref, Variant, VariantExt},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
@@ -75,6 +75,17 @@ impl Consumptions {
 }
 
 impl Consumptions {
+    pub fn push_key(self: &mut Ref<Self>, value: SubstanceId) {
+        let keys = self.keys();
+        call!("ArrayPush;array:TweakDBIDTweakDBID" (keys, value) -> ());
+    }
+    pub fn push_value(self: &mut Ref<Self>, value: Ref<Consumption>) {
+        let values = self.values();
+        let values = RedArray::<MaybeUninitRef<Consumption>>::from_sized_iter(
+            values.into_iter().map(Ref::into_maybe_uninit),
+        );
+        call!("ArrayPush;array:handle:Addicted.Consumptionhandle:Addicted.Consumption" (values, value) -> ());
+    }
     pub fn set_keys(self: &mut Ref<Self>, values: Vec<SubstanceId>) {
         let cls = Reflection::get_class(CName::new(Self::NAME))
             .into_ref()

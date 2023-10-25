@@ -89,7 +89,7 @@ macro_rules! reference {
                     $(
                         effect.weakened_ids = Some($crate::addictive::WeakenedEffectIds { notably_id: $notably_weakened_effect_id, severely_id: $severely_weakened_effect_id });
                     )?
-                    map.insert(crate::interop::SubstanceId::new($key), crate::addictive::SubstanceDetails {
+                    map.insert($crate::interop::SubstanceId::new($key), $crate::addictive::SubstanceDetails {
                         substance: crate::interop::Substance::$substance,
                         kind: crate::interop::Kind::$kind,
                         quality: ::cp2077_rs::GameDataQuality::$quality,
