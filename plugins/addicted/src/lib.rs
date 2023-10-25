@@ -83,22 +83,22 @@ fn set_consumptions(player: WRef<cp2077_rs::PlayerPuppet>, id: String, threshold
     use interop::SubstanceId;
     if let Some(player) = player.upgrade() {
         let instance = player.get_game();
-        let mut system = System::get_instance(instance);
+        let system = System::get_instance(instance);
         if let Ok(ref id) = SubstanceId::try_from(TweakDbId::new(id.as_str())) {
-            let consumptions = system.consumptions();
+            let mut consumptions = system.consumptions();
             // call!(consumptions, "SetConsumptions;TweakDBIDInt32" (id, threshold) -> ());
             let mut keys = consumptions.keys();
             let mut values = consumptions.values();
             if let Some(position) = keys.iter().position(|x| x == id) {
                 let consumption = Consumption::create(threshold);
                 values[position] = consumption;
-                system.set_values(values);
+                consumptions.set_values(values);
             } else {
                 let consumption = Consumption::create(threshold);
                 keys.push(*id);
                 values.push(consumption);
-                system.set_keys(keys);
-                system.set_values(values);
+                consumptions.set_keys(keys);
+                consumptions.set_values(values);
             }
         }
     }

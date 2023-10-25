@@ -83,11 +83,11 @@ macro_rules! reference {
                 $(
                     #[allow(unused_mut)]
                     let mut effect: $crate::addictive::Effect = $crate::addictive::Effect {
-                        id: crate::interop::EffectId::new($effect_id),
+                        id: $crate::interop::EffectId::new($effect_id),
                         weakened_ids: None,
                     };
                     $(
-                        effect.weakened_ids = Some(crate::addictive::WeakenedEffectIds { notably_id: $notably_weakened_effect_id, severely_id: $severely_weakened_effect_id });
+                        effect.weakened_ids = Some($crate::addictive::WeakenedEffectIds { notably_id: $notably_weakened_effect_id, severely_id: $severely_weakened_effect_id });
                     )?
                     map.insert(crate::interop::SubstanceId::new($key), crate::addictive::SubstanceDetails {
                         substance: crate::interop::Substance::$substance,

@@ -1,8 +1,8 @@
-use cp2077_rs::GameTime;
+use cp2077_rs::{GameTime, Reflection};
 use red4ext_rs::{
     call, info,
     prelude::{redscript_import, ClassType},
-    types::{IScriptable, RedArray, Ref},
+    types::{CName, IScriptable, RedArray, Ref, Variant, VariantExt},
 };
 
 use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
@@ -72,6 +72,37 @@ impl ClassType for Consumptions {
 impl Consumptions {
     pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId>;
     pub fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
+}
+
+impl Consumptions {
+    pub fn set_keys(self: &mut Ref<Self>, values: Vec<SubstanceId>) {
+        let cls = Reflection::get_class(CName::new(Self::NAME))
+            .into_ref()
+            .expect("get class Addicted.Consumptions");
+        let field = cls
+            .get_property(CName::new("keys"))
+            .into_ref()
+            .expect("get prop keys for class Addicted.Consumptions");
+        field.set_value(
+            Variant::new(self.clone()),
+            Variant::new(RedArray::from_sized_iter(values.into_iter())),
+        );
+    }
+    pub fn set_values(self: &mut Ref<Self>, values: Vec<Ref<Consumption>>) {
+        let cls = Reflection::get_class(CName::new(Self::NAME))
+            .into_ref()
+            .expect("get class Addicted.Consumptions");
+        let field = cls
+            .get_property(CName::new("values"))
+            .into_ref()
+            .expect("get prop values for class Addicted.Consumptions");
+        field.set_value(
+            Variant::new(self.clone()),
+            Variant::new(RedArray::from_sized_iter(values.into_iter().map(|x| {
+                red4ext_rs::prelude::Ref::<Consumption>::into_maybe_uninit(x)
+            }))),
+        );
+    }
 }
 
 impl Consumptions {
