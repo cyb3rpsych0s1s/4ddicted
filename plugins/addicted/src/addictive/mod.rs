@@ -78,11 +78,11 @@ macro_rules! reference {
     };
     (name: $name:ident, [$(key: $key:literal, substance: $substance:ident, kind: $kind:ident, quality: $quality:ident, category: $category:ident, effect: ($effect_id:literal $(, $notably_weakened_effect_id:expr, $severely_weakened_effect_id:expr)?)),+ $(,)?]) => {
         ::lazy_static::lazy_static!(
-            pub static ref $name: ::std::collections::HashMap<crate::interop::SubstanceId, crate::addictive::SubstanceDetails> = {
+            pub static ref $name: ::std::collections::HashMap<$crate::interop::SubstanceId, $crate::addictive::SubstanceDetails> = {
                 let mut map = ::std::collections::HashMap::new();
                 $(
                     #[allow(unused_mut)]
-                    let mut effect: crate::addictive::Effect = crate::addictive::Effect {
+                    let mut effect: $crate::addictive::Effect = $crate::addictive::Effect {
                         id: crate::interop::EffectId::new($effect_id),
                         weakened_ids: None,
                     };
