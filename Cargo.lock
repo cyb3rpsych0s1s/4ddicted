@@ -298,7 +298,7 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 [[package]]
 name = "red4ext-macros"
 version = "0.5.1"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/tdbid-as-u64#373b5bb77345ba1e57e5b42f38dd6f801dfab228"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=e76d0f1#e76d0f1af18fe51e629e30462366f76f6f809377"
 dependencies = [
  "darling",
  "heck",
@@ -310,7 +310,7 @@ dependencies = [
 [[package]]
 name = "red4ext-rs"
 version = "0.5.1"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/tdbid-as-u64#373b5bb77345ba1e57e5b42f38dd6f801dfab228"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=e76d0f1#e76d0f1af18fe51e629e30462366f76f6f809377"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -322,7 +322,7 @@ dependencies = [
 [[package]]
 name = "red4ext-sys"
 version = "0.5.1"
-source = "git+https://github.com/Roms1383/red4ext-rs.git?branch=feat/tdbid-as-u64#373b5bb77345ba1e57e5b42f38dd6f801dfab228"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=e76d0f1#e76d0f1af18fe51e629e30462366f76f6f809377"
 dependencies = [
  "const-crc32",
  "cxx",

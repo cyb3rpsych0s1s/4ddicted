@@ -24,13 +24,13 @@ pub struct SubstanceId(pub(crate) TweakDbId);
 
 impl Hash for SubstanceId {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.as_u64().hash(state)
+        self.0.to_u64().hash(state)
     }
 }
 
 impl phf::PhfHash for SubstanceId {
     fn phf_hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.as_u64().hash(state)
+        self.0.to_u64().hash(state)
     }
 }
 
