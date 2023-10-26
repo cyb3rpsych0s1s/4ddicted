@@ -112,10 +112,8 @@ fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
     if let Some(player) = player.upgrade() {
         let system = System::get_instance(player.get_game());
         let consumptions = system.consumptions();
-        std::thread::sleep(std::time::Duration::from_millis(100));
         let keys = consumptions.keys();
         let values = consumptions.values();
-        std::thread::sleep(std::time::Duration::from_millis(100));
         let channel = CName::new("DEBUG");
         let mut holder: ScriptRef<'_, RedString>;
         let mut allocated: String;
