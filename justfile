@@ -344,3 +344,9 @@ format:
     cargo fix --allow-dirty --allow-staged
     cargo fmt --all
     cargo clippy --fix --allow-dirty --allow-staged
+
+decompile MODE='code':
+    @if (-NOT('{{MODE}}' -EQ 'ast') -AND -NOT('{{MODE}}' -EQ 'code') -AND -NOT('{{MODE}}' -EQ 'bytecode')) { \
+        Write-Host "MODE can only be 'ast', 'code' or 'bytecode' (default to 'code')"; exit 1; \
+    }
+    {{red_cli}} decompile --input '{{red_cache_bundle}}' --mode '{{MODE}}' --verbose --output 'dump.reds'
