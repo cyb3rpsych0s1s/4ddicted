@@ -342,8 +342,8 @@ tabula: delete-bin delete-lock uninstall clear build
 
 format:
     cargo fix --allow-dirty --allow-staged
-    cargo fmt --all
     cargo clippy --fix --allow-dirty --allow-staged
+    cargo fmt --all
 
 decompile MODE='code':
     @if (-NOT('{{MODE}}' -EQ 'ast') -AND -NOT('{{MODE}}' -EQ 'code') -AND -NOT('{{MODE}}' -EQ 'bytecode')) { \
