@@ -32,21 +32,6 @@ public func SearchItems() -> Void {
     WriteToFile(names, "items");
 }
 
-@addMethod(PlayerPuppet)
-public func Checkup() -> Void {
-    let system = System.GetInstance(this.GetGame());
-    let consumptions: ref<Consumptions> = system.Consumptions();
-    let keys = consumptions.Keys();
-    let values = consumptions.Values();
-    let idx = 0;
-    for key in keys {
-        let value = values[idx];
-        LogChannel(n"DEBUG", s"key: \(TDBID.ToStringDEBUG(key)), value: \(value.current), [\(ArraySize(value.doses))] doses: \(ToString(value.doses))");
-        idx = idx + 1;
-    }
-    if idx == 0 { LogChannel(n"DEBUG", "no consumption!"); }
-}
-
 // [C] ui data: icon path asskick, ID Items.Blackmarket_HealthBooster, record ID Items.Blackmarket_HealthBooster
 // [C] ui data: icon path ram_nugs, ID Items.Blackmarket_MemoryBooster, record ID Items.Blackmarket_MemoryBooster
 // [C] ui data: icon path ol_donkey, ID Items.Blackmarket_CarryCapacityBooster, record ID Items.Blackmarket_CarryCapacityBooster

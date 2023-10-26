@@ -81,6 +81,10 @@ impl ReflectionProp {
     /// `public native func SetValue(owner: Variant, value: Variant) -> Void`
     #[redscript(native)]
     pub fn set_value(self: &Ref<Self>, owner: Variant, value: Variant) -> ();
+
+    /// `public native func GetType() -> ref<ReflectionType>`
+    #[redscript(native)]
+    pub fn get_type(self: &Ref<Self>) -> Ref<ReflectionType>;
 }
 
 #[derive(Debug)]

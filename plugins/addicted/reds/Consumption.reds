@@ -4,13 +4,6 @@ public class Consumptions extends IScriptable {
     private persistent let keys: array<TweakDBID>;
     private persistent let values: array<ref<Consumption>>;
     private let observers: array<Notify>;
-    private func Keys() -> array<TweakDBID> { return this.keys; }
-    private func Values() -> array<ref<Consumption>> {
-        for v in this.values {
-            LogChannel(n"DEBUG", s"\(IsDefined(v) ? "defined" : "null")");
-        }
-        return this.values;
-    }
     private func OnConsumeOnce(once: ConsumeOnce) -> Void {
         LogChannel(n"DEBUG", s"once: score \(once.increase.score), when \(once.increase.when)");
         let consumption = new Consumption();
@@ -82,8 +75,6 @@ public class Consumptions extends IScriptable {
 public class Consumption extends IScriptable {
     private persistent let current: Int32;
     private persistent let doses: array<Float>;
-    private func Current() -> Int32 { return this.current; }
-    private func Doses() -> array<Float> { return this.doses; }
     private final static func Create(score: Int32) -> ref<Consumption> {
         let instance = new Consumption();
         instance.current = score;

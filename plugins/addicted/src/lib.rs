@@ -32,6 +32,8 @@ define_plugin! {
         register_function!("TestRemoveStatus", test_remove_status);
         #[cfg(debug_assertions)]
         register_function!("SetConsumptions", set_consumptions);
+        #[cfg(debug_assertions)]
+        register_function!("Checkup", checkup);
     }
 }
 
@@ -100,3 +102,60 @@ fn set_consumptions(player: WRef<cp2077_rs::PlayerPuppet>, id: String, threshold
         }
     }
 }
+/// usage:
+///
+/// ```lua
+/// Checkup(Game.GetPlayer());
+/// ```
+#[cfg(debug_assertions)]
+fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
+    if let Some(player) = player.upgrade() {
+        let system = System::get_instance(player.get_game());
+        let consumptions = system.consumptions();
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        let keys = consumptions.keys();
+        let values = consumptions.values();
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        let channel = CName::new("DEBUG");
+        let mut holder: ScriptRef<'_, RedString>;
+        let mut allocated: String;
+        let mut message: &str;
+        let mut repr: RedString;
+        let mut current: i32;
+        let mut doses: Vec<f32>;
+        for (key, value) in keys.into_iter().zip(values.into_iter()) {
+            info!("before retrieving current");
+            current = value.current();
+            info!("before retrieving doses");
+            doses = value.doses();
+            info!("before constructing String");
+            allocated = format!(
+                "key: {}, value.current: {}, values.doses[{}]: {:#?}",
+                key.0.to_u64(),
+                current,
+                doses.len(),
+                doses
+            );
+            info!("before constructing &str");
+            message = allocated.as_str();
+            info!("before constructing RedString");
+            repr = RedString::from(message);
+            info!("before constructing ScriptRef");
+            holder = ScriptRef::new(&mut repr);
+            info!("before calling LogChannel");
+            call!("LogChannel;CNamescript_ref:String" (channel.clone(), holder) -> ());
+        }
+    }
+}
+
+pub(crate) trait Field: ClassType {
+    fn field(name: &str) -> Ref<cp2077_rs::ReflectionProp> {
+        let cls = cp2077_rs::Reflection::get_class(CName::new(Self::NAME))
+            .into_ref()
+            .unwrap_or_else(|| panic!("get class {}", Self::NAME));
+        cls.get_property(CName::new(name))
+            .into_ref()
+            .unwrap_or_else(|| panic!("get prop {name} for class {}", Self::NAME))
+    }
+}
+impl<T> Field for T where T: ClassType {}

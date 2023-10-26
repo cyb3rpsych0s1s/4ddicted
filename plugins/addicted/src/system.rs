@@ -5,12 +5,13 @@ use cp2077_rs::{
     TimeSystem, TransactionSystem, TweakDbInterface,
 };
 use red4ext_rs::prelude::*;
-use red4ext_rs::types::{IScriptable, Ref};
+use red4ext_rs::types::{IScriptable, MaybeUninitRef, Ref};
 
 use crate::addictive::{Healer, Neuro};
 use crate::board::AddictedBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
 use crate::symptoms::WithdrawalSymptoms;
+use crate::Field;
 
 #[derive(Debug)]
 pub struct System;
@@ -38,7 +39,6 @@ impl ClassType for ConsumeCallback {
 
 #[redscript_import]
 impl System {
-    pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
     fn player(self: &Ref<Self>) -> WRef<PlayerPuppet>;
     fn time_system(self: &Ref<Self>) -> Ref<TimeSystem>;
     fn transaction_system(self: &Ref<Self>) -> Ref<TransactionSystem>;
@@ -53,6 +53,16 @@ impl System {
     /// workaround for issue with `GameInstance`/`ScriptGameInstance` (possibly `System`'s namespace too)
     pub fn get_instance(instance: GameInstance) -> Ref<Self> {
         call!("Addicted.System::GetInstance;GameInstance" (instance) -> Ref<Self>)
+    }
+}
+
+impl System {
+    pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions> {
+        Self::field("consumptions")
+            .get_value(Variant::new(self.clone()))
+            .try_take::<MaybeUninitRef<Consumptions>>()
+            .map(FromRepr::from_repr)
+            .expect("value for prop consumptions of type array<ref<Consumption>>")
     }
 }
 
