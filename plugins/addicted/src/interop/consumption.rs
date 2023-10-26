@@ -1,7 +1,7 @@
 use cp2077_rs::GameTime;
 use red4ext_rs::{
     call, info,
-    prelude::{ClassType, FromRepr},
+    prelude::{ClassType, redscript_import},
     types::{IScriptable, MaybeUninitRef, RedArray, Ref, Variant, VariantExt},
 };
 
@@ -53,18 +53,17 @@ impl Intoxication for Consumption {
 #[derive(Debug)]
 pub struct Consumptions;
 
+#[redscript_import]
+impl Consumption {
+    pub(crate) fn doses(self: &Ref<Self>) -> Vec<f32>;
+}
+
 impl Consumption {
     pub fn current(self: &Ref<Self>) -> i32 {
         Self::field("current")
             .get_value(Variant::new(self.clone()))
             .try_take()
             .expect("value for prop current of type Int32")
-    }
-    pub fn doses(self: &Ref<Self>) -> Vec<f32> {
-        Self::field("doses")
-            .get_value(Variant::new(self.clone()))
-            .try_take()
-            .expect("value for prop doses of type array<Float>")
     }
 }
 
@@ -79,34 +78,17 @@ impl ClassType for Consumptions {
     const NAME: &'static str = "Addicted.Consumptions";
 }
 
+#[redscript_import]
+impl Consumptions {
+    pub(crate) fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>>;
+}
+
 impl Consumptions {
     pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId> {
         Self::field("keys")
             .get_value(Variant::new(self.clone()))
             .try_take()
             .expect("value for prop keys of type array<TweakDBID>")
-    }
-    pub fn values(self: &Ref<Self>) -> Vec<Ref<Consumption>> {
-        use red4ext_rs::conv::NativeRepr;
-        let prop = Self::field("values");
-        let ty = prop.get_type();
-        info!(
-            "values type: {}, inner type: {}",
-            red4ext_rs::ffi::resolve_cname(&ty.get_name()),
-            red4ext_rs::ffi::resolve_cname(&ty.get_inner_type().get_name())
-        );
-        let mut value = prop.get_value(Variant::new(self.clone()));
-        info!(
-            "rtti get type: {:#?} == {} ({})",
-            red4ext_rs::rtti::Rtti::type_name_of(value.get_type()).map(|x| red4ext_rs::ffi::resolve_cname(&x)),
-            red4ext_rs::ffi::resolve_cname(&red4ext_rs::types::CName::new(<Vec<Ref<Consumption>> as red4ext_rs::conv::FromRepr>::Repr::NATIVE_NAME)),
-            red4ext_rs::ffi::resolve_cname(&red4ext_rs::types::CName::new(<RedArray<MaybeUninitRef<Consumption>> as red4ext_rs::conv::FromRepr>::Repr::NATIVE_NAME))
-        );
-        let values = value
-            .try_take::<RedArray<MaybeUninitRef<Consumption>>>()
-            .map(FromRepr::from_repr)
-            .expect("value for prop values of type array<ref<Addicted.Consumption>>");
-        values
     }
     pub fn push_key(self: &mut Ref<Self>, value: SubstanceId) {
         let keys = self.keys();
