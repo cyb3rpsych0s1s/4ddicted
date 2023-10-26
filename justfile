@@ -102,8 +102,8 @@ pack:
     Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
 
 # 🔛 just compile to check (without building)
-compile:
-    {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
+# compile:
+#     {{red_cli}} compile -s 'scripts' -b '{{red_cache_bundle}}' -o "dump.redscripts"
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
