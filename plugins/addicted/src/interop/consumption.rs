@@ -33,8 +33,7 @@ impl VariousIntoxication for Vec<Ref<Consumption>> {
     }
 }
 
-#[derive(Default, Clone)]
-#[repr(transparent)]
+#[derive(Default)]
 pub struct Consumption;
 
 impl ClassType for Consumption {
