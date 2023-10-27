@@ -109,9 +109,9 @@ impl Consumptions {
 }
 
 impl Consumptions {
-    pub fn push_key(self: &mut Ref<Self>, value: SubstanceId) {
+    pub fn push_key(self: &mut Ref<Self>, key: SubstanceId) {
         let keys = self.keys();
-        call!("ArrayPush;array:TweakDBIDTweakDBID" (keys, value) -> ());
+        call!("ArrayPush;array:TweakDBIDTweakDBID" (keys, key) -> ());
     }
     pub fn push_value(self: &mut Ref<Self>, value: Ref<Consumption>) {
         let values = self.values();
@@ -127,13 +127,10 @@ impl Consumptions {
     pub fn notify(self: &Ref<Self>, former: Threshold, latter: Threshold) {
         call!(self, "Notify;ThresholdThreshold" (former, latter) -> ());
     }
-    pub fn add(self: &Ref<Self>, id: SubstanceId, score: i32, tms: f32) {
+    pub fn add(self: &mut Ref<Self>, id: SubstanceId, score: i32, tms: f32) {
         let value = Consumption::create(score, tms);
-        let key = id.0;
-        let keys = self.keys();
-        let values = self.values();
-        call!("ArrayPush;array:TweakDBIDTweakDBID" (keys, key) -> ());
-        call!("ArrayPush;array:Addicted.ConsumptionAddicted.Consumption" (values, value) -> ());
+        self.push_key(id);
+        self.push_value(value);
     }
 }
 
@@ -180,7 +177,7 @@ impl Consumptions {
     ///
     /// if consumed for the first time, create an entry in keys and values.
     /// otherwise update existing entry in values.
-    pub fn increase(self: &Ref<Self>, id: SubstanceId, tms: f32) {
+    pub fn increase(self: &mut Ref<Self>, id: SubstanceId, tms: f32) {
         if let Some(which) = self.position(id) {
             info!("increase existing consumption");
             let existing = &mut self.values()[which];
