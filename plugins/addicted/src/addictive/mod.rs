@@ -57,6 +57,7 @@ pub struct SubstanceDetails {
     pub quality: cp2077_rs::GameDataQuality,
     pub category: crate::interop::Category,
     pub effect: Effect,
+    pub key: &'static str,
 }
 
 impl ContainsItem for std::collections::HashMap<SubstanceId, SubstanceDetails> {
@@ -95,10 +96,30 @@ macro_rules! reference {
                         quality: ::cp2077_rs::GameDataQuality::$quality,
                         category: $crate::interop::Category::$category,
                         effect,
+                        key: $key,
                     });
                 )+
                 map
             };
         );
     };
+}
+
+impl ::std::convert::AsRef<str> for crate::interop::SubstanceId {
+    fn as_ref(&self) -> &str {
+        if let Some(SubstanceDetails { key, .. }) = MAX_DOC
+            .get(self)
+            .or(BOUNCE_BACK.get(self))
+            .or(HEALTH_BOOSTER.get(self))
+            .or(STAMINA_BOOSTER.get(self))
+            .or(CAPACITY_BOOSTER.get(self))
+            .or(MEMORY_BOOSTER.get(self))
+            .or(BLACK_LACE.get(self))
+            .or(NEURO_BLOCKER.get(self))
+            .or(ALCOHOL.get(self))
+        {
+            return key;
+        }
+        unreachable!()
+    }
 }

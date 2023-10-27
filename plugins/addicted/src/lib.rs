@@ -89,7 +89,7 @@ fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
             doses = value.doses();
             info!(
                 "key: {}, value.current: {}, values.doses[{}]: {}",
-                key.0.to_u64(),
+                key.as_ref(),
                 value.current(),
                 doses.len(),
                 doses
