@@ -58,31 +58,42 @@ impl Consumption {
 
 impl Consumption {
     const MAX_DOSES_LENGTH: usize = 100;
-    pub fn create(score: i32, tms: f32) -> Ref<Self> {
-        call!("Addicted.Consumption::Create;Int32Float" (score, tms) -> Ref<Self>)
-    }
-    pub fn increase(self: &mut Ref<Self>, score: i32, dose: f32) {
+    #[inline]
+    pub(crate) fn set_current(self: &mut Ref<Self>, score: i32) {
         Self::field("current").set_value(
             Variant::new(self.clone()),
             Variant::new((self.current() + score).min(Threshold::MAX)),
         );
+    }
+    #[inline]
+    pub(crate) fn push_dose(self: &mut Ref<Self>, dose: f32) {
         call!("ArrayPush;array:FloatFloat" (self.doses(), dose) -> ());
     }
-    pub fn decrease(self: &mut Ref<Self>, score: i32) {
+    #[inline]
+    pub(crate) fn shrink_doses(self: &mut Ref<Self>) {
         let doses = self.doses();
         let size = doses.len();
-        let shrink = size > Self::MAX_DOSES_LENGTH;
-        Self::field("current").set_value(
-            Variant::new(self.clone()),
-            Variant::new((self.current() - score).max(Threshold::MIN)),
-        );
-        if shrink {
+        if size > Self::MAX_DOSES_LENGTH {
             let starts = size - Self::MAX_DOSES_LENGTH;
             Self::field("doses").set_value(
                 Variant::new(self.clone()),
                 Variant::new(doses[starts..].to_vec()),
             );
         }
+    }
+}
+
+impl Consumption {
+    pub fn create(score: i32, tms: f32) -> Ref<Self> {
+        call!("Addicted.Consumption::Create;Int32Float" (score, tms) -> Ref<Self>)
+    }
+    pub fn increase(self: &mut Ref<Self>, score: i32, dose: f32) {
+        self.set_current((self.current() + score).min(Threshold::MAX));
+        self.push_dose(dose);
+    }
+    pub fn decrease(self: &mut Ref<Self>, score: i32) {
+        self.set_current((self.current() - score).max(Threshold::MIN));
+        self.shrink_doses();
     }
 }
 
@@ -108,20 +119,6 @@ impl Consumptions {
             values.into_iter().map(Ref::into_maybe_uninit),
         );
         call!("ArrayPush;array:handle:Addicted.Consumptionhandle:Addicted.Consumption" (values, value) -> ());
-    }
-    pub fn set_keys(self: &mut Ref<Self>, values: Vec<SubstanceId>) {
-        Self::field("keys").set_value(
-            Variant::new(self.clone()),
-            Variant::new(RedArray::from_sized_iter(values.into_iter())),
-        );
-    }
-    pub fn set_values(self: &mut Ref<Self>, values: Vec<Ref<Consumption>>) {
-        Self::field("values").set_value(
-            Variant::new(self.clone()),
-            Variant::new(RedArray::from_sized_iter(values.into_iter().map(|x| {
-                red4ext_rs::prelude::Ref::<Consumption>::into_maybe_uninit(x)
-            }))),
-        );
     }
 }
 
