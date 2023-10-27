@@ -1,6 +1,9 @@
 use red4ext_rs::prelude::NativeRepr;
 
-use crate::addictive::{Alcoholic, Booster, Healer, Neuro, ALCOHOL, HEALTH_BOOSTER, MAX_DOC, BOUNCE_BACK, MEMORY_BOOSTER, STAMINA_BOOSTER, BLACK_LACE, CAPACITY_BOOSTER, NEURO_BLOCKER};
+use crate::addictive::{
+    Alcoholic, Booster, Healer, Neuro, ALCOHOL, BLACK_LACE, BOUNCE_BACK, CAPACITY_BOOSTER,
+    HEALTH_BOOSTER, MAX_DOC, MEMORY_BOOSTER, NEURO_BLOCKER, STAMINA_BOOSTER,
+};
 
 use super::{Category, SubstanceId};
 
@@ -74,6 +77,8 @@ impl From<Substance> for Vec<SubstanceId> {
             Substance::BlackLace => BLACK_LACE.keys(),
             Substance::CarryCapacityBooster => CAPACITY_BOOSTER.keys(),
             Substance::NeuroBlocker => NEURO_BLOCKER.keys(),
-        }.cloned().collect()
+        }
+        .cloned()
+        .collect()
     }
 }

@@ -90,12 +90,13 @@ fn set_consumptions(player: WRef<cp2077_rs::PlayerPuppet>, id: String, threshold
             let mut consumptions = system.consumptions();
             let keys = consumptions.keys();
             let mut values = consumptions.values();
+            let on = system.time_system().get_game_time_stamp();
             if let Some(position) = keys.iter().position(|x| x == id) {
-                let consumption = Consumption::create(threshold);
+                let consumption = Consumption::create(threshold, on);
                 values[position] = consumption;
                 consumptions.set_values(values);
             } else {
-                let consumption = Consumption::create(threshold);
+                let consumption = Consumption::create(threshold, on);
                 consumptions.push_key(*id);
                 consumptions.push_value(consumption);
             }

@@ -39,7 +39,7 @@ impl ClassType for ConsumeCallback {
 #[redscript_import]
 impl System {
     fn player(self: &Ref<Self>) -> WRef<PlayerPuppet>;
-    fn time_system(self: &Ref<Self>) -> Ref<TimeSystem>;
+    pub fn time_system(self: &Ref<Self>) -> Ref<TimeSystem>;
     fn transaction_system(self: &Ref<Self>) -> Ref<TransactionSystem>;
     fn delay_system(self: &Ref<Self>) -> Ref<DelaySystem>;
     fn resting_since(self: &Ref<Self>) -> GameTime;

@@ -10,10 +10,7 @@ use crate::{
     Field,
 };
 
-use super::{
-    Category, ConsumeAgain, ConsumeOnce, Decrease, Increase, Substance, SubstanceId, Threshold,
-    WeanOff,
-};
+use super::{Category, Substance, SubstanceId, Threshold};
 
 impl VariousIntoxication for Vec<Ref<Consumption>> {
     fn average_threshold(self) -> Threshold {
@@ -60,8 +57,29 @@ impl Consumption {
 }
 
 impl Consumption {
-    pub fn create(score: i32) -> Ref<Self> {
-        call!("Addicted.Consumption::Create;Int32" (score) -> Ref<Self>)
+    const MAX_DOSES_LENGTH: usize = 100;
+    pub fn create(score: i32, tms: f32) -> Ref<Self> {
+        call!("Addicted.Consumption::Create;Int32Float" (score, tms) -> Ref<Self>)
+    }
+    pub fn increase(self: &mut Ref<Self>, score: i32, dose: f32) {
+        Self::field("current").set_value(Variant::new(self.clone()), Variant::new(score));
+        call!("ArrayPush;array:FloatFloat" (self.doses(), dose) -> ());
+    }
+    pub fn decrease(self: &mut Ref<Self>, score: i32) {
+        let doses = self.doses();
+        let size = doses.len();
+        let shrink = size > Self::MAX_DOSES_LENGTH;
+        Self::field("current").set_value(
+            Variant::new(self.clone()),
+            Variant::new(self.current() - score),
+        );
+        if shrink {
+            let starts = size - Self::MAX_DOSES_LENGTH;
+            Self::field("doses").set_value(
+                Variant::new(self.clone()),
+                Variant::new(doses[starts..].to_vec()),
+            );
+        }
     }
 }
 
@@ -106,25 +124,20 @@ impl Consumptions {
 
 impl Consumptions {
     /// workaround for unsupported namespace with native struct
-    pub fn on_consume_once(self: &Ref<Self>, once: ConsumeOnce) {
-        call!(self, "OnConsumeOnce;ConsumeOnce" (once) -> ());
-    }
-    /// workaround for unsupported namespace with native struct
-    pub fn on_consume_again(self: &Ref<Self>, again: ConsumeAgain) {
-        call!(self, "OnConsumeAgain;ConsumeAgain" (again) -> ());
-    }
-    /// workaround for unsupported namespace with native struct
-    pub fn on_wean_off(self: &Ref<Self>, off: WeanOff) {
-        call!(self, "OnWeanOff;WeanOff" (off) -> ());
-    }
-    /// workaround for unsupported namespace with native struct
     pub fn notify(self: &Ref<Self>, former: Threshold, latter: Threshold) {
         call!(self, "Notify;ThresholdThreshold" (former, latter) -> ());
+    }
+    pub fn add(self: &Ref<Self>, id: SubstanceId, score: i32, tms: f32) {
+        let value = Consumption::create(score, tms);
+        let key = id.0;
+        let keys = self.keys();
+        let values = self.values();
+        call!("ArrayPush;array:TweakDBIDTweakDBID" (keys, key) -> ());
+        call!("ArrayPush;array:Addicted.ConsumptionAddicted.Consumption" (values, value) -> ());
     }
 }
 
 impl Consumptions {
-    const MAX_DOSES_LENGTH: usize = 100;
     /// get index from substance ID, if any.
     fn position(self: &Ref<Self>, id: SubstanceId) -> Option<usize> {
         let keys = self.keys();
@@ -170,30 +183,17 @@ impl Consumptions {
     pub fn increase(self: &Ref<Self>, id: SubstanceId, tms: f32) {
         if let Some(which) = self.position(id) {
             info!("increase existing consumption");
-            let again = ConsumeAgain {
-                which: which as u32,
-                increase: Increase {
-                    score: id.kicks_in(),
-                    when: tms,
-                },
-            };
-            let former = self.values()[which].threshold();
-            self.on_consume_again(again);
-            let latter = self.values()[which].threshold();
+            let existing = &mut self.values()[which];
+            let former = existing.threshold();
+            existing.increase(id.kicks_in(), tms);
+            let latter = existing.threshold();
             // if former != Threshold::Clean && former != latter {
             // self.fire_callbacks(self.create_cross_threshold_event(former, latter));
             self.notify(former, latter);
             // }
         } else {
             info!("create new consumption");
-            let once = ConsumeOnce {
-                id: id.into_inner(),
-                increase: Increase {
-                    score: id.kicks_in(),
-                    when: tms,
-                },
-            };
-            self.on_consume_once(once);
+            self.add(id, id.kicks_in(), tms);
         }
     }
     /// decrease consumption for all substances.
@@ -202,31 +202,11 @@ impl Consumptions {
     /// otherwise remove entry from both keys and values.
     pub fn decrease(self: &Ref<Self>) {
         let keys = self.keys();
-        let values = self.values();
-        let mut decrease = Vec::with_capacity(values.len());
-        for (idx, (key, value)) in keys.iter().zip(values.iter()).enumerate() {
+        let mut values = self.values();
+        for (key, value) in keys.iter().zip(values.iter_mut()) {
             if value.current() > 0 {
-                let doses = value.doses();
-                let size = doses.len();
-                let shrink = size > Self::MAX_DOSES_LENGTH;
-                let doses = if shrink {
-                    let starts = size - Self::MAX_DOSES_LENGTH;
-                    doses[starts..].to_vec()
-                } else {
-                    Vec::with_capacity(0)
-                };
-                decrease.push(Decrease {
-                    which: idx as u32,
-                    score: key.wean_off(),
-                    doses: RedArray::from_sized_iter(doses.into_iter()),
-                })
+                value.decrease(key.wean_off());
             }
-        }
-        if !decrease.is_empty() {
-            decrease.shrink_to_fit();
-            self.on_wean_off(WeanOff {
-                decrease: RedArray::from_sized_iter(decrease.into_iter()),
-            })
         }
     }
     pub fn is_withdrawing_from_substance(
