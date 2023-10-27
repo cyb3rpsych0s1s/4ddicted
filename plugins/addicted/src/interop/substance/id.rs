@@ -250,17 +250,3 @@ effect!(
     {"FirstAidWhiffVEpicPlus", "FirstAidWhiffVEpic"},
     {"FirstAidWhiffVLegendaryPlus", "FirstAidWhiffV2"},
 );
-
-// TODO: move inside macro
-// impl Lessen for EffectId {
-//     fn lessen(&self, threshold: Threshold) -> Self {
-//         match threshold {
-//             // Threshold::Notably if self == &EffectId::new("BaseStatusEffect.Something") => {
-//             //     EffectId::new("BaseStatusEffect.SomethingWeakened")
-//             // }
-//             // Threshold::Severely => {}
-//             // Threshold::Notably => {}
-//             _ => *self,
-//         }
-//     }
-// }

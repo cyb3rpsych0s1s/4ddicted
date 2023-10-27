@@ -59,15 +59,6 @@ impl Consumption {
     pub(crate) fn doses(self: &Ref<Self>) -> Vec<f32>;
 }
 
-// impl Consumption {
-//     pub fn current(self: &Ref<Self>) -> i32 {
-//         Self::field("current")
-//             .get_value(Variant::new(self.clone()))
-//             .try_take()
-//             .expect("value for prop current of type Int32")
-//     }
-// }
-
 impl Consumption {
     pub fn create(score: i32) -> Ref<Self> {
         call!("Addicted.Consumption::Create;Int32" (score) -> Ref<Self>)
@@ -86,12 +77,6 @@ impl Consumptions {
 }
 
 impl Consumptions {
-    // pub fn keys(self: &Ref<Self>) -> Vec<SubstanceId> {
-    //     Self::field("keys")
-    //         .get_value(Variant::new(self.clone()))
-    //         .try_take()
-    //         .expect("value for prop keys of type array<TweakDBID>")
-    // }
     pub fn push_key(self: &mut Ref<Self>, value: SubstanceId) {
         let keys = self.keys();
         call!("ArrayPush;array:TweakDBIDTweakDBID" (keys, value) -> ());

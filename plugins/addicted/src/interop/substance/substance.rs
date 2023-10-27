@@ -1,6 +1,6 @@
 use red4ext_rs::prelude::NativeRepr;
 
-use crate::addictive::{Alcoholic, Booster, Healer, Neuro, ALCOHOL};
+use crate::addictive::{Alcoholic, Booster, Healer, Neuro, ALCOHOL, HEALTH_BOOSTER, MAX_DOC, BOUNCE_BACK, MEMORY_BOOSTER, STAMINA_BOOSTER, BLACK_LACE, CAPACITY_BOOSTER, NEURO_BLOCKER};
 
 use super::{Category, SubstanceId};
 
@@ -62,35 +62,18 @@ impl From<SubstanceId> for Substance {
     }
 }
 
-// impl From<Substance> for &[SubstanceId] {
-//     fn from(value: Substance) -> Self {
-//         match value {
-//             Substance::Alcohol => &ALCOHOL,
-//             Substance::MaxDOC => &MAX_DOC,
-//             Substance::BounceBack => &BOUNCE_BACK,
-//             Substance::HealthBooster => &HEALTH_BOOSTER,
-//             Substance::MemoryBooster => &MEMORY_BOOSTER,
-//             Substance::StaminaBooster => &STAMINA_BOOSTER,
-//             Substance::BlackLace => &BLACK_LACE,
-//             Substance::CarryCapacityBooster => &CAPACITY_BOOSTER,
-//             Substance::NeuroBlocker => &NEURO_BLOCKER,
-//         }
-//     }
-// }
-
 impl From<Substance> for Vec<SubstanceId> {
     fn from(value: Substance) -> Self {
         match value {
-            Substance::Alcohol => ALCOHOL.keys().cloned().collect(),
-            _ => todo!()
-            // Substance::MaxDOC => &MAX_DOC,
-            // Substance::BounceBack => &BOUNCE_BACK,
-            // Substance::HealthBooster => &HEALTH_BOOSTER,
-            // Substance::MemoryBooster => &MEMORY_BOOSTER,
-            // Substance::StaminaBooster => &STAMINA_BOOSTER,
-            // Substance::BlackLace => &BLACK_LACE,
-            // Substance::CarryCapacityBooster => &CAPACITY_BOOSTER,
-            // Substance::NeuroBlocker => &NEURO_BLOCKER,
-        }
+            Substance::Alcohol => ALCOHOL.keys(),
+            Substance::MaxDOC => MAX_DOC.keys(),
+            Substance::BounceBack => BOUNCE_BACK.keys(),
+            Substance::HealthBooster => HEALTH_BOOSTER.keys(),
+            Substance::MemoryBooster => MEMORY_BOOSTER.keys(),
+            Substance::StaminaBooster => STAMINA_BOOSTER.keys(),
+            Substance::BlackLace => BLACK_LACE.keys(),
+            Substance::CarryCapacityBooster => CAPACITY_BOOSTER.keys(),
+            Substance::NeuroBlocker => NEURO_BLOCKER.keys(),
+        }.cloned().collect()
     }
 }

@@ -60,16 +60,6 @@ impl System {
     pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
 }
 
-// impl System {
-//     pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions> {
-//         Self::field("consumptions")
-//             .get_value(Variant::new(self.clone()))
-//             .try_take::<MaybeUninitRef<Consumptions>>()
-//             .map(FromRepr::from_repr)
-//             .expect("value for prop consumptions of type array<ref<Consumption>>")
-//     }
-// }
-
 impl System {
     fn withdrawal_symptoms(&self) -> BlackboardIdUint {
         get_all_blackboard_defs()
