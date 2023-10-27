@@ -59,15 +59,22 @@ impl Consumption {
 impl Consumption {
     const MAX_DOSES_LENGTH: usize = 100;
     #[inline]
-    pub(crate) fn set_current(self: &mut Ref<Self>, score: i32) {
-        Self::field("current").set_value(
-            Variant::new(self.clone()),
-            Variant::new((self.current() + score).min(Threshold::MAX)),
-        );
+    fn set_current(self: &mut Ref<Self>, score: i32) {
+        Self::field("current").set_value(Variant::new(self.clone()), Variant::new(score));
+    }
+    #[inline]
+    pub(crate) fn increase_current(self: &mut Ref<Self>, amount: i32) {
+        self.set_current((self.current() + amount).min(Threshold::MAX));
+    }
+    #[inline]
+    pub(crate) fn decrease_current(self: &mut Ref<Self>, amount: i32) {
+        self.set_current((self.current() - amount).max(Threshold::MIN));
     }
     #[inline]
     pub(crate) fn push_dose(self: &mut Ref<Self>, dose: f32) {
-        call!("ArrayPush;array:FloatFloat" (self.doses(), dose) -> ());
+        let mut doses = self.doses();
+        doses.push(dose);
+        Self::field("doses").set_value(Variant::new(self.clone()), Variant::new(doses));
     }
     #[inline]
     pub(crate) fn shrink_doses(self: &mut Ref<Self>) {
@@ -88,11 +95,11 @@ impl Consumption {
         call!("Addicted.Consumption::Create;Int32Float" (score, tms) -> Ref<Self>)
     }
     pub fn increase(self: &mut Ref<Self>, score: i32, dose: f32) {
-        self.set_current((self.current() + score).min(Threshold::MAX));
+        self.increase_current(score);
         self.push_dose(dose);
     }
     pub fn decrease(self: &mut Ref<Self>, score: i32) {
-        self.set_current((self.current() - score).max(Threshold::MIN));
+        self.decrease_current(score);
         self.shrink_doses();
     }
 }
