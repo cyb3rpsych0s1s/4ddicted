@@ -249,15 +249,15 @@ bundle_lang LOCALE:
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 [windows]
-uninstall: uninstall-red uninstall-red4ext
+uninstall: uninstall-red uninstall-red4ext uninstall-archive
 # uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod uninstall-red4ext
 
 # 🗑️🎭  clear out mod archive files in game files
 [windows]
 uninstall-archive:
-    @$file = '{{ join(archive_game_dir, mod_name + ".archive") }}'; \
+    @$file = '{{ join(archive_game_dir, "Addicted.*.archive") }}'; \
     if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
-    @$file = '{{ join(archive_game_dir, mod_name + ".archive.xl") }}'; \
+    @$file = '{{ join(archive_game_dir, "Addicted.*.archive.xl") }}'; \
     if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
 
 # 🗑️⚙️   clear out mod CET files in game files
