@@ -109,39 +109,25 @@ fn set_consumptions(player: WRef<cp2077_rs::PlayerPuppet>, id: String, threshold
 /// ```
 #[cfg(debug_assertions)]
 fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
-    if let Some(player) = player.upgrade() {
-        let system = System::get_instance(player.get_game());
-        let consumptions = system.consumptions();
+    if let Some(ref player) = player.upgrade() {
+        let system = &System::get_instance(player.get_game());
+        let consumptions = &system.consumptions();
         let keys = consumptions.keys();
         let values = consumptions.values();
-        let channel = CName::new("DEBUG");
-        let mut holder: ScriptRef<'_, RedString>;
-        let mut allocated: String;
-        let mut message: &str;
-        let mut repr: RedString;
-        let mut current: i32;
         let mut doses: Vec<f32>;
-        for (key, value) in keys.into_iter().zip(values.into_iter()) {
-            info!("before retrieving current");
-            current = value.current();
-            info!("before retrieving doses");
+        for (key, value) in keys.iter().zip(values.iter()) {
             doses = value.doses();
-            info!("before constructing String");
-            allocated = format!(
-                "key: {}, value.current: {}, values.doses[{}]: {:#?}",
+            info!(
+                "key: {}, value.current: {}, values.doses[{}]: {}",
                 key.0.to_u64(),
-                current,
+                value.current(),
                 doses.len(),
                 doses
+                    .iter()
+                    .map(f32::to_string)
+                    .collect::<Vec<_>>()
+                    .join(", ")
             );
-            info!("before constructing &str");
-            message = allocated.as_str();
-            info!("before constructing RedString");
-            repr = RedString::from(message);
-            info!("before constructing ScriptRef");
-            holder = ScriptRef::new(&mut repr);
-            info!("before calling LogChannel");
-            call!("LogChannel;CNamescript_ref:String" (channel.clone(), holder) -> ());
         }
     }
 }

@@ -5,13 +5,12 @@ use cp2077_rs::{
     TimeSystem, TransactionSystem, TweakDbInterface,
 };
 use red4ext_rs::prelude::*;
-use red4ext_rs::types::{IScriptable, MaybeUninitRef, Ref};
+use red4ext_rs::types::{IScriptable, Ref};
 
 use crate::addictive::{Healer, Neuro};
 use crate::board::AddictedBoard;
 use crate::interop::{Consumptions, Substance, SubstanceId};
 use crate::symptoms::WithdrawalSymptoms;
-use crate::Field;
 
 #[derive(Debug)]
 pub struct System;
@@ -56,15 +55,20 @@ impl System {
     }
 }
 
+#[redscript_import]
 impl System {
-    pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions> {
-        Self::field("consumptions")
-            .get_value(Variant::new(self.clone()))
-            .try_take::<MaybeUninitRef<Consumptions>>()
-            .map(FromRepr::from_repr)
-            .expect("value for prop consumptions of type array<ref<Consumption>>")
-    }
+    pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions>;
 }
+
+// impl System {
+//     pub(crate) fn consumptions(self: &Ref<Self>) -> Ref<Consumptions> {
+//         Self::field("consumptions")
+//             .get_value(Variant::new(self.clone()))
+//             .try_take::<MaybeUninitRef<Consumptions>>()
+//             .map(FromRepr::from_repr)
+//             .expect("value for prop consumptions of type array<ref<Consumption>>")
+//     }
+// }
 
 impl System {
     fn withdrawal_symptoms(&self) -> BlackboardIdUint {
