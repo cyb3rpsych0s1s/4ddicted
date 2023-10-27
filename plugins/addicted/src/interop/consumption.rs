@@ -62,7 +62,10 @@ impl Consumption {
         call!("Addicted.Consumption::Create;Int32Float" (score, tms) -> Ref<Self>)
     }
     pub fn increase(self: &mut Ref<Self>, score: i32, dose: f32) {
-        Self::field("current").set_value(Variant::new(self.clone()), Variant::new(score));
+        Self::field("current").set_value(
+            Variant::new(self.clone()),
+            Variant::new((self.current() + score).min(Threshold::MAX)),
+        );
         call!("ArrayPush;array:FloatFloat" (self.doses(), dose) -> ());
     }
     pub fn decrease(self: &mut Ref<Self>, score: i32) {
@@ -71,7 +74,7 @@ impl Consumption {
         let shrink = size > Self::MAX_DOSES_LENGTH;
         Self::field("current").set_value(
             Variant::new(self.clone()),
-            Variant::new(self.current() - score),
+            Variant::new((self.current() - score).max(Threshold::MIN)),
         );
         if shrink {
             let starts = size - Self::MAX_DOSES_LENGTH;

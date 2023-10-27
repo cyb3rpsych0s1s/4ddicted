@@ -22,6 +22,8 @@ unsafe impl NativeRepr for Threshold {
 }
 
 impl Threshold {
+    pub const MIN: i32 = Self::Clean as i32;
+    pub const MAX: i32 = 100;
     pub fn is_serious(self) -> bool {
         matches!(self, Self::Notably | Self::Severely)
     }
