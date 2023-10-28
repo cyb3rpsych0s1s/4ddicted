@@ -152,5 +152,7 @@ Items.$(threshold)WeakenedActionEffect$(consumable)$(version):
     - { threshold: Severely, consumable: FirstAidWhiff, tier: VUncommon,   version: VUncommon }
     - { threshold: Notably,  consumable: FirstAidWhiff, tier: VEpic,       version: VEpic     }
     - { threshold: Severely, consumable: FirstAidWhiff, tier: VEpic,       version: VEpic     }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  tier: V0,          version: V0        }
+    - { threshold: Severely, consumable: BonesMcCoy70,  tier: V0,          version: V0        }
   $base: Items.$(consumable)$(version)_inline3
   statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(tier)

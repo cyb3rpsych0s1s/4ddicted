@@ -1,8 +1,8 @@
 use cp2077_rs::{
     get_all_blackboard_defs, BlackboardIdUint, DelayCallback, DelaySystem,
     EquipmentSystemPlayerData, Event, GameDataEquipmentArea, GameInstance, GameTime, Housing,
-    InventoryDataManagerV2, ObjectActionEffectRecord, PlayerPuppet, RPGManager, ScriptedPuppet,
-    TimeSystem, TransactionSystem, TweakDbInterface,
+    InventoryDataManagerV2, PlayerPuppet, RPGManager, ScriptedPuppet, TimeSystem,
+    TransactionSystem,
 };
 use red4ext_rs::prelude::*;
 use red4ext_rs::types::{IScriptable, Ref};
@@ -169,29 +169,6 @@ impl System {
                     // update cyberware status
                 }
             }
-        }
-    }
-    pub fn on_process_status_effect(mut action_effects: Vec<WRef<ObjectActionEffectRecord>>) {
-        let mut replacements = Vec::with_capacity(action_effects.len());
-        for (idx, effect) in action_effects.iter().enumerate() {
-            if let Some(effect) = effect.clone().upgrade() {
-                let id: TweakDbId = effect.get_id();
-                std::mem::drop(effect);
-                if let Ok(id) = SubstanceId::try_from(id) {
-                    if id.is_healer() {
-                        let action = TweakDbInterface::get_object_action_effect_record(
-                            TweakDbId::new("Items.SeverelyWeakenedActionEffectFirstAidWhiffV0"),
-                        );
-                        replacements.push((idx, action));
-                    }
-                }
-            }
-        }
-        for (idx, action) in replacements.iter() {
-            let _ = std::mem::replace(
-                &mut action_effects[*idx],
-                red4ext_rs::prelude::Ref::<ObjectActionEffectRecord>::downgrade(action).to_owned(),
-            );
         }
     }
     pub fn is_losing_potency(self: Ref<Self>, item: ItemId) -> bool {

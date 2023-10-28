@@ -16,7 +16,7 @@ final static func ProcessUsedItemAction(executor: wref<GameObject>, actionID: Tw
   }
 }
 
-// used at all times
+// used at all times, once status effects have been processed
 @wrapMethod(ItemActionsHelper)
 public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool) -> Bool {
   LogChannel(n"DEBUG", s"process item action \(TDBID.ToStringDEBUG(actionID))");
@@ -27,7 +27,7 @@ public final static func ProcessItemAction(gi: GameInstance, executor: wref<Game
   return used;
 }
 
-// used at all times
+// used at all times, once status effects have been processed
 @wrapMethod(ItemActionsHelper)
 public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool, quantity: Int32) -> Bool {
   LogChannel(n"DEBUG", s"process item action \(TDBID.ToStringDEBUG(actionID))");

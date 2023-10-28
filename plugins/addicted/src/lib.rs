@@ -20,7 +20,6 @@ define_plugin! {
         register_function!("Addicted.OnIngestedItem", System::on_ingested_item);
         register_function!("Addicted.OnStatusEffectNotAppliedOnSpawn", System::on_status_effect_not_applied_on_spawn);
         register_function!("Addicted.OnUnequipItem", System::on_unequip_item);
-        register_function!("Addicted.OnProcessStatusEffect", System::on_process_status_effect);
         register_function!("Addicted.IsLosingPotency", System::is_losing_potency);
 
         #[cfg(debug_assertions)]
@@ -47,17 +46,20 @@ fn write_to_file(names: Vec<String>, filename: String) {
 fn native_log(channel: CName, message: ScriptRef<RedString>) -> ();
 
 #[cfg(debug_assertions)]
-macro_rules! dbg {
-    ($message:expr) => {
+macro_rules! reds_dbg {
+    ($($arg:tt)*) => {
         #[cfg(not(feature = "console"))]
-        ::red4ext_rs::logger::info!("{}", $message);
+        ::red4ext_rs::logger::info!($($arg)*);
         #[cfg(feature = "console")]
         $crate::native_log(
             CName::new("DEBUG"),
-            ScriptRef::new(&mut RedString::new($message)),
+            ScriptRef::new(&mut RedString::new(::std::format!($($arg)*))),
         );
     };
 }
+
+#[cfg(debug_assertions)]
+pub(crate) use reds_dbg;
 
 /// usage:
 ///
@@ -116,7 +118,7 @@ fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
                     .collect::<Vec<_>>()
                     .join(", ")
             );
-            dbg!(message);
+            reds_dbg!("{message}");
         }
     }
 }

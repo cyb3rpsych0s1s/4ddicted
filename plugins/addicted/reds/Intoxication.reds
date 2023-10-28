@@ -1,5 +1,40 @@
 module Addicted
 
+native func IsLosingPotency(system: ref<System>, item: ItemID) -> Bool;
+
+// used at all times, before status effects are processed
+@wrapMethod(ConsumeAction)
+protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "[ConsumeAction] ProcessStatusEffects...");
+    let i: Int32 = 0;
+    while i < ArraySize(Deref(actionEffects)) {
+        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
+        i += 1;
+    }
+    LogChannel(n"DEBUG", "--------------------------------------------");
+    wrappedMethod(actionEffects, gameInstance);
+}
+
+// used at all times, before status effects are processed
+@wrapMethod(UseHealChargeAction)
+protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "[UseHealChargeAction] ProcessStatusEffects...");
+    let i: Int32;
+    i = 0;
+    while i < ArraySize(Deref(actionEffects)) {
+        LogChannel(n"DEBUG", s"BEFORE: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()))");
+        if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.FirstAidWhiffVEpic" {
+            Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"Items.SeverelyWeakenedActionEffectFirstAidWhiffVEpic");
+        } else if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.BonesMcCoy70V0" {
+            Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V0");
+        }
+        LogChannel(n"DEBUG", s"AFTER: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()))");
+        i += 1;
+    }
+    LogChannel(n"DEBUG", "--------------------------------------------");
+    wrappedMethod(actionEffects, gameInstance);
+}
+
 /*
 
 private final func OnStatusEffectUsedHealingItemOrCyberwareApplied() -> Void
@@ -29,57 +64,3 @@ BaseStatusEffect.BonesMcCoy70VEpic
         ModiyStatPoolModifier_Record: BaseStats.InjectorBaseOverTheTimeHealing > BaseStats.InjectorBaseOverTheTimeHealing
 
 */
-
-native func OnProcessStatusEffect(actionEffects: array<wref<ObjectActionEffect_Record>>) -> Void;
-native func IsLosingPotency(system: ref<System>, item: ItemID) -> Bool;
-
-@wrapMethod(ConsumeAction)
-protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "[ConsumeAction] ProcessStatusEffects...");
-    let i: Int32 = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
-        i += 1;
-    }
-    LogChannel(n"DEBUG", "---------------------------------------------");
-    wrappedMethod(actionEffects, gameInstance);
-}
-
-@wrapMethod(UseHealChargeAction)
-protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "[UseHealChargeAction] ProcessStatusEffects...");
-    let i: Int32;
-    i = 0;
-    // LogChannel(n"DEBUG", "------------------BEFORE---------------------");
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
-        i += 1;
-    }
-    // i = 0;
-    // while i < ArraySize(Deref(actionEffects)) {
-    //     if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.FirstAidWhiffVEpic" {
-    //         Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"BaseStatusEffect.BlackLaceV1");
-    //     }
-    //     i += 1;
-    // }
-    // i = 0;
-    // LogChannel(n"DEBUG", "------------------AFTER----------------------");
-    // while i < ArraySize(Deref(actionEffects)) {
-    //     LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
-    //     i += 1;
-    // }
-    LogChannel(n"DEBUG", "---------------------------------------------");
-    wrappedMethod(actionEffects, gameInstance);
-}
-
-@wrapMethod(BaseScriptableAction)
-protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "[BaseScriptableAction] ProcessStatusEffects...");
-    let i: Int32 = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
-        i += 1;
-    }
-    LogChannel(n"DEBUG", "---------------------------------------------");
-    wrappedMethod(actionEffects, gameInstance);
-}
