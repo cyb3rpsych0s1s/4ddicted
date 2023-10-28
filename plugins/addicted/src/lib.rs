@@ -78,6 +78,8 @@ fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
 /// ```
 #[cfg(debug_assertions)]
 fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
+    use cp2077_rs::reds_dbg;
+
     if let Some(ref player) = player.upgrade() {
         let system = &System::get_instance(player.get_game());
         let consumptions = &system.consumptions();

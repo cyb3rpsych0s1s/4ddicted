@@ -38,7 +38,7 @@ pub enum Error {
 
 #[cfg(debug_assertions)]
 #[red4ext_rs::prelude::redscript_global(name = "LogChannel", native)]
-fn native_log(
+pub fn native_log(
     channel: red4ext_rs::types::CName,
     message: red4ext_rs::types::ScriptRef<red4ext_rs::types::RedString>,
 ) -> ();
