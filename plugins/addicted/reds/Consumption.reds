@@ -5,53 +5,7 @@ public class Consumptions extends IScriptable {
     private persistent let values: array<ref<Consumption>>;
     private let observers: array<Notify>;
     private func Keys() -> array<TweakDBID> { return this.keys; }
-    private func Values() -> array<ref<Consumption>> {
-        for v in this.values {
-            LogChannel(n"DEBUG", s"\(IsDefined(v) ? "defined" : "null")");
-        }
-        return this.values;
-    }
-    private func OnConsumeOnce(once: ConsumeOnce) -> Void {
-        LogChannel(n"DEBUG", s"once: score \(once.increase.score), when \(once.increase.when)");
-        let consumption = new Consumption();
-        consumption.current = once.increase.score;
-        consumption.doses = [once.increase.when];
-        ArrayPush(this.keys, once.id);
-        ArrayPush(this.values, consumption);
-    }
-    private func OnConsumeAgain(again: ConsumeAgain) -> Void {
-        LogChannel(n"DEBUG", s"again: score \(again.increase.score), when \(again.increase.when)");
-        let consumption: ref<Consumption> = this.values[Cast<Int32>(again.which)];
-        consumption.current = consumption.current + again.increase.score;
-        ArrayPush(consumption.doses, again.increase.when);
-    }
-    private func OnWeanOff(off: WeanOff) -> Void {
-        LogChannel(n"DEBUG", s"weanoff: off.size \(ArraySize(off.decrease))");
-        let consumption: ref<Consumption>;
-        for decrease in off.decrease {
-            consumption = this.values[Cast<Int32>(decrease.which)];
-            consumption.current = consumption.current - decrease.score;
-            if ArraySize(decrease.doses) > 0 { consumption.doses = decrease.doses; }
-        }
-    }
-    private func SetConsumptions(id: TweakDBID, threshold: Int32) -> Void {
-        let idx: Int32 = 0;
-        let found: Int32 = -1;
-        for key in this.keys {
-            if Equals(key, id) { found = idx; }
-            idx += 1;
-        }
-        let consumption: ref<Consumption> = new Consumption();
-        consumption.current = threshold;
-        if found == -1 {
-            consumption.doses = [];
-            ArrayPush(this.keys, id);
-            ArrayPush(this.values, consumption);
-        } else {
-            consumption.doses = this.values[found].doses;
-            this.values[found] = consumption;
-        }
-    }
+    private func Values() -> array<ref<Consumption>> { return this.values; }
     public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
         ArrayPush(this.observers, new Notify(target, function));
     }

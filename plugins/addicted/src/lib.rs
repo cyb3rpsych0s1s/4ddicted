@@ -1,6 +1,4 @@
 #![feature(arbitrary_self_types)]
-#![feature(concat_idents)]
-#![recursion_limit = "1024"]
 
 use red4ext_rs::prelude::*;
 use system::System;
@@ -24,8 +22,9 @@ define_plugin! {
         register_function!("Addicted.OnUnequipItem", System::on_unequip_item);
         register_function!("Addicted.OnProcessStatusEffect", System::on_process_status_effect);
         register_function!("Addicted.IsLosingPotency", System::is_losing_potency);
-        register_function!("WriteToFile", write_to_file);
 
+        #[cfg(debug_assertions)]
+        register_function!("WriteToFile", write_to_file);
         #[cfg(debug_assertions)]
         register_function!("TestApplyStatus", test_apply_status);
         #[cfg(debug_assertions)]
@@ -35,11 +34,29 @@ define_plugin! {
     }
 }
 
+#[cfg(debug_assertions)]
 fn write_to_file(names: Vec<String>, filename: String) {
     let _ = std::fs::write(
         format!("C:\\Development\\4ddicted\\{filename}.txt"),
         names.join("\n"),
     );
+}
+
+#[cfg(debug_assertions)]
+#[redscript_global(name = "LogChannel", native)]
+fn native_log(channel: CName, message: ScriptRef<RedString>) -> ();
+
+#[cfg(debug_assertions)]
+macro_rules! dbg {
+    ($message:expr) => {
+        #[cfg(not(feature = "console"))]
+        ::red4ext_rs::logger::info!("{}", $message);
+        #[cfg(feature = "console")]
+        $crate::native_log(
+            CName::new("DEBUG"),
+            ScriptRef::new(&mut RedString::new($message)),
+        );
+    };
 }
 
 /// usage:
@@ -85,9 +102,10 @@ fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
         let keys = consumptions.keys();
         let values = consumptions.values();
         let mut doses: Vec<f32>;
+        let mut message: String;
         for (key, value) in keys.iter().zip(values.iter()) {
             doses = value.doses();
-            info!(
+            message = format!(
                 "key: {}, value.current: {}, values.doses[{}]: {}",
                 key.as_ref(),
                 value.current(),
@@ -98,6 +116,7 @@ fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
                     .collect::<Vec<_>>()
                     .join(", ")
             );
+            dbg!(message);
         }
     }
 }
