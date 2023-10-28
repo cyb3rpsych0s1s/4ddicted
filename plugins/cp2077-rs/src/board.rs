@@ -52,23 +52,11 @@ impl ClassType for AllBlackboardDefinitions {
 impl AllBlackboardDefinitions {
     pub fn player_state_machine(self: &Ref<Self>) -> Ref<PlayerStateMachineDef> {
         use crate::codeware::Field;
-        use red4ext_rs::types::Variant;
-        use red4ext_rs::types::VariantExt;
-        let field = Self::field("PlayerStateMachine");
-        field
-            .get_value(Variant::new(self.clone()))
-            .try_take()
-            .expect("value for prop PlayerStateMachine of type PlayerStateMachineDef")
+        Self::get_field_value(self, "PlayerStateMachine")
     }
     pub fn ui_interactions(self: &Ref<Self>) -> Ref<UIInteractionsDef> {
         use crate::codeware::Field;
-        use red4ext_rs::types::Variant;
-        use red4ext_rs::types::VariantExt;
-        let field = Self::field("UIInteractions");
-        field
-            .get_value(Variant::new(self.clone()))
-            .try_take()
-            .expect("value for prop UIInteractions of type UIInteractionsDef")
+        Self::get_field_value(self, "UIInteractions")
     }
 }
 

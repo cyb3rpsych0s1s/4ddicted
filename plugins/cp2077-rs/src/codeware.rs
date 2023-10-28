@@ -1,5 +1,5 @@
 use red4ext_rs::{
-    prelude::{redscript_import, ClassType, NativeRepr},
+    prelude::{redscript_import, ClassType, FromRepr, NativeRepr},
     types::{CName, IScriptable, MaybeUninitRef, Ref, ScriptRef, Variant},
 };
 
@@ -173,6 +173,19 @@ pub trait Field: ClassType {
         cls.get_property(CName::new(name))
             .into_ref()
             .unwrap_or_else(|| panic!("get prop {name} for class {}", Self::NAME))
+    }
+    fn get_field_value<A>(self: &Ref<Self>, name: &str) -> Ref<A>
+    where
+        Self: Sized,
+        Ref<A>: FromRepr,
+        A: ClassType,
+    {
+        use red4ext_rs::types::VariantExt;
+        let field = Self::field(name);
+        field
+            .get_value(Variant::new(self.clone()))
+            .try_take()
+            .expect(&format!("value for prop {name} of type {}", A::NAME))
     }
 }
 impl<T> Field for T where T: ClassType {}
