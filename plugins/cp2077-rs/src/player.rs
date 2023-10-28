@@ -1,4 +1,4 @@
-use crate::{EquipmentSystem, Event, GameInstance, GameObject, IBlackboard};
+use crate::{Entity, EquipmentSystem, Event, GameInstance, GameObject, IBlackboard};
 use red4ext_rs::{
     prelude::{redscript_import, ClassType},
     types::{CName, Ref},
@@ -27,6 +27,14 @@ impl PlayerPuppet {
 
     /// `private final const func GetEquipmentSystem() -> ref<EquipmentSystem>`
     pub fn get_equipment_system(self: &Ref<Self>) -> Ref<EquipmentSystem>;
+}
+
+impl PlayerPuppet {
+    pub fn to_entity(self: &Ref<Self>) -> Ref<Entity> {
+        Ref::<GameObject>::upcast(Ref::<ScriptedPuppet>::upcast(Ref::<Self>::upcast(
+            self.clone(),
+        )))
+    }
 }
 
 #[derive(Debug)]

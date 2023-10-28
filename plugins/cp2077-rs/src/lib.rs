@@ -35,3 +35,24 @@ pub use codeware::*;
 pub enum Error {
     Incompatible,
 }
+
+#[cfg(debug_assertions)]
+#[red4ext_rs::prelude::redscript_global(name = "LogChannel", native)]
+fn native_log(
+    channel: red4ext_rs::types::CName,
+    message: red4ext_rs::types::ScriptRef<red4ext_rs::types::RedString>,
+) -> ();
+
+#[cfg(debug_assertions)]
+#[macro_export]
+macro_rules! reds_dbg {
+    ($($arg:tt)*) => {
+        #[cfg(not(feature = "console"))]
+        ::red4ext_rs::prelude::info!($($arg)*);
+        #[cfg(feature = "console")]
+        $crate::native_log(
+            CName::new("DEBUG"),
+            ScriptRef::new(&mut RedString::new(::std::format!($($arg)*))),
+        );
+    };
+}

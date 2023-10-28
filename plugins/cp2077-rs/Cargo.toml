@@ -11,6 +11,7 @@ crate-type = ["cdylib", "rlib"]
 red4ext-rs.workspace = true
 
 [features]
-default = ["codeware", "tweakxl"]
+default = ["console", "codeware", "tweakxl"]
+console = []
 codeware = []
 tweakxl = []

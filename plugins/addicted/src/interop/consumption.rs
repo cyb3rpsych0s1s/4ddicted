@@ -1,14 +1,11 @@
-use cp2077_rs::GameTime;
+use cp2077_rs::{Field, GameTime};
 use red4ext_rs::{
     call, info,
     prelude::{redscript_import, ClassType},
     types::{IScriptable, MaybeUninitRef, RedArray, Ref, Variant, VariantExt},
 };
 
-use crate::{
-    intoxication::{Intoxication, Intoxications, VariousIntoxication},
-    Field,
-};
+use crate::intoxication::{Intoxication, Intoxications, VariousIntoxication};
 
 use super::{Category, Substance, SubstanceId, Threshold};
 

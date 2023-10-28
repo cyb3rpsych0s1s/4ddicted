@@ -2,8 +2,10 @@ use std::ffi::c_void;
 
 use red4ext_rs::{
     prelude::{redscript_import, ClassType, NativeRepr},
-    types::{CName, IScriptable, Ref},
+    types::{CName, EntityId, IScriptable, Ref},
 };
+
+use crate::BlackboardSystem;
 
 #[derive(Clone)]
 #[repr(C)]
@@ -26,6 +28,13 @@ impl Default for GameInstance {
 unsafe impl NativeRepr for GameInstance {
     const NAME: &'static str = "GameInstance";
     const NATIVE_NAME: &'static str = "ScriptGameInstance";
+}
+
+#[redscript_import]
+impl GameInstance {
+    /// `public static native GetBlackboardSystem(self: GameInstance): BlackboardSystem`
+    #[redscript(native)]
+    pub fn get_blackboard_system(instance: GameInstance) -> Ref<BlackboardSystem>;
 }
 
 #[derive(Debug)]
@@ -55,7 +64,7 @@ impl ClassType for ScriptableSystem {
 pub struct GameObject;
 
 impl ClassType for GameObject {
-    type BaseClass = IScriptable;
+    type BaseClass = Entity;
     const NAME: &'static str = "GameObject";
     /// required when `GameObject` expected in signature yet `whandle:gameObject` expected when performing `call!`
     const NATIVE_NAME: &'static str = "gameObject";
@@ -66,6 +75,22 @@ impl GameObject {
     /// `public final native const func GetGame() -> GameInstance;`
     #[redscript(native)]
     pub fn get_game(self: &Ref<Self>) -> GameInstance;
+}
+
+#[derive(Debug)]
+pub struct Entity;
+
+impl ClassType for Entity {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "Entity";
+    const NATIVE_NAME: &'static str = "entEntity";
+}
+
+#[redscript_import]
+impl Entity {
+    /// `public native GetEntityID(): EntityID`
+    #[redscript(native)]
+    pub fn get_entity_id(self: &Ref<Self>) -> EntityId;
 }
 
 #[derive(Debug)]

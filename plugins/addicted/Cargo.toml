@@ -13,7 +13,7 @@ bitflags = "2.4.0"
 casey = "0.4.0"
 const-str.workspace = true
 cp2077-rs.workspace = true
-lazy_static = "1.4.0"
+lazy_static.workspace = true
 phf.workspace = true
 stupefied = { path = "../stupefied" }
 quote = "1.0.33"

@@ -10,4 +10,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 cp2077-rs.workspace = true
+lazy_static.workspace = true
 red4ext-rs.workspace = true

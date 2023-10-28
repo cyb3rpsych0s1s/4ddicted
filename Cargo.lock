@@ -354,6 +354,7 @@ name = "stupefied"
 version = "0.1.0"
 dependencies = [
  "cp2077-rs",
+ "lazy_static",
  "red4ext-rs",
 ]
 

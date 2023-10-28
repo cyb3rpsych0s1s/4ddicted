@@ -41,26 +41,6 @@ fn write_to_file(names: Vec<String>, filename: String) {
     );
 }
 
-#[cfg(debug_assertions)]
-#[redscript_global(name = "LogChannel", native)]
-fn native_log(channel: CName, message: ScriptRef<RedString>) -> ();
-
-#[cfg(debug_assertions)]
-macro_rules! reds_dbg {
-    ($($arg:tt)*) => {
-        #[cfg(not(feature = "console"))]
-        ::red4ext_rs::logger::info!($($arg)*);
-        #[cfg(feature = "console")]
-        $crate::native_log(
-            CName::new("DEBUG"),
-            ScriptRef::new(&mut RedString::new(::std::format!($($arg)*))),
-        );
-    };
-}
-
-#[cfg(debug_assertions)]
-pub(crate) use reds_dbg;
-
 /// usage:
 ///
 /// ```lua
@@ -122,15 +102,3 @@ fn checkup(player: WRef<cp2077_rs::PlayerPuppet>) {
         }
     }
 }
-
-pub(crate) trait Field: ClassType {
-    fn field(name: &str) -> Ref<cp2077_rs::ReflectionProp> {
-        let cls = cp2077_rs::Reflection::get_class(CName::new(Self::NAME))
-            .into_ref()
-            .unwrap_or_else(|| panic!("get class {}", Self::NAME));
-        cls.get_property(CName::new(name))
-            .into_ref()
-            .unwrap_or_else(|| panic!("get prop {name} for class {}", Self::NAME))
-    }
-}
-impl<T> Field for T where T: ClassType {}

@@ -164,3 +164,15 @@ impl ReflectionMemberFunc {
         status: ScriptRef<bool>,
     ) -> Variant;
 }
+
+pub trait Field: ClassType {
+    fn field(name: &str) -> Ref<ReflectionProp> {
+        let cls = Reflection::get_class(CName::new(Self::NAME))
+            .into_ref()
+            .unwrap_or_else(|| panic!("get class {}", Self::NAME));
+        cls.get_property(CName::new(name))
+            .into_ref()
+            .unwrap_or_else(|| panic!("get prop {name} for class {}", Self::NAME))
+    }
+}
+impl<T> Field for T where T: ClassType {}
