@@ -32,6 +32,7 @@ public class System extends ScriptableSystem {
     private persistent let consumptions: ref<Consumptions>;
     private let restingSince: GameTime;
     private let ingame: Bool;
+    public func IconMaxDOC() -> IconKind { return IconKind.Notably; }
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Addicted.System") as System;

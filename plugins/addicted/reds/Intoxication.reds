@@ -2,12 +2,6 @@ module Addicted
 
 native func IsLosingPotency(system: ref<System>, item: ItemID) -> Bool;
 
-@wrapMethod(InkImageUtils)
-public final static func RequestSetImage(controller: ref<inkLogicController>, target: wref<inkImage>, iconID: TweakDBID, opt callbackFunction: CName) -> Void {
-    if iconID != t"UIIcon.rested_icon" {LogChannel(n"DEBUG", s"icon id: \(TDBID.ToStringDEBUG(iconID))");}
-    wrappedMethod(controller, target, iconID, callbackFunction);
-}
-
 @wrapMethod(PlayerPuppet)
 protected func StartStatusEffectVFX(evt: ref<ApplyStatusEffectEvent>) -> Void {
     let vfxs: array<wref<StatusEffectFX_Record>> = [];
@@ -16,39 +10,6 @@ protected func StartStatusEffectVFX(evt: ref<ApplyStatusEffectEvent>) -> Void {
         LogChannel(n"DEBUG", s"name: \(NameToString(vfx.Name())), should reapply: \(vfx.ShouldReapply())");
     }
     wrappedMethod(evt);
-}
-
-// used at all times, before status effects are processed
-@wrapMethod(ConsumeAction)
-protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "[ConsumeAction] ProcessStatusEffects...");
-    let i: Int32 = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()));
-        i += 1;
-    }
-    LogChannel(n"DEBUG", "--------------------------------------------");
-    wrappedMethod(actionEffects, gameInstance);
-}
-
-// used at all times, before status effects are processed
-@wrapMethod(UseHealChargeAction)
-protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "[UseHealChargeAction] ProcessStatusEffects...");
-    let i: Int32;
-    i = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", s"BEFORE: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()))");
-        if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.FirstAidWhiffVEpic" {
-            Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"Items.SeverelyWeakenedActionEffectFirstAidWhiffVEpic");
-        } else if Deref(actionEffects)[i].StatusEffect().GetID() == t"BaseStatusEffect.BonesMcCoy70V0" {
-            Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(t"Items.SeverelyWeakenedActionEffectBonesMcCoy70V0");
-        }
-        LogChannel(n"DEBUG", s"AFTER: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].StatusEffect().GetID()))");
-        i += 1;
-    }
-    LogChannel(n"DEBUG", "--------------------------------------------");
-    wrappedMethod(actionEffects, gameInstance);
 }
 
 /*
