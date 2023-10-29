@@ -2,6 +2,22 @@ module Addicted
 
 native func IsLosingPotency(system: ref<System>, item: ItemID) -> Bool;
 
+@wrapMethod(InkImageUtils)
+public final static func RequestSetImage(controller: ref<inkLogicController>, target: wref<inkImage>, iconID: TweakDBID, opt callbackFunction: CName) -> Void {
+    if iconID != t"UIIcon.rested_icon" {LogChannel(n"DEBUG", s"icon id: \(TDBID.ToStringDEBUG(iconID))");}
+    wrappedMethod(controller, target, iconID, callbackFunction);
+}
+
+@wrapMethod(PlayerPuppet)
+protected func StartStatusEffectVFX(evt: ref<ApplyStatusEffectEvent>) -> Void {
+    let vfxs: array<wref<StatusEffectFX_Record>> = [];
+    evt.staticData.VFX(vfxs);
+    for vfx in vfxs {
+        LogChannel(n"DEBUG", s"name: \(NameToString(vfx.Name())), should reapply: \(vfx.ShouldReapply())");
+    }
+    wrappedMethod(evt);
+}
+
 // used at all times, before status effects are processed
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {

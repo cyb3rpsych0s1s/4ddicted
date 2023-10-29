@@ -1,17 +1,9 @@
-use std::{
-    collections::HashMap,
-    sync::{Arc, Mutex},
-};
+use cp2077_rs::{get_all_blackboard_defs, reds_dbg, BlackboardIdBool, PlayerPuppet};
 
-use cp2077_rs::{
-    get_all_blackboard_defs, reds_dbg, BlackboardDefinition, BlackboardIdBool, BlackboardIdInt,
-    BlackboardIdVariant, CallbackHandle, GameInstance, PlayerPuppet, UIInteractionsDef,
-};
-use lazy_static::lazy_static;
 use red4ext_rs::{
     info,
     prelude::{redscript_import, ClassType},
-    types::{CName, IScriptable, Ref},
+    types::{IScriptable, Ref},
 };
 
 use crate::board::StupefiedBoard;
@@ -60,7 +52,7 @@ impl CompanionSystem {
         //     true,
         // );
     }
-    pub fn on_detach(mut self: Ref<Self>) {
+    pub fn on_detach(self: Ref<Self>) {
         // let system = GameInstance::get_blackboard_system(self.player().get_game());
         // let board = system.get_local_instanced(
         //     self.player().to_entity().get_entity_id(),
@@ -72,7 +64,7 @@ impl CompanionSystem {
         //     reference,
         // );
     }
-    pub fn on_combat_changed(value: i32) {
+    pub fn on_combat_changed(_value: i32) {
         reds_dbg!("on combat changed called!");
     }
     /// disable voice whenever consuming item

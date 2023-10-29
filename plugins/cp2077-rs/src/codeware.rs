@@ -184,10 +184,12 @@ pub trait Field: ClassType {
         field
             .get_value(Variant::new(self.clone()))
             .try_take()
-            .expect(&format!(
-                "value for prop {name} of type {}",
-                ::red4ext_rs::ffi::resolve_cname(&field.get_type().get_name())
-            ))
+            .unwrap_or_else(|| {
+                panic!(
+                    "value for prop {name} of type {}",
+                    ::red4ext_rs::ffi::resolve_cname(&field.get_type().get_name())
+                )
+            })
     }
     fn set_field_value<A>(self: &mut Ref<Self>, name: &str, value: A)
     where
