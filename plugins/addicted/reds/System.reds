@@ -7,6 +7,7 @@ public class System extends ScriptableSystem {
     private let observers: array<Notify>;
     private let restingSince: GameTime;
     private let lastWeanOff: GameTime;
+    private let player: wref<PlayerPuppet>;
 
     //// consumptions
 
@@ -96,7 +97,8 @@ public class System extends ScriptableSystem {
         }
     }
     private func FireEvent(event: ref<AddictionEvent>) {
-        if ArraySize(this.observers) == 0 { return; }
+        let size = ArraySize(this.observers);
+        if size == 0 { return; }
         for observer in this.observers {
             if IsDefined(observer.target) {
                 Reflection.GetClassOf(observer.target)
@@ -117,28 +119,72 @@ public class System extends ScriptableSystem {
             board.SignalInt(pin);
         }
     }
+    private func UpdateEffect(item: ItemID, threshold: Threshold) -> Void {
+        let effect = GetStatusEffect(item);
+        if !TDBID.IsValid(effect) { return; }
+        let system = this.EffectSystem();
+        let applied: array<ref<StatusEffect>>;
+        let current: Int32;
+        let next: Int32 = Equals(threshold, Threshold.Notably)
+        ? 1
+        : Equals(threshold, Threshold.Severely)
+          ? 2
+          : 0;
+        let count: Int32;
+        if system.HasStatusEffect(this.player.GetEntityID(), effect) {
+            system.GetAppliedEffectsWithID(this.player.GetEntityID(), effect, applied);
+            current = ArraySize(applied);
+            LogChannel(n"DEBUG", ToString(current));
+            // current = ArraySize(applied) > 0
+            // ? Cast<Int32>(applied[0].GetStackCount())
+            // : 0;
+            count = next - current;
+            if count > 0 {
+                system.ApplyStatusEffect(this.player.GetEntityID(), effect, t"Addiction", this.player.GetEntityID(), Cast<Uint32>(count));
+            } else if current < 0 {
+                system.RemoveStatusEffect(this.player.GetEntityID(), effect, Cast<Uint32>(Abs(count)));
+            }
+        }
+    }
     private func Notify(item: ItemID, before: Int32, after: Int32) -> Void {
         let consume: ref<ConsumeEvent> = new ConsumeEvent();
         consume.item = item;
         consume.score = after;
         this.FireEvent(consume);
+        this.UpdateBoard(item, after);
 
         let former: Threshold = GetThreshold(before);
         let latter: Threshold = GetThreshold(after);
         if NotEquals(former, latter) {
-            let evt: ref<CrossThresholdEvent>;
-            if before < after { evt = new IncreaseThresholdEvent(); }
-            else              { evt = new DecreaseThresholdEvent(); }
-            evt.item   = item;
-            evt.former = former;
-            evt.latter = latter;
-            this.FireEvent(evt);
+            let cross: ref<CrossThresholdEvent>;
+            if before < after { cross = new IncreaseThresholdEvent(); }
+            else              { cross = new DecreaseThresholdEvent(); }
+            cross.item   = item;
+            cross.former = former;
+            cross.latter = latter;
+            this.FireEvent(cross);
+            this.UpdateEffect(item, latter);
         }
     }
 
     //// initialization methods
 
-    private func OnAttach() -> Void {}
+    private func OnAttach() -> Void {
+        let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
+        if IsDefined(player) {
+            this.player = player;
+        }
+    }
+
+    private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
+        let player: ref<PlayerPuppet> = request.owner as PlayerPuppet;
+        if IsDefined(player) {
+            this.player = player;
+        }
+    }
+    private final func OnPlayerDetach(request: ref<PlayerDetachRequest>) -> Void {
+        this.player = null;
+    }
 
     //// helper methods
 
@@ -154,11 +200,15 @@ public class System extends ScriptableSystem {
     public func GetHighestScore(itemID: ItemID) -> Int32 {
         return this.GetHighestScore(GetBaseName(itemID));
     }
+    public func GetHighestThreshold(itemID: ItemID) -> Threshold {
+        return GetThreshold(this.GetHighestScore(GetBaseName(itemID)));
+    }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Addicted.System") as System;
     }
-    public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
-    public func BoardSystem() -> ref<BlackboardSystem> { return GameInstance.GetBlackboardSystem(this.GetGameInstance()); }
+    public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.player.GetGame()); }
+    public func BoardSystem() -> ref<BlackboardSystem> { return GameInstance.GetBlackboardSystem(this.player.GetGame()); }
+    public func EffectSystem() -> ref<StatusEffectSystem> { return GameInstance.GetStatusEffectSystem(this.player.GetGame()); }
 }

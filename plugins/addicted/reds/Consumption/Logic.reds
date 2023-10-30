@@ -13,7 +13,15 @@ private func GetBaseName(id: TweakDBID) -> gamedataConsumableBaseName {
 }
 
 private func GetConsumable(id: TweakDBID) -> Consumable {
-    return GetConsumable(GetBaseName(id));
+    let base = GetBaseName(id);
+    if NotEquals(base, gamedataConsumableBaseName.Invalid) {
+        return GetConsumable(base);
+    }
+    switch(id) {
+        case t"Items.neuro_blocker":
+            return Consumable.NeuroBlocker;
+    }
+    return Consumable.Invalid;
 }
 
 public func GetConsumable(base: gamedataConsumableBaseName) -> Consumable {
@@ -32,4 +40,30 @@ public func GetConsumable(base: gamedataConsumableBaseName) -> Consumable {
             return Consumable.MemoryBooster;
     }
     LogChannel(n"ASSERT", s"unknown consumable for base \(ToString(base))");
+}
+
+public func GetGameplayTag(item: ItemID) -> CName {
+    return n"None";
+}
+
+public func GetStatusEffect(item: ItemID) -> TweakDBID {
+    switch (GetConsumable(ItemID.GetTDBID(item))) {
+        case Consumable.MaxDOC:
+            return t"BaseStatusEffect.AddictToFirstAidWhiff";
+        case Consumable.BounceBack:
+            return t"BaseStatusEffect.AddictToBonesMcCoy70";
+        case Consumable.HealthBooster:
+            return t"BaseStatusEffect.AddictToHealthBooster";
+        case Consumable.CarryCapacityBooster:
+            return t"BaseStatusEffect.AddictToCarryCapacityBooster";
+        case Consumable.StaminaBooster:
+            return t"BaseStatusEffect.AddictToStaminaBooster";
+        case Consumable.MemoryBooster:
+            return t"BaseStatusEffect.AddictToMemoryBooster";
+        case Consumable.Alcohol:
+            return t"BaseStatusEffect.AddictToAlcohol";
+        case Consumable.Tobacco:
+            return t"BaseStatusEffect.AddictToTobacco";
+    }
+    return TDBID.None();
 }

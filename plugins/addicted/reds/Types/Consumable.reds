@@ -8,6 +8,8 @@ enum Consumable {
     CarryCapacityBooster = 4,
     MemoryBooster = 5,
     NeuroBlocker = 6,
-    Count = 7,
-    Invalid = 8,
+    Alcohol = 7,
+    Tobacco = 8,
+    Count = 9,
+    Invalid = 10,
 }
