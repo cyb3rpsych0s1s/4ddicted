@@ -1,7 +1,5 @@
 module Addicted
 
-import Addicted.System
-
 @wrapMethod(TimeskipGameController)
 private final func Apply() -> Void {
   if this.m_hoursToSkip > 0 {

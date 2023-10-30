@@ -18,13 +18,13 @@ public class System extends ScriptableSystem {
         let after: Int32;
         if position != -1 {
             before = this.values[position].current;
-            after = before + GetAddictivity(itemID);
+            after = before + GetIncreaseFactor(itemID);
             if after > 100 { after = 100; }
             this.values[position].current = after;
             ArrayPush(this.values[position].doses, on);
         } else {
             before = 0;
-            after = before + GetAddictivity(itemID);
+            after = before + GetIncreaseFactor(itemID);
             let value = new Consumption();
             value.current = after;
             value.doses = [on];
@@ -65,7 +65,7 @@ public class System extends ScriptableSystem {
         let idx = this.Position(id);
         if idx == -1 { return; }
         let before = this.values[idx].current;
-        let after = before - GetResilience(ItemID.FromTDBID(id));
+        let after = before - GetDecreaseFactor(ItemID.FromTDBID(id));
         if after < 0 { after = 0; }
         this.values[idx].current = after;
         this.lastWeanOff = this.TimeSystem().GetGameTime();
@@ -109,21 +109,12 @@ public class System extends ScriptableSystem {
         let def: ref<AddictionsThresholdDef> = GetAllBlackboardDefs().PlayerStateMachine.Thresholds;
         let system = this.BoardSystem();
         let board = system.Get(def);
-        let id: BlackboardID_Variant;
-        let found = false;
-        switch(ItemID.GetTDBID(item)) {
-            case t"Items.FirstAidWhiffV0":
-                id = GetAllBlackboardDefs().PlayerStateMachine.Thresholds.MaxDOC;
-                found = true;
-                break;
-        }
-        if found {
-            let current = FromVariant<Threshold>(board.GetVariant(GetAllBlackboardDefs().PlayerStateMachine.Thresholds.MaxDOC));
-            let next = GetHighestThreshold(this.keys, this.values, item);
-            if NotEquals(current, next) {
-                board.SetVariant(GetAllBlackboardDefs().PlayerStateMachine.Thresholds.MaxDOC, ToVariant(next));
-                board.SignalVariant(id);
-            }
+        let pin: BlackboardID_Int = GetBoardPin(item);
+        let current = board.GetInt(pin);
+        let next = this.GetHighestScore(item);
+        if NotEquals(current, next) {
+            board.SetInt(pin, next);
+            board.SignalInt(pin);
         }
     }
     private func Notify(item: ItemID, before: Int32, after: Int32) -> Void {
@@ -147,21 +138,22 @@ public class System extends ScriptableSystem {
 
     //// initialization methods
 
-    private func CreateRegistry() -> Void {
-        this.registry = new inkHashMap();
-        let records = TweakDBInterface.GetRecords(n"ConsumableItem");
-        let consumable: ref<ConsumableItem_Record>;
-        let entry: ref<RegistryEntry>;
-        for record in records {
-            consumable = record as ConsumableItem_Record;
-            entry = GetRegistryEntry(consumable);
-            if IsDefined(entry) {
-                this.registry.Insert(TDBID.ToNumber(ItemID.GetTDBID(entry.id)), entry);
-            }
-        }
-    }
+    private func OnAttach() -> Void {}
 
     //// helper methods
+
+    public func GetHighestScore(base: gamedataConsumableBaseName) -> Int32 {
+        let highest: Int32 = 0;
+        let idx = 0;
+        for value in this.values {
+            if Equals(GetBaseName(this.keys[idx]), base) && value.current > highest { highest = value.current; }
+            idx += 1;
+        }
+        return highest;
+    }
+    public func GetHighestScore(itemID: ItemID) -> Int32 {
+        return this.GetHighestScore(GetBaseName(itemID));
+    }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
