@@ -47,7 +47,7 @@ BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
                   value: $(value)
         - Effectors.UsedHealingItemOrCyberwareEffector
   uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline5
+    $base: BaseStatusEffect.FirstAidWhiff_inline5
     iconPath: $(icon)_weakened_first_aid_whiff_icon
 # TODO: add once VFX archive ready
 # VFX:
