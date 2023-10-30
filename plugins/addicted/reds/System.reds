@@ -1,97 +1,127 @@
 module Addicted
 
-import Addicted.Consumptions
-import Addicted.Consumption
-import Codeware.*
-
-class ConsumeEvent extends Event {
-    let message: String;
-    static func Create(message: String) -> ref<ConsumeEvent> {
-        let evt: ref<ConsumeEvent> = new ConsumeEvent();
-        evt.message = message;
-        return evt;
-    }
-}
-
-class ConsumeCallback extends DelayCallback {
-  public let system: wref<System>;
-  public let message: String;
-  public func Call() -> Void {
-    LogChannel(n"DEBUG", s"received callback: \(this.message)");
-  }
-}
-
-@addMethod(PlayerPuppet)
-protected cb func OnConsumeEvent(evt: ref<ConsumeEvent>) -> Void {
-    LogChannel(n"DEBUG", s"received event: \(evt.message)");
-}
-
 public class System extends ScriptableSystem {
-    private let player: wref<PlayerPuppet>;
-    private let callbacks: wref<CallbackSystem>;
-    private persistent let consumptions: ref<Consumptions>;
+    private persistent let keys: array<TweakDBID>;
+    private persistent let values: array<ref<Consumption>>;
+    private let observers: array<Notify>;
     private let restingSince: GameTime;
-    private let ingame: Bool;
-    public func IconMaxDOC() -> IconKind { return IconKind.Notably; }
+    private let lastResilience: GameTime;
+
+    //// consumptions
+
+    private func Consumed(itemID: ItemID) -> Void {
+        let id = ItemID.GetTDBID(itemID);
+        let position = this.Position(id);
+        let on = this.TimeSystem().GetGameTimeStamp();
+        let before: Int32;
+        let after: Int32;
+        if position != -1 {
+            before = this.values[position].current;
+            after = before + GetAddictivity(itemID);
+            if after > 100 { after = 100; }
+            this.values[position].current = after;
+            ArrayPush(this.values[position].doses, on);
+        } else {
+            before = 0;
+            after = before + GetAddictivity(itemID);
+            let value = new Consumption();
+            value.current = after;
+            value.doses = [on];
+            ArrayPush(this.keys, id);
+            ArrayPush(this.values, value);
+        }
+        let former = GetThreshold(before);
+        let latter = GetThreshold(after);
+        if NotEquals(former, latter) {
+            this.Notify(former, latter);
+        }
+    }
+    private func Rested() -> Void {
+        let now = this.TimeSystem().GetGameTime();
+        let idx = 0;
+        let minimum: Int32;
+        let since: GameTime;
+        for key in this.keys {
+            minimum = GetMinimumSleepRequired(ItemID.FromTDBID(key));
+            since = GameTime.MakeGameTime(GameTime.Days(this.restingSince), GameTime.Hours(this.restingSince) + minimum, GameTime.Minutes(this.restingSince));
+            if GameTime.IsAfter(now, since) {
+                this.WeanOff(key);
+            }
+            idx += 1;
+        }
+    }
+    private func Refreshed() -> Void {
+        let now = this.TimeSystem().GetGameTime();
+        let last = GameTime.MakeGameTime(GameTime.Days(this.lastResilience), GameTime.Hours(this.lastResilience) + 12, GameTime.Minutes(this.lastResilience));
+        if GameTime.IsAfter(now, last) {
+            let idx = 0;
+            for key in this.keys {
+                this.WeanOff(key);
+                idx += 1;
+            }
+        }
+    }
+    private func Energized() -> Void {
+        this.Refreshed();
+    }
+    private func WeanOff(id: TweakDBID) -> Void {
+        let idx = this.Position(id);
+        if idx == -1 { return; }
+        let before = this.values[idx].current;
+        let after = before - GetResilience(ItemID.FromTDBID(id));
+        if after < 0 { after = 0; }
+        let former = GetThreshold(before);
+        let latter = GetThreshold(after);
+        this.values[idx].current = after;
+        this.lastResilience = this.TimeSystem().GetGameTime();
+        if NotEquals(former, latter) {
+            this.Notify(former, latter);
+        }
+    }
+    private func Position(id: TweakDBID) -> Int32 {
+        let idx = 0;
+        for key in this.keys {
+            if key == id { return idx; }
+            idx += 1;
+        }
+        return -1;
+    }
+
+    //// notifications
+
+    public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
+        ArrayPush(this.observers, new Notify(target, function));
+    }
+    public func UnregisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
+        let idx = ArraySize(this.observers) - 1;
+        while idx > -1 {
+            let observer = this.observers[idx];
+            if observer.target == target && Equals(observer.function, function) {
+                ArrayErase(this.observers, idx);
+            }
+            idx = idx - 1;
+        }
+    }
+    private func FireCallbacks(event: ref<CrossThresholdEvent>) {
+        for observer in this.observers {
+            if IsDefined(observer.target) {
+                Reflection.GetClassOf(observer.target)
+                    .GetFunction(observer.function)
+                    .Call(observer.target, [event]);
+            }
+        }
+    }
+    private func Notify(former: Threshold, latter: Threshold) -> Void {
+        let evt: ref<CrossThresholdEvent> = CrossThresholdEvent.Create(former, latter);
+        this.FireCallbacks(evt);
+    }
+
+    //// helper methods
+    
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Addicted.System") as System;
     }
-    private func OnAttach() -> Void {
-        this.callbacks = GameInstance.GetCallbackSystem();
-        this.callbacks.RegisterCallback(n"Session/Ready", this, n"OnSessionChanged");
-        this.callbacks.RegisterCallback(n"Session/End", this, n"OnSessionChanged");
-        if !IsDefined(this.consumptions)
-           || NotEquals(ArraySize(this.consumptions.keys), ArraySize(this.consumptions.values)) {
-            LogChannel(n"DEBUG", "initializing or resetting corrupted consumptions");
-            let consumptions = new Consumptions();
-            consumptions.keys = [];
-            consumptions.values = [];
-            this.consumptions = consumptions;
-        }
-    }
-    private func OnDetach() -> Void {
-        if IsDefined(this.callbacks) {
-            this.callbacks.UnregisterCallback(n"Session/Ready", this, n"OnSessionChanged");
-            this.callbacks.UnregisterCallback(n"Session/End", this, n"OnSessionChanged");
-            this.callbacks = null;
-        }
-    }
-    private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
-        if IsDefined(request.owner as PlayerPuppet) {
-            this.player = request.owner as PlayerPuppet;
-        }
-    }
-    private final func OnPlayerDetach(request: ref<PlayerDetachRequest>) -> Void {
-        this.player = null;
-    }
-    private cb func OnSessionChanged(event: ref<GameSessionEvent>) {
-        LogChannel(n"DEBUG", s"on session changed: pre-game: \(ToString(event.IsPreGame())) restored: \(ToString(event.IsRestored()))");
-        this.ingame = !event.IsPreGame();
-    }
-    public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
-        this.consumptions.RegisterCallback(target, function);
-    }
-    public func UnregisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
-        this.consumptions.UnregisterCallback(target, function);
-    }
-    public func IsInGame() -> Bool { return this.ingame; }
-    public func RestingSince() -> GameTime { return this.restingSince; }
-    public func OnSkipTime() -> Void { this.restingSince = this.TimeSystem().GetGameTime(); }
-    // imported in natives
-    public func Consumptions() -> ref<Consumptions> { return this.consumptions; }
-    public func Player() -> wref<PlayerPuppet> { return this.player; }
-    public func GetEquipAreaType(item: ItemID) -> gamedataEquipmentArea {
-        LogChannel(n"DEBUG", s"\(TDBID.ToStringDEBUG(ItemID.GetTDBID(item)))");
-        return EquipmentSystem.GetEquipAreaType(item); }
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.GetGameInstance()); }
-    public func TransactionSystem() -> ref<TransactionSystem> { return GameInstance.GetTransactionSystem(this.GetGameInstance()); }
-    public func DelaySystem() -> ref<DelaySystem> { return GameInstance.GetDelaySystem(this.GetGameInstance()); }
-    func CreateConsumeEvent(message: String) -> ref<ConsumeEvent> { return ConsumeEvent.Create(message); }
-    func CreateConsumeCallback(message: String) -> ref<ConsumeCallback> {
-        let callback: ref<ConsumeCallback> = new ConsumeCallback();
-        callback.system = this;
-        callback.message = message;
-        return callback;
-    }
+    public func BoardSystem() -> ref<BlackboardSystem> { return GameInstance.GetBlackboardSystem(this.GetGameInstance()); }
 }

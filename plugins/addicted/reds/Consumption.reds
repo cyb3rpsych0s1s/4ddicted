@@ -1,73 +1,50 @@
 module Addicted
 
-public class Consumptions extends IScriptable {
-    private persistent let keys: array<TweakDBID>;
-    private persistent let values: array<ref<Consumption>>;
-    private let observers: array<Notify>;
-    private func Keys() -> array<TweakDBID> { return this.keys; }
-    private func Values() -> array<ref<Consumption>> { return this.values; }
-    public func RegisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
-        ArrayPush(this.observers, new Notify(target, function));
-    }
-    public func UnregisterCallback(target: ref<ScriptableSystem>, function: CName) -> Void {
-        let idx = ArraySize(this.observers) - 1;
-        while idx > -1 {
-            let observer = this.observers[idx];
-            if observer.target == target && Equals(observer.function, function) {
-                ArrayErase(this.observers, idx);
-            }
-            idx = idx - 1;
-        }
-    }
-    private func FireCallbacks(event: ref<CrossThresholdEvent>) {
-        for observer in this.observers {
-            if IsDefined(observer.target) {
-                Reflection.GetClassOf(observer.target)
-                    .GetFunction(observer.function)
-                    .Call(observer.target, [event]);
-            }
-        }
-    }
-    private func Notify(former: Threshold, latter: Threshold) -> Void {
-        let evt: ref<CrossThresholdEvent> = CrossThresholdEvent.Create(former, latter);
-        this.FireCallbacks(evt);
-    }
-}
 public class Consumption extends IScriptable {
     private persistent let current: Int32;
     private persistent let doses: array<Float>;
-    private func Current() -> Int32 { return this.current; }
-    private func Doses() -> array<Float> { return this.doses; }
-    private final static func Create(score: Int32, tms: Float) -> ref<Consumption> {
-        let instance = new Consumption();
-        instance.current = score;
-        instance.doses = [tms];
-        return instance;
-    }
+    public func Current() -> Int32 { return this.current; }
+    public func Doses() -> array<Float> { return this.doses; }
 }
 
 enum Threshold {
     Clean = 0,
+    Occasionally = 1,
     Barely = 10,
     Mildly = 20,
     Notably = 40,
     Severely = 60,
 }
 
-enum Kind {
-    Mild = 1,
-    Hard = 2,
+public func GetThreshold(value: Int32) -> Threshold {
+    if value >= EnumInt(Threshold.Severely) { return Threshold.Severely; }
+    if value >= EnumInt(Threshold.Notably) { return Threshold.Notably; }
+    if value >= EnumInt(Threshold.Mildly) { return Threshold.Mildly; }
+    if value >= EnumInt(Threshold.Barely) { return Threshold.Barely; }
+    if value >= EnumInt(Threshold.Occasionally) { return Threshold.Occasionally; }
+    return Threshold.Clean;
 }
 
-enum Substance {
-    Unknown = -1,
-    Alcohol = 1,
-    MaxDOC = 2,     // FirstAidWhiff
-    BounceBack = 3, // BonesMcCoy
-    HealthBooster = 4,
-    MemoryBooster = 5,
-    StaminaBooster = 7,
-    BlackLace = 8,
-    CarryCapacityBooster = 9,
-    NeuroBlocker = 10,
+public func GetAddictivity(itemID: ItemID) -> Int32 {
+    switch (ItemID.GetTDBID(ItemID)) {
+        case t"Items.BlacklaceV0":
+        case t"Items.BlacklaceV1":
+            return 2;
+        default:
+            break;
+    }
+    return 1;
 }
+
+public func GetResilience(itemID: ItemID) -> Int32 {
+    switch (ItemID.GetTDBID(ItemID)) {
+        case t"Items.BlacklaceV0":
+        case t"Items.BlacklaceV1":
+            return 1;
+        default:
+            break;
+    }
+    return 2;
+}
+
+public func GetMinimumSleepRequired(itemID: ItemID) -> Int32 { return 6; }
