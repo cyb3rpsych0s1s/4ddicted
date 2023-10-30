@@ -1,0 +1,41 @@
+# weakenable consumables addiction status effect
+
+# addiction can be notable or severe
+BaseStats.StackTwice:
+  $type: Stat_Record
+  min: 0
+  max: 2
+  # localizedName: Addicted-RPG-Stats-StackTwice
+  # TODO
+
+# addiction passive status effect
+BaseStatusEffect.AddictTo$(consumable):
+  $instances:
+    - { consumable: FirstAidWhiff,        type: Inhaler,  category: Healer    }
+    - { consumable: BonesMcCoy70,         type: Injector, category: Healer    }
+    - { consumable: HealthBooster,        type: Kit,      category: Healer    }
+    - { consumable: CarryCapacityBooser,  type: Pill,     category: Anabolic  }
+    - { consumable: StaminaBooster,       type: Pill,     category: Anabolic  }
+    - { consumable: MemoryBooster,        type: Pill,     category: Neuro     }
+    - { consumable: NeuroBlocker,         type: Pill,     category: Neuro     }
+    - { consumable: Alcohol,              type: Beverage, category: Alcoholic }
+    - { consumable: Tobacco,              type: Smoke,    category: Smoker    }
+  $type: StatusEffect_Record
+  duration: BaseStats.InfiniteDuration
+  gameplayTags:
+    - Debuff
+    - $(type)Debuff
+    - $(category)
+  maxStacks:
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.StackTwice
+        value: 1
+  statusEffectType: BaseStatusEffectTypes.PassiveDebuff
+  removeOnStoryTier: false
+  replicated: false
+  savable: true
+  # uiData:
+  #   TODO

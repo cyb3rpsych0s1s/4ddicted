@@ -131,19 +131,13 @@ public class System extends ScriptableSystem {
           ? 2
           : 0;
         let count: Int32;
-        if system.HasStatusEffect(this.player.GetEntityID(), effect) {
-            system.GetAppliedEffectsWithID(this.player.GetEntityID(), effect, applied);
-            current = ArraySize(applied);
-            LogChannel(n"DEBUG", ToString(current));
-            // current = ArraySize(applied) > 0
-            // ? Cast<Int32>(applied[0].GetStackCount())
-            // : 0;
-            count = next - current;
-            if count > 0 {
-                system.ApplyStatusEffect(this.player.GetEntityID(), effect, t"Addiction", this.player.GetEntityID(), Cast<Uint32>(count));
-            } else if current < 0 {
-                system.RemoveStatusEffect(this.player.GetEntityID(), effect, Cast<Uint32>(Abs(count)));
-            }
+        system.GetAppliedEffectsWithID(this.player.GetEntityID(), effect, applied);
+        current = ArraySize(applied);
+        count = next - current;
+        if count > 0 {
+            system.ApplyStatusEffect(this.player.GetEntityID(), effect, t"Addiction", this.player.GetEntityID(), Cast<Uint32>(count));
+        } else if current < 0 {
+            system.RemoveStatusEffect(this.player.GetEntityID(), effect, Cast<Uint32>(Abs(count)));
         }
     }
     private func Notify(item: ItemID, before: Int32, after: Int32) -> Void {
