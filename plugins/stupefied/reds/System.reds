@@ -25,14 +25,14 @@ public class CompanionSystem extends ScriptableSystem {
         this.player = null;
     }
     protected cb func OnAddictionEvent(event: ref<AddictionEvent>) {
-        if event.IsExactlyA(n"ConsumeEvent") {
+        if event.IsExactlyA(n"Addicted.ConsumeEvent") {
             let consume = event as ConsumeEvent;
             LogChannel(n"DEBUG", s"consumed: \(TDBID.ToStringDEBUG(ItemID.GetTDBID(consume.Item()))): \(consume.Score())");
-        } else if event.IsA(n"CrossThresholdEvent") {
+        } else if event.IsA(n"Addicted.CrossThresholdEvent") {
             let cross = event as CrossThresholdEvent;
             let direction: String = "unknown direction from event";
-            if cross.IsExactlyA(n"IncreaseThresholdEvent")      { direction = "threshold increase"; }
-            else if cross.IsExactlyA(n"DecreaseThresholdEvent") { direction = "threshold decrease"; }
+            if cross.IsExactlyA(n"Addicted.IncreaseThresholdEvent")      { direction = "threshold increase"; }
+            else if cross.IsExactlyA(n"Addicted.DecreaseThresholdEvent") { direction = "threshold decrease"; }
             LogChannel(n"DEBUG", s"\(direction) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(cross.Item()))): \(cross.Former()) -> \(cross.Latter())");
         }
     }
