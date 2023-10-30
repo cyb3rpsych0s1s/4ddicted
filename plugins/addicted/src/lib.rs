@@ -54,3 +54,6 @@ fn test_remove_status(player: WRef<cp2077_rs::PlayerPuppet>, status: String) {
     let handle = player.upcast().upcast();
     cp2077_rs::StatusEffectHelper::remove_status_effect(handle, id, 1);
 }
+
+#[derive(Debug)]
+pub struct BlackboardIdThreshold;

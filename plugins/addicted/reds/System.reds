@@ -3,9 +3,10 @@ module Addicted
 public class System extends ScriptableSystem {
     private persistent let keys: array<TweakDBID>;
     private persistent let values: array<ref<Consumption>>;
+    private let registry: ref<inkHashMap>;
     private let observers: array<Notify>;
     private let restingSince: GameTime;
-    private let lastResilience: GameTime;
+    private let lastWeanOff: GameTime;
 
     //// consumptions
 
@@ -30,11 +31,7 @@ public class System extends ScriptableSystem {
             ArrayPush(this.keys, id);
             ArrayPush(this.values, value);
         }
-        let former = GetThreshold(before);
-        let latter = GetThreshold(after);
-        if NotEquals(former, latter) {
-            this.Notify(former, latter);
-        }
+        this.Notify(itemID, before, after);
     }
     private func Rested() -> Void {
         let now = this.TimeSystem().GetGameTime();
@@ -52,7 +49,7 @@ public class System extends ScriptableSystem {
     }
     private func Refreshed() -> Void {
         let now = this.TimeSystem().GetGameTime();
-        let last = GameTime.MakeGameTime(GameTime.Days(this.lastResilience), GameTime.Hours(this.lastResilience) + 12, GameTime.Minutes(this.lastResilience));
+        let last = GameTime.MakeGameTime(GameTime.Days(this.lastWeanOff), GameTime.Hours(this.lastWeanOff) + 12, GameTime.Minutes(this.lastWeanOff));
         if GameTime.IsAfter(now, last) {
             let idx = 0;
             for key in this.keys {
@@ -70,13 +67,9 @@ public class System extends ScriptableSystem {
         let before = this.values[idx].current;
         let after = before - GetResilience(ItemID.FromTDBID(id));
         if after < 0 { after = 0; }
-        let former = GetThreshold(before);
-        let latter = GetThreshold(after);
         this.values[idx].current = after;
-        this.lastResilience = this.TimeSystem().GetGameTime();
-        if NotEquals(former, latter) {
-            this.Notify(former, latter);
-        }
+        this.lastWeanOff = this.TimeSystem().GetGameTime();
+        this.Notify(ItemID.FromTDBID(id), before, after);
     }
     private func Position(id: TweakDBID) -> Int32 {
         let idx = 0;
@@ -102,7 +95,8 @@ public class System extends ScriptableSystem {
             idx = idx - 1;
         }
     }
-    private func FireCallbacks(event: ref<CrossThresholdEvent>) {
+    private func FireEvent(event: ref<AddictionEvent>) {
+        if ArraySize(this.observers) == 0 { return; }
         for observer in this.observers {
             if IsDefined(observer.target) {
                 Reflection.GetClassOf(observer.target)
@@ -111,9 +105,60 @@ public class System extends ScriptableSystem {
             }
         }
     }
-    private func Notify(former: Threshold, latter: Threshold) -> Void {
-        let evt: ref<CrossThresholdEvent> = CrossThresholdEvent.Create(former, latter);
-        this.FireCallbacks(evt);
+    private func UpdateBoard(item: ItemID, score: Int32) -> Void {
+        let def: ref<AddictionsThresholdDef> = GetAllBlackboardDefs().PlayerStateMachine.Thresholds;
+        let system = this.BoardSystem();
+        let board = system.Get(def);
+        let id: BlackboardID_Variant;
+        let found = false;
+        switch(ItemID.GetTDBID(item)) {
+            case t"Items.FirstAidWhiffV0":
+                id = GetAllBlackboardDefs().PlayerStateMachine.Thresholds.MaxDOC;
+                found = true;
+                break;
+        }
+        if found {
+            let current = FromVariant<Threshold>(board.GetVariant(GetAllBlackboardDefs().PlayerStateMachine.Thresholds.MaxDOC));
+            let next = GetHighestThreshold(this.keys, this.values, item);
+            if NotEquals(current, next) {
+                board.SetVariant(GetAllBlackboardDefs().PlayerStateMachine.Thresholds.MaxDOC, ToVariant(next));
+                board.SignalVariant(id);
+            }
+        }
+    }
+    private func Notify(item: ItemID, before: Int32, after: Int32) -> Void {
+        let consume: ref<ConsumeEvent> = new ConsumeEvent();
+        consume.item = item;
+        consume.score = after;
+        this.FireEvent(consume);
+
+        let former: Threshold = GetThreshold(before);
+        let latter: Threshold = GetThreshold(after);
+        if NotEquals(former, latter) {
+            let evt: ref<CrossThresholdEvent>;
+            if before < after { evt = new IncreaseThresholdEvent(); }
+            else              { evt = new DecreaseThresholdEvent(); }
+            evt.item   = item;
+            evt.former = former;
+            evt.latter = latter;
+            this.FireEvent(evt);
+        }
+    }
+
+    //// initialization methods
+
+    private func CreateRegistry() -> Void {
+        this.registry = new inkHashMap();
+        let records = TweakDBInterface.GetRecords(n"ConsumableItem");
+        let consumable: ref<ConsumableItem_Record>;
+        let entry: ref<RegistryEntry>;
+        for record in records {
+            consumable = record as ConsumableItem_Record;
+            entry = GetRegistryEntry(consumable);
+            if IsDefined(entry) {
+                this.registry.Insert(TDBID.ToNumber(ItemID.GetTDBID(entry.id)), entry);
+            }
+        }
     }
 
     //// helper methods

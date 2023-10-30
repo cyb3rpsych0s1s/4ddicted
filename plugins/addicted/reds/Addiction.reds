@@ -2,6 +2,15 @@ module Addicted
 
 import Addicted.System
 
+public class AddictionsThresholdDef extends BlackboardDefinition {
+  public let MaxDOC: BlackboardID_Variant;
+  public let BounceBack: BlackboardID_Variant;
+  public let HealthBooster: BlackboardID_Variant;
+}
+
+@addField(PlayerStateMachineDef)
+public let Thresholds: ref<AddictionsThresholdDef>;
+
 @addField(PlayerStateMachineDef)
 public let WithdrawalSymptoms: BlackboardID_Uint;
 

@@ -1,16 +1,20 @@
 module Addicted
 
-public class CrossThresholdEvent extends Event {
+abstract public class AddictionEvent extends Event {
+    private let item: ItemID;
+    public func Item() -> ItemID { return this.item; }
+}
+abstract public class CrossThresholdEvent extends AddictionEvent {
     private let former: Threshold;
     private let latter: Threshold;
     public func Former() -> Threshold { return this.former; }
     public func Latter() -> Threshold { return this.latter; }
-    static func Create(former: Threshold, latter: Threshold) -> ref<CrossThresholdEvent> {
-        let me: ref<CrossThresholdEvent> = new CrossThresholdEvent();
-        me.former = former;
-        me.latter = latter;
-        return me;
-    }
+}
+public class IncreaseThresholdEvent extends CrossThresholdEvent {}
+public class DecreaseThresholdEvent extends CrossThresholdEvent {}
+public class ConsumeEvent extends AddictionEvent {
+    private let score: Int32;
+    public func Score() -> Int32 { return this.score; }
 }
 
 struct Notify {
