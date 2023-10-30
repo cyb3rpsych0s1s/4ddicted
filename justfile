@@ -125,9 +125,9 @@ deploy:
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
 rebuild: setup
-    Copy-Item -Force -Recurse '{{ join(repo_dir, "tweaks", "*.yml") }}' '{{tweak_game_dir}}'
-    Copy-Item -Force -Recurse '{{ join(red4ext_repo_dir, "*.reds") }}' '{{ join(red_game_dir, "Natives") }}'
-    Copy-Item -Force -Recurse '{{ join(red4ext_companion_repo_dir, "*.reds") }}' '{{ join(red_companion_game_dir, "Natives") }}'
+    Copy-Item -Force -Recurse -Container '{{ join(repo_dir, "tweaks", "*") }}' '{{tweak_game_dir}}'
+    Copy-Item -Force -Recurse -Container '{{ join(red4ext_repo_dir, "*") }}' '{{ join(red_game_dir, "Natives") }}'
+    Copy-Item -Force -Recurse -Container '{{ join(red4ext_companion_repo_dir, "*") }}' '{{ join(red_companion_game_dir, "Natives") }}'
 
 # 🧾 show logs from CET and RED
 [windows]
@@ -338,7 +338,7 @@ analyze FILE:
   ffprobe -i '{{FILE}}' -show_format -probesize 50000000 -analyzeduration 500
 
 # nuke everything and rebuild from scratch
-tabula: delete-bin delete-lock uninstall clear build
+tabula: delete-bin delete-lock uninstall clear build pack
 
 format:
     cargo fix --allow-dirty --allow-staged
