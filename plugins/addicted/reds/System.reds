@@ -239,11 +239,46 @@ public class System extends ScriptableSystem {
         }
         return Threshold.Clean;
     }
+    public func GetThresholdFromAppliedEffects(status: ref<StatusEffect_Record>) -> Threshold {
+        let applied: array<ref<StatusEffect>>;
+        this.EffectSystem().GetAppliedEffects(this.player.GetEntityID(), applied);
+        if Equals(ArraySize(applied), 0) { return Threshold.Clean; }
+        let count: Uint32 = 0u;
+        let times: Uint32;
+        if this.IsHealer(status) {
+            for id in [
+                t"BaseStatusEffect.AddictToFirstAidWhiff",
+                t"BaseStatusEffect.AddictToBonesMcCoy70",
+                t"BaseStatusEffect.AddictToHealthBooster"] {
+                if count >= 2u { break; }
+                times = 0u;
+                for effect in applied {
+                    if effect.GetRecord().GetID() == id { times += effect.GetStackCount(); }
+                }
+                if times > count { count = times; }
+            }
+        } else if this.IsNeuroBlocker(status) {
+            count = 0u;
+            for effect in applied {
+                if effect.GetRecord().GetID() == t"BaseStatusEffect.AddictToRipperdocMed" { count += effect.GetStackCount(); }
+                if count >= 2u { break; }
+            }
+        }
+        return count == 0u
+        ? Threshold.Clean
+        : count == 1u
+          ? Threshold.Notably
+          : Threshold.Severely;
+    }
     public func IsHealer(status: ref<StatusEffect_Record>) -> Bool {
         let name = TDBID.ToStringDEBUG(status.GetID());
         return StrContains(name, "FirstAidWhiff")
         || StrContains(name, "BonesMcCoy70")
         || StrContains(name, "HealthBooster");
+    }
+    public func IsNeuroBlocker(status: ref<StatusEffect_Record>) -> Bool {
+        let name = TDBID.ToStringDEBUG(status.GetID());
+        return StrContains(name, "RipperdocMed");
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
