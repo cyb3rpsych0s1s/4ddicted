@@ -1,6 +1,6 @@
 module Addicted
 
-@replaceMethod(PlayerPuppet)
+@replaceMethod(GameObject)
 protected func StartStatusEffectVFX(evt: ref<ApplyStatusEffectEvent>) -> Void {
     let threshold: Threshold;
     let i: Int32;
@@ -16,7 +16,7 @@ protected func StartStatusEffectVFX(evt: ref<ApplyStatusEffectEvent>) -> Void {
     };
 }
 
-@replaceMethod(PlayerPuppet)
+@replaceMethod(GameObject)
 protected func StopStatusEffectVFX(evt: ref<RemoveStatusEffect>) -> Void {
     let threshold: Threshold;
     let i: Int32;
