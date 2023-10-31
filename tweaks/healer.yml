@@ -22,6 +22,8 @@ BaseStatusEffect.Addicted_FirstAidWhiff_inline4:
 BaseStatusEffect.FirstAidWhiff_inline3.statModifiers:
   - !append-once BaseStatusEffect.Addicted_FirstAidWhiff_inline4
 
+BaseStatusEffect.FirstAidWhiff_inline1.effectorClassName: ModifyAddictToFirstAidWhiffStatPoolValueEffector
+
 ## bones mc coy '70' (a.k.a bounceback)
 
 # custom stat for addiction-induced injector healing debuff
@@ -43,6 +45,8 @@ BaseStatusEffect.Addicted_BonesMcCoy70V0_inline11:
 # stat pool update
 BaseStatusEffect.BonesMcCoy70V0_inline10.statModifiers:
   - !append-once BaseStatusEffect.Addicted_BonesMcCoy70V0_inline11
+
+BaseStatusEffect.BonesMcCoy70V0_inline9.effectorClassName: ModifyAddictToBonesMcCoy70StatPoolValueEffector
 
 ## health booster
 
