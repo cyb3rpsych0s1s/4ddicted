@@ -2,9 +2,10 @@
 
 # addiction can be notable or severe
 BaseStats.StackTwice:
-  $type: Stat_Record
+  $type: Stat
   min: 0
   max: 2
+  enumName: StackTwice
   # localizedName: Addicted-RPG-Stats-StackTwice
   # TODO
 
