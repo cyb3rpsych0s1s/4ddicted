@@ -32,7 +32,7 @@ BaseStats.InjectorBaseHealingDebuff:
   max: 200
 
 # combined stat modifier
-BaseStatusEffect.Addicted_BonesMcCoy70_inline11:
+BaseStatusEffect.Addicted_BonesMcCoy70V0_inline11:
   $type: CombinedStatModifier
   modifierType: Additive
   opSymbol: '*'
@@ -41,8 +41,8 @@ BaseStatusEffect.Addicted_BonesMcCoy70_inline11:
   value: -1
 
 # stat pool update
-BaseStatusEffect.BonesMcCoy70_inline10.statModifiers:
-  - !append-once BaseStatusEffect.Addicted_BonesMcCoy70_inline11
+BaseStatusEffect.BonesMcCoy70V0_inline10.statModifiers:
+  - !append-once BaseStatusEffect.Addicted_BonesMcCoy70V0_inline11
 
 ## health booster
 
