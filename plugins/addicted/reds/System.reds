@@ -107,6 +107,8 @@ public class System extends ScriptableSystem {
             }
         }
     }
+    // TODO: remove board implementation
+    // reason: we don't want other mods to alter them and cause inconsistencies
     private func UpdateBoard(item: ItemID, score: Int32) -> Void {
         let def: ref<AddictionsThresholdDef> = GetAllBlackboardDefs().PlayerStateMachine.Thresholds;
         let system = this.BoardSystem();
@@ -182,6 +184,14 @@ public class System extends ScriptableSystem {
 
     //// helper methods
 
+    private func Keys(category: Category) -> array<TweakDBID> {
+        let items: array<TweakDBID> = [];
+        let bases: array<Consumable> = GetConsumables(category);
+        for key in this.keys {
+            if ArrayContains(bases, GetConsumable(key)) { ArrayPush(items, key); }
+        }
+        return items;
+    }
     public func GetHighestScore(base: gamedataConsumableBaseName) -> Int32 {
         let highest: Int32 = 0;
         let idx = 0;
@@ -191,11 +201,49 @@ public class System extends ScriptableSystem {
         }
         return highest;
     }
+    public func GetHighestScore(consumable: Consumable) -> Int32 {
+        let highest: Int32 = 0;
+        let idx = 0;
+        for value in this.values {
+            if Equals(GetConsumable(this.keys[idx]), consumable) && value.current > highest { highest = value.current; }
+            idx += 1;
+        }
+        return highest;
+    }
     public func GetHighestScore(itemID: ItemID) -> Int32 {
         return this.GetHighestScore(GetBaseName(itemID));
     }
+    public func GetHighestScore(category: Category) -> Int32 {
+        let highest: Int32 = 0;
+        let idx = 0;
+        let consumables = this.Keys(category);
+        for value in this.values {
+            if ArrayContains(consumables, this.keys[idx]) && value.current > highest { highest = value.current; }
+            idx += 1;
+        }
+        return highest;
+    }
     public func GetHighestThreshold(itemID: ItemID) -> Threshold {
         return GetThreshold(this.GetHighestScore(GetBaseName(itemID)));
+    }
+    public func GetHighestThreshold(consumable: Consumable) -> Threshold {
+        return GetThreshold(this.GetHighestScore(consumable));
+    }
+    public func GetHighestThreshold(category: Category) -> Threshold {
+        return GetThreshold(this.GetHighestScore(category));
+    }
+    public func GetHighestThreshold(status: ref<StatusEffect_Record>) -> Threshold {
+        if IsDefined(status) {
+            if this.IsHealer(status) { return this.GetHighestThreshold(Category.Healers); }
+            else { return this.GetHighestThreshold(GetConsumable(status)); }
+        }
+        return Threshold.Clean;
+    }
+    public func IsHealer(status: ref<StatusEffect_Record>) -> Bool {
+        let name = TDBID.ToStringDEBUG(status.GetID());
+        return StrContains(name, "FirstAidWhiff")
+        || StrContains(name, "BonesMcCoy70")
+        || StrContains(name, "HealthBooster");
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {

@@ -6,6 +6,7 @@ UIIcon.first_aid_whiff_icon:
   atlasPartName: first_aid_whiff
   atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
+# weakened variants of status effects icons
 UIIcon.$(threshold)_weakened_$(icon):
   $instances:
     - { threshold: notably,  icon: first_aid_whiff_icon, part_suffix: first_aid_whiff }

@@ -1,5 +1,8 @@
 module Addicted
 
+//// TODO: remove board implementation
+//// reason: we don't want other mods to alter them and cause inconsistencies
+
 public class AddictionsThresholdDef extends BlackboardDefinition {
   public let MaxDOC: BlackboardID_Int;
   public let BounceBack: BlackboardID_Int;
