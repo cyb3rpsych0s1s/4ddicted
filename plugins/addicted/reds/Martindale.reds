@@ -14,6 +14,7 @@ public class MartindaleSystem extends ScriptableSystem {
     private func OnDetach() -> Void {
         this.registry.Clear();
         this.registry = null;
+        LogChannel(n"DEBUG", "[Martindale.System][OnDetach] deleted registry");
     }
     
     public func DebugRegistry() -> Void {
@@ -21,7 +22,7 @@ public class MartindaleSystem extends ScriptableSystem {
     }
     public final static func GetInstance(game: GameInstance) -> ref<MartindaleSystem> {
         let container = GameInstance.GetScriptableSystemsContainer(game);
-        return container.Get(n"Martindale.System") as MartindaleSystem;
+        return container.Get(n"Martindale.MartindaleSystem") as MartindaleSystem;
     }
 }
 
@@ -40,15 +41,19 @@ public class Registry extends IScriptable {
         return IsDefined(this.healthStatusEffects.Get(TDBID.ToNumber(id)));
     }
     private func InsertPoolUpdate(update: ref<StatPoolUpdate_Record>) -> Void {
+        if this.healthPoolUpdates.KeyExist(TDBID.ToNumber(update.GetID())) { return; }
         this.healthPoolUpdates.Insert(TDBID.ToNumber(update.GetID()), update);
     }
     private func InsertPoolValueEffector(modify: ref<ModifyStatPoolValueEffector_Record>) -> Void {
+        if this.healthEffectors.KeyExist(TDBID.ToNumber(modify.GetID())) { return; }
         this.healthEffectors.Insert(TDBID.ToNumber(modify.GetID()), modify);
     }
     private func InsertStatusEffect(status: ref<StatusEffect_Record>) -> Void {
+        if this.healthStatusEffects.KeyExist(TDBID.ToNumber(status.GetID())) { return; }
         this.healthStatusEffects.Insert(TDBID.ToNumber(status.GetID()), status);
     }
     private func InsertConsumable(consumable: ref<ConsumableItem_Record>) -> Void {
+        if this.healthConsumables.KeyExist(TDBID.ToNumber(consumable.GetID())) { return; }
         this.healthConsumables.Insert(TDBID.ToNumber(consumable.GetID()), consumable);
     }
     private func Clear() -> Void {
@@ -64,10 +69,11 @@ public class Registry extends IScriptable {
         let name: String;
         this.healthConsumables.GetValues(values);
         let idx = 0u;
+        LogChannel(n"DEBUG", s"registry contains \(ArraySize(values)) consumable(s)");
         for value in values {
             consumable = value as ConsumableItem_Record;
             name = TDBID.ToStringDEBUG(consumable.GetID());
-            if idx >= 1u { message += " ," + name; }
+            if idx >= 1u { message = message + "\n" + name; }
             else         { message = name; }
             idx += 1u;
         }
@@ -93,6 +99,7 @@ public func ScanStatPoolUpdates(registry: ref<Registry>) -> Void {
             registry.InsertPoolUpdate(update);
         }
     }
+    LogChannel(n"DEBUG", s"completed stat pool updates registration");
 }
 
 public func BasedOnHealth(update: ref<StatPoolUpdate_Record>) -> Bool {
@@ -106,6 +113,7 @@ public func ScanModifyStatPoolValueEffectors(registry: ref<Registry>) -> Void {
     let updates: array<wref<StatPoolUpdate_Record>>;
     for record in records {
         effector = record as ModifyStatPoolValueEffector_Record;
+        ArrayClear(updates);
         effector.StatPoolUpdates(updates);
         for update in updates {
             if registry.HealthPoolUpdatesContains(update.GetID()) {
@@ -113,6 +121,7 @@ public func ScanModifyStatPoolValueEffectors(registry: ref<Registry>) -> Void {
             }
         }
     }
+    LogChannel(n"DEBUG", s"completed stat pool value effectors registration");
 }
 
 public func BasedOnModifyStatPoolValueEffector(effector: ref<Effector_Record>) -> Bool {
@@ -127,16 +136,33 @@ public func ScanStatusEffects(registry: ref<Registry>) -> Void {
     let effectors: array<wref<Effector_Record>>;
     for record in records {
         status = record as StatusEffect_Record;
-        status.Packages(packages);
-        for package in packages {
-            package.Effectors(effectors);
-            for effector in effectors {
-                if registry.HealthEffectorsContains(effector.GetID()) {
-                    registry.InsertStatusEffect(status);
+        if BasedOnMisc(status) {
+            ArrayClear(packages);
+            status.Packages(packages);
+            LogChannel(n"DEBUG", s"scanning \(ToString(ArraySize(packages))) package(s)...");
+            for package in packages {
+                if BasedOnEffectorsOrModifiers(package) {
+                    ArrayClear(effectors);
+                    package.Effectors(effectors);
+                    LogChannel(n"DEBUG", s"scanning \(ToString(ArraySize(effectors))) effector(s)...");
+                    for effector in effectors {
+                        if registry.HealthEffectorsContains(effector.GetID()) {
+                            registry.InsertStatusEffect(status);
+                        }
+                    }
                 }
             }
         }
     }
+    LogChannel(n"DEBUG", s"completed status effects registration");
+}
+
+public func BasedOnMisc(status: ref<StatusEffect_Record>) -> Bool {
+    return Equals(status.StatusEffectType().Type(), gamedataStatusEffectType.Misc);
+}
+
+public func BasedOnEffectorsOrModifiers(package: ref<GameplayLogicPackage_Record>) -> Bool {
+    return package.GetEffectorsCount() > 0 || package.GetStatsCount() > 0;
 }
 
 public func BasedOnHealChargeOrConsume(object: ref<ObjectAction_Record>) -> Bool {
@@ -166,6 +192,7 @@ public func ScanConsumables(registry: ref<Registry>) -> Void {
             }
         }
     }
+    LogChannel(n"DEBUG", s"completed consumables registration");
 }
 
 public func BasedOnMaxDOC(consumable: ref<ConsumableItem_Record>) -> Bool {
