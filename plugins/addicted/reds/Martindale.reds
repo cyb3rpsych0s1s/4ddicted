@@ -32,28 +32,31 @@ public class Registry extends IScriptable {
     private let healthStatusEffects: ref<inkHashMap>;
     private let healthConsumables: ref<inkHashMap>;
     public func HealthPoolUpdatesContains(id: TweakDBID) -> Bool {
-        return IsDefined(this.healthPoolUpdates.Get(TDBID.ToNumber(id)));
+        return this.healthPoolUpdates.KeyExist(TDBID.ToNumber(id));
     }
     public func HealthEffectorsContains(id: TweakDBID) -> Bool {
-        return IsDefined(this.healthEffectors.Get(TDBID.ToNumber(id)));
+        return this.healthEffectors.KeyExist(TDBID.ToNumber(id));
     }
     public func HealthStatusEffectsContains(id: TweakDBID) -> Bool {
-        return IsDefined(this.healthStatusEffects.Get(TDBID.ToNumber(id)));
+        return this.healthStatusEffects.KeyExist(TDBID.ToNumber(id));
+    }
+    public func HealthConsumablesContains(id: TweakDBID) -> Bool {
+        return this.healthConsumables.KeyExist(TDBID.ToNumber(id));
     }
     private func InsertPoolUpdate(update: ref<StatPoolUpdate_Record>) -> Void {
-        if this.healthPoolUpdates.KeyExist(TDBID.ToNumber(update.GetID())) { return; }
+        if this.HealthPoolUpdatesContains(update.GetID()) { return; }
         this.healthPoolUpdates.Insert(TDBID.ToNumber(update.GetID()), update);
     }
     private func InsertPoolValueEffector(modify: ref<ModifyStatPoolValueEffector_Record>) -> Void {
-        if this.healthEffectors.KeyExist(TDBID.ToNumber(modify.GetID())) { return; }
+        if this.HealthEffectorsContains(modify.GetID()) { return; }
         this.healthEffectors.Insert(TDBID.ToNumber(modify.GetID()), modify);
     }
     private func InsertStatusEffect(status: ref<StatusEffect_Record>) -> Void {
-        if this.healthStatusEffects.KeyExist(TDBID.ToNumber(status.GetID())) { return; }
+        if this.HealthStatusEffectsContains(status.GetID()) { return; }
         this.healthStatusEffects.Insert(TDBID.ToNumber(status.GetID()), status);
     }
     private func InsertConsumable(consumable: ref<ConsumableItem_Record>) -> Void {
-        if this.healthConsumables.KeyExist(TDBID.ToNumber(consumable.GetID())) { return; }
+        if this.HealthConsumablesContains(consumable.GetID()) { return; }
         this.healthConsumables.Insert(TDBID.ToNumber(consumable.GetID()), consumable);
     }
     private func Clear() -> Void {
