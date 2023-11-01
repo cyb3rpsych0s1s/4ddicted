@@ -1,5 +1,6 @@
 import Addicted.System
 import Addicted.Threshold
+import Martindale.MartindaleSystem
 
 // DebugAddictTo(Game.GetPlayer());
 public func DebugAddictTo(player: wref<PlayerPuppet>) -> Void {
@@ -29,4 +30,10 @@ public func DebugCustomStat(player: wref<PlayerPuppet>) -> Void {
 
     debuff = stats.GetStatValue(Cast<StatsObjectID>(player.GetEntityID()), IntEnum<gamedataStatType>(EnumValueFromName(n"gamedataStatType", n"BaseStats.InjectorBaseHealingDebuff"))); 
     LogChannel(n"DEBUG", s"after: \(ToString(debuff))");
+}
+
+// DebugMartindaleRegistry(Game.GetPlayer());
+public func DebugMartindaleRegistry(player: wref<PlayerPuppet>) -> Void {
+    let system = MartindaleSystem.GetInstance(player.GetGame());
+    system.DebugRegistry();
 }
