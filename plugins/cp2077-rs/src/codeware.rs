@@ -24,6 +24,9 @@ impl Reflection {
     // `public static native func GetGlobalFunctions() -> array<ref<ReflectionStaticFunc>>`
     #[redscript(native, name = "GetGlobalFunctions")]
     pub fn get_global_functions() -> Vec<Ref<ReflectionStaticFunc>>;
+    /// `public static native func GetEnum(name: CName) -> ref<ReflectionEnum>`
+    #[redscript(native, name = "GetEnum")]
+    pub fn get_enum(name: CName) -> MaybeUninitRef<ReflectionEnum>;
 }
 
 #[derive(Debug)]
@@ -202,3 +205,36 @@ pub trait Field: ClassType {
     }
 }
 impl<T> Field for T where T: ClassType {}
+
+#[derive(Debug)]
+pub struct ReflectionConst;
+
+impl ClassType for ReflectionConst {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "ReflectionConst";
+}
+
+#[redscript_import]
+impl ReflectionConst {
+    /// `public native func GetName() -> CName`
+    #[redscript(native)]
+    pub fn get_name(self: &Ref<Self>) -> CName;
+    /// `public native func GetValue() -> Int64`
+    #[redscript(native)]
+    pub fn get_value(self: &Ref<Self>) -> i64;
+}
+
+#[derive(Debug)]
+pub struct ReflectionEnum;
+
+impl ClassType for ReflectionEnum {
+    type BaseClass = IScriptable;
+    const NAME: &'static str = "ReflectionEnum";
+}
+
+#[redscript_import]
+impl ReflectionEnum {
+    /// `public native func GetConstants() -> array<ref<ReflectionConst>>`
+    #[redscript(native)]
+    pub fn get_constants(self: &Ref<Self>) -> Vec<Ref<ReflectionConst>>;
+}
