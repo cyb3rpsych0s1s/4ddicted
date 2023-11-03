@@ -195,6 +195,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "martindale"
+version = "0.1.0"
+
+[[package]]
 name = "num_enum"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -297,8 +301,8 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "red4ext-macros"
-version = "0.5.2"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=5551400#5551400a27fc88ba4a534b8768a2216607f84432"
+version = "0.5.3"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.3#69712933da0674751691c48a75fa4c360f1aac97"
 dependencies = [
  "darling",
  "heck",
@@ -309,8 +313,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-rs"
-version = "0.5.2"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=5551400#5551400a27fc88ba4a534b8768a2216607f84432"
+version = "0.5.3"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.3#69712933da0674751691c48a75fa4c360f1aac97"
 dependencies = [
  "const-combine",
  "red4ext-macros",
@@ -321,8 +325,8 @@ dependencies = [
 
 [[package]]
 name = "red4ext-sys"
-version = "0.5.2"
-source = "git+https://github.com/jac3km4/red4ext-rs.git?rev=5551400#5551400a27fc88ba4a534b8768a2216607f84432"
+version = "0.5.3"
+source = "git+https://github.com/jac3km4/red4ext-rs.git?tag=v0.5.3#69712933da0674751691c48a75fa4c360f1aac97"
 dependencies = [
  "const-crc32",
  "cxx",
