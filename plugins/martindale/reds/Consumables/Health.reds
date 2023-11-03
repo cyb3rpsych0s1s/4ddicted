@@ -8,12 +8,12 @@ public func BasedOnHealChargeOrConsume(object: ref<ObjectAction_Record>) -> Bool
     return IsDefined(item) && (Equals(item.ActionName(), n"UseHealCharge") || Equals(item.ActionName(), n"Consume"));
 }
 
-private func Healer(recorded: ref<inkHashMap>, base: gamedataConsumableBaseName) -> array<ref<ConsumableItem_Record>> {
+private func Healer(recorded: ref<inkHashMap>, base: gamedataConsumableBaseName) -> ref<inkHashMap> {
     let records = TweakDBInterface.GetRecords(n"ConsumableItem");
     let consumable: ref<ConsumableItem_Record>;
     let actions: array<wref<ObjectAction_Record>>;
     let completions: array<wref<ObjectActionEffect_Record>>;
-    let consumables: array<ref<ConsumableItem_Record>> = [];
+    let consumables = new inkHashMap();
     for record in records {
         consumable = record as ConsumableItem_Record;
         if BasedOnConsumable(consumable, base) {
@@ -22,8 +22,8 @@ private func Healer(recorded: ref<inkHashMap>, base: gamedataConsumableBaseName)
                 if BasedOnHealChargeOrConsume(action) {
                     action.CompletionEffects(completions);
                     for completion in completions {
-                        if Recorded(recorded, completion.StatusEffect()) && !ArrayContains(consumables, consumable) {
-                            ArrayPush(consumables, consumable);
+                        if Recorded(recorded, completion.StatusEffect()) && !consumables.KeyExist(TDBID.ToNumber(consumable.GetID())) {
+                            consumables.Insert(TDBID.ToNumber(consumable.GetID()), consumable);
                         }
                     }
                 }
@@ -32,12 +32,12 @@ private func Healer(recorded: ref<inkHashMap>, base: gamedataConsumableBaseName)
     }
     return consumables;
 }
-public func MaxDOC(recorded: ref<inkHashMap>) -> array<ref<ConsumableItem_Record>> {
+public func MaxDOC(recorded: ref<inkHashMap>) -> ref<inkHashMap> {
     return Healer(recorded, gamedataConsumableBaseName.FirstAidWhiff);
 }
-public func BounceBack(recorded: ref<inkHashMap>) -> array<ref<ConsumableItem_Record>> {
+public func BounceBack(recorded: ref<inkHashMap>) -> ref<inkHashMap> {
     return Healer(recorded, gamedataConsumableBaseName.BonesMcCoy70);
 }
-public func HealthBooster(recorded: ref<inkHashMap>) -> array<ref<ConsumableItem_Record>> {
+public func HealthBooster(recorded: ref<inkHashMap>) -> ref<inkHashMap> {
     return Healer(recorded, gamedataConsumableBaseName.HealthBooster);
 }
