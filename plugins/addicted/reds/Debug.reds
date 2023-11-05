@@ -2,6 +2,8 @@ import Addicted.System
 import Addicted.Threshold
 import Martindale.MartindaleSystem
 
+native func WriteToFile(lines: array<String>, filename: String) -> Void;
+
 // DebugAddictTo(Game.GetPlayer());
 public func DebugAddictTo(player: wref<PlayerPuppet>) -> Void {
     let system = GameInstance.GetStatusEffectSystem(player.GetGame());
@@ -36,4 +38,19 @@ public func DebugCustomStat(player: wref<PlayerPuppet>) -> Void {
 public func DebugMartindaleRegistry(player: wref<PlayerPuppet>) -> Void {
     let system = MartindaleSystem.GetInstance(player.GetGame());
     system.DebugRegistry();
+}
+
+public func DebugStatusEffectPrereq() -> Void {
+    let records = TweakDBInterface.GetRecords(n"StatusEffectPrereq");
+    let prereq: ref<StatusEffectPrereq_Record>;
+    let lines: array<String> = [];
+    let line: String;
+    LogChannel(n"DEBUG", s"StatusEffectPrereq");
+    for record in records {
+        prereq = record as StatusEffectPrereq_Record;
+        line = s"\(TDBID.ToStringDEBUG(prereq.GetID())):\nstatus effect ID:\(TDBID.ToStringDEBUG(prereq.StatusEffect().GetID()))\ncheck type: \(prereq.CheckType().EnumName())";
+        LogChannel(n"DEBUG", line);
+        ArrayPush(lines, line);
+    }
+    WriteToFile(lines, "StatusEffectPrereq");
 }

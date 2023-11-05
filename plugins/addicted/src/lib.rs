@@ -17,10 +17,10 @@ define_plugin! {
 }
 
 #[cfg(debug_assertions)]
-fn write_to_file(names: Vec<String>, filename: String) {
+fn write_to_file(lines: Vec<String>, filename: String) {
     let _ = std::fs::write(
         format!("C:\\Development\\4ddicted\\{filename}.txt"),
-        names.join("\n"),
+        lines.join("\n\n"),
     );
 }
 

@@ -17,6 +17,19 @@ public class inkRecords extends inkHashMap {
             ArrayPush(records, value as TweakDBRecord);
         }
     }
+    public func Size() -> Int32 {
+        let values: array<wref<IScriptable>>;
+        this.GetValues(values);
+        let size = ArraySize(values);
+        return size;
+    }
+    public func Debug() -> Void {
+        let records: array<ref<TweakDBRecord>>;
+        this.GetValues(records);
+        for record in records {
+            LogChannel(n"DEBUG", TDBID.ToStringDEBUG(record.GetID()));
+        }
+    }
 }
 
 public class inkConsumables extends inkHashMap {
@@ -35,5 +48,11 @@ public class inkConsumables extends inkHashMap {
         for value in values {
             ArrayPush(records, value as Consumable);
         }
+    }
+    public func Size() -> Int32 {
+        let values: array<wref<IScriptable>>;
+        this.GetValues(values);
+        let size = ArraySize(values);
+        return size;
     }
 }

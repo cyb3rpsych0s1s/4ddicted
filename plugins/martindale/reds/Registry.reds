@@ -1,60 +1,67 @@
 module Martindale
 
-// public func HasCompletionEffect(action: ref<ObjectAction_Record>) -> Bool {
-//     return action.GetCompletionEffectsCount() > 0;
-// }
-
-// public func IsValidStatusEffect(status: ref<StatusEffect_Record>) -> Bool {
-//     return status.GameplayTagsContains(n"Buff") && status.GetPackagesCount() > 0;
-// }
-
-public abstract class Infos extends IScriptable {
-    public abstract func IsValidConsumableItem(consumable: ref<ConsumableItem_Record>) -> Bool;
-    protected abstract func IsValidObjectActionEffect(action: ref<ObjectAction_Record>) -> Bool;
-    protected abstract func IsValidStatusEffect(status: ref<StatusEffect_Record>) -> Bool;
-    protected abstract func IsValidGameplayLogicPackage(package: ref<GameplayLogicPackage_Record>) -> Bool;
-    protected abstract func IsValidEffector(effector: ref<Effector_Record>) -> Bool;
-    protected abstract func IsValidStatModifier(modifier: ref<StatModifier_Record>) -> Bool;
-}
-
-public abstract class Consumable extends Infos {
+public class Consumable extends IScriptable {
     private let item: ref<ConsumableItem_Record>;
     private let statuses: ref<inkRecords>;
     private let effectors: ref<inkRecords>;
     private let stats: ref<inkRecords>;
-    private let updates: ref<inkRecords>;
-    public func Scan(consumable: ref<ConsumableItem_Record>) -> ref<Consumable> {
+    public func Debug() -> Void {
+        LogChannel(n"DEBUG", TDBID.ToStringDEBUG(this.item.GetID()));
+        LogChannel(n"DEBUG", "statuses:");
+        this.statuses.Debug();
+        LogChannel(n"DEBUG", "effectors:");
+        this.effectors.Debug();
+        LogChannel(n"DEBUG", "stats:");
+        this.stats.Debug();
+    }
+}
+
+public class Registry extends IScriptable {
+    private let entries: ref<inkConsumables>;
+    public func Scan() -> Void {
+        this.entries = new inkConsumables();
+        let records = TweakDBInterface.GetRecords(n"ConsumableItem");
+        let consumable: ref<ConsumableItem_Record>;
+        let entry: ref<Consumable>;
         let actions: array<wref<ObjectAction_Record>>;
         let completions: array<wref<ObjectActionEffect_Record>>;
         let status: ref<StatusEffect_Record>;
         let packages: array<wref<GameplayLogicPackage_Record>>;
         let effectors: array<wref<Effector_Record>>;
         let stats: array<wref<StatModifier_Record>>;
-        ArrayClear(actions);
-        consumable.ObjectActions(actions);
-        for action in actions {
-            if this.IsValidObjectActionEffect(action) {
-                ArrayClear(completions);
-                action.CompletionEffects(completions);
-                for completion in completions {
-                    status = completion.StatusEffect();
-                    if this.IsValidStatusEffect(status) {
-                        ArrayClear(packages);
-                        status.Packages(packages);
-                        for package in packages {
-                            if this.IsValidGameplayLogicPackage(package) {
-                                ArrayClear(effectors);
-                                package.Effectors(effectors);
-                                for effector in effectors {
-                                    if this.IsValidEffector(effector) {
-                                        // TODO ...
+        for record in records {
+            consumable = record as ConsumableItem_Record;
+            entry = new Consumable();
+            entry.item = consumable;
+            entry.statuses = new inkRecords();
+            entry.effectors = new inkRecords();
+            entry.stats = new inkRecords();
+            this.entries.Insert(entry);
+            ArrayClear(actions);
+            consumable.ObjectActions(actions);
+            for action in actions {
+                if action.GetCompletionEffectsCount() > 0 {
+                    ArrayClear(completions);
+                    action.CompletionEffects(completions);
+                    for completion in completions {
+                        status = completion.StatusEffect();
+                        if IsDefined(status) && status.GetPackagesCount() > 0 {
+                            entry.statuses.Insert(status);
+                            ArrayClear(packages);
+                            status.Packages(packages);
+                            for package in packages {
+                                if package.GetEffectorsCount() > 0 {
+                                    ArrayClear(effectors);
+                                    package.Effectors(effectors);
+                                    for effector in effectors {
+                                        entry.effectors.Insert(effector);
                                     }
                                 }
-                                ArrayClear(stats);
-                                package.Stats(stats);
-                                for stat in stats {
-                                    if this.IsValidStatModifier(stat) {
-                                        // TODO ...
+                                if package.GetStatsCount() > 0 {
+                                    ArrayClear(stats);
+                                    package.Stats(stats);
+                                    for stat in stats {
+                                        entry.stats.Insert(stat);
                                     }
                                 }
                             }
@@ -63,91 +70,13 @@ public abstract class Consumable extends Infos {
                 }
             }
         }
-        return null;
     }
-}
-
-public abstract class Consumables extends Consumable {
-    private let items: ref<inkConsumables>;
-    public func IsValid(consumable: ref<ConsumableItem_Record>) -> Bool;
-    public func Scan(consumable: ref<ConsumableItem_Record>) -> Bool {
-        let scanned = super.Scan(consumable);
-        if IsDefined(scanned) {
-            this.items.Insert(scanned);
-            return true;
-        }
-        return false;
-    }
-}
-
-public abstract class Category extends Consumables {
-    public func Scan(consumable: ref<ConsumableItem_Record>) -> Bool {
-        let registries: array<ref<Consumables>>;
-        let ty: ref<ReflectionType> = Reflection.GetTypeOf(this);
-        let cls: ref<ReflectionClass> = ty.GetInnerType().AsClass();
-        let fields: array<ref<ReflectionProp>> = cls.GetProperties();
-        for field in fields {
-            if field.IsA(n"Martindale.Consumables") {
-                ArrayPush(registries, FromVariant(field.GetValue(ToVariant(this))));
-            }
-        }
-        for registry in registries {
-            if registry.IsValid(consumable) { return registry.Scan(consumable); }
-        }
-        return false;
-    }
-}
-
-public class MaxDOC extends Consumables {
-    public func IsValid(consumable: ref<ConsumableItem_Record>) -> Bool {
-        return IsMaxDOC(consumable);
-    }
-}
-
-public class BounceBack extends Consumables {
-    public func IsValid(consumable: ref<ConsumableItem_Record>) -> Bool {
-        return IsBounceBack(consumable);
-    }
-}
-
-public class HealthBooster extends Consumables {
-    public func IsValid(consumable: ref<ConsumableItem_Record>) -> Bool {
-        return IsHealthBooster(consumable);
-    }
-}
-
-public class Healers extends Category {
-    private let maxdocs: ref<MaxDOC>;
-    private let bouncebacks: ref<Consumables>;
-    private let healthboosters: ref<Consumables>;
-    private let medicals: ref<Consumables>;
-    public func IsValid(consumable: ref<ConsumableItem_Record>) -> Bool {
-        return IsHealer(consumable);
-    }
-}
-
-public class Anabolics extends Category {
-    private let staminaboosters: ref<Consumables>;
-    private let carrycapacityboosters: ref<Consumables>;
-    public func IsValid(consumable: ref<ConsumableItem_Record>) -> Bool {
-        return IsAnabolic(consumable);
-    }
-}
-
-public class Registry extends IScriptable {
-    private let healers: ref<Healers>;
-    private let anabolics: ref<Anabolics>;
-    public func Scan() -> Void {
-        let records = TweakDBInterface.GetRecords(n"ConsumableItem");
-        let consumable: ref<ConsumableItem_Record>;
-        let found: Bool;
-        for record in records {
-            consumable = record as ConsumableItem_Record;
-            found = false;
-            for registry in [this.healers, this.anabolics] {
-                if registry.IsValid(consumable) { found = registry.Scan(consumable); break; }
-            }
-            if !found { /* TODO: keep record in uncategorized map ? */ }
+    public func Debug() -> Void {
+        LogChannel(n"DEBUG", NameToString(this.GetClassName()));
+        let consumables: array<ref<Consumable>>;
+        this.entries.GetValues(consumables);
+        for consumable in consumables {
+            consumable.Debug();
         }
     }
 }
