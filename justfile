@@ -11,6 +11,7 @@ mod_martindale_name := 'Martindale'
 # installation dir for Cyberpunk 2077, e.g. Steam
 repo_dir            := justfile_directory()    
 game_dir            := env_var_or_default("GAME_DIR", DEFAULT_GAME_DIR)
+user_profile        := env_var("USERPROFILE")
 bundle_dir          := mod_name
 
 # codebase (outside of game files)
@@ -363,3 +364,9 @@ decompile MODE='code':
         Write-Host "MODE can only be 'ast', 'code' or 'bytecode' (default to 'code')"; exit 1; \
     }
     {{red_cli}} decompile --input '{{red_cache_bundle}}' --mode '{{MODE}}' --verbose --output 'dump.reds'
+
+clear-redengine:
+    @$folder = '{{ join(user_profile, "AppData", "Local", "CD Projekt Red", "Cyberpunk 2077") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Recurse -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
+    @$folder = '{{ join(user_profile, "AppData", "Local", "REDEngine") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Force -Recurse -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
