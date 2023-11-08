@@ -1,14 +1,5 @@
 # weakenable consumables addiction status effect
 
-# addiction can be notable or severe
-BaseStats.StackTwice:
-  $type: Stat
-  enumName: StackTwice
-  min: 0
-  max: 2
-  # localizedName: Addicted-RPG-Stats-StackTwice
-  # TODO
-
 # addiction passive status effect
 BaseStatusEffect.AddictTo$(consumable):
   $instances:
@@ -28,27 +19,17 @@ BaseStatusEffect.AddictTo$(consumable):
     - $(type)Debuff
     - $(category)
   # packages:
-  #   - $type: GameplayLogicPackage_Record
-  #     effectors:
-  #       - $type: Effector_Record
-  #         effectorClassName: ModifyStatPoolValueEffector
-  #         statModifierGroups:
-  #           - $type: StatModifierGroup_Record
-  #             statModifiers:
-  #               - $type: ConstantStatModifier_Record
-  #                 modifierType: Additive
-  #                 statType: BaseStats.InhalerBaseHealingDebuff
-  #                 value: 20
+  #   TODO
   maxStacks:
     $type: StatModifierGroup_Record
     statModifiers:
       - $type: ConstantStatModifier_Record
         modifierType: Additive
-        statType: BaseStats.StackTwice
-        value: 1
+        statType: BaseStats.MaxStacks
+        value: 2
   statusEffectType: BaseStatusEffectTypes.PassiveDebuff
   removeOnStoryTier: false
   replicated: false
-  savable: true
+  savable: false
   # uiData:
   #   TODO
