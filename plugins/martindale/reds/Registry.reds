@@ -79,6 +79,15 @@ public class Registry extends IScriptable {
             consumable.Debug();
         }
     }
+    public func MaxDOC() -> array<ref<Consumable>> {
+        let consumables: array<ref<Consumable>>;
+        let maxdoc: array<ref<Consumable>> = [];
+        this.entries.GetValues(consumables);
+        for consumable in consumables {
+            if IsMaxDOC(consumable.item) { ArrayPush(maxdoc, consumable); }
+        }
+        return maxdoc;
+    }
 }
 
 private func LogIDs(map: ref<inkHashMap>, title: String) -> Void {

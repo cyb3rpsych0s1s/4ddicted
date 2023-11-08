@@ -1,35 +1,79 @@
 # weakenable consumables addiction status effect
 
+# duration stat modifier group
+BaseStatusEffect.StackTwice:
+  $type: StatModifierGroup_Record
+  statModifiers:
+    - $type: ConstantStatModifier_Record
+      modifierType: Additive
+      statType: BaseStats.MaxStacks
+      value: 1
+  statModsLimit: 2
+
 # addiction passive status effect
-BaseStatusEffect.AddictTo$(consumable):
-  $instances:
-    - { consumable: FirstAidWhiff,        type: Inhaler,  category: Healer    }
-    - { consumable: BonesMcCoy70,         type: Injector, category: Healer    }
-    - { consumable: HealthBooster,        type: Kit,      category: Healer    }
-    - { consumable: CarryCapacityBooser,  type: Pill,     category: Anabolic  }
-    - { consumable: StaminaBooster,       type: Pill,     category: Anabolic  }
-    - { consumable: MemoryBooster,        type: Pill,     category: Neuro     }
-    - { consumable: NeuroBlocker,         type: Pill,     category: Neuro     }
-    - { consumable: Alcohol,              type: Beverage, category: Alcoholic }
-    - { consumable: Tobacco,              type: Smoke,    category: Smoker    }
+BaseStatusEffect.Addict:
   $type: StatusEffect_Record
   duration: BaseStats.InfiniteDuration
   gameplayTags:
     - Debuff
-    - $(type)Debuff
-    - $(category)
-  # packages:
-  #   TODO
-  maxStacks:
-    $type: StatModifierGroup_Record
-    statModifiers:
-      - $type: ConstantStatModifier_Record
-        modifierType: Additive
-        statType: BaseStats.MaxStacks
-        value: 2
+  maxStacks: BaseStatusEffect.StackTwice
   statusEffectType: BaseStatusEffectTypes.PassiveDebuff
   removeOnStoryTier: false
   replicated: false
   savable: false
-  # uiData:
-  #   TODO
+
+# shorten status effect duration
+Effectors.ShortenDuration:
+  $base: Effectors.ModifyStatusEffectDurationEffector
+  effectorClassName: ModifyStatusEffectDurationBasedOnAddictionEffector
+  isPercentage: true
+  listenConstantly: true
+
+# consumables which modifies health stat pool
+BaseStatusEffect.$(consumable)Addict:
+  $instances:
+    - { consumable: MaxDOC,               type: Inhaler,  category: Healer    }
+    - { consumable: BounceBack,           type: Injector, category: Healer    }
+  $base: BaseStatusEffect.Addict
+  gameplayTags:
+    - !append-once $(type)Debuff
+    - !append-once $(category)
+#   # uiData:
+#   #   TODO
+
+Packages.ShortenDuration:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.ShortenDuration
+
+# consumable whose duration is modified
+BaseStatusEffect.$(consumable)Addict:
+  $instances:
+    - { consumable: HealthBooster,        type: Kit,      category: Healer    }
+    - { consumable: NeuroBlocker,         type: Pill,     category: Neuro     }
+  $base: BaseStatusEffect.Addict
+  gameplayTags:
+    - !append-once $(type)Debuff
+    - !append-once $(category)
+  packages:
+    - Packages.Shorten$(consumable)Duration
+      $type: GameplayLogicPackage_Record
+      effectors:
+        - Effectors.ShortenDuration
+#   # uiData:
+#   #   TODO
+
+# TODO: other consumables
+BaseStatusEffect.$(consumable)Addict:
+  $instances:
+    - { consumable: CarryCapacityBooser,  type: Pill,     category: Anabolic  }
+    - { consumable: StaminaBooster,       type: Pill,     category: Anabolic  }
+    - { consumable: MemoryBooster,        type: Pill,     category: Neuro     }
+    - { consumable: Alcohol,              type: Beverage, category: Alcoholic }
+    - { consumable: Tobacco,              type: Smoke,    category: Smoker    }
+  $base: BaseStatusEffect.Addict
+  gameplayTags:
+    - !append-once $(type)Debuff
+    - !append-once $(category)
+#   # uiData:
+#   #   TODO

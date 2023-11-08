@@ -2,70 +2,7 @@
 
 ## first aid whiff (a.k.a maxdoc)
 
-# custom stat for addiction-induced inhaler healing debuff
-BaseStats.InhalerBaseHealingDebuff:
-  $type: Stat
-  enumName: InhalerBaseHealingDebuff
-  min: 0
-  max: 200
+BaseStatusEffect.FirstAidWhiff_inline1.effectorClassName: ModifyStatPoolValueBasedOnAddictionEffector
 
-# combined stat modifier
-BaseStatusEffect.Addicted_FirstAidWhiff_inline4:
-  $type: CombinedStatModifier
-  modifierType: Additive
-  opSymbol: '*'
-  refStat: BaseStats.InhalerBaseHealingDebuff
-  statType: BaseStats.InhalerBaseHealingDebuff
-  value: -1
-
-# stat pool update
-BaseStatusEffect.FirstAidWhiff_inline3.statModifiers:
-  - !append-once BaseStatusEffect.Addicted_FirstAidWhiff_inline4
-
-BaseStatusEffect.FirstAidWhiff_inline1.effectorClassName: ModifyAddictToFirstAidWhiffStatPoolValueEffector
-
-## bones mc coy '70' (a.k.a bounceback)
-
-# custom stat for addiction-induced injector healing debuff
-BaseStats.InjectorBaseHealingDebuff:
-  $type: Stat
-  enumName: InjectorBaseHealingDebuff
-  min: 0
-  max: 200
-
-# combined stat modifier
-BaseStatusEffect.Addicted_BonesMcCoy70V0_inline11:
-  $type: CombinedStatModifier
-  modifierType: Additive
-  opSymbol: '*'
-  refStat: BaseStats.InjectorBaseHealingDebuff
-  statType: BaseStats.InjectorBaseHealingDebuff
-  value: -1
-
-# stat pool update
-BaseStatusEffect.BonesMcCoy70V0_inline10.statModifiers:
-  - !append-once BaseStatusEffect.Addicted_BonesMcCoy70V0_inline11
-
-BaseStatusEffect.BonesMcCoy70V0_inline9.effectorClassName: ModifyAddictToBonesMcCoy70StatPoolValueEffector
-
-## health booster
-
-# custom stat for addiction-induced kit healing debuff
-BaseStats.KitBaseHealingDebuff:
-  $type: Stat
-  enumName: KitBaseHealingDebuff
-  min: 0.1
-  max: 1
-
-# combined stat modifier
-BaseStatusEffect.Addicted_HealthBooster_inline1:
-  $type: CombinedStatModifier
-  modifierType: Multiplier
-  refStat: BaseStats.KitBaseHealingDebuff
-  statType: BaseStats.Health
-  opSymbol: '*'
-  value: 1
-
-# stat pool update
-BaseStatusEffect.HealthBooster_inline0.stats:
-  - !append-once BaseStatusEffect.Addicted_HealthBooster_inline1
+## bones mc coy 70 (a.k.a bounceback)
+BaseStatusEffect.BonesMcCoy70V0_inline9.effectorClassName: ModifyStatPoolValueBasedOnAddictionEffector

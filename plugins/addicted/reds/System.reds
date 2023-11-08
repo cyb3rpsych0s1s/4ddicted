@@ -1,5 +1,7 @@
 module Addicted
 
+import Martindale.MartindaleSystem
+
 public class System extends ScriptableSystem {
     private persistent let keys: array<TweakDBID>;
     private persistent let values: array<ref<Consumption>>;
@@ -247,9 +249,9 @@ public class System extends ScriptableSystem {
         let times: Uint32;
         if this.IsHealer(status) {
             for id in [
-                t"BaseStatusEffect.AddictToFirstAidWhiff",
-                t"BaseStatusEffect.AddictToBonesMcCoy70",
-                t"BaseStatusEffect.AddictToHealthBooster"] {
+                t"BaseStatusEffect.MaxDOCAddict",
+                t"BaseStatusEffect.BounceBackAddict",
+                t"BaseStatusEffect.HealthBoosterAddict"] {
                 if count >= 2u { break; }
                 times = 0u;
                 for effect in applied {
@@ -260,7 +262,7 @@ public class System extends ScriptableSystem {
         } else if this.IsNeuroBlocker(status) {
             count = 0u;
             for effect in applied {
-                if effect.GetRecord().GetID() == t"BaseStatusEffect.AddictToRipperdocMed" { count += effect.GetStackCount(); }
+                if effect.GetRecord().GetID() == t"BaseStatusEffect.RipperdocMedAddict" { count += effect.GetStackCount(); }
                 if count >= 2u { break; }
             }
         }

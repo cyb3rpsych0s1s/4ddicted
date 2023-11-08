@@ -9,7 +9,7 @@ public func DebugAddictTo(player: wref<PlayerPuppet>) -> Void {
     let system = GameInstance.GetStatusEffectSystem(player.GetGame());
     system.ApplyStatusEffect(
         player.GetEntityID(),
-        t"BaseStatusEffect.AddictToFirstAidWhiff",
+        t"BaseStatusEffect.FirstAidWhiffAddict",
         t"Addiction",
         player.GetEntityID(),
         1u);
@@ -22,16 +22,7 @@ public func DebugAddictTo(player: wref<PlayerPuppet>) -> Void {
 
 // DebugCustomStat(Game.GetPlayer());
 public func DebugCustomStat(player: wref<PlayerPuppet>) -> Void {
-    let debuff:Float;
-    let stats = GameInstance.GetStatsSystem(player.GetGame());
-
-    debuff = stats.GetStatValue(Cast<StatsObjectID>(player.GetEntityID()), IntEnum<gamedataStatType>(EnumValueFromName(n"gamedataStatType", n"BaseStats.InjectorBaseHealingDebuff"))); 
-    LogChannel(n"DEBUG", s"before: \(ToString(debuff))");
-
     DebugAddictTo(player);
-
-    debuff = stats.GetStatValue(Cast<StatsObjectID>(player.GetEntityID()), IntEnum<gamedataStatType>(EnumValueFromName(n"gamedataStatType", n"BaseStats.InjectorBaseHealingDebuff"))); 
-    LogChannel(n"DEBUG", s"after: \(ToString(debuff))");
 }
 
 // DebugMartindaleRegistry(Game.GetPlayer());
@@ -54,3 +45,128 @@ public func DebugStatusEffectPrereq() -> Void {
     }
     WriteToFile(lines, "StatusEffectPrereq");
 }
+
+public func DebugStatPoolUpdate() -> Void {
+    let records = TweakDBInterface.GetRecords(n"StatPoolUpdate");
+    let update: ref<StatPoolUpdate_Record>;
+    let modifiers: array<wref<StatModifier_Record>>;
+    let constant: ref<ConstantStatModifier_Record>;
+    let combined: ref<CombinedStatModifier_Record>;
+    let substat: ref<SubStatModifier_Record>;
+    let random: ref<RandomStatModifier_Record>;
+    let curve: ref<CurveStatModifier_Record>;
+    let lines: array<String> = [];
+    let line: String;
+    let size: Int32;
+    LogChannel(n"DEBUG", s"StatPoolUpdate");
+    for record in records {
+        line = "";
+        update = record as StatPoolUpdate_Record;
+        ArrayClear(modifiers);
+        update.StatModifiers(modifiers);
+        size = ArraySize(modifiers);
+        if size == 0 { line = line + s"\(TDBID.ToStringDEBUG(update.GetID())) (no modifier)\n\n"; }
+        else         { line = line + s"\(TDBID.ToStringDEBUG(update.GetID())):\n"; }
+        
+        for modifier in modifiers {
+            line = line + s"[\(NameToString(modifier.GetClassName()))]\n";
+            line = line + s"modifier type: \(NameToString(modifier.ModifierType()))\n";
+            line = line + s"stat type: \(ToString(modifier.StatType().StatType()))\n";
+            if modifier.IsExactlyA(n"gamedataConstantStatModifier_Record") {
+                constant = modifier as ConstantStatModifier_Record;
+                line = line + s"value: \(ToString(constant.Value()))\n";
+            }
+            if modifier.IsExactlyA(n"gamedataCombinedStatModifier_Record") {
+                combined = modifier as CombinedStatModifier_Record;
+                line = line + s"ref stat: \(ToString(combined.RefStat().StatType()))\n";
+                line = line + s"ref object: \(NameToString(combined.RefObject()))\n";
+                line = line + s"op symbol: \(NameToString(combined.OpSymbol()))\n";
+                line = line + s"value: \(ToString(combined.Value()))\n";
+            }
+            if modifier.IsExactlyA(n"gamedataSubStatModifier_Record") {
+                substat = modifier as SubStatModifier_Record;
+                line = line + s"ref stat: \(ToString(substat.RefStat().StatType()))\n";
+                line = line + s"ref object: \(NameToString(substat.RefObject()))\n";
+            }
+            if modifier.IsExactlyA(n"gamedataRandomStatModifier_Record") {
+                random = modifier as RandomStatModifier_Record;
+                line = line + s"min: \(ToString(random.Min()))\n";
+                line = line + s"max: \(ToString(random.Max()))\n";
+                line = line + s"use controlled random: \(ToString(random.UseControlledRandom()))\n";
+            }
+            if modifier.IsExactlyA(n"gamedataCurveStatModifier_Record") {
+                curve = modifier as CurveStatModifier_Record;
+                line = line + s"id: \(curve.Id())\n";
+                line = line + s"column: \(curve.Column())\n";
+                line = line + s"ref stat: \(ToString(curve.RefStat().StatType()))\n";
+                line = line + s"ref object: \(NameToString(curve.RefObject()))\n";
+            }
+        }
+        LogChannel(n"DEBUG", line);
+        ArrayPush(lines, line);
+    }
+    WriteToFile(lines, "StatPoolUpdate");
+}
+
+// BUG: attempt to read inacessible 0xC
+// public func DebugStatModifier() -> Void {
+//     let kinds: array<CName> = [
+//         n"ConstantStatModifier",
+//         n"CombinedStatModifier",
+//         n"SubStatModifier",
+//         n"RandomStatModifier",
+//         n"CurveStatModifier"];
+//     let records: array<ref<TweakDBRecord>>;
+//     let modifier: ref<StatModifier_Record>;
+//     let constant: ref<ConstantStatModifier_Record>;
+//     let combined: ref<CombinedStatModifier_Record>;
+//     let substat: ref<SubStatModifier_Record>;
+//     let random: ref<RandomStatModifier_Record>;
+//     let curve: ref<CurveStatModifier_Record>;
+//     let size: Int32;
+//     let lines: array<String> = [];
+//     let line: String;
+//     for kind in kinds {
+//         records = TweakDBInterface.GetRecords(kind);
+//         size = ArraySize(records);
+//         LogChannel(n"DEBUG", s"\(NameToString(kind)) has \(ToString(size)) record(s)");
+//         // for record in records {
+//         //     line = "";
+//         //     modifier = record as StatModifier_Record;
+//         //     line = line + s"\(TDBID.ToStringDEBUG(modifier.GetID())) [\(NameToString(modifier.GetClassName()))]\n";
+//         //     line = line + s"modifier type: \(NameToString(modifier.ModifierType()))\n";
+//         //     line = line + s"stat type: \(ToString(modifier.StatType().StatType()))\n";
+//         //     if modifier.IsExactlyA(n"gamedataConstantStatModifier_Record") {
+//         //         constant = modifier as ConstantStatModifier_Record;
+//         //         line = line + s"value: \(ToString(constant.Value()))\n";
+//         //     }
+//         //     if modifier.IsExactlyA(n"gamedataCombinedStatModifier_Record") {
+//         //         combined = modifier as CombinedStatModifier_Record;
+//         //         line = line + s"ref stat: \(ToString(combined.RefStat().StatType()))\n";
+//         //         line = line + s"ref object: \(NameToString(combined.RefObject()))\n";
+//         //         line = line + s"op symbol: \(NameToString(combined.OpSymbol()))\n";
+//         //         line = line + s"value: \(ToString(combined.Value()))\n";
+//         //     }
+//         //     if modifier.IsExactlyA(n"gamedataSubStatModifier_Record") {
+//         //         substat = modifier as SubStatModifier_Record;
+//         //         line = line + s"ref stat: \(ToString(substat.RefStat().StatType()))\n";
+//         //         line = line + s"ref object: \(NameToString(substat.RefObject()))\n";
+//         //     }
+//         //     if modifier.IsExactlyA(n"gamedataRandomStatModifier_Record") {
+//         //         random = modifier as RandomStatModifier_Record;
+//         //         line = line + s"min: \(ToString(random.Min()))\n";
+//         //         line = line + s"max: \(ToString(random.Max()))\n";
+//         //         line = line + s"use controlled random: \(ToString(random.UseControlledRandom()))\n";
+//         //     }
+//         //     if modifier.IsExactlyA(n"gamedataCurveStatModifier_Record") {
+//         //         curve = modifier as CurveStatModifier_Record;
+//         //         line = line + s"id: \(curve.Id())\n";
+//         //         line = line + s"column: \(curve.Column())\n";
+//         //         line = line + s"ref stat: \(ToString(curve.RefStat().StatType()))\n";
+//         //         line = line + s"ref object: \(NameToString(curve.RefObject()))\n";
+//         //     }
+//         //     ArrayPush(lines, line);
+//         // }
+//     }
+//     WriteToFile(lines, "StatModifier");
+// }
