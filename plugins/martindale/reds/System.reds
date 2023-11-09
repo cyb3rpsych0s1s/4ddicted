@@ -34,17 +34,23 @@ public class MartindaleSystem extends ScriptableSystem {
         return container.Get(n"Martindale.MartindaleSystem") as MartindaleSystem;
     }
     public func IsHealerStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
-        let consumables: array<ref<RegisteredConsumable>>;
-        this.registry.entries.GetValues(consumables);
+        let consumables: array<ref<RegisteredConsumable>> = this.GetRegisteredConsumables();
         for consumable in consumables {
             if (IsMaxDOC(consumable.item) || IsBounceBack(consumable.item) || IsHealthBooster(consumable.item))
             && consumable.statuses.KeyExist(record) { return true; }
         }
         return false;
     }
+    public func IsHealthBoosterStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
+        let consumables: array<ref<RegisteredConsumable>> = this.GetRegisteredConsumables();
+        for consumable in consumables {
+            if IsHealthBooster(consumable.item)
+            && consumable.statuses.KeyExist(record) { return true; }
+        }
+        return false;
+    }
     public func IsNeuroBlockerStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
-        let consumables: array<ref<RegisteredConsumable>>;
-        this.registry.entries.GetValues(consumables);
+        let consumables: array<ref<RegisteredConsumable>> = this.GetRegisteredConsumables();
         for consumable in consumables {
             if IsNeuroBlocker(consumable.item)
             && consumable.statuses.KeyExist(record) { return true; }
@@ -52,8 +58,7 @@ public class MartindaleSystem extends ScriptableSystem {
         return false;
     }
     public func IsMaxDOCEffector(record: ref<Effector_Record>) -> Bool {
-        let consumables: array<ref<RegisteredConsumable>>;
-        this.registry.entries.GetValues(consumables);
+        let consumables: array<ref<RegisteredConsumable>> = this.GetRegisteredConsumables();
         for consumable in consumables {
             if IsMaxDOC(consumable.item)
             && consumable.effectors.KeyExist(record) { return true; }
@@ -61,16 +66,15 @@ public class MartindaleSystem extends ScriptableSystem {
         return false;
     }
     public func IsBounceBackEffector(record: ref<Effector_Record>) -> Bool {
-        let consumables: array<ref<RegisteredConsumable>>;
-        this.registry.entries.GetValues(consumables);
+        let consumables: array<ref<RegisteredConsumable>> = this.GetRegisteredConsumables();
         for consumable in consumables {
             if IsBounceBack(consumable.item)
             && consumable.effectors.KeyExist(record) { return true; }
         }
         return false;
     }
-    public func GetAppliedEffectsForHealthBooster(player: ref<PlayerPuppet>) -> array<ref<StatusEffect>> {
-        let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(player);
+    public func GetAppliedEffectsForHealthBooster(target: wref<GameObject>) -> array<ref<StatusEffect>> {
+        let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(target);
         let filtered: array<ref<StatusEffect>> = [];
         let record: ref<StatusEffect_Record>;
         let consumables: array<ref<RegisteredConsumable>>;
@@ -85,8 +89,8 @@ public class MartindaleSystem extends ScriptableSystem {
         }
         return filtered;
     }
-    public func GetAppliedEffectsForNeuroBlocker(player: ref<PlayerPuppet>) -> array<ref<StatusEffect>> {
-        let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(player);
+    public func GetAppliedEffectsForNeuroBlocker(target: wref<GameObject>) -> array<ref<StatusEffect>> {
+        let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(target);
         let filtered: array<ref<StatusEffect>> = [];
         let record: ref<StatusEffect_Record>;
         let consumables: array<ref<RegisteredConsumable>>;
@@ -100,5 +104,17 @@ public class MartindaleSystem extends ScriptableSystem {
             }
         }
         return filtered;
+    }
+    public func GetConsumableItemFromStatusEffect(record: ref<StatusEffect_Record>) -> ref<ConsumableItem_Record> {
+        let consumables: array<ref<RegisteredConsumable>> = this.GetRegisteredConsumables();
+        for consumable in consumables {
+            if consumable.statuses.KeyExist(record) { return consumable.item; }
+        }
+        return null;
+    }
+    public func GetRegisteredConsumables() -> array<ref<RegisteredConsumable>> {
+        let consumables: array<ref<RegisteredConsumable>>;
+        this.registry.entries.GetValues(consumables);
+        return consumables;
     }
 }

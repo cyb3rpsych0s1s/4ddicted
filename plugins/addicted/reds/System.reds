@@ -1,6 +1,7 @@
 module Addicted
 
 import Martindale.MartindaleSystem
+import Martindale.RegisteredConsumable
 
 public class System extends ScriptableSystem {
     private persistent let keys: array<TweakDBID>;
@@ -247,6 +248,7 @@ public class System extends ScriptableSystem {
                 if count >= 2u { break; }
             }
         }
+        LogChannel(n"DEBUG", s"\(TDBID.ToStringDEBUG(status.GetID())) final threshold count = \(count)");
         return count == 0u
         ? Threshold.Clean
         : count == 1u
@@ -282,6 +284,13 @@ public class System extends ScriptableSystem {
         }
         return TDBID.None();
     }
+    public func GetRelatedAddictiveEffect(status: ref<StatusEffect_Record>) -> ref<StatusEffect_Record> {
+        let consumable = GetConsumable(status);
+        if NotEquals(consumable, Consumable.Invalid) {
+            return TweakDBInterface.GetStatusEffectRecord(this.GetAddictStatusEffectID(consumable));
+        }
+        return null;
+    }
     public func GetAddictStatusEffectIDs(category: Category) -> array<TweakDBID> {
         let consumables = GetConsumables(category);
         let ids: array<TweakDBID> = [];
@@ -289,6 +298,14 @@ public class System extends ScriptableSystem {
             ArrayPush(ids, this.GetAddictStatusEffectID(consumable));
         }
         return ids;
+    }
+    public func GetRegisteredConsumables(consumable: Consumable) -> array<ref<RegisteredConsumable>> {
+        let all = this.MartindaleSystem().GetRegisteredConsumables();
+        let related: array<ref<RegisteredConsumable>>;
+        for record in all {
+            if IsConsumable(record.item, consumable) { ArrayPush(related, record); }
+        }
+        return related;
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {

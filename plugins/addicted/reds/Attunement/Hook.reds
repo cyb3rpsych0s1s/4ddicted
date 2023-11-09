@@ -1,5 +1,24 @@
 module Addicted
 
+import Martindale.MartindaleSystem
+import Martindale.RegisteredConsumable
+
+@addMethod(StatusEffectHelper)
+public final static func GetAppliedEffectsForConsumable(target: wref<GameObject>, consumable: Consumable) -> array<ref<StatusEffect>> {
+    let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(target);
+    let main: ref<System> = System.GetInstance(target.GetGame());
+    let knowns = main.GetRegisteredConsumables(consumable);
+    let related: array<ref<StatusEffect>>;
+    let record: ref<StatusEffect_Record>;
+    for effect in applied {
+        record = effect.GetRecord();
+        for known in knowns {
+            if known.ContainsStatus(record) { ArrayPush(related, effect); break; }
+        }
+    }
+    return related;
+}
+
 // @wrapMethod(EquipmentSystemPlayerData)
 // private final func GetItemGLPs(itemID: TweakDBID) -> array<wref<GameplayLogicPackage_Record>> {
 //     let packages = wrappedMethod(itemID);

@@ -7,7 +7,8 @@ protected func StartStatusEffectVFX(evt: ref<ApplyStatusEffectEvent>) -> Void {
     let vfxList: array<wref<StatusEffectFX_Record>>;
     evt.staticData.VFX(vfxList);
     i = 0;
-    threshold = System.GetInstance(this.GetGame()).GetThresholdFromAppliedEffects(evt.staticData);
+    let addictive = System.GetInstance(this.GetGame()).GetRelatedAddictiveEffect(evt.staticData);
+    threshold = System.GetInstance(this.GetGame()).GetThresholdFromAppliedEffects(addictive);
     while i < ArraySize(vfxList) {
         if evt.isNewApplication || vfxList[i].ShouldReapply() {
             GameObjectEffectHelper.StartEffectEvent(this, GetVFXName(threshold, vfxList[i].Name()));
@@ -23,7 +24,8 @@ protected func StopStatusEffectVFX(evt: ref<RemoveStatusEffect>) -> Void {
     let vfxList: array<wref<StatusEffectFX_Record>>;
     evt.staticData.VFX(vfxList);
     i = 0;
-    threshold = System.GetInstance(this.GetGame()).GetThresholdFromAppliedEffects(evt.staticData);
+    let addictive = System.GetInstance(this.GetGame()).GetRelatedAddictiveEffect(evt.staticData);
+    threshold = System.GetInstance(this.GetGame()).GetThresholdFromAppliedEffects(addictive);
     while i < ArraySize(vfxList) {
         if evt.isFinalRemoval {
             GameObjectEffectHelper.BreakEffectLoopEvent(this, GetVFXName(threshold, vfxList[i].Name()));

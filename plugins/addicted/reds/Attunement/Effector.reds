@@ -2,6 +2,7 @@ import Addicted.Threshold
 import Addicted.System
 import Addicted.Consumable
 import Martindale.MartindaleSystem
+import Addicted.IsConsumable
 
 // modify health stat pool update based on addiction, directly overriden on vanilla
 public class ModifyStatPoolValueBasedOnAddictionEffector extends ModifyStatPoolValueEffector {
@@ -63,49 +64,62 @@ public class ModifyStatPoolValueBasedOnAddictionEffector extends ModifyStatPoolV
     }
 }
 
+public class OnStatusEffectBasedOnAddictionAppliedListener extends ScriptStatusEffectListener {
+    public let m_effector: wref<ModifyStatusEffectDurationBasedOnAddictionEffector>;
+    public let m_owner: wref<GameObject>;
+
+    public func OnStatusEffectApplied(statusEffect: wref<StatusEffect_Record>) -> Void {
+        let item = MartindaleSystem.GetInstance(this.m_owner.GetGame()).GetConsumableItemFromStatusEffect(statusEffect);
+        if IsConsumable(item, this.m_effector.Consumable()) {
+            this.m_effector.ProcessAction(this.m_owner);
+        }
+    }
+}
+
 // modify status effect duration based on addiction, applyied on addiction status effect itself
-public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifyStatusEffectDurationEffector {
-    private let addicted: TweakDBID;
+public class ModifyStatusEffectDurationBasedOnAddictionEffector extends Effector {
+    private let m_statusEffectListener: ref<OnStatusEffectBasedOnAddictionAppliedListener>;
+    public let m_change: Float;
+    public let m_gameInstance: GameInstance;
+    private let m_consumable: Consumable;
+
+    public func Consumable() -> Consumable { return this.m_consumable; }
     protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
-        super.Initialize(record, game, parentRecord);
-        let main = System.GetInstance(game);
+        LogChannel(n"DEBUG", "initialize ModifyStatusEffectDurationBasedOnAddictionEffector");
+        this.m_change = 100.;
+        this.m_gameInstance = game;
         // cases MUST match YAML definitions
         switch parentRecord {
             case t"Packages.ShortenHealthBoosterDuration":
-                this.addicted = main.GetAddictStatusEffectID(Consumable.HealthBooster);
+                this.m_consumable = Consumable.HealthBooster;
                 break;
             case t"Packages.ShortenNeuroBlockerDuration":
-                this.addicted = main.GetAddictStatusEffectID(Consumable.NeuroBlocker);
+                this.m_consumable = Consumable.NeuroBlocker;
                 break;
             default:
+                this.m_consumable = Consumable.Invalid;
                 LogChannel(n"ASSERT", s"unknown addicted status effect (\(TDBID.ToStringDEBUG(parentRecord)))");
                 break;
         }
+        LogChannel(n"DEBUG", s"ModifyStatusEffectDurationBasedOnAddictionEffector.m_consumable = \(ToString(this.m_consumable))");
     }
     public final func ProcessAction(owner: ref<GameObject>) -> Void {
-        LogChannel(n"DEBUG", "process action on ModifyStatusEffectDurationBasedOnAddictionEffector");
+        LogChannel(n"DEBUG", "process action ModifyStatusEffectDurationBasedOnAddictionEffector");
         let player: ref<PlayerPuppet> = owner as PlayerPuppet;
-        if !IsDefined(player) || !TDBID.IsValid(this.addicted) { 
-            super.ProcessAction(owner);
+        if !IsDefined(player) || Equals(this.m_consumable, Consumable.Invalid) { 
             return;
         }
 
-        let martindale = MartindaleSystem.GetInstance(player.GetGame());
-        let main = System.GetInstance(player.GetGame());
-        let addict = TweakDBInterface.GetStatusEffectRecord(this.addicted);
+        let main = System.GetInstance(owner.GetGame());
+        let addict = TweakDBInterface.GetStatusEffectRecord(main.GetAddictStatusEffectID(this.m_consumable));
         let threshold = System.GetInstance(owner.GetGame()).GetThresholdFromAppliedEffects(addict);
         this.m_change = 100.;
+        LogChannel(n"DEBUG", s"threshold from \(TDBID.ToStringDEBUG(addict.GetID())): \(ToString(threshold))");
         if Equals(threshold, Threshold.Notably)       { this.m_change = 30; }
         else if Equals(threshold, Threshold.Severely) { this.m_change = 70; }
         if this.m_change == 100. { return; }
 
-        let applied: array<ref<StatusEffect>>;
-        if this.addicted == main.GetAddictStatusEffectID(Consumable.HealthBooster) {
-            applied = martindale.GetAppliedEffectsForHealthBooster(player);
-        }
-        else if this.addicted == main.GetAddictStatusEffectID(Consumable.NeuroBlocker) {
-            applied = martindale.GetAppliedEffectsForNeuroBlocker(player);
-        }
+        let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffectsForConsumable(owner, this.m_consumable);
         let i: Int32 = 0;
         let remaining: Float;
         let change: Float;
@@ -127,5 +141,26 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifySt
             }
             i += 1;
         }
+    }
+
+    protected func ActionOn(owner: ref<GameObject>) -> Void {
+        LogChannel(n"DEBUG", "action on ModifyStatusEffectDurationBasedOnAddictionEffector");
+        this.ProcessAction(owner);
+        this.m_statusEffectListener = new OnStatusEffectBasedOnAddictionAppliedListener();
+        this.m_statusEffectListener.m_owner = owner;
+        this.m_statusEffectListener.m_effector = this;
+        GameInstance
+        .GetStatusEffectSystem(this.m_gameInstance)
+        .RegisterListener(owner.GetEntityID(), this.m_statusEffectListener);
+    }
+
+    protected func RepeatedAction(owner: ref<GameObject>) -> Void {
+        LogChannel(n"DEBUG", "repeated action ModifyStatusEffectDurationBasedOnAddictionEffector");
+        this.ProcessAction(owner);
+    }
+
+    protected func ActionOff(owner: ref<GameObject>) -> Void {
+        LogChannel(n"DEBUG", "action off ModifyStatusEffectDurationBasedOnAddictionEffector");
+        this.m_statusEffectListener = null;
     }
 }

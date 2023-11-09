@@ -14,6 +14,9 @@ public class RegisteredConsumable extends IScriptable {
         LogChannel(n"DEBUG", "stats:");
         this.stats.Debug();
     }
+    public func ContainsStatus(status: ref<StatusEffect_Record>) -> Bool {
+        return this.statuses.KeyExist(status);
+    }
 }
 
 public class Registry extends IScriptable {

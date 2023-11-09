@@ -1,5 +1,9 @@
 module Addicted
 
+import Martindale.IsMaxDOC
+import Martindale.IsBounceBack
+import Martindale.IsHealthBooster
+
 enum Consumable {
     MaxDOC = 0,
     BounceBack = 1,
@@ -12,4 +16,18 @@ enum Consumable {
     Tobacco = 8,
     Count = 9,
     Invalid = 10,
+}
+
+public func IsConsumable(record: ref<ConsumableItem_Record>, consumable: Consumable) -> Bool {
+    switch(consumable) {
+        case Consumable.MaxDOC:
+            return IsMaxDOC(record);
+        case Consumable.BounceBack:
+            return IsBounceBack(record);
+        case Consumable.HealthBooster:
+            return IsHealthBooster(record);
+        default:
+            break;
+    }
+    return false;
 }
