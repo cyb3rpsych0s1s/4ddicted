@@ -7,8 +7,8 @@ BaseStatusEffect.StackTwice:
     - $type: ConstantStatModifier_Record
       modifierType: Additive
       statType: BaseStats.MaxStacks
-      value: 1
-  statModsLimit: 2
+      value: 2
+  statModsLimit: 1
 
 # addiction passive status effect
 BaseStatusEffect.Addict:
