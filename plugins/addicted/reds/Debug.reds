@@ -1,28 +1,17 @@
 import Addicted.System
+import Addicted.Consumable
 import Addicted.Threshold
 import Martindale.MartindaleSystem
 
 native func WriteToFile(lines: array<String>, filename: String) -> Void;
 
-// DebugAddictTo(Game.GetPlayer());
-public func DebugAddictTo(player: wref<PlayerPuppet>) -> Void {
-    let system = GameInstance.GetStatusEffectSystem(player.GetGame());
-    system.ApplyStatusEffect(
-        player.GetEntityID(),
-        t"BaseStatusEffect.FirstAidWhiffAddict",
-        t"Addiction",
-        player.GetEntityID(),
-        1u);
-    // System.GetInstance(player.GetGame()).UpdateEffect(ItemID.FromTDBID(t"Items.BonesMcCoy70V0"), Threshold.Severely);
-}
-
-// GameInstance.GetGameplayLogicPackageSystem(this.GetGame()).ApplyPackage()
-// GameInstance.GetStatPoolsSystem(this.GetGame()). RequestSettingStatPoolValue / RequestChangingStatPoolValue
-// class ConvertDamageToDoTEffector
-
-// DebugCustomStat(Game.GetPlayer());
-public func DebugCustomStat(player: wref<PlayerPuppet>) -> Void {
-    DebugAddictTo(player);
+public func DebugHealthBoosterAddiction(gi: GameInstance) -> Void {
+    let system = System.GetInstance(gi);
+    let effect = TDBID.ToStringDEBUG(system.GetAddictStatusEffectID(Consumable.HealthBooster));
+    ApplyEffectOnPlayer(gi, effect);
+    PrintEffectsOnPlayer(gi);
+    AddToInventory(gi, "Items.HealthBooster");
+    ItemActionsHelper_ConsumeItem(GetPlayer(gi), ItemID.FromTDBID(t"Items.HealthBooster"), true);
 }
 
 // DebugMartindaleRegistry(Game.GetPlayer());
