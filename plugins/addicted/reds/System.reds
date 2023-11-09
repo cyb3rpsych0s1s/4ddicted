@@ -179,42 +179,39 @@ public class System extends ScriptableSystem {
         }
         return items;
     }
-    public func GetHighestScore(base: gamedataConsumableBaseName) -> Int32 {
-        let highest: Int32 = 0;
+    public func GetCumulatedScore(base: gamedataConsumableBaseName) -> Int32 {
+        let cumulated: Int32 = 0;
         let idx = 0;
         for value in this.values {
-            if Equals(GetBaseName(this.keys[idx]), base) && value.current > highest { highest = value.current; }
+            if Equals(GetBaseName(this.keys[idx]), base) { cumulated += value.current; }
             idx += 1;
         }
-        return highest;
+        return cumulated;
     }
-    public func GetHighestScore(consumable: Consumable) -> Int32 {
-        let highest: Int32 = 0;
+    public func GetCumulatedScore(consumable: Consumable) -> Int32 {
+        let cumulated: Int32 = 0;
         let idx = 0;
         for value in this.values {
-            if Equals(GetConsumable(this.keys[idx]), consumable) && value.current > highest { highest = value.current; }
+            if Equals(GetConsumable(this.keys[idx]), consumable) { cumulated += value.current; }
             idx += 1;
         }
-        return highest;
+        return cumulated;
     }
-    public func GetHighestScore(itemID: ItemID) -> Int32 {
-        return this.GetHighestScore(GetBaseName(itemID));
+    public func GetCumulatedScore(itemID: ItemID) -> Int32 {
+        return this.GetCumulatedScore(GetBaseName(itemID));
     }
     public func GetHighestScore(category: Category) -> Int32 {
         let highest: Int32 = 0;
-        let idx = 0;
-        let consumables = this.Keys(category);
-        for value in this.values {
-            if ArrayContains(consumables, this.keys[idx]) && value.current > highest { highest = value.current; }
-            idx += 1;
+        let consumables = GetConsumables(category);
+        let cumulated: Int32;
+        for consumable in consumables {
+            cumulated = this.GetCumulatedScore(consumable);
+            if cumulated > highest { highest = cumulated; }
         }
         return highest;
     }
-    public func GetHighestThreshold(itemID: ItemID) -> Threshold {
-        return GetThreshold(this.GetHighestScore(GetBaseName(itemID)));
-    }
-    public func GetHighestThreshold(consumable: Consumable) -> Threshold {
-        return GetThreshold(this.GetHighestScore(consumable));
+    public func GetCumulatedThreshold(consumable: Consumable) -> Threshold {
+        return GetThreshold(this.GetCumulatedScore(consumable));
     }
     public func GetHighestThreshold(category: Category) -> Threshold {
         return GetThreshold(this.GetHighestScore(category));
@@ -222,7 +219,7 @@ public class System extends ScriptableSystem {
     public func GetHighestThreshold(status: ref<StatusEffect_Record>) -> Threshold {
         if IsDefined(status) {
             if this.IsHealer(status) { return this.GetHighestThreshold(Category.Healers); }
-            else { return this.GetHighestThreshold(GetConsumable(status)); }
+            else { return this.GetCumulatedThreshold(GetConsumable(status)); }
         }
         return Threshold.Clean;
     }
