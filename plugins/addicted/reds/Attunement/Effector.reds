@@ -83,6 +83,7 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifySt
         }
     }
     public final func ProcessAction(owner: ref<GameObject>) -> Void {
+        LogChannel(n"DEBUG", "process action on ModifyStatusEffectDurationBasedOnAddictionEffector");
         let player: ref<PlayerPuppet> = owner as PlayerPuppet;
         if !IsDefined(player) || !TDBID.IsValid(this.addicted) { 
             super.ProcessAction(owner);
@@ -121,6 +122,7 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifySt
                 value = RPGManager.CalculateStatModifiers(modifiers, this.m_gameInstance, owner, Cast<StatsObjectID>(owner.GetEntityID()));
                 change = value * this.m_change / 100.00;
                 remaining = MaxF(0.00, remaining + change);
+                LogChannel(n"DEBUG", s"shortening duration for \(TDBID.ToStringDEBUG(applied[i].GetRecord().GetID())) \(applied[i].GetRemainingDuration()) -> \(remaining)");
                 GameInstance.GetStatusEffectSystem(this.m_gameInstance).SetStatusEffectRemainingDuration(owner.GetEntityID(), applied[i].GetRecord().GetID(), remaining);
             }
             i += 1;
