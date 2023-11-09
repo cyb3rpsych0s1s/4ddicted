@@ -1,4 +1,7 @@
 module Martindale
+import Addicted.Consumable
+import Addicted.Category
+import Addicted.GetConsumables
 
 public class MartindaleSystem extends ScriptableSystem {
     private let registry: ref<Registry>;
@@ -34,27 +37,74 @@ public class MartindaleSystem extends ScriptableSystem {
         let container = GameInstance.GetScriptableSystemsContainer(game);
         return container.Get(n"Martindale.MartindaleSystem") as MartindaleSystem;
     }
-    public func IsMaxDOCEffector(record: ref<Effector_Record>) -> Bool {
-        let consumables: array<ref<Consumable>>;
+    public func IsHealerStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
+        let consumables: array<ref<RegisteredConsumable>>;
         this.registry.entries.GetValues(consumables);
         for consumable in consumables {
-            if IsMaxDOC(consumable.item) && consumable.effectors.KeyExist(record) { return true; }
+            if (IsMaxDOC(consumable.item) || IsBounceBack(consumable.item) || IsHealthBooster(consumable.item))
+            && consumable.statuses.KeyExist(record) { return true; }
+        }
+        return false;
+    }
+    public func IsNeuroBlockerStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
+        let consumables: array<ref<RegisteredConsumable>>;
+        this.registry.entries.GetValues(consumables);
+        for consumable in consumables {
+            if IsNeuroBlocker(consumable.item)
+            && consumable.statuses.KeyExist(record) { return true; }
+        }
+        return false;
+    }
+    public func IsMaxDOCEffector(record: ref<Effector_Record>) -> Bool {
+        let consumables: array<ref<RegisteredConsumable>>;
+        this.registry.entries.GetValues(consumables);
+        for consumable in consumables {
+            if IsMaxDOC(consumable.item)
+            && consumable.effectors.KeyExist(record) { return true; }
         }
         return false;
     }
     public func IsBounceBackEffector(record: ref<Effector_Record>) -> Bool {
-        let consumables: array<ref<Consumable>>;
+        let consumables: array<ref<RegisteredConsumable>>;
         this.registry.entries.GetValues(consumables);
         for consumable in consumables {
-            if IsBounceBack(consumable.item) && consumable.effectors.KeyExist(record) { return true; }
+            if IsBounceBack(consumable.item)
+            && consumable.effectors.KeyExist(record) { return true; }
         }
         return false;
+    }
+    // has to match with YAML definitions
+    public func GetAddictStatusEffect(consumable: Consumable) -> TweakDBID {
+        switch consumable {
+            case Consumable.MaxDOC:
+                return t"BaseStatusEffect.MaxDOCAddict";
+            case Consumable.BounceBack:
+                return t"BaseStatusEffect.BounceBackAddict";
+            case Consumable.HealthBooster:
+                return t"BaseStatusEffect.HealthBoosterAddict";
+            case Consumable.NeuroBlocker:
+                return t"BaseStatusEffect.NeuroBlockerAddict";
+            default:
+                break;
+        }
+        return TDBID.None();
+    }
+    public func GetAddictStatusEffect(category: Category) -> array<TweakDBID> {
+        let consumables = GetConsumables(category);
+        let ids: array<TweakDBID> = [];
+        for consumable in consumables {
+            ArrayPush(ids, this.GetAddictStatusEffect(consumable));
+        }
+        return ids;
+    }
+    public func IsNeuroBlockerAddictStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
+        return Equals(record.GetID(), t"BaseStatusEffect.NeuroBlockerAddict");
     }
     public func GetAppliedEffectsForHealthBooster(player: ref<PlayerPuppet>) -> array<ref<StatusEffect>> {
         let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(player);
         let filtered: array<ref<StatusEffect>> = [];
         let record: ref<StatusEffect_Record>;
-        let consumables: array<ref<Consumable>>;
+        let consumables: array<ref<RegisteredConsumable>>;
         this.registry.entries.GetValues(consumables);
         for status in applied {
             record = status.GetRecord();
@@ -70,7 +120,7 @@ public class MartindaleSystem extends ScriptableSystem {
         let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(player);
         let filtered: array<ref<StatusEffect>> = [];
         let record: ref<StatusEffect_Record>;
-        let consumables: array<ref<Consumable>>;
+        let consumables: array<ref<RegisteredConsumable>>;
         this.registry.entries.GetValues(consumables);
         for status in applied {
             record = status.GetRecord();
@@ -84,7 +134,7 @@ public class MartindaleSystem extends ScriptableSystem {
     }
 }
 
-public func PatchMaxDOC(maxdoc: array<ref<Consumable>>) -> Void {
+public func PatchMaxDOC(maxdoc: array<ref<RegisteredConsumable>>) -> Void {
     LogChannel(n"DEBUG", "PatchMaxDOC");
     let raw: String = "BaseStatusEffect.MaxDOCAddict";
     let name: CName = StringToName(raw);

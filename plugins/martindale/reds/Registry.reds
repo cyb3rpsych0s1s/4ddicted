@@ -1,6 +1,6 @@
 module Martindale
 
-public class Consumable extends IScriptable {
+public class RegisteredConsumable extends IScriptable {
     private let item: ref<ConsumableItem_Record>;
     private let statuses: ref<inkRecords>;
     private let effectors: ref<inkRecords>;
@@ -22,7 +22,7 @@ public class Registry extends IScriptable {
         this.entries = new inkConsumables();
         let records = TweakDBInterface.GetRecords(n"ConsumableItem");
         let consumable: ref<ConsumableItem_Record>;
-        let entry: ref<Consumable>;
+        let entry: ref<RegisteredConsumable>;
         let actions: array<wref<ObjectAction_Record>>;
         let completions: array<wref<ObjectActionEffect_Record>>;
         let status: ref<StatusEffect_Record>;
@@ -31,7 +31,7 @@ public class Registry extends IScriptable {
         let stats: array<wref<StatModifier_Record>>;
         for record in records {
             consumable = record as ConsumableItem_Record;
-            entry = new Consumable();
+            entry = new RegisteredConsumable();
             entry.item = consumable;
             entry.statuses = new inkRecords();
             entry.effectors = new inkRecords();
@@ -73,15 +73,15 @@ public class Registry extends IScriptable {
     }
     public func Debug() -> Void {
         LogChannel(n"DEBUG", NameToString(this.GetClassName()));
-        let consumables: array<ref<Consumable>>;
+        let consumables: array<ref<RegisteredConsumable>>;
         this.entries.GetValues(consumables);
         for consumable in consumables {
             consumable.Debug();
         }
     }
-    public func MaxDOC() -> array<ref<Consumable>> {
-        let consumables: array<ref<Consumable>>;
-        let maxdoc: array<ref<Consumable>> = [];
+    public func MaxDOC() -> array<ref<RegisteredConsumable>> {
+        let consumables: array<ref<RegisteredConsumable>>;
+        let maxdoc: array<ref<RegisteredConsumable>> = [];
         this.entries.GetValues(consumables);
         for consumable in consumables {
             if IsMaxDOC(consumable.item) { ArrayPush(maxdoc, consumable); }

@@ -56,7 +56,7 @@ BaseStatusEffect.$(consumable)Addict:
     - !append-once $(type)Debuff
     - !append-once $(category)
   packages:
-    - Packages.Shorten$(consumable)Duration
+    - Packages.Shorten$(consumable)Duration # used in effector
       $type: GameplayLogicPackage_Record
       effectors:
         - Effectors.ShortenDuration

@@ -230,10 +230,8 @@ public class System extends ScriptableSystem {
         let count: Uint32 = 0u;
         let times: Uint32;
         if this.IsHealer(status) {
-            for id in [
-                t"BaseStatusEffect.MaxDOCAddict",
-                t"BaseStatusEffect.BounceBackAddict",
-                t"BaseStatusEffect.HealthBoosterAddict"] {
+            let ids = MartindaleSystem.GetAddictStatusEffect(Category.Healers);
+            for id in ids {
                 if count >= 2u { break; }
                 times = 0u;
                 for effect in applied {
@@ -242,9 +240,10 @@ public class System extends ScriptableSystem {
                 if times > count { count = times; }
             }
         } else if this.IsNeuroBlocker(status) {
+            let id = MartindaleSystem.GetAddictStatusEffect(Consumable.NeuroBlocker);
             count = 0u;
             for effect in applied {
-                if effect.GetRecord().GetID() == t"BaseStatusEffect.RipperdocMedAddict" { count += effect.GetStackCount(); }
+                if effect.GetRecord().GetID() == id { count += effect.GetStackCount(); }
                 if count >= 2u { break; }
             }
         }
@@ -255,14 +254,12 @@ public class System extends ScriptableSystem {
           : Threshold.Severely;
     }
     public func IsHealer(status: ref<StatusEffect_Record>) -> Bool {
-        let name = TDBID.ToStringDEBUG(status.GetID());
-        return StrContains(name, "FirstAidWhiff")
-        || StrContains(name, "BonesMcCoy70")
-        || StrContains(name, "HealthBooster");
+        let system = MartindaleSystem.GetInstance(this.player.GetGame());
+        return system.IsHealerStatusEffect(status);
     }
     public func IsNeuroBlocker(status: ref<StatusEffect_Record>) -> Bool {
-        let name = TDBID.ToStringDEBUG(status.GetID());
-        return StrContains(name, "RipperdocMed");
+        let system = MartindaleSystem.GetInstance(this.player.GetGame());
+        return system.IsNeuroBlockerStatusEffect(status);
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {

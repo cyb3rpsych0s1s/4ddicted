@@ -33,20 +33,20 @@ public class inkRecords extends inkHashMap {
 }
 
 public class inkConsumables extends inkHashMap {
-    public func Insert(value: ref<Consumable>) -> Void {
+    public func Insert(value: ref<RegisteredConsumable>) -> Void {
         if !this.KeyExist(value) {
             this.Insert(TDBID.ToNumber(value.item.GetID()), value);
         }
     }
-    public func KeyExist(value: ref<Consumable>) -> Bool {
+    public func KeyExist(value: ref<RegisteredConsumable>) -> Bool {
         return this.KeyExist(TDBID.ToNumber(value.item.GetID()));
     }
-    public func GetValues(out records: array<ref<Consumable>>) -> Void {
+    public func GetValues(out records: array<ref<RegisteredConsumable>>) -> Void {
         let values: array<wref<IScriptable>>;
         this.GetValues(values);
         ArrayClear(records);
         for value in values {
-            ArrayPush(records, value as Consumable);
+            ArrayPush(records, value as RegisteredConsumable);
         }
     }
     public func Size() -> Int32 {
