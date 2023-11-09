@@ -41,7 +41,11 @@ BaseStatusEffect.$(consumable)Addict:
 #   # uiData:
 #   #   TODO
 
-Packages.ShortenDuration:
+# used in effector
+Packages.Shorten$(consumable)Duration:
+  $instances:
+    - { consumable: HealthBooster }
+    - { consumable: NeuroBlocker  }
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.ShortenDuration
@@ -56,10 +60,7 @@ BaseStatusEffect.$(consumable)Addict:
     - !append-once $(type)Debuff
     - !append-once $(category)
   packages:
-    - Packages.Shorten$(consumable)Duration # used in effector
-      $type: GameplayLogicPackage_Record
-      effectors:
-        - Effectors.ShortenDuration
+    - Packages.Shorten$(consumable)Duration
 #   # uiData:
 #   #   TODO
 
