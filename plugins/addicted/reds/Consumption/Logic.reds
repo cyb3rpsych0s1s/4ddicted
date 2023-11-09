@@ -1,5 +1,7 @@
 module Addicted
 
+import Martindale.Consumable
+
 public func GetMinimumSleepRequired(itemID: ItemID) -> Int32 { return 6; }
 
 public func IsSerious(threshold: Threshold) -> Bool {

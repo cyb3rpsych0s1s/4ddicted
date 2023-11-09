@@ -2,6 +2,7 @@ module Addicted
 
 import Martindale.MartindaleSystem
 import Martindale.RegisteredConsumable
+import Martindale.Consumable
 
 public class System extends ScriptableSystem {
     private persistent let keys: array<TweakDBID>;
@@ -248,7 +249,7 @@ public class System extends ScriptableSystem {
                 if count >= 2u { break; }
             }
         }
-        LogChannel(n"DEBUG", s"\(TDBID.ToStringDEBUG(status.GetID())) final threshold count = \(count)");
+        // LogChannel(n"DEBUG", s"\(TDBID.ToStringDEBUG(status.GetID())) final threshold count = \(count)");
         return count == 0u
         ? Threshold.Clean
         : count == 1u

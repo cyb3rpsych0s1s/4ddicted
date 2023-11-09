@@ -1,8 +1,8 @@
 import Addicted.Threshold
 import Addicted.System
-import Addicted.Consumable
-import Martindale.MartindaleSystem
 import Addicted.IsConsumable
+import Martindale.Consumable
+import Martindale.MartindaleSystem
 
 // modify health stat pool update based on addiction, directly overriden on vanilla
 public class ModifyStatPoolValueBasedOnAddictionEffector extends ModifyStatPoolValueEffector {

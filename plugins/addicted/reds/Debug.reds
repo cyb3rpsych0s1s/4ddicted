@@ -1,5 +1,5 @@
 import Addicted.System
-import Addicted.Consumable
+import Martindale.Consumable
 import Addicted.Threshold
 import Martindale.MartindaleSystem
 

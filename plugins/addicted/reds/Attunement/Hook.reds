@@ -2,6 +2,7 @@ module Addicted
 
 import Martindale.MartindaleSystem
 import Martindale.RegisteredConsumable
+import Martindale.Consumable
 
 @addMethod(StatusEffectHelper)
 public final static func GetAppliedEffectsForConsumable(target: wref<GameObject>, consumable: Consumable) -> array<ref<StatusEffect>> {
