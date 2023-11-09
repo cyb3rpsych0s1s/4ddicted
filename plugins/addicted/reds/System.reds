@@ -109,20 +109,6 @@ public class System extends ScriptableSystem {
             }
         }
     }
-    // TODO: remove board implementation
-    // reason: we don't want other mods to alter them and cause inconsistencies
-    private func UpdateBoard(item: ItemID, score: Int32) -> Void {
-        let def: ref<AddictionsThresholdDef> = GetAllBlackboardDefs().PlayerStateMachine.Thresholds;
-        let system = this.BoardSystem();
-        let board = system.Get(def);
-        let pin: BlackboardID_Int = GetBoardPin(item);
-        let current = board.GetInt(pin);
-        let next = this.GetHighestScore(item);
-        if NotEquals(current, next) {
-            board.SetInt(pin, next);
-            board.SignalInt(pin);
-        }
-    }
     private func UpdateEffect(item: ItemID, threshold: Threshold) -> Void {
         let effect = GetStatusEffect(item);
         if !TDBID.IsValid(effect) { return; }
@@ -149,7 +135,6 @@ public class System extends ScriptableSystem {
         consume.item = item;
         consume.score = after;
         this.FireEvent(consume);
-        this.UpdateBoard(item, after);
 
         let former: Threshold = GetThreshold(before);
         let latter: Threshold = GetThreshold(after);
