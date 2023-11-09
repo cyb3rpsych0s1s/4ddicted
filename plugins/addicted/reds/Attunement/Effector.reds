@@ -1,5 +1,6 @@
 import Addicted.Threshold
 import Addicted.System
+import Addicted.Consumable
 import Martindale.MartindaleSystem
 
 // modify health stat pool update based on addiction, directly overriden on vanilla
@@ -8,12 +9,13 @@ public class ModifyStatPoolValueBasedOnAddictionEffector extends ModifyStatPoolV
     protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
         super.Initialize(record, game, parentRecord);
         LogChannel(n"DEBUG", s"parentRecord: \(TDBID.ToStringDEBUG(parentRecord))");
-        let system = MartindaleSystem.GetInstance(game);
+        let main = System.GetInstance(game);
+        let martindale = MartindaleSystem.GetInstance(game);
         let effector = TweakDBInterface.GetEffectorRecord(record);
-        if system.IsMaxDOCEffector(effector) {
-            this.addicted = t"BaseStatusEffect.MaxDOCAddict";
-        } else if system.IsBounceBackEffector(effector) {
-            this.addicted = t"BaseStatusEffect.BounceBackAddict";
+        if martindale.IsMaxDOCEffector(effector) {
+            this.addicted = main.GetAddictStatusEffectID(Consumable.MaxDOC);
+        } else if martindale.IsBounceBackEffector(effector) {
+            this.addicted = main.GetAddictStatusEffectID(Consumable.BounceBack);
         } else {
             LogChannel(n"ASSERT", s"unknown addicted status effect (\(TDBID.ToStringDEBUG(record)))");
         }
@@ -66,12 +68,14 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifySt
     private let addicted: TweakDBID;
     protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
         super.Initialize(record, game, parentRecord);
+        let main = System.GetInstance(game);
+        // cases MUST match YAML definitions
         switch parentRecord {
             case t"Packages.ShortenHealthBoosterDuration":
-                this.addicted = t"BaseStatusEffect.HealthBoosterAddict";
+                this.addicted = main.GetAddictStatusEffectID(Consumable.HealthBooster);
                 break;
             case t"Packages.ShortenNeuroBlockerDuration":
-                this.addicted = t"BaseStatusEffect.NeuroBlockerAddict";
+                this.addicted = main.GetAddictStatusEffectID(Consumable.NeuroBlocker);
                 break;
             default:
                 LogChannel(n"ASSERT", s"unknown addicted status effect (\(TDBID.ToStringDEBUG(parentRecord)))");
@@ -85,7 +89,8 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifySt
             return;
         }
 
-        let system = MartindaleSystem.GetInstance(player.GetGame());
+        let martindale = MartindaleSystem.GetInstance(player.GetGame());
+        let main = System.GetInstance(player.GetGame());
         let addict = TweakDBInterface.GetStatusEffectRecord(this.addicted);
         let threshold = System.GetInstance(owner.GetGame()).GetThresholdFromAppliedEffects(addict);
         this.m_change = 100.;
@@ -94,11 +99,11 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends ModifySt
         if this.m_change == 100. { return; }
 
         let applied: array<ref<StatusEffect>>;
-        if this.addicted == t"BaseStatusEffect.HealthBoosterAddict" {
-            applied = system.GetAppliedEffectsForHealthBooster(player);
+        if this.addicted == main.GetAddictStatusEffectID(Consumable.HealthBooster) {
+            applied = martindale.GetAppliedEffectsForHealthBooster(player);
         }
-        else if this.addicted == t"BaseStatusEffect.NeuroBlockerAddict" {
-            applied = system.GetAppliedEffectsForNeuroBlocker(player);
+        else if this.addicted == main.GetAddictStatusEffectID(Consumable.NeuroBlocker) {
+            applied = martindale.GetAppliedEffectsForNeuroBlocker(player);
         }
         let i: Int32 = 0;
         let remaining: Float;

@@ -1,7 +1,4 @@
 module Martindale
-import Addicted.Consumable
-import Addicted.Category
-import Addicted.GetConsumables
 
 public class MartindaleSystem extends ScriptableSystem {
     private let registry: ref<Registry>;
@@ -72,33 +69,6 @@ public class MartindaleSystem extends ScriptableSystem {
             && consumable.effectors.KeyExist(record) { return true; }
         }
         return false;
-    }
-    // has to match with YAML definitions
-    public func GetAddictStatusEffect(consumable: Consumable) -> TweakDBID {
-        switch consumable {
-            case Consumable.MaxDOC:
-                return t"BaseStatusEffect.MaxDOCAddict";
-            case Consumable.BounceBack:
-                return t"BaseStatusEffect.BounceBackAddict";
-            case Consumable.HealthBooster:
-                return t"BaseStatusEffect.HealthBoosterAddict";
-            case Consumable.NeuroBlocker:
-                return t"BaseStatusEffect.NeuroBlockerAddict";
-            default:
-                break;
-        }
-        return TDBID.None();
-    }
-    public func GetAddictStatusEffect(category: Category) -> array<TweakDBID> {
-        let consumables = GetConsumables(category);
-        let ids: array<TweakDBID> = [];
-        for consumable in consumables {
-            ArrayPush(ids, this.GetAddictStatusEffect(consumable));
-        }
-        return ids;
-    }
-    public func IsNeuroBlockerAddictStatusEffect(record: ref<StatusEffect_Record>) -> Bool {
-        return Equals(record.GetID(), t"BaseStatusEffect.NeuroBlockerAddict");
     }
     public func GetAppliedEffectsForHealthBooster(player: ref<PlayerPuppet>) -> array<ref<StatusEffect>> {
         let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffects(player);

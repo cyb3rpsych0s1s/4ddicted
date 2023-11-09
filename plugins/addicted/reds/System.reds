@@ -230,7 +230,7 @@ public class System extends ScriptableSystem {
         let count: Uint32 = 0u;
         let times: Uint32;
         if this.IsHealer(status) {
-            let ids = MartindaleSystem.GetAddictStatusEffect(Category.Healers);
+            let ids = this.GetAddictStatusEffectIDs(Category.Healers);
             for id in ids {
                 if count >= 2u { break; }
                 times = 0u;
@@ -240,7 +240,7 @@ public class System extends ScriptableSystem {
                 if times > count { count = times; }
             }
         } else if this.IsNeuroBlocker(status) {
-            let id = MartindaleSystem.GetAddictStatusEffect(Consumable.NeuroBlocker);
+            let id = this.GetAddictStatusEffectID(Consumable.NeuroBlocker);
             count = 0u;
             for effect in applied {
                 if effect.GetRecord().GetID() == id { count += effect.GetStackCount(); }
@@ -254,12 +254,41 @@ public class System extends ScriptableSystem {
           : Threshold.Severely;
     }
     public func IsHealer(status: ref<StatusEffect_Record>) -> Bool {
-        let system = MartindaleSystem.GetInstance(this.player.GetGame());
-        return system.IsHealerStatusEffect(status);
+        return this.MartindaleSystem().IsHealerStatusEffect(status);
     }
     public func IsNeuroBlocker(status: ref<StatusEffect_Record>) -> Bool {
-        let system = MartindaleSystem.GetInstance(this.player.GetGame());
-        return system.IsNeuroBlockerStatusEffect(status);
+        return this.MartindaleSystem().IsNeuroBlockerStatusEffect(status);
+    }
+    // MUST match YAML definitions
+    public func GetAddictStatusEffectID(consumable: Consumable) -> TweakDBID {
+        switch consumable {
+            case Consumable.MaxDOC:
+                return t"BaseStatusEffect.MaxDOCAddict";
+            case Consumable.BounceBack:
+                return t"BaseStatusEffect.BounceBackAddict";
+            case Consumable.HealthBooster:
+                return t"BaseStatusEffect.HealthBoosterAddict";
+            case Consumable.StaminaBooster:
+                return t"BaseStatusEffect.StaminaBoosterAddict";
+            case Consumable.CarryCapacityBooster:
+                return t"BaseStatusEffect.CarryCapacityBoosterAddict";
+            case Consumable.MemoryBooster:
+                return t"BaseStatusEffect.MemoryBoosterAddict";
+            case Consumable.NeuroBlocker:
+                return t"BaseStatusEffect.NeuroBlockerAddict";
+            // TODO ...
+            default:
+                break;
+        }
+        return TDBID.None();
+    }
+    public func GetAddictStatusEffectIDs(category: Category) -> array<TweakDBID> {
+        let consumables = GetConsumables(category);
+        let ids: array<TweakDBID> = [];
+        for consumable in consumables {
+            ArrayPush(ids, this.GetAddictStatusEffectID(consumable));
+        }
+        return ids;
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
@@ -269,4 +298,5 @@ public class System extends ScriptableSystem {
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.player.GetGame()); }
     public func BoardSystem() -> ref<BlackboardSystem> { return GameInstance.GetBlackboardSystem(this.player.GetGame()); }
     public func EffectSystem() -> ref<StatusEffectSystem> { return GameInstance.GetStatusEffectSystem(this.player.GetGame()); }
+    public func MartindaleSystem() -> ref<MartindaleSystem> { return MartindaleSystem.GetInstance(this.player.GetGame()); }
 }
