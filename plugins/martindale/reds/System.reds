@@ -23,7 +23,6 @@ public class MartindaleSystem extends ScriptableSystem {
 
         this.registry = new Registry();
         this.registry.Scan();
-        PatchMaxDOC(this.registry.MaxDOC());
 
         LogChannel(n"DEBUG", "[Martindale.System][OnSessionReady] registry created successfully!");
     }
@@ -102,23 +101,4 @@ public class MartindaleSystem extends ScriptableSystem {
         }
         return filtered;
     }
-}
-
-public func PatchMaxDOC(maxdoc: array<ref<RegisteredConsumable>>) -> Void {
-    LogChannel(n"DEBUG", "PatchMaxDOC");
-    let raw: String = "BaseStatusEffect.MaxDOCAddict";
-    let name: CName = StringToName(raw);
-    let id: TweakDBID = TDBID.Create(raw);
-    TweakDBManager.CreateRecord(name, n"StatusEffect_Record");
-    TweakDBManager.SetFlat(id + t".duration", t"BaseStats.InfiniteDuration");
-    TweakDBManager.SetFlat(id + t".gameplayTags", ["Debuff"]);
-    TweakDBManager.SetFlat(id + t".maxStacks", t"BaseStatusEffect.StackTwice");
-    TweakDBManager.SetFlat(id + t".statusEffectType", t"BaseStatusEffectTypes.PassiveDebuff");
-    TweakDBManager.SetFlat(id + t".removeOnStoryTier", false);
-    TweakDBManager.SetFlat(id + t".replicated", false);
-    TweakDBManager.SetFlat(id + t".savable", false);
-
-    TweakDBManager.SetFlat(id + t".packages", [t"Packages.LessenFirstAidWhiff"]);
-    
-    TweakDBManager.UpdateRecord(id);
 }
