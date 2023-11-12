@@ -1,7 +1,6 @@
 import Addicted.System
 import Addicted.Consumable
 import Addicted.Threshold
-import Martindale.MartindaleSystem
 
 native func WriteToFile(lines: array<String>, filename: String) -> Void;
 
@@ -12,12 +11,6 @@ public func DebugHealthBoosterAddiction(gi: GameInstance) -> Void {
     PrintEffectsOnPlayer(gi);
     AddToInventory(gi, "Items.HealthBooster");
     ItemActionsHelper_ConsumeItem(GetPlayer(gi), ItemID.FromTDBID(t"Items.HealthBooster"), true);
-}
-
-// DebugMartindaleRegistry(Game.GetPlayer());
-public func DebugMartindaleRegistry(player: wref<PlayerPuppet>) -> Void {
-    let system = MartindaleSystem.GetInstance(player.GetGame());
-    system.DebugRegistry();
 }
 
 public func DebugStatusEffectPrereq() -> Void {

@@ -1,10 +1,7 @@
 module Addicted
 
-import Martindale.MartindaleSystem
-import Martindale.RegisteredConsumable
-import Martindale.IsMaxDOC
-import Martindale.IsBounceBack
 import Addicted.Consumable
+import Martindale.Is
 
 public class System extends ScriptableSystem {
     private persistent let keys: array<TweakDBID>;
@@ -220,51 +217,6 @@ public class System extends ScriptableSystem {
     public func GetHighestThreshold(category: Category) -> Threshold {
         return GetThreshold(this.GetHighestScore(category));
     }
-    public func GetHighestThreshold(status: ref<StatusEffect_Record>) -> Threshold {
-        if IsDefined(status) {
-            if this.IsHealer(status) { return this.GetHighestThreshold(Category.Healers); }
-            else { return this.GetCumulatedThreshold(GetConsumable(status)); }
-        }
-        return Threshold.Clean;
-    }
-    public func GetThresholdFromAppliedEffects(status: ref<StatusEffect_Record>) -> Threshold {
-        if !IsDefined(status) { return Threshold.Clean; }
-        let applied: array<ref<StatusEffect>>;
-        this.EffectSystem().GetAppliedEffects(this.player.GetEntityID(), applied);
-        if Equals(ArraySize(applied), 0) { return Threshold.Clean; }
-        let count: Uint32 = 0u;
-        let times: Uint32;
-        if this.IsHealer(status) {
-            let ids = this.GetAddictStatusEffectIDs(Category.Healers);
-            for id in ids {
-                if count >= 2u { break; }
-                times = 0u;
-                for effect in applied {
-                    if effect.GetRecord().GetID() == id { times += effect.GetStackCount(); }
-                }
-                if times > count { count = times; }
-            }
-        } else if this.IsNeuroBlocker(status) {
-            let id = this.GetAddictStatusEffectID(Consumable.NeuroBlocker);
-            count = 0u;
-            for effect in applied {
-                if effect.GetRecord().GetID() == id { count += effect.GetStackCount(); }
-                if count >= 2u { break; }
-            }
-        }
-        // LogChannel(n"DEBUG", s"\(TDBID.ToStringDEBUG(status.GetID())) final threshold count = \(count)");
-        return count == 0u
-        ? Threshold.Clean
-        : count == 1u
-          ? Threshold.Notably
-          : Threshold.Severely;
-    }
-    public func IsHealer(status: ref<StatusEffect_Record>) -> Bool {
-        return this.MartindaleSystem().IsHealerStatusEffect(status);
-    }
-    public func IsNeuroBlocker(status: ref<StatusEffect_Record>) -> Bool {
-        return this.MartindaleSystem().IsNeuroBlockerStatusEffect(status);
-    }
     // MUST match YAML definitions
     public func GetAddictStatusEffectID(consumable: Consumable) -> TweakDBID {
         switch consumable {
@@ -303,41 +255,18 @@ public class System extends ScriptableSystem {
         }
         return ids;
     }
-    public func GetRegisteredConsumables(consumable: Consumable) -> array<ref<RegisteredConsumable>> {
-        let all = this.MartindaleSystem().GetRegisteredConsumables();
-        let related: array<ref<RegisteredConsumable>>;
-        for record in all {
-            if IsConsumable(record.item, consumable) { ArrayPush(related, record); }
-        }
-        return related;
-    }
     public func Threshold(consumable: Consumable) -> Threshold {
-        let record: ref<ConsumableItem_Record>;
-        let i: Int32;
-        let score: Int32;
-        if Equals(consumable, Consumable.MaxDOC) {
-            i = 0;
-            for key in this.keys {
-                record = TweakDBInterface.GetConsumableItemRecord(key);
-                if IsMaxDOC(record) {
-                    score += this.values[i].current;
-                }
-                i += 1;
+        let record: ref<Item_Record>;
+        let i: Int32 = 0;
+        let score: Int32 = 0;
+        for key in this.keys {
+            record = TweakDBInterface.GetItemRecord(key);
+            if Is(record, consumable) {
+                score += this.values[i].current;
             }
-            return IntEnum<Threshold>(score);
+            i += 1;
         }
-        if Equals(consumable, Consumable.BounceBack) {
-            i = 0;
-            for key in this.keys {
-                record = TweakDBInterface.GetConsumableItemRecord(key);
-                if IsBounceBack(record) {
-                    score += this.values[i].current;
-                }
-                i += 1;
-            }
-            return IntEnum<Threshold>(score);
-        }
-        return Threshold.Clean;
+        return IntEnum<Threshold>(score);
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
@@ -347,5 +276,4 @@ public class System extends ScriptableSystem {
     public func TimeSystem() -> ref<TimeSystem> { return GameInstance.GetTimeSystem(this.player.GetGame()); }
     public func BoardSystem() -> ref<BlackboardSystem> { return GameInstance.GetBlackboardSystem(this.player.GetGame()); }
     public func EffectSystem() -> ref<StatusEffectSystem> { return GameInstance.GetStatusEffectSystem(this.player.GetGame()); }
-    public func MartindaleSystem() -> ref<MartindaleSystem> { return MartindaleSystem.GetInstance(this.player.GetGame()); }
 }

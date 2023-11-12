@@ -6,7 +6,6 @@ DEFAULT_GAME_DIR    := join("C:\\", "Program Files (x86)", "Steam", "steamapps",
 
 mod_name            := 'Addicted'
 mod_companion_name  := 'Stupefied'
-mod_martindale_name := 'Martindale'
 
 # installation dir for Cyberpunk 2077, e.g. Steam
 repo_dir            := justfile_directory()    
@@ -25,20 +24,17 @@ resources_repo_dir  := join(repo_dir, "archive", "source", "raw", "addicted", "r
 red4ext_bin_dir     := join(repo_dir, "target")
 red4ext_repo_dir     := join(repo_dir, "plugins", lowercase(mod_name), "reds")
 red4ext_companion_repo_dir := join(repo_dir, "plugins", lowercase(mod_companion_name), "reds")
-red4ext_martindale_repo_dir := join(repo_dir, "plugins", lowercase(mod_martindale_name), "reds")
 
 # game files
 cet_game_dir        := join(game_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
 red_game_dir        := join(game_dir, "r6", "scripts", mod_name)
 red_companion_game_dir := join(game_dir, "r6", "scripts", mod_companion_name)
-red_martindale_game_dir := join(game_dir, "r6", "scripts", mod_martindale_name)
 tweak_game_dir      := join(game_dir, "r6", "tweaks", mod_name)
 archive_game_dir    := join(game_dir, "archive", "pc", "mod")
 redmod_game_dir     := join(game_dir, "mods", mod_name)
 red_cache_dir       := join(game_dir, "r6", "cache")
 red4ext_game_dir    := join(game_dir, "red4ext", "plugins", lowercase(mod_name))
 red4ext_companion_game_dir := join(game_dir, "red4ext", "plugins", lowercase(mod_companion_name))
-red4ext_martindale_game_dir := join(game_dir, "red4ext", "plugins", lowercase(mod_martindale_name))
 
 # bundle files for release
 cet_bundle_dir      := join(bundle_dir, "bin", "x64", "plugins", "cyber_engine_tweaks", "mods", mod_name)
@@ -79,7 +75,6 @@ default:
 setup:
     @$folder = '{{ join(red_game_dir, "Natives") }}';           if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{ join(red_companion_game_dir, "Natives") }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    @$folder = '{{ join(red_martindale_game_dir, "Natives") }}';if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{tweak_game_dir}}';                            if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{archive_game_dir}}';                          if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
 
@@ -116,16 +111,13 @@ pack:
 build TARGET='debug' LOCALE='en-us':
     @$folder = '{{red4ext_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{red4ext_companion_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
-    @$folder = '{{red4ext_martindale_game_dir}}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @if (-NOT('{{TARGET}}' -EQ 'debug') -AND -NOT('{{TARGET}}' -EQ 'release')) { \
         Write-Host "target can only be 'debug' or 'release' (default to 'release')"; exit 1; \
     }
     @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p addicted; } else { cargo +nightly build -p addicted --release; }
-    @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p martindale; } else { cargo +nightly build -p martindale --release; }
     @if ('{{TARGET}}' -EQ 'debug') { cargo +nightly build -p stupefied; } else { cargo +nightly build -p stupefied --release; }
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_name) + ".dll") }}' '{{red4ext_game_dir}}'
     Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_companion_name) + ".dll") }}' '{{red4ext_companion_game_dir}}'
-    Copy-Item -Force -Recurse '{{ join(red4ext_bin_dir, TARGET, lowercase(mod_martindale_name) + ".dll") }}' '{{red4ext_martindale_game_dir}}'
     @just rebuild
 
 deploy:
@@ -137,7 +129,6 @@ rebuild: setup
     Copy-Item -Force -Recurse -Container '{{ join(repo_dir, "tweaks", "*") }}' '{{tweak_game_dir}}'
     Copy-Item -Force -Recurse -Container '{{ join(red4ext_repo_dir, "*") }}' '{{ join(red_game_dir, "Natives") }}'
     Copy-Item -Force -Recurse -Container '{{ join(red4ext_companion_repo_dir, "*") }}' '{{ join(red_companion_game_dir, "Natives") }}'
-    Copy-Item -Force -Recurse -Container '{{ join(red4ext_martindale_repo_dir, "*") }}' '{{ join(red_martindale_game_dir, "Natives") }}'
 
 # 🧾 show logs from CET and RED
 [windows]
@@ -283,8 +274,6 @@ uninstall-red:
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
     @$folder = '{{red_companion_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
-    @$folder = '{{red_martindale_game_dir}}'; \
-    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 # 🗑️🗜️   clear out mod tweaks files in game files
 [windows]
@@ -304,8 +293,6 @@ uninstall-red4ext:
     @$folder = '{{red4ext_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
     @$folder = '{{red4ext_companion_game_dir}}'; \
-    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
-    @$folder = '{{red4ext_martindale_game_dir}}'; \
     if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force -Path $folder; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 alias nuke := nuclear
