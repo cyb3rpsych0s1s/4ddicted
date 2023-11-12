@@ -2,6 +2,14 @@
 
 ## first aid whiff (a.k.a maxdoc)
 
+# ui data
+BaseStatusEffect.FirstAidWhiff_inline5_$(threshold)_weakened:
+  $base: BaseStatusEffect.FirstAidWhiff_inline5
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  iconPath: $(threshold)_weakened_first_aid_whiff
+
 # combined stat modifier
 BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened:
   $instances:
@@ -57,6 +65,7 @@ BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
   packages:
     - !remove BaseStatusEffect.FirstAidWhiff_inline0
     - !append BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
+  uiData: BaseStatusEffect.FirstAidWhiff_inline5_$(threshold)_weakened
 
 # object action effect
 Items.FirstAidWhiffV$(version)_inline3_$(threshold)_weakened:
