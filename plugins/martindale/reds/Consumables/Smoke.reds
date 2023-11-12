@@ -1,15 +1,15 @@
 module Martindale
 
-public func IsCigar(consumable: ref<ConsumableItem_Record>) -> Bool {
-    return IsProp(consumable)
+public func IsCigar(item: ref<Item_Record>) -> Bool {
+    return IsProp(item)
     && ArrayContains([
         "cigar",
-        "crowd_cigar"], consumable.FriendlyName());
+        "crowd_cigar"], item.FriendlyName());
 }
-public func IsCigarette(consumable: ref<ConsumableItem_Record>) -> Bool {
-    return IsProp(consumable)
+public func IsCigarette(item: ref<Item_Record>) -> Bool {
+    return IsProp(item)
     && ArrayContains([
         "cigarette_i_stick",
         "locomotion_crowd_cigarette_i_stick",
-        "Evelyn's Cigarette Case"], consumable.FriendlyName());
+        "Evelyn's Cigarette Case"], item.FriendlyName());
 }
