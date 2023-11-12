@@ -1,0 +1,64 @@
+## bones mc coy 70 (a.k.a bounceback)
+
+# combined stat modifier
+BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  value: 0.7 }
+    - { threshold: "severely", value: 0.3 }
+  $base: BaseStatusEffect.BonesMcCoy70V0_inline8
+  value: $(value)
+
+# modify stat pool modifier effector
+BaseStatusEffect.BonesMcCoy70V0_inline1_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+  poolModifier:
+    valuePerSecMods:
+      - !remove BaseStatusEffect.BonesMcCoy70V0_inline8
+      - !append BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened
+
+# gameplay logic package
+BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+  effectors:
+    - !remove BaseStatusEffect.BonesMcCoy70V0_inline1
+    - !append BaseStatusEffect.BonesMcCoy70V0_inline1_$(threshold)_weakened
+
+# status effect
+BaseStatusEffect.BonesMcCoy70V$(version)_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  version: 0          }
+    - { threshold: "severely", version: 0          }
+    - { threshold: "notably",  version: 1          }
+    - { threshold: "severely", version: 1          }
+    - { threshold: "notably",  version: 2          }
+    - { threshold: "severely", version: 2          }
+    - { threshold: "notably",  version: "Epic"     }
+    - { threshold: "severely", version: "Epic"     }
+    - { threshold: "notably",  version: "Uncommon" }
+    - { threshold: "severely", version: "Uncommon" }
+  $base: BaseStatusEffect.BonesMcCoy70V$(version)
+  packages:
+    - !remove BaseStatusEffect.BonesMcCoy70V0_inline0
+    - !append BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened
+
+# object action effect
+Items.BonesMcCoy70V$(version)_inline$(inline)_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  inline: 3, version: 0          }
+    - { threshold: "severely", inline: 3, version: 0          }
+    - { threshold: "notably",  inline: 3, version: 1          }
+    - { threshold: "severely", inline: 3, version: 1          }
+    - { threshold: "notably",  inline: 3, version: 2          }
+    - { threshold: "severely", inline: 3, version: 2          }
+    - { threshold: "notably",  inline: 8, version: "Epic"     }
+    - { threshold: "severely", inline: 8, version: "Epic"     }
+    - { threshold: "notably",  inline: 8, version: "Uncommon" }
+    - { threshold: "severely", inline: 8, version: "Uncommon" }
+  $base: Items.BonesMcCoy70V$(version)_inline$(inline)
+  statusEffect: BaseStatusEffect.BonesMcCoy70V$(version)_$(threshold)_weakened
