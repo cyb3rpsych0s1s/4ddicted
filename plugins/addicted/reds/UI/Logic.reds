@@ -8,6 +8,7 @@ private func IsAlterableUIIcon(name: String) -> Bool {
 }
 
 private func GetUIIcon(threshold: Threshold, name: String) -> String {
+    LogChannel(n"DEBUG", s"threshold: \(ToString(threshold)), icon: \(name)");
     if !IsAlterableUIIcon(name)
     || !IsSerious(threshold) { return "UIIcon." + name; }
     let icon = name;

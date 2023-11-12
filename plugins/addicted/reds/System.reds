@@ -226,6 +226,7 @@ public class System extends ScriptableSystem {
         return Threshold.Clean;
     }
     public func GetThresholdFromAppliedEffects(status: ref<StatusEffect_Record>) -> Threshold {
+        if !IsDefined(status) { return Threshold.Clean; }
         let applied: array<ref<StatusEffect>>;
         this.EffectSystem().GetAppliedEffects(this.player.GetEntityID(), applied);
         if Equals(ArraySize(applied), 0) { return Threshold.Clean; }

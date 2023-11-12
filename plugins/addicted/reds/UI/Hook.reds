@@ -75,6 +75,8 @@ public final func ActivateCooldown(buffData: UIBuffInfo) -> Void {
     this.SetTimeRemaining(this.m_buffData.timeRemaining);
     this.SetStackCount(Cast<Int32>(this.m_buffData.stackCount));
     let addictive = this.system.GetRelatedAddictiveEffect(effect);
+    LogChannel(n"DEBUG", s"record ID: \(TDBID.ToStringDEBUG(effect.GetID()))");
+    LogChannel(n"DEBUG", s"related addictive effect: \(TDBID.ToStringDEBUG(addictive.GetID()))");
     threshold = this.system.GetThresholdFromAppliedEffects(addictive);
     if Equals(this.m_type, ECooldownGameControllerMode.COOLDOWNS) {
       InkImageUtils.RequestSetImage(this, this.m_spriteBg, GetUIIcon(threshold, effectUIData.IconPath()));
@@ -104,6 +106,8 @@ public final func SetData(icon: CName, time: Float, totalTime: Float, opt stackC
     this.SetTimeFill(time, totalTime);
     this.SetTimeText(time);
     let addictive = this.system.GetRelatedAddictiveEffect(this.GetStatusEffectRecord());
+    LogChannel(n"DEBUG", s"record ID: \(TDBID.ToStringDEBUG(this.GetStatusEffectRecord().GetID()))");
+    LogChannel(n"DEBUG", s"related addictive effect: \(TDBID.ToStringDEBUG(addictive.GetID()))");
     threshold = this.system.GetThresholdFromAppliedEffects(addictive);
     InkImageUtils.RequestSetImage(this, this.m_icon, GetUIIcon(threshold, NameToString(icon)));
     InkImageUtils.RequestSetImage(this, this.m_iconBg, GetUIIcon(threshold, NameToString(icon)));
@@ -115,6 +119,8 @@ public final func SetData(icon: TweakDBID, time: Float, totalTime: Float) -> Voi
     this.SetTimeText(time);
     this.SetTimeFill(time, totalTime);
     let addictive = this.system.GetRelatedAddictiveEffect(this.GetStatusEffectRecord());
+    LogChannel(n"DEBUG", s"record ID: \(TDBID.ToStringDEBUG(this.GetStatusEffectRecord().GetID()))");
+    LogChannel(n"DEBUG", s"related addictive effect: \(TDBID.ToStringDEBUG(addictive.GetID()))");
     threshold = this.system.GetThresholdFromAppliedEffects(addictive);
     InkImageUtils.RequestSetImage(this, this.m_icon, GetUIIcon(threshold, TDBID.ToStringDEBUG(icon)));
     InkImageUtils.RequestSetImage(this, this.m_iconBg, GetUIIcon(threshold, TDBID.ToStringDEBUG(icon)));
@@ -130,6 +136,8 @@ public final func SetData(icon: CName, stackCount: Int32) -> Void {
         inkWidgetRef.SetVisible(this.m_stackCounterContainer, false);
     };
     let addictive = this.system.GetRelatedAddictiveEffect(this.GetStatusEffectRecord());
+    LogChannel(n"DEBUG", s"record ID: \(TDBID.ToStringDEBUG(this.GetStatusEffectRecord().GetID()))");
+    LogChannel(n"DEBUG", s"related addictive effect: \(TDBID.ToStringDEBUG(addictive.GetID()))");
     threshold = this.system.GetThresholdFromAppliedEffects(addictive);
     InkImageUtils.RequestSetImage(this, this.m_icon, GetUIIcon(threshold, NameToString(icon)));
     InkImageUtils.RequestSetImage(this, this.m_iconBg, GetUIIcon(threshold, NameToString(icon)));

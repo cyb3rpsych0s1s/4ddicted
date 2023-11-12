@@ -86,7 +86,7 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends Effector
     public func Consumable() -> Consumable { return this.m_consumable; }
     protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
         LogChannel(n"DEBUG", "initialize ModifyStatusEffectDurationBasedOnAddictionEffector");
-        this.m_change = 100.;
+        this.m_change = 0.;
         this.m_gameInstance = game;
         // cases MUST match YAML definitions
         switch parentRecord {
@@ -113,11 +113,12 @@ public class ModifyStatusEffectDurationBasedOnAddictionEffector extends Effector
         let main = System.GetInstance(owner.GetGame());
         let addict = TweakDBInterface.GetStatusEffectRecord(main.GetAddictStatusEffectID(this.m_consumable));
         let threshold = System.GetInstance(owner.GetGame()).GetThresholdFromAppliedEffects(addict);
-        this.m_change = 100.;
         LogChannel(n"DEBUG", s"threshold from \(TDBID.ToStringDEBUG(addict.GetID())): \(ToString(threshold))");
-        if Equals(threshold, Threshold.Notably)       { this.m_change = 30; }
-        else if Equals(threshold, Threshold.Severely) { this.m_change = 70; }
-        if this.m_change == 100. { return; }
+        // if Equals(threshold, Threshold.Notably)       { this.m_change = -33; }
+        // else if Equals(threshold, Threshold.Severely) { this.m_change = -66; }
+        // else                                          { this.m_change = 0.; }
+        // if this.m_change == 0. { return; }
+        this.m_change = -66.;
 
         let applied: array<ref<StatusEffect>> = StatusEffectHelper.GetAppliedEffectsForConsumable(owner, this.m_consumable);
         let i: Int32 = 0;
