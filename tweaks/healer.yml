@@ -2,7 +2,77 @@
 
 ## first aid whiff (a.k.a maxdoc)
 
-BaseStatusEffect.FirstAidWhiff_inline1.effectorClassName: ModifyStatPoolValueBasedOnAddictionEffector
+# combined stat modifier
+BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably", value: 0.7  }
+    - { threshold: "severely", value: 0.3 }
+  $base: BaseStatusEffect.FirstAidWhiff_inline4
+  value: $(value)
+
+# stat pool update
+BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  $base: BaseStatusEffect.FirstAidWhiff_inline3
+  statModifiers:
+    - !remove BaseStatusEffect.FirstAidWhiff_inline4
+    - !append BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened
+
+# modify stat pool value effector
+BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  $base: BaseStatusEffect.FirstAidWhiff_inline1
+  statPoolUpdates:
+    - !remove BaseStatusEffect.FirstAidWhiff_inline3
+    - !append BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened
+
+# gameplay logic package
+BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  $base: BaseStatusEffect.FirstAidWhiff_inline0
+  effectors:
+    - !remove BaseStatusEffect.FirstAidWhiff_inline1
+    - !append BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened
+
+# status effect
+BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  version: 0          }
+    - { threshold: "severely", version: 0          }
+    - { threshold: "notably",  version: 1          }
+    - { threshold: "severely", version: 1          }
+    - { threshold: "notably",  version: 2          }
+    - { threshold: "severely", version: 2          }
+    - { threshold: "notably",  version: "Epic"     }
+    - { threshold: "severely", version: "Epic"     }
+    - { threshold: "notably",  version: "Uncommon" }
+    - { threshold: "severely", version: "Uncommon" }
+  $base: BaseStatusEffect.FirstAidWhiffV$(version)
+  packages:
+    - !remove BaseStatusEffect.FirstAidWhiff_inline0
+    - !append BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
+
+# object action effect
+Items.FirstAidWhiffV$(version)_inline3_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  version: 0          }
+    - { threshold: "severely", version: 0          }
+    - { threshold: "notably",  version: 1          }
+    - { threshold: "severely", version: 1          }
+    - { threshold: "notably",  version: 2          }
+    - { threshold: "severely", version: 2          }
+    - { threshold: "notably",  version: "Epic"     }
+    - { threshold: "severely", version: "Epic"     }
+    - { threshold: "notably",  version: "Uncommon" }
+    - { threshold: "severely", version: "Uncommon" }
+  $base: Items.FirstAidWhiffV$(version)_inline3
+  statusEffect: BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened
 
 ## bones mc coy 70 (a.k.a bounceback)
-BaseStatusEffect.BonesMcCoy70V0_inline9.effectorClassName: ModifyStatPoolValueBasedOnAddictionEffector
+
