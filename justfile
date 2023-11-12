@@ -298,10 +298,12 @@ uninstall-red4ext:
 alias nuke := nuclear
 
 delete-bin:
-    rm -Recurse -Force '{{ join(repo_dir, "target") }}'
+    @$folder = '{{ join(repo_dir, "target") }}'; \
+    if (Test-Path $folder -PathType container) { Remove-Item -Recurse -Force '{{ join(repo_dir, "target") }}'; Write-Host "deleted $folder"; } else {  Write-Host "missing $folder"; }
 
 delete-lock:
-    rm -Force '{{ join(repo_dir, "Cargo.lock") }}'
+    @$file = '{{ join(repo_dir, "Cargo.lock") }}'; \
+    if (Test-Path $file -PathType leaf) { Remove-Item -Force -Path $file; Write-Host "deleted $file"; } else {  Write-Host "missing $file"; }
 
 # 🧨 nuke your game files as a last resort (vanilla reset)
 [windows]
