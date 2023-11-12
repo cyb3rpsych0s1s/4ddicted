@@ -2,7 +2,9 @@ module Addicted
 
 import Martindale.MartindaleSystem
 import Martindale.RegisteredConsumable
-import Martindale.Consumable
+import Martindale.IsMaxDOC
+import Martindale.IsBounceBack
+import Addicted.Consumable
 
 public class System extends ScriptableSystem {
     private persistent let keys: array<TweakDBID>;
@@ -308,6 +310,34 @@ public class System extends ScriptableSystem {
             if IsConsumable(record.item, consumable) { ArrayPush(related, record); }
         }
         return related;
+    }
+    public func Threshold(consumable: Consumable) -> Threshold {
+        let record: ref<ConsumableItem_Record>;
+        let i: Int32;
+        let score: Int32;
+        if Equals(consumable, Consumable.MaxDOC) {
+            i = 0;
+            for key in this.keys {
+                record = TweakDBInterface.GetConsumableItemRecord(key);
+                if IsMaxDOC(record) {
+                    score += this.values[i].current;
+                }
+                i += 1;
+            }
+            return IntEnum<Threshold>(score);
+        }
+        if Equals(consumable, Consumable.BounceBack) {
+            i = 0;
+            for key in this.keys {
+                record = TweakDBInterface.GetConsumableItemRecord(key);
+                if IsBounceBack(record) {
+                    score += this.values[i].current;
+                }
+                i += 1;
+            }
+            return IntEnum<Threshold>(score);
+        }
+        return Threshold.Clean;
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {

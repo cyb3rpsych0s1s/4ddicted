@@ -1,6 +1,6 @@
 module Addicted
 
-import Martindale.Consumable
+import Addicted.Consumable
 
 public func GetMinimumSleepRequired(itemID: ItemID) -> Int32 { return 6; }
 
