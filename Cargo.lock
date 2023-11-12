@@ -195,10 +195,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "martindale"
-version = "0.1.0"
-
-[[package]]
 name = "num_enum"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

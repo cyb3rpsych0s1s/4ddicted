@@ -1,5 +1,5 @@
 [workspace]
-members = ["plugins/cp2077-rs", "plugins/martindale", "plugins/stupefied", "plugins/addicted"]
+members = ["plugins/cp2077-rs", "plugins/stupefied", "plugins/addicted"]
 resolver = "2"
 
 [workspace.package]
