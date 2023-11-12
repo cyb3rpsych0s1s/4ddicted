@@ -153,13 +153,6 @@ public class System extends ScriptableSystem {
 
     //// initialization methods
 
-    private func OnAttach() -> Void {
-        let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
-        if IsDefined(player) {
-            this.player = player;
-        }
-    }
-
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         let player: ref<PlayerPuppet> = request.owner as PlayerPuppet;
         if IsDefined(player) {
