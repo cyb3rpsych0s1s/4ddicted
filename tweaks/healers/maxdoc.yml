@@ -1,5 +1,3 @@
-# status effect
-
 ## first aid whiff (a.k.a maxdoc)
 
 # ui data
@@ -82,6 +80,3 @@ Items.FirstAidWhiffV$(version)_inline3_$(threshold)_weakened:
     - { threshold: "severely", version: "Uncommon" }
   $base: Items.FirstAidWhiffV$(version)_inline3
   statusEffect: BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened
-
-## bones mc coy 70 (a.k.a bounceback)
-
