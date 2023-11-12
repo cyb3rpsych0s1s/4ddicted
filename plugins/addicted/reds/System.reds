@@ -240,34 +240,6 @@ public class System extends ScriptableSystem {
         }
         return TDBID.None();
     }
-    public func GetRelatedAddictiveEffect(status: ref<StatusEffect_Record>) -> ref<StatusEffect_Record> {
-        let consumable = GetConsumable(status);
-        if NotEquals(consumable, Consumable.Invalid) {
-            return TweakDBInterface.GetStatusEffectRecord(this.GetAddictStatusEffectID(consumable));
-        }
-        return null;
-    }
-    public func GetAddictStatusEffectIDs(category: Category) -> array<TweakDBID> {
-        let consumables = GetConsumables(category);
-        let ids: array<TweakDBID> = [];
-        for consumable in consumables {
-            ArrayPush(ids, this.GetAddictStatusEffectID(consumable));
-        }
-        return ids;
-    }
-    public func Threshold(consumable: Consumable) -> Threshold {
-        let record: ref<Item_Record>;
-        let i: Int32 = 0;
-        let score: Int32 = 0;
-        for key in this.keys {
-            record = TweakDBInterface.GetItemRecord(key);
-            if Is(record, consumable) {
-                score += this.values[i].current;
-            }
-            i += 1;
-        }
-        return IntEnum<Threshold>(score);
-    }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
         let container = GameInstance.GetScriptableSystemsContainer(game);

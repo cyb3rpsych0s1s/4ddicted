@@ -14,14 +14,14 @@ protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<O
             case t"Items.FirstAidWhiffV2_inline3":
             case t"Items.FirstAidWhiffVEpic_inline3":
             case t"Items.FirstAidWhiffVUncommon_inline3":
-                threshold = system.Threshold(Consumable.MaxDOC);
+                threshold = system.GetCumulatedThreshold(Consumable.MaxDOC);
                 break;
             case t"Items.BonesMcCoy70V0_inline3":
             case t"Items.BonesMcCoy70V1_inline3":
             case t"Items.BonesMcCoy70V2_inline3":
             case t"Items.BonesMcCoy70VEpic_inline8":
             case t"Items.BonesMcCoy70VUncommon_inline8":
-                threshold = system.Threshold(Consumable.BounceBack);
+                threshold = system.GetCumulatedThreshold(Consumable.BounceBack);
                 break;
         }
         if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[idx] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[idx].GetID() + t"_notably_weakened");  }
