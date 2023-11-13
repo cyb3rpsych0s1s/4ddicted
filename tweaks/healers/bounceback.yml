@@ -57,21 +57,25 @@ BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened:
 # status effect
 BaseStatusEffect.BonesMcCoy70V$(version)_$(threshold)_weakened:
   $instances:
-    - { threshold: "notably",  version: 0,          inline: 12 }
-    - { threshold: "severely", version: 0,          inline: 12 }
-    - { threshold: "notably",  version: 1,          inline: 0  }
-    - { threshold: "severely", version: 1,          inline: 0  }
-    - { threshold: "notably",  version: 2,          inline: 0  }
-    - { threshold: "severely", version: 2,          inline: 0  }
-    - { threshold: "notably",  version: "Epic",     inline: 0  }
-    - { threshold: "severely", version: "Epic",     inline: 0  }
-    - { threshold: "notably",  version: "Uncommon", inline: 0  }
-    - { threshold: "severely", version: "Uncommon", inline: 0  }
+    - { threshold: "notably",  version: 0,          inline: 12, intensity: "mildly" }
+    - { threshold: "severely", version: 0,          inline: 12, intensity: "piddly" }
+    - { threshold: "notably",  version: 1,          inline: 0,  intensity: "mildly" }
+    - { threshold: "severely", version: 1,          inline: 0,  intensity: "piddly" }
+    - { threshold: "notably",  version: 2,          inline: 0,  intensity: "mildly" }
+    - { threshold: "severely", version: 2,          inline: 0,  intensity: "piddly" }
+    - { threshold: "notably",  version: "Epic",     inline: 0,  intensity: "mildly" }
+    - { threshold: "severely", version: "Epic",     inline: 0,  intensity: "piddly" }
+    - { threshold: "notably",  version: "Uncommon", inline: 0,  intensity: "mildly" }
+    - { threshold: "severely", version: "Uncommon", inline: 0,  intensity: "piddly" }
   $base: BaseStatusEffect.BonesMcCoy70V$(version)
   packages:
     - !remove BaseStatusEffect.BonesMcCoy70V0_inline0
     - !append BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened
   uiData: BaseStatusEffect.BonesMcCoy70V$(version)_inline$(inline)_$(threshold)_weakened
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: $(intensity)_reflex_buster
+      shouldReapply: false
 
 # object action effect
 Items.BonesMcCoy70V$(version)_inline$(inline)_$(threshold)_weakened:

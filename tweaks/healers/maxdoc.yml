@@ -49,21 +49,25 @@ BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
 # status effect
 BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
   $instances:
-    - { threshold: "notably",  version: 0          }
-    - { threshold: "severely", version: 0          }
-    - { threshold: "notably",  version: 1          }
-    - { threshold: "severely", version: 1          }
-    - { threshold: "notably",  version: 2          }
-    - { threshold: "severely", version: 2          }
-    - { threshold: "notably",  version: "Epic"     }
-    - { threshold: "severely", version: "Epic"     }
-    - { threshold: "notably",  version: "Uncommon" }
-    - { threshold: "severely", version: "Uncommon" }
+    - { threshold: "notably",  version: 0,          intensity: "mildly" }
+    - { threshold: "severely", version: 0,          intensity: "piddly" }
+    - { threshold: "notably",  version: 1,          intensity: "mildly" }
+    - { threshold: "severely", version: 1,          intensity: "piddly" }
+    - { threshold: "notably",  version: 2,          intensity: "mildly" }
+    - { threshold: "severely", version: 2,          intensity: "piddly" }
+    - { threshold: "notably",  version: "Epic",     intensity: "mildly" }
+    - { threshold: "severely", version: "Epic",     intensity: "piddly" }
+    - { threshold: "notably",  version: "Uncommon", intensity: "mildly" }
+    - { threshold: "severely", version: "Uncommon", intensity: "piddly" }
   $base: BaseStatusEffect.FirstAidWhiffV$(version)
   packages:
     - !remove BaseStatusEffect.FirstAidWhiff_inline0
     - !append BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
   uiData: BaseStatusEffect.FirstAidWhiff_inline5_$(threshold)_weakened
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: $(intensity)_splinter_buff
+      shouldReapply: false
 
 # object action effect
 Items.FirstAidWhiffV$(version)_inline3_$(threshold)_weakened:

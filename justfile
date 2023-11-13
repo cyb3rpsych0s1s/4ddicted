@@ -76,6 +76,7 @@ setup:
     @$folder = '{{ join(red_game_dir, "Natives") }}';           if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{ join(red_companion_game_dir, "Natives") }}'; if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{tweak_game_dir}}';                            if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
+    @$folder = '{{cet_game_dir}}';                              if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
     @$folder = '{{archive_game_dir}}';                          if (!(Test-Path $folder)) { [void](New-Item $folder -ItemType Directory); Write-Host "Created folder at $folder"; }
 
 # 🎨 lint code
@@ -129,6 +130,7 @@ rebuild: setup
     Copy-Item -Force -Recurse -Container '{{ join(repo_dir, "tweaks", "*") }}' '{{tweak_game_dir}}'
     Copy-Item -Force -Recurse -Container '{{ join(red4ext_repo_dir, "*") }}' '{{ join(red_game_dir, "Natives") }}'
     Copy-Item -Force -Recurse -Container '{{ join(red4ext_companion_repo_dir, "*") }}' '{{ join(red_companion_game_dir, "Natives") }}'
+    Copy-Item -Force -Recurse -Container '{{ join(cet_repo_dir, "*") }}' '{{cet_game_dir}}'
 
 # 🧾 show logs from CET and RED
 [windows]
@@ -250,7 +252,7 @@ bundle_lang LOCALE:
 
 # 🗑️🎭⚙️ 🧧🗜️  clear out all mod files in game files
 [windows]
-uninstall: uninstall-red uninstall-red4ext uninstall-archive
+uninstall: uninstall-red uninstall-red4ext uninstall-cet uninstall-archive
 # uninstall: uninstall-archive uninstall-cet uninstall-red uninstall-tweak uninstall-redmod uninstall-red4ext
 
 # 🗑️🎭  clear out mod archive files in game files
