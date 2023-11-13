@@ -7,8 +7,8 @@ UIData.WithdrawnFrom$(consumable):
     - { consumable: CarryCapacityBooster }
     - { consumable: MemoryBooster        }
   $base: BaseStatusEffect.$(consumable)_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-$(key)-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-$(key)
+  description: LocKey#Mod-Addicted-Withdrawn-$(consumable)-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-$(consumable)
   iconPath: withdrawn_from_pill
 
 # effector
