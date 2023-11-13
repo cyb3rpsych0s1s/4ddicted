@@ -24,7 +24,7 @@ BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened:
   $base: BaseStatusEffect.FirstAidWhiff_inline3
   statModifiers:
     - !remove BaseStatusEffect.FirstAidWhiff_inline4
-    - !append BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened
+    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened
 
 # modify stat pool value effector
 BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened:
@@ -34,7 +34,7 @@ BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened:
   $base: BaseStatusEffect.FirstAidWhiff_inline1
   statPoolUpdates:
     - !remove BaseStatusEffect.FirstAidWhiff_inline3
-    - !append BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened
+    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened
 
 # gameplay logic package
 BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
@@ -44,7 +44,7 @@ BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
   $base: BaseStatusEffect.FirstAidWhiff_inline0
   effectors:
     - !remove BaseStatusEffect.FirstAidWhiff_inline1
-    - !append BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened
+    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened
 
 # status effect
 BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
@@ -62,7 +62,7 @@ BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
   $base: BaseStatusEffect.FirstAidWhiffV$(version)
   packages:
     - !remove BaseStatusEffect.FirstAidWhiff_inline0
-    - !append BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
+    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
   uiData: BaseStatusEffect.FirstAidWhiff_inline5_$(threshold)_weakened
   VFX:
     - $type: StatusEffectFX_Record
