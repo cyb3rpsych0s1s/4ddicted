@@ -153,6 +153,16 @@ public class System extends ScriptableSystem {
 
     //// initialization methods
 
+    private func OnAttach() -> Void {
+        let k = ArraySize(this.keys);
+        let v = ArraySize(this.values);
+        if NotEquals(k, v) {
+            LogChannel(n"ASSERT", "consumptions keys and values size do not match");
+            this.keys = [];
+            this.values = [];
+        }
+    }
+
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
         let player: ref<PlayerPuppet> = request.owner as PlayerPuppet;
         if IsDefined(player) {
