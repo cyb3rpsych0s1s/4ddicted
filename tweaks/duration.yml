@@ -6,11 +6,11 @@ Items.LongLastingConsumableDuration_inline0_$(threshold)_shortened:
   $base: Items.LongLastingConsumableDuration_inline0
   value: $(value)
 
+# stat modifier group
 Items.LongLastingConsumableDuration_$(threshold)_shortened:
   $instances:
     - { threshold: "notably"  }
     - { threshold: "severely" }
   $base: Items.LongLastingConsumableDuration
   statModifiers:
-    - !remove Items.LongLastingConsumableDuration_inline0
-    - !prepend-once Items.LongLastingConsumableDuration_inline0_$(threshold)_shortened
+    - Items.LongLastingConsumableDuration_inline0_$(threshold)_shortened

@@ -23,8 +23,7 @@ BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened:
     - { threshold: "severely" }
   $base: BaseStatusEffect.FirstAidWhiff_inline3
   statModifiers:
-    - !remove BaseStatusEffect.FirstAidWhiff_inline4
-    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened
+    - BaseStatusEffect.FirstAidWhiff_inline4_$(threshold)_weakened
 
 # modify stat pool value effector
 BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened:
@@ -33,8 +32,7 @@ BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened:
     - { threshold: "severely" }
   $base: BaseStatusEffect.FirstAidWhiff_inline1
   statPoolUpdates:
-    - !remove BaseStatusEffect.FirstAidWhiff_inline3
-    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened
+    - BaseStatusEffect.FirstAidWhiff_inline3_$(threshold)_weakened
 
 # gameplay logic package
 BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
@@ -43,8 +41,8 @@ BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
     - { threshold: "severely" }
   $base: BaseStatusEffect.FirstAidWhiff_inline0
   effectors:
-    - !remove BaseStatusEffect.FirstAidWhiff_inline1
-    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened
+    - BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened
+    - Effectors.UsedHealingItemOrCyberwareEffector
 
 # status effect
 BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
@@ -61,8 +59,7 @@ BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
     - { threshold: "severely", version: "Uncommon", intensity: "piddly" }
   $base: BaseStatusEffect.FirstAidWhiffV$(version)
   packages:
-    - !remove BaseStatusEffect.FirstAidWhiff_inline0
-    - !prepend-once BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
+    - BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened
   uiData: BaseStatusEffect.FirstAidWhiff_inline5_$(threshold)_weakened
   VFX:
     - $type: StatusEffectFX_Record
