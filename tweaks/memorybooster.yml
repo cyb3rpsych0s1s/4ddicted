@@ -1,0 +1,57 @@
+## memory booster
+
+# effector
+Effectors.MigraineStart:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  activationSFXName: q101_sc_03_heart_loop
+
+Effectors.MigraineDecrease:
+  $type: Effector_Record
+  effectorClassName: StopAndPlaySFXEffector
+  sfxToStop: q101_sc_03_heart_loop
+  sfxToStart: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 120
+    randRange: 0
+
+Effectors.MigraineEnd:
+  $type: Effector_Record
+  effectorClassName: StopSFXEffector
+  sfxName: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 150
+    randRange: 0
+
+Effectors.Dizzy:
+  $type: Effector_Record
+  effectorClassName: PlayBreathingAnimationEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  amplitudeWeight: 1.0
+  animFeatureName: CameraBreathingMedium
+  blendInDuration: 5.0
+  blendOutDuration: 5.0
+
+# status effect
+BaseStatusEffect.$(threshold)WithdrawnFromMemoryBooster:
+  $instances:
+    - { threshold: Notably,  modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, modifier: 0.7, modifiers: 70 }
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Memory
+          value: $(modifier)
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
+    - $type: GameplayLogicPackage_Record
+      effectors:
+        - Effectors.Dizzy
+  uiData:
+    $base: UIData.WithdrawnFromMemoryBooster
+    intValues: [ $(modifiers) ]
