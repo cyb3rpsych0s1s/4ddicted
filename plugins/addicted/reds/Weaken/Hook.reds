@@ -2,7 +2,7 @@ module Addicted
 
 @wrapMethod(UseHealChargeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "on ProcessStatusEffect inside UseHealChargeAction");
+    LogChannel(n"DEBUG", "on UseHealChargeAction.ProcessStatusEffects");
     let system = System.GetInstance(gameInstance);
     let threshold: Threshold = Threshold.Clean;
     let i: Int32 = 0;
