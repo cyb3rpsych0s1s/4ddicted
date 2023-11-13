@@ -23,14 +23,32 @@ protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<O
             case t"Items.BonesMcCoy70VUncommon_inline8":
                 threshold = system.GetCumulatedThreshold(Consumable.BounceBack);
                 break;
-            case t"Items.HealthBooster_inline1":
-            case t"Items.Blackmarket_HealthBooster_inline1":
-                threshold = system.GetCumulatedThreshold(Consumable.HealthBooster);
-                break;
         }
         if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[idx] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[idx].GetID() + t"_notably_weakened");  }
         else if Equals(threshold, Threshold.Severely) { Deref(actionEffects)[idx] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[idx].GetID() + t"_severely_weakened"); }
         idx += 1;
+    }
+    wrappedMethod(actionEffects, gameInstance);
+}
+
+@wrapMethod(ConsumeAction)
+protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "on ConsumeAction.ProcessStatusEffects");
+    let system = System.GetInstance(gameInstance);
+    let threshold: Threshold = Threshold.Clean;
+    let i: Int32 = 0;
+    while i < ArraySize(Deref(actionEffects)) {
+        LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+        switch(Deref(actionEffects)[i].GetID()) {
+            case t"Items.HealthBooster_inline1":
+            case t"Items.Blackmarket_HealthBooster_inline1":
+                // threshold = system.GetCumulatedThreshold(Consumable.HealthBooster);
+                threshold = Threshold.Notably;
+                break;
+        }
+        if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
+        else if Equals(threshold, Threshold.Severely) { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
+        i += 1;
     }
     wrappedMethod(actionEffects, gameInstance);
 }
