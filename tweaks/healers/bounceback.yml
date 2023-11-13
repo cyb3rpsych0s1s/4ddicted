@@ -26,16 +26,23 @@ BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened:
   $base: BaseStatusEffect.BonesMcCoy70V0_inline8
   value: $(value)
 
+# mutable pool value modifier
+BaseStatusEffect.BonesMcCoy70V0_inline2_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably"  }
+    - { threshold: "severely" }
+  $base: BaseStatusEffect.BonesMcCoy70V0_inline2
+  valuePerSecMods:
+    - !remove BaseStatusEffect.BonesMcCoy70V0_inline8
+    - !append BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened
+
 # modify stat pool modifier effector
 BaseStatusEffect.BonesMcCoy70V0_inline1_$(threshold)_weakened:
   $instances:
     - { threshold: "notably"  }
     - { threshold: "severely" }
   $base: BaseStatusEffect.BonesMcCoy70V0_inline1
-  poolModifier:
-    valuePerSecMods:
-      - !remove BaseStatusEffect.BonesMcCoy70V0_inline8
-      - !append BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened
+  poolModifier: BaseStatusEffect.BonesMcCoy70V0_inline2_$(threshold)_weakened
 
 # gameplay logic package
 BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened:
