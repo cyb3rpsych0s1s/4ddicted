@@ -32,7 +32,8 @@ BaseStatusEffect.BonesMcCoy70V0_inline2_$(threshold)_weakened:
     - { threshold: "severely" }
   $base: BaseStatusEffect.BonesMcCoy70V0_inline2
   valuePerSecMods:
-    - BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened
+    - !remove BaseStatusEffect.BonesMcCoy70V0_inline8
+    - !prepend-once BaseStatusEffect.BonesMcCoy70V0_inline8_$(threshold)_weakened
 
 # modify stat pool modifier effector
 BaseStatusEffect.BonesMcCoy70V0_inline1_$(threshold)_weakened:
@@ -49,9 +50,8 @@ BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened:
     - { threshold: "severely" }
   $base: BaseStatusEffect.BonesMcCoy70V0_inline0
   effectors:
-    - BaseStatusEffect.BonesMcCoy70V0_inline1_$(threshold)_weakened
-    - BaseStatusEffect.BonesMcCoy70V0_inline9
-    - Effectors.UsedHealingItemOrCyberwareEffector
+    - !remove BaseStatusEffect.BonesMcCoy70V0_inline1
+    - !prepend-once BaseStatusEffect.BonesMcCoy70V0_inline1_$(threshold)_weakened
 
 # status effect
 BaseStatusEffect.BonesMcCoy70V$(version)_$(threshold)_weakened:
@@ -68,7 +68,8 @@ BaseStatusEffect.BonesMcCoy70V$(version)_$(threshold)_weakened:
     - { threshold: "severely", version: "Uncommon", inline: 0,  intensity: "piddly" }
   $base: BaseStatusEffect.BonesMcCoy70V$(version)
   packages:
-    - BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened
+    - !remove BaseStatusEffect.BonesMcCoy70V0_inline0
+    - !prepend-once BaseStatusEffect.BonesMcCoy70V0_inline0_$(threshold)_weakened
   uiData: BaseStatusEffect.BonesMcCoy70V$(version)_inline$(inline)_$(threshold)_weakened
   VFX:
     - $type: StatusEffectFX_Record
