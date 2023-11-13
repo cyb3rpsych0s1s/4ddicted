@@ -1,0 +1,39 @@
+## stamina booster
+
+# ui data
+UIData.WithdrawnFrom$(consumable):
+  $instances:
+    - { consumable: StaminaBooster       }
+    - { consumable: CarryCapacityBooster }
+    - { consumable: MemoryBooster        }
+  $base: BaseStatusEffect.$(consumable)_inline2
+  description: LocKey#Mod-Addicted-Withdrawn-$(key)-Desc
+  displayName: LocKey#Mod-Addicted-Craving-For-$(key)
+  iconPath: withdrawn_from_pill
+
+# effector
+Effectors.Grunt:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  activationSFXName: ono_v_effort
+
+# status effect
+BaseStatusEffect.$(threshold)WithdrawnFrom$(consumable):
+  $instances:
+    - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: 70 }
+    - { threshold: Notably,  consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.9, modifiers: 90 }
+    - { threshold: Severely, consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.7, modifiers: 70 }
+  $base: BaseStatusEffect.WithdrawalSymptom
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.$(stat)
+          value: $(modifier)
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.Grunt]
+  uiData:
+    $base: UIData.WithdrawnFrom$(consumable)
+    intValues: [ $(modifiers) ]

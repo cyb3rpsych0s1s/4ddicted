@@ -101,7 +101,11 @@ pack:
     Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Icons", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Icons.archive") }}' -Force
     {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.VFX", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.VFX") }}'
     Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.VFX", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.VFX.archive") }}' -Force
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Translations", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Translations") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Translations", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Translations.archive") }}' -Force
+    Copy-Item -Path '{{ join(repo_dir, "archives", "Addicted.Translations", "source", "resources", "Addicted.Translations.archive.xl") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Translations.archive.xl") }}' -Force
     Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
+    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.xl") }}' '{{archive_game_dir}}'
 
 # 🔛 just compile to check (without building)
 # compile:

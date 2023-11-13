@@ -18,3 +18,9 @@ UIIcon.$(threshold)_weakened_$(icon):
   $type: UIIcon_Record
   atlasPartName: $(threshold)_weakened_$(part_suffix)
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+# withdrawn from pill-based consumables
+UIIcon.withdrawn_from_pill:
+  $type: UIIcon_Record
+  atlasPartName: craving_for_pills_icon
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas

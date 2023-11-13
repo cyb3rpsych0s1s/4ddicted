@@ -17,6 +17,7 @@ scripts/*
 /archives/**/install_log.xml
 /archives/**/packed
 /archives/*.archive
+/archives/*.xl
 /target
 /researches
 
