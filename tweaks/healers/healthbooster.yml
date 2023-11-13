@@ -1,0 +1,18 @@
+# status effect
+BaseStatusEffect.$(prefix)HealthBooster_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  prefix: ""             }
+    - { threshold: "severely", prefix: ""             }
+    - { threshold: "notably",  prefix: "Blackmarket_" }
+    - { threshold: "severely", prefix: "Blackmarket_" }
+  $base: BaseStatusEffect.$(prefix)HealthBooster
+  duration: Items.LongLastingConsumableDuration_$(threshold)_shortened
+
+# object action effect
+Items.$(prefix)HealthBooster_inline1_$(threshold)_weakened:
+  $instances:
+    - { threshold: "notably",  prefix: ""             }
+    - { threshold: "severely", prefix: ""             }
+    - { threshold: "notably",  prefix: "Blackmarket_" }
+    - { threshold: "severely", prefix: "Blackmarket_" }
+  statusEffect: BaseStatusEffect.$(prefix)HealthBooster_$(threshold)_weakened

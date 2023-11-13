@@ -23,6 +23,10 @@ protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<O
             case t"Items.BonesMcCoy70VUncommon_inline8":
                 threshold = system.GetCumulatedThreshold(Consumable.BounceBack);
                 break;
+            case t"Items.HealthBooster_inline1":
+            case t"Items.Blackmarket_HealthBooster_inline1":
+                threshold = system.GetCumulatedThreshold(Consumable.HealthBooster);
+                break;
         }
         if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[idx] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[idx].GetID() + t"_notably_weakened");  }
         else if Equals(threshold, Threshold.Severely) { Deref(actionEffects)[idx] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[idx].GetID() + t"_severely_weakened"); }
