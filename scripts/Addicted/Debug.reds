@@ -295,7 +295,7 @@ private cb func OnEntityUpdate(event: ref<DynamicEntityEvent>) {
     // workspotSystem.SendJumpToTagCommandEnt(this, n"Animated5005", true, event.GetEntityID());
     // workspotSystem.SendJumpToAnimEnt(this, n"Animated5005", true);
     // workspotSystem.SendJumpToAnimEnt(this, n"Addicted", true);
-    workspotSystem.SendJumpToAnimEnt(this, n"stand_car_lean180__rh_cigarette__01__smoke__01", true);
+    workspotSystem.SendJumpToAnimEnt(this, n"stand_car_lean180__rh_cigarette__01__smoke__01", true); // these AnimEnt can be found in "base\\cyberscript\\workspot\\smoke.workspot"
 
     GameInstance.GetTransactionSystem(this.GetGame())
     .GiveItem(this, ItemID.FromTDBID(t"Items.crowd_cigarette_i_stick"), 1);
@@ -331,7 +331,7 @@ public func Smoke() -> Void {
   this.entitySystem = GameInstance.GetDynamicEntitySystem();
   this.entitySystem.RegisterListener(n"Addicted", this, n"OnEntityUpdate");
   let deviceSpec = new DynamicEntitySpec();
-  deviceSpec.templatePath = r"base\\cyberscript\\entity\\smoke.ent";
+  deviceSpec.templatePath = r"base\\cyberscript\\entity\\smoke.ent"; // this is responsible for linking to "base\\cyberscript\\workspot\\smoke.workspot"
   deviceSpec.position = this.GetWorldPosition();
   deviceSpec.orientation = EulerAngles.ToQuat(Vector4.ToRotation(this.GetWorldPosition()));
   deviceSpec.persistState = false;
