@@ -6,6 +6,7 @@ import Addicted.Helpers.*
 import Addicted.Manager.*
 import Addicted.Crossover.AlterNeuroBlockerStatusEffects
 import Addicted.Crossover.AlterBlackLaceStatusEffects
+import Addicted.Component.*
 
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
@@ -41,6 +42,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let updateSymtomsID: DelayID;
 
+  private let callbackSystem: wref<CallbackSystem>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -77,6 +79,9 @@ public class AddictedSystem extends ScriptableSystem {
     this.healerManager = new HealerManager();
     this.healerManager.Initialize(this);
 
+    this.callbackSystem = GameInstance.GetCallbackSystem();
+    this.callbackSystem.RegisterCallback(n"Entity/Assemble", this, n"OnEntityAssemble");
+
     // ModSettings.RegisterListenerToModifications(this);
   }
 
@@ -112,6 +117,17 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);
+  }
+
+  private cb func OnEntityAssemble(event: ref<EntityLifecycleEvent>) {
+    let entity = event.GetEntity();
+    let template = entity.GetTemplatePath();
+    if template == r"base\\characters\\entities\\player\\player_ma_fpp.ent" || template == r"base\\characters\\entities\\player\\player_wa_fpp.ent" {
+      let puppet = entity as PlayerPuppet;
+      puppet.AddComponent(new TobaccoComponent());
+      puppet.AddTag(n"Addicted");
+      this.callbackSystem.UnregisterCallback(n"Entity/Assemble", this);
+    }
   }
 
   public func RefreshConfig() -> Void {
