@@ -193,6 +193,7 @@ public static exec func Checkup(gi: GameInstance) -> Void {
             line = line + "\n" + "       " + ToString(dose);
         }
         msg = msg + "\n" + line;
+        idx += 1;
     }
     LogChannel(n"DEBUG", msg);
 }
