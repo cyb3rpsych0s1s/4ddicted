@@ -172,6 +172,13 @@ public static exec func SetConsumptions(gi: GameInstance, id: String, score: Int
     }
 }
 
+// Game.ResetConsumptions();
+public static exec func ResetConsumptions(gi: GameInstance) -> Void {
+    let system = System.GetInstance(gi);
+    system.keys = [];
+    system.values = [];
+}
+
 // Game.Checkup();
 public static exec func Checkup(gi: GameInstance) -> Void {
     let system = System.GetInstance(gi);
