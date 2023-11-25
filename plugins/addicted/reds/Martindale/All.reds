@@ -5,6 +5,9 @@ public func Is(record: ref<Item_Record>, consumable: Consumable) -> Bool {
     if record.IsExactlyA(n"gamedataConsumableItem_Record") {
         return Is(record as ConsumableItem_Record, consumable);
     }
+    if record.IsExactlyA(n"gamedataItem_Record") {
+        return Is(record, consumable);
+    }
     return false;
 }
 
@@ -26,6 +29,18 @@ public func Is(record: ref<ConsumableItem_Record>, consumable: Consumable) -> Bo
             return IsMemoryBooster(record);
         case Consumable.NeuroBlocker:
             return IsNeuroBlocker(record);
+        default:
+            break;
+    }
+    return false;
+}
+
+public func Is(record: ref<Item_Record>, consumable: Consumable) -> Bool {
+    switch(consumable) {
+        case Consumable.Tobacco:
+            return IsCigarette(record) || IsCigar(record);
+        default:
+            break;
     }
     return false;
 }
