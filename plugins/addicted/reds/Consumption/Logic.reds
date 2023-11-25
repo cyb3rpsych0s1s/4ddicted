@@ -79,8 +79,11 @@ public func GetConsumable(base: gamedataConsumableBaseName) -> Consumable {
             return Consumable.StaminaBooster;
         case gamedataConsumableBaseName.MemoryBooster:
             return Consumable.MemoryBooster;
+        default:
+            break;
     }
     LogChannel(n"ASSERT", s"unknown consumable for base \(ToString(base))");
+    return Consumable.Invalid;
 }
 
 public func GetGameplayTag(item: ItemID) -> CName {
