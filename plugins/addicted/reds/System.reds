@@ -78,7 +78,7 @@ public class System extends ScriptableSystem {
     private func Position(id: TweakDBID) -> Int32 {
         let idx = 0;
         for key in this.keys {
-            if key == id { return idx; }
+            if Equals(key, id) { return idx; }
             idx += 1;
         }
         return -1;
