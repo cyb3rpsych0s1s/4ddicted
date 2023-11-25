@@ -90,6 +90,56 @@ public func DebugStatPoolUpdate() -> Void {
     WriteToFile(lines, "StatPoolUpdate");
 }
 
+public static exec func ApplyVFXOn(gi: GameInstance, name: String) -> Void {
+    let player: ref<PlayerPuppet>;
+    player = GetPlayer(gi);
+    GameObjectEffectHelper.StartEffectEvent(player, StringToName(name));
+}
+
+public static exec func RemoveVFXOn(gi: GameInstance, name: String) -> Void {
+    let player: ref<PlayerPuppet>;
+    player = GetPlayer(gi);
+    GameObjectEffectHelper.StopEffectEvent(player, StringToName(name));
+}
+
+public static exec func PlaySFXOn(gi: GameInstance, name: String) -> Void {
+    let player: ref<PlayerPuppet>;
+    player = GetPlayer(gi);
+    GameObject.PlaySound(player, StringToName(name));
+}
+
+public static exec func StopSFXOn(gi: GameInstance, name: String) -> Void {
+    let player: ref<PlayerPuppet>;
+    player = GetPlayer(gi);
+    GameObject.StopSound(player, StringToName(name));
+}
+
+public static exec func SearchItem(gi: GameInstance, id: String) -> Void {
+  let i: Int32;
+  let itemID: ItemID;
+  let itemList: array<wref<gameItemData>>;
+  let quantity: Int32;
+  let str: String;
+  let player: ref<PlayerPuppet> = GetPlayer(gi);
+  let trans: ref<TransactionSystem> = GameInstance.GetTransactionSystem(gi);
+  let found: Bool = false;
+  trans.GetItemList(player, itemList);
+  i = 0;
+  LogItems(s"searching for \(id) in inventory...");
+  while i < ArraySize(itemList) {
+    itemID = itemList[i].GetID();
+    if Equals(ItemID.FromTDBID(TDBID.Create(id)), itemID) {
+        quantity = trans.GetItemQuantity(player, itemID);
+        str = SpaceFill(IntToString(quantity), 6, ESpaceFillMode.JustifyRight) + "x " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID));
+        LogItems(str);
+        found = true;
+        break;
+    }
+    i += 1;
+  };
+  if !found { LogItems(s"couldn't find \(id) in inventory"); }
+}
+
 // BUG: attempt to read inacessible 0xC
 // public func DebugStatModifier() -> Void {
 //     let kinds: array<CName> = [
