@@ -1,6 +1,7 @@
 import Addicted.System
 import Addicted.Consumable
 import Addicted.Threshold
+import Addicted.Consumption
 
 native func WriteToFile(lines: array<String>, filename: String) -> Void;
 
@@ -138,6 +139,55 @@ public static exec func SearchItem(gi: GameInstance, id: String) -> Void {
     i += 1;
   };
   if !found { LogItems(s"couldn't find \(id) in inventory"); }
+}
+
+// Game.SetConsumptions("Items.BonesMcCoy70V0", 40, {});
+public static exec func SetConsumptions(gi: GameInstance, id: String, score: Int32, doses: array<Float>) -> Void {
+    let system = System.GetInstance(gi);
+    let key = TDBID.Create(id);
+    let position = system.Position(key);
+    let s: Int32 = score;
+    if s > 100 { s = 100; }
+    if s < 0   { s = 0;   }
+    if position != -1 {
+        let printDoses = "[";
+        let idx = 0;
+        for dose in system.values[position].doses {
+            if idx > 0 { printDoses = printDoses + ToString(dose); }
+            else       { printDoses = printDoses + ToString(dose) + ","; }
+            idx += 1;
+        }
+        printDoses = printDoses + "]";
+        let printCurrent = ToString(system.values[position].current);
+        LogChannel(n"DEBUG", s"\(id) = { current: \(printCurrent), doses: \(printDoses) }");
+        system.values[position].current = s;
+        system.values[position].doses = doses;
+    } else {
+        LogChannel(n"DEBUG", s"\(id) = { current: 0, doses: [] }");
+        let value = new Consumption();
+        value.current = s;
+        value.doses = doses;
+        ArrayPush(system.keys, key);
+        ArrayPush(system.values, value);
+    }
+}
+
+// Game.Checkup();
+public static exec func Checkup(gi: GameInstance) -> Void {
+    let system = System.GetInstance(gi);
+    let idx = 0;
+    let line: String;
+    let msg: String = "";
+    for key in system.keys {
+        line = TDBID.ToStringDEBUG(key);
+        line = line + "\n" + "   current: " + ToString(system.values[idx].current);
+        line = line + "\n" + "   doses:";
+        for dose in system.values[idx].doses {
+            line = line + "\n" + "       " + ToString(dose);
+        }
+        msg = msg + "\n" + line;
+    }
+    LogChannel(n"DEBUG", msg);
 }
 
 // BUG: attempt to read inacessible 0xC
