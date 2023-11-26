@@ -1,0 +1,75 @@
+Duration.TenSeconds:
+  $type: ConstantStatModifier_Record
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+  value: 10
+
+Duration.Cough:
+  $type: StatModifierGroup_Record
+  statModifiers:
+    - Duration.TenSeconds
+
+Stacks.Thrice:
+  $type: ConstantStatModifier_Record
+  statType: BaseStats.MaxStacks
+  modifierType: Additive
+  value: 1
+
+MaxStacks.Thrice:
+  $type: StatModifierGroup_Record
+  statModifiers:
+    - Stacks.Thrice
+    - Duration.TenSeconds
+  statModsLimit: 3
+
+Effectors.Cough:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  activationSFXName: g_sc_v_sickness_cough_light
+  fireAndForget: false
+  startOnUninitialize: false
+  stopActiveSfxOnDeactivate: false
+  unique: false
+
+Packages.Cough:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - $base: Effectors.Cough
+      prereqRecord:
+        $base: Prereqs.DurationPrereq
+        duration: 3
+        randRange: 2
+    - $base: Effectors.Cough
+      prereqRecord:
+        $base: Prereqs.DurationPrereq
+        duration: 7
+        randRange: 2
+
+BaseStatusEffect.Cough:
+  $type: StatusEffect_Record
+  duration: Duration.Cough
+  maxStacks: MaxStacks.Thrice
+  packages:
+    - Packages.Cough
+
+Effectors.CoughingFit:
+  $type: ApplyStatusEffectEffector_Record
+  effectorClassName: ApplyStatusEffectEffector
+  count: 1
+  statusEffect: BaseStatusEffect.Cough
+  removeWithEffector: false
+  applicationTarget: Player
+  useCountWhenRemoving: true
+
+Effectors.NoCoughingFit:
+  $type: Effector_Record
+  effectorClassName: RemoveStatusEffectsEffector
+  statusEffects:
+    - BaseStatusEffect.Cough
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 10
+    randRange: 0

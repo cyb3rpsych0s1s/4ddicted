@@ -45,6 +45,8 @@ BaseStatusEffect.FirstAidWhiff_inline0_$(threshold)_weakened:
   effectors:
     - !remove BaseStatusEffect.FirstAidWhiff_inline1
     - !prepend-once BaseStatusEffect.FirstAidWhiff_inline1_$(threshold)_weakened
+    - !append-once Effectors.CoughingFit
+    - !append-once Effectors.NoCoughingFit
 
 # status effect
 BaseStatusEffect.FirstAidWhiffV$(version)_$(threshold)_weakened:
