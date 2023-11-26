@@ -5,15 +5,6 @@ import Addicted.Consumption
 
 native func WriteToFile(lines: array<String>, filename: String) -> Void;
 
-public func DebugHealthBoosterAddiction(gi: GameInstance) -> Void {
-    let system = System.GetInstance(gi);
-    let effect = TDBID.ToStringDEBUG(system.GetAddictStatusEffectID(Consumable.HealthBooster));
-    ApplyEffectOnPlayer(gi, effect);
-    PrintEffectsOnPlayer(gi);
-    AddToInventory(gi, "Items.HealthBooster");
-    ItemActionsHelper_ConsumeItem(GetPlayer(gi), ItemID.FromTDBID(t"Items.HealthBooster"), true);
-}
-
 public func DebugStatusEffectPrereq() -> Void {
     let records = TweakDBInterface.GetRecords(n"StatusEffectPrereq");
     let prereq: ref<StatusEffectPrereq_Record>;
