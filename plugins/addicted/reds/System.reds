@@ -204,44 +204,8 @@ public class System extends ScriptableSystem {
     public func GetCumulatedScore(itemID: ItemID) -> Int32 {
         return this.GetCumulatedScore(GetBaseName(itemID));
     }
-    public func GetHighestScore(category: Category) -> Int32 {
-        let highest: Int32 = 0;
-        let consumables = GetConsumables(category);
-        let cumulated: Int32;
-        for consumable in consumables {
-            cumulated = this.GetCumulatedScore(consumable);
-            if cumulated > highest { highest = cumulated; }
-        }
-        return highest;
-    }
     public func GetCumulatedThreshold(consumable: Consumable) -> Threshold {
         return GetThreshold(this.GetCumulatedScore(consumable));
-    }
-    public func GetHighestThreshold(category: Category) -> Threshold {
-        return GetThreshold(this.GetHighestScore(category));
-    }
-    // MUST match YAML definitions
-    public func GetAddictStatusEffectID(consumable: Consumable) -> TweakDBID {
-        switch consumable {
-            case Consumable.MaxDOC:
-                return t"BaseStatusEffect.MaxDOCAddict";
-            case Consumable.BounceBack:
-                return t"BaseStatusEffect.BounceBackAddict";
-            case Consumable.HealthBooster:
-                return t"BaseStatusEffect.HealthBoosterAddict";
-            case Consumable.StaminaBooster:
-                return t"BaseStatusEffect.StaminaBoosterAddict";
-            case Consumable.CarryCapacityBooster:
-                return t"BaseStatusEffect.CarryCapacityBoosterAddict";
-            case Consumable.MemoryBooster:
-                return t"BaseStatusEffect.MemoryBoosterAddict";
-            case Consumable.NeuroBlocker:
-                return t"BaseStatusEffect.NeuroBlockerAddict";
-            // TODO ...
-            default:
-                break;
-        }
-        return TDBID.None();
     }
     
     public final static func GetInstance(game: GameInstance) -> ref<System> {
