@@ -181,7 +181,7 @@ public func Reacts(reaction: CName) -> Void {
 }
 
 @addMethod(PlayerPuppet)
-private func ReactionID() -> CRUID { return CreateCRUID(12345ul); }
+private func ReactionID() -> CRUID { return CreateCRUID(40015730ul); }
 
 @wrapMethod(UseHealChargeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
