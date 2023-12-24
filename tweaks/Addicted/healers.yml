@@ -130,19 +130,32 @@ BaseStatusEffect.$(threshold)WeakenedBlackmarket_HealthBooster:
 
 Items.$(threshold)WeakenedActionEffect$(consumable)$(version):
   $instances:
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline2 }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline2 }
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: V1, flat: inline6 }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: V1, flat: inline6 }
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: V2, flat: inline6 }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: V2, flat: inline6 }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V0, flat: inline2 }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: V0, flat: inline2 }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V1, flat: inline2 }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: V1, flat: inline2 }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V2, flat: inline6 }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline6 }
-    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1 }
-    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1 }
-  $base: Items.$(consumable)$(version)_$(flat)
+    # maxdoc
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '' }
+    # bounce back
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '' }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '' }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '' }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '' }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '' }
+    # health booster
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: '' }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: '' }
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_' }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_' }
+  $base: Items.$(prefix)$(consumable)$(version)_$(flat)
   statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)
