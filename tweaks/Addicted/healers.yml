@@ -50,16 +50,16 @@ BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
 
 BaseStatusEffect.$(threshold)WeakenedBonesMcCoy70$(version):
   $instances:
-    - { threshold: Notably,  intensity: mildly, version: V0, modifier: 7, value: 0.7 }
-    - { threshold: Severely, intensity: piddly, version: V0, modifier: 3, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: V1, modifier: 7, value: 0.7 }
-    - { threshold: Severely, intensity: piddly, version: V1, modifier: 3, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: V2, modifier: 7, value: 0.7 }
-    - { threshold: Severely, intensity: piddly, version: V2, modifier: 3, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: VUncommon, modifier: 7, value: 0.7 }
-    - { threshold: Severely, intensity: piddly, version: VUncommon, modifier: 3, value: 0.3 }
-    - { threshold: Notably,  intensity: mildly, version: VEpic, modifier: 7, value: 0.7 }
-    - { threshold: Severely, intensity: piddly, version: VEpic, modifier: 3, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V0, modifier: 7, value: 0.7, inline: 12 }
+    - { threshold: Severely, intensity: piddly, version: V0, modifier: 3, value: 0.3, inline: 12 }
+    - { threshold: Notably,  intensity: mildly, version: V1, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: V1, modifier: 3, value: 0.3, inline: 0 }
+    - { threshold: Notably,  intensity: mildly, version: V2, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: V2, modifier: 3, value: 0.3, inline: 0 }
+    - { threshold: Notably,  intensity: mildly, version: VUncommon, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: VUncommon, modifier: 3, value: 0.3, inline: 0 }
+    - { threshold: Notably,  intensity: mildly, version: VEpic, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: VEpic, modifier: 3, value: 0.3, inline: 0 }
   $base: BaseStatusEffect.BonesMcCoy70$(version)
   packages:
     - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
@@ -82,7 +82,7 @@ BaseStatusEffect.$(threshold)WeakenedBonesMcCoy70$(version):
       name: $(intensity)_reflex_buster
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.BonesMcCoy70$(version)_inline7
+    $base: BaseStatusEffect.BonesMcCoy70$(version)_inline$(inline)
     iconPath: $(threshold)WeakenedBonesMcCoy70
     intValues: [ $(modifier) ]
 
