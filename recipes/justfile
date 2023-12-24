@@ -1,0 +1,18 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set dotenv-load
+
+dir FOLDER:
+    @if (!(Test-Path "{{FOLDER}}")) { [void](New-Item "{{FOLDER}}" -ItemType Directory); Write-Host "Created folder at {{FOLDER}}"; }
+
+remove FILE:
+    @if (Test-Path "{{FILE}}" -PathType leaf) { Remove-Item -Force -Path "{{FILE}}"; Write-Host "deleted {{FILE}}"; } else {  Write-Host "missing {{FILE}}"; }
+
+trash FOLDER:
+    @if (Test-Path "{{FOLDER}}" -PathType container) { Remove-Item -Force -Recurse -Path "{{FOLDER}}"; Write-Host "deleted {{FOLDER}}"; } else {  Write-Host "missing {{FOLDER}}"; }
+
+swap BACKUP CACHE:
+    @if(Test-Path "{{BACKUP}}" ) { \
+        Write-Host "replacing {{CACHE}} with {{BACKUP}}"; \
+        cp -Force "{{BACKUP}}' '{{CACHE}}"; \
+        Remove-Item -Force -Path "{{BACKUP}}"; \
+    } else { Write-Host "missing {{BACKUP}}"; }
