@@ -2,7 +2,7 @@
 **/*.log
 **/.DS_Store
 
-/book
+/book/site
 !scripts/
 scripts/*
 /archives/**/*.cpmodproj

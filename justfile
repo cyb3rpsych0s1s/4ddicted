@@ -199,15 +199,15 @@ install:
 
 # 📖 read book directly
 read:
-    mdbook build --open
+    cd book; mdbook build --open
 
 # 🖊️  book with live hot reload
 draft:
-    mdbook watch --open
+    cd book; mdbook watch --open
 
 # 📕 assemble book (for release in CI)
 assemble:
-    mdbook build
+    cd book; mdbook build
 
 # 📦 bundle mod files (for release in CI)
 [windows]
