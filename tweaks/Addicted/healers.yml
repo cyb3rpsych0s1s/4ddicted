@@ -90,9 +90,9 @@ BaseStatusEffect.$(threshold)WeakenedBonesMcCoy70$(version):
 
 BaseStatusEffect.$(threshold)WeakenedHealthBooster:
   $instances:
-    - { threshold: Notably,  modifier: 1.15, modifiers: 15 }
-    - { threshold: Severely, modifier: 1.1,  modifiers: 10 }
-  $base: BaseStatusEffect.HealthBooster
+    - { threshold: Notably,  modifier: 1.07, modifiers: 7 }
+    - { threshold: Severely, modifier: 1.03, modifiers: 3 }
+  $base: BaseStatusEffect.$(prefix)HealthBooster
   packages:
     - $base: BaseStatusEffect.HealthBooster_inline0
       stats:
@@ -104,6 +104,27 @@ BaseStatusEffect.$(threshold)WeakenedHealthBooster:
     $base: BaseStatusEffect.HealthBooster_inline2
     iconPath: $(threshold)WeakenedHealthBooster
     intValues: [ $(modifiers) ]
+
+BaseStatusEffect.$(threshold)WeakenedBlackmarket_HealthBooster:
+  $instances:
+    - { threshold: Notably,  modifier: 1.15, modifiers: 15, malus: -0.6, maluses: 60 }
+    - { threshold: Severely, modifier: 1.1,  modifiers: 10, malus: -0.7, maluses: 70 }
+  $base: BaseStatusEffect.$(prefix)HealthBooster
+  packages:
+    - $base: BaseStatusEffect.Blackmarket_HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: $(modifier)
+        - $type: ConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.StaminaRegenRateMult
+          value: $(malus)
+  uiData:
+    $base: BaseStatusEffect.$(prefix)HealthBooster_inline$(inline)
+    iconPath: $(threshold)WeakenedHealthBooster
+    intValues: [ $(modifiers), $(maluses) ]
 
 # object action effect
 
