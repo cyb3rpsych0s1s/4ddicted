@@ -80,12 +80,18 @@ import:
     {{wk_cli}} cr2w -d '{{ join(repo_dir, "archive", "source", "raw", "addicted", "localization") }}' -o '{{ join(repo_dir, "archive", "source", "archive", "addicted", "localization") }}'
 
 # 📦 pack archive with WolvenKit
-# deprecated because of bug (biomonitor not triggered, 8.9.0)
-# [windows]
-# pack: import
-#     {{wk_cli}} pack '{{ join(repo_dir, "archive") }}'
-#     Move-Item -Force -Path '{{ join(repo_dir, "archive.archive") }}' -Destination '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", mod_name + ".archive") }}'
-#     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "resources", "Addicted.archive.xl") }}' '{{ join(repo_dir, "archive", "packed", "archive", "pc", "mod", "Addicted.archive.xl") }}'
+pack:
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Icons", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Icons") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Icons", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Icons.archive") }}' -Force
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.VFX", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.VFX") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.VFX", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.VFX.archive") }}' -Force
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Biomon", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Biomon") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Biomon", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Biomon.archive") }}' -Force
+    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Translations", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Translations") }}'
+    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Translations", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Translations.archive") }}' -Force
+    Copy-Item -Path '{{ join(repo_dir, "archives", "Addicted.Translations", "source", "resources", "Addicted.Translations.archive.xl") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Translations.archive.xl") }}' -Force
+    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
+    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.xl") }}' '{{archive_game_dir}}'
 
 # 🔛 just compile to check (without building)
 compile:
@@ -101,8 +107,7 @@ build LOCALE: rebuild
     Copy-Item -Force -Recurse '{{ join(repo_dir, "archive", "source", "customSounds", "vanilla", LOCALE, "*") }}' '{{ join(redmod_game_dir, "customSounds", "vanilla", LOCALE) }}'
     Copy-Item -Force '{{ join(repo_dir, "archive", "source", "raw", "addicted", "resources", "info." + LOCALE + ".json") }}' '{{ join(redmod_game_dir, "info.json") }}'
 
-deploy:
-    cd '{{ join(game_dir, "tools", "redmod", "bin") }}'; .\redMod.exe deploy -root="{{game_dir}}"
+dev: (build 'LOCALE=en-us')
 
 # see WolvenKit archive Hot Reload (with Red Hot Tools)
 # ↪️  copy codebase files to game files, excluding archive (when game is running)
