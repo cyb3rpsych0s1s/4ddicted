@@ -18,27 +18,32 @@ UIIcon.$(threshold)Weakened$(consumable):
 
 BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
   $instances:
-    - { threshold: Notably,  intensity: mildly, version: V0, value: 30 }
-    - { threshold: Severely, intensity: piddly, version: V0, value: 20 }
-    - { threshold: Notably,  intensity: mildly, version: V1, value: 45 }
-    - { threshold: Severely, intensity: piddly, version: V1, value: 30 }
-    - { threshold: Notably,  intensity: mildly, version: V2, value: 60 }
-    - { threshold: Severely, intensity: piddly, version: V2, value: 40 }
+    - { threshold: Notably,  intensity: mildly, version: V0, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: V0, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V1, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: V1, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V2, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: V2, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: VUncommon, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: VUncommon, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: VEpic, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: VEpic, value: 0.3 }
   $base: BaseStatusEffect.FirstAidWhiff$(version)
   packages:
-    - $base: BaseStatusEffect.FirstAidWhiff$(version)_inline0
+    - $base: BaseStatusEffect.FirstAidWhiff_inline0
       effectors:
-        - $base: BaseStatusEffect.FirstAidWhiff$(version)_inline1
+        - $base: BaseStatusEffect.FirstAidWhiff_inline1
           statPoolUpdates:
-            - $type: StatPoolUpdate_Record
-              statPoolType: BaseStatPools.Health
-              statPoolValue: $(value)  
+            - $base: BaseStatusEffect.FirstAidWhiff_inline3
+              statModifiers:
+                - $base: BaseStatusEffect.FirstAidWhiff_inline4
+                  value: $(value)
   VFX:
     - $type: StatusEffectFX_Record
       name: $(intensity)_splinter_buff
       shouldReapply: false
   uiData:
-    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    $base: BaseStatusEffect.FirstAidWhiff_inline5
     iconPath: $(threshold)WeakenedFirstAidWhiff
 
 ## bounce back (a.k.a bones mccoy)
