@@ -6,11 +6,11 @@ UIIcon.$(threshold)Weakened$(consumable):
     - { threshold: Severely, consumable: FirstAidWhiff, part_prefix: severely, part_suffix: first_aid_whiff }
     - { threshold: Notably,  consumable: BonesMcCoy70,  part_prefix: notably,  part_suffix: regeneration_icon }
     - { threshold: Severely, consumable: BonesMcCoy70,  part_prefix: severely, part_suffix: regeneration_icon }
-    - { threshold: Notably,  consumable: HealthBooster, part_prefix: notably,  part_suffix: health_booster_regen }
-    - { threshold: Severely, consumable: HealthBooster, part_prefix: severely, part_suffix: health_booster_regen }
+    - { threshold: Notably,  consumable: HealthBooster, part_prefix: notably,  part_suffix: slot_consumable_hp }
+    - { threshold: Severely, consumable: HealthBooster, part_prefix: severely, part_suffix: slot_consumable_hp }
   $type: UIIcon_Record
-  atlasPartName: $(part_prefix)_$(part_suffix)
-  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasPartName: $(part_prefix)_weakened_$(part_suffix)
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
 # status effect
 
