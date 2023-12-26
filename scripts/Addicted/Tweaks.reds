@@ -204,8 +204,12 @@ private func AlterStatusEffects(const actionEffects: script_ref<array<wref<Objec
             threshold = others;
           }
         }
-        if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
-        else if Equals(threshold, Threshold.Severely) { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
+        let altered: ref<ObjectActionEffect_Record>;
+        if Equals(threshold, Threshold.Notably)       { altered = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
+        else if Equals(threshold, Threshold.Severely) { altered = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
+        
+        if IsDefined(altered) { Deref(actionEffects)[i] = altered; }
+        else { LogError(s"unknown weakened variant for \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))"); }
       }
       i += 1;
   }
