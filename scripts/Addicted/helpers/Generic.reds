@@ -21,9 +21,6 @@ public class Generic {
       suffix = StrReplace(suffix, "SeverelyWeakened", "");
       return TDBID.Create("Items." + suffix);
     }
-    if StrContains(str, "BlackLace") {
-      return TDBID.Create("Items.BlackLaceV0");
-    }
     return TDBID.Create("Items." + suffix);
   }
 
@@ -41,20 +38,6 @@ public class Generic {
     return Consumable.Invalid;
   }
 
-  public static func Weaken(consumable: Consumable) -> Bool {
-    switch consumable {
-      case Consumable.MaxDOC:
-      case Consumable.BounceBack:
-      case Consumable.HealthBooster:
-      case Consumable.BlackLace:
-      case Consumable.NeuroBlocker:
-        return true;
-      default:
-        break;
-    }
-    return false;
-  }
-
   public static func Addiction(consumable: Consumable) -> Addiction {
     switch consumable {
       case Consumable.MaxDOC:
@@ -67,10 +50,12 @@ public class Generic {
       case Consumable.MemoryBooster:
       case Consumable.NeuroBlocker:
         return Addiction.Neuros;
+      case Consumable.BlackLace:
+        return Addiction.BlackLace;
       default:
         break;
     }
-    return Addiction.Unknown;
+    return Addiction.Invalid;
   }
 
   public static func IsBiomonitor(id: TweakDBID) -> Bool {

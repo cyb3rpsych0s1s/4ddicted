@@ -183,55 +183,45 @@ public func Reacts(reaction: CName) -> Void {
 @addMethod(PlayerPuppet)
 private func ReactionID() -> CRUID { return CreateCRUID(40015730ul); }
 
-@wrapMethod(UseHealChargeAction)
-protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "on UseHealChargeAction.ProcessStatusEffects");
-    let system = AddictedSystem.GetInstance(gameInstance);
-    let threshold: Threshold = Threshold.Clean;
-    let i: Int32 = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
-        switch(Deref(actionEffects)[i].GetID()) {
-            case t"Items.FirstAidWhiffV0_inline3":
-            case t"Items.FirstAidWhiffV1_inline3":
-            case t"Items.FirstAidWhiffV2_inline3":
-            case t"Items.FirstAidWhiffVEpic_inline3":
-            case t"Items.FirstAidWhiffVUncommon_inline3":
-                threshold = system.Threshold(Consumable.MaxDOC);
-                break;
-            case t"Items.BonesMcCoy70V0_inline3":
-            case t"Items.BonesMcCoy70V1_inline3":
-            case t"Items.BonesMcCoy70V2_inline3":
-            case t"Items.BonesMcCoy70VEpic_inline8":
-            case t"Items.BonesMcCoy70VUncommon_inline8":
-                threshold = system.Threshold(Consumable.BounceBack);
-                break;
+/// replace existing status effect with modified one
+/// ObjectActionEffect_Record are immutable but actionEffects can be swapped
+private func AlterStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+  let system = AddictedSystem.GetInstance(gameInstance);
+  let consumable: Consumable;
+  let addiction: Addiction;
+  let threshold: Threshold = Threshold.Clean;
+  let others: Threshold;
+  let i: Int32 = 0;
+  while i < ArraySize(Deref(actionEffects)) {
+      LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+      consumable = Generic.Consumable(Deref(actionEffects)[i].GetID());
+      if NotEquals(consumable, Consumable.Invalid) {
+        addiction = Generic.Addiction(consumable);
+        threshold = system.Threshold(consumable);
+        if Equals(addiction, Addiction.Healers) {
+          others = system.Threshold(addiction);
+          if EnumInt(threshold) < EnumInt(others) {
+            threshold = others;
+          }
         }
         if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
         else if Equals(threshold, Threshold.Severely) { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
-        i += 1;
-    }
+      }
+      i += 1;
+  }
+}
+
+@wrapMethod(UseHealChargeAction)
+protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "on UseHealChargeAction.ProcessStatusEffects");
+    AlterStatusEffects(actionEffects, gameInstance);
     wrappedMethod(actionEffects, gameInstance);
 }
 
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
     LogChannel(n"DEBUG", "on ConsumeAction.ProcessStatusEffects");
-    let system = AddictedSystem.GetInstance(gameInstance);
-    let threshold: Threshold = Threshold.Clean;
-    let i: Int32 = 0;
-    while i < ArraySize(Deref(actionEffects)) {
-        LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
-        switch(Deref(actionEffects)[i].GetID()) {
-            case t"Items.HealthBooster_inline1":
-            case t"Items.Blackmarket_HealthBooster_inline1":
-                threshold = system.Threshold(Consumable.HealthBooster);
-                break;
-        }
-        if Equals(threshold, Threshold.Notably)       { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
-        else if Equals(threshold, Threshold.Severely) { Deref(actionEffects)[i] = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
-        i += 1;
-    }
+    AlterStatusEffects(actionEffects, gameInstance);
     wrappedMethod(actionEffects, gameInstance);
 }
 
