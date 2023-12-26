@@ -126,36 +126,36 @@ BaseStatusEffect.$(threshold)WeakenedBlackmarket_HealthBooster:
     iconPath: $(threshold)WeakenedHealthBooster
     intValues: [ $(modifiers), $(maluses) ]
 
-# object action effect
+# completion effect (object action effect)
 
-Items.$(threshold)WeakenedActionEffect$(consumable)$(version):
+Items.$(prefix)$(consumable)$(version)_$(flat)_$(suffix)_weakened:
   $instances:
     # maxdoc
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '' }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '', suffix: severely }
     # bounce back
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '' }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '' }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '' }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '' }
-    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '' }
-    - { threshold: Severely, consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '' }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '', suffix: severely }
     # health booster
-    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: '' }
-    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: '' }
-    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_' }
-    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_' }
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: notably }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: severely }
   $base: Items.$(prefix)$(consumable)$(version)_$(flat)
   statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)

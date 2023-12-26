@@ -41,6 +41,38 @@ public class Generic {
     return Consumable.Invalid;
   }
 
+  public static func Weaken(consumable: Consumable) -> Bool {
+    switch consumable {
+      case Consumable.MaxDOC:
+      case Consumable.BounceBack:
+      case Consumable.HealthBooster:
+      case Consumable.BlackLace:
+      case Consumable.NeuroBlocker:
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  public static func Addiction(consumable: Consumable) -> Addiction {
+    switch consumable {
+      case Consumable.MaxDOC:
+      case Consumable.BounceBack:
+      case Consumable.HealthBooster:
+        return Addiction.Healers;
+      case Consumable.StaminaBooster:
+      case Consumable.CarryCapacityBooster:
+        return Addiction.Anabolics;
+      case Consumable.MemoryBooster:
+      case Consumable.NeuroBlocker:
+        return Addiction.Neuros;
+      default:
+        break;
+    }
+    return Addiction.Unknown;
+  }
+
   public static func IsBiomonitor(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
@@ -103,7 +135,7 @@ public class Generic {
   }
 
   public static func IsNeurotransmitter(id: TweakDBID) -> Bool {
-    return Generic.IsMemoryBooster(id);
+    return Generic.IsMemoryBooster(id) || Generic.IsNeuroBlocker(id);
   }
 
   public static func IsAlcohol(id: TweakDBID) -> Bool {
