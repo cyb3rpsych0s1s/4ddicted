@@ -5,6 +5,7 @@ import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect,Translations}
+import Addicted.Crossover.{AlterBlackLaceStatusEffects,AlterNeuroBlockerStatusEffects}
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -61,7 +62,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
 
     if Generic.IsBlackLace(id) {
       EI(id, s"consumed BlackLace");
-      let threshold: Threshold = system.HighestThreshold(Consumable.BlackLace);
+      let threshold: Threshold = system.Threshold(Consumable.BlackLace);
       let insanity = StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.Insanity");
       E(s"is defined insanity: \(IsDefined(insanity))");
       E(s"insanity: \(TDBID.ToStringDEBUG(insanity.GetRecord().GetID()))");
@@ -187,6 +188,7 @@ private func ReactionID() -> CRUID { return CreateCRUID(40015730ul); }
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
 private func AlterStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let system = AddictedSystem.GetInstance(gameInstance);
+  let altered: ref<ObjectActionEffect_Record>;
   let consumable: Consumable;
   let addiction: Addiction;
   let threshold: Threshold = Threshold.Clean;
@@ -195,21 +197,30 @@ private func AlterStatusEffects(const actionEffects: script_ref<array<wref<Objec
   while i < ArraySize(Deref(actionEffects)) {
       LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
       consumable = Generic.Consumable(Deref(actionEffects)[i].GetID());
-      if NotEquals(consumable, Consumable.Invalid) {
-        addiction = Generic.Addiction(consumable);
+      addiction = Generic.Addiction(consumable);
+      if Equals(addiction, Addiction.Healers) {
         threshold = system.Threshold(consumable);
-        if Equals(addiction, Addiction.Healers) {
-          others = system.Threshold(addiction);
-          if EnumInt(threshold) < EnumInt(others) {
-            threshold = others;
-          }
+        others = system.Threshold(addiction);
+        if EnumInt(threshold) < EnumInt(others) {
+          threshold = others;
         }
-        let altered: ref<ObjectActionEffect_Record>;
         if Equals(threshold, Threshold.Notably)       { altered = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
         else if Equals(threshold, Threshold.Severely) { altered = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
         
         if IsDefined(altered) { Deref(actionEffects)[i] = altered; }
-        else { LogError(s"unknown weakened variant for \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))"); }
+        else if Helper.IsSerious(threshold) {
+          LogError(s"unknown weakened variant for \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+        }
+      } else if Equals(consumable, Consumable.BlackLace) {
+        threshold = system.Threshold(consumable);
+        if Helper.IsSerious(threshold) {
+          AlterBlackLaceStatusEffects(actionEffects, gameInstance);
+        }
+      } else if Equals(consumable, Consumable.NeuroBlocker) {
+        threshold = system.Threshold(consumable);
+        if Helper.IsSerious(threshold) {
+          AlterNeuroBlockerStatusEffects(actionEffects, gameInstance);
+        }
       }
       i += 1;
   }

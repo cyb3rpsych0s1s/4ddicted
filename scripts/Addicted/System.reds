@@ -22,7 +22,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let config: ref<AddictedConfig>;
 
-  private let healerManager: ref<HealerManager>;
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
   private let blacklaceManager: ref<BlackLaceManager>;
@@ -74,8 +73,6 @@ public class AddictedSystem extends ScriptableSystem {
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
     }
-    this.healerManager = new HealerManager();
-    this.healerManager.Initialize(this);
 
     // ModSettings.RegisterListenerToModifications(this);
   }
@@ -92,8 +89,6 @@ public class AddictedSystem extends ScriptableSystem {
     this.blacklaceManager.Unregister(this.player);
     this.blacklaceManager = null;
 
-    this.healerManager = null;
-
     this.ShrinkDoses();
 
     // ModSettings.UnregisterListenerToModifications(this);
@@ -101,8 +96,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
     E(s"on restored system");
-
-    this.healerManager.Initialize(this);
 
     this.stimulantManager = new StimulantManager();
     this.stimulantManager.Register(this.player);
@@ -276,25 +269,6 @@ public class AddictedSystem extends ScriptableSystem {
         consumption.doses = shrinked;
       }
     }
-  }
-
-  public func OnProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>) -> array<wref<ObjectActionEffect_Record>> {
-    if this.healerManager.ContainsHealerStatusEffects(actionEffects) {
-      return this.healerManager.AlterHealerStatusEffects(actionEffects);
-    }
-    if this.blacklaceManager.ContainsBlackLaceStatusEffects(actionEffects) {
-      let threshold = this.Threshold(Consumable.BlackLace);
-      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
-        return AlterBlackLaceStatusEffects(threshold, actionEffects);
-      }
-    }
-    if this.blacklaceManager.ContainsNeuroBlockerStatusEffects(actionEffects) {
-      let threshold = this.Threshold(Consumable.NeuroBlocker);
-      if EnumInt(threshold) >= EnumInt(Threshold.Notably) {
-        return AlterNeuroBlockerStatusEffects(threshold, actionEffects);
-      }
-    }
-    return actionEffects;
   }
 
   public func OnBiomonitorChanged(hasBiomonitor: Bool) -> Void {
