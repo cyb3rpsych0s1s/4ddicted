@@ -72,7 +72,6 @@ public class Feeling {
     let choices: array<String>;
     let size: Int32;
     let which: Int32;
-    let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
 
     switch(mood) {
       case Mood.Disheartened:
@@ -95,7 +94,7 @@ public class Feeling {
     size = ArraySize(choices);
     if size > 0 {
       which = size > 1 ? RandRange(0, size -1) : 0;
-      output = StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
+      output = StringToName(choices[which]);
       E(s"picked \(NameToString(output)) (\(which))");
       return IsNameValid(output) ? output : n"";
     }

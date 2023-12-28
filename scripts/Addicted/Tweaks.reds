@@ -156,7 +156,7 @@ public func Reacts(reaction: CName) -> Void {
   // only show subtitles if they are available
   if StrBeginsWith(NameToString(written), "en-") || StrBeginsWith(NameToString(written), "fr-") {
     let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-    let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(written));
+    let key: String = NameToString(reaction);
     E(s"reacts: subtitle key (\(key))");
     let subtitle: String = localization.GetSubtitle(key);
     E(s"reacts: subtitle (\(subtitle))");
@@ -178,7 +178,7 @@ public func Reacts(reaction: CName) -> Void {
       .DelayCallback(callback, duration);
     }
   }
-  GameObject.PlaySound(this, reaction);
+  GameInstance.GetAudioSystem(this.GetGame()).Play(reaction, this.GetEntityID());
 }
 
 @addMethod(PlayerPuppet)

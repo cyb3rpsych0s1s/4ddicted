@@ -1,0 +1,230 @@
+version: 1.0.0
+voices:
+  ono_hhuh:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q113_f_1956c7fde04e1000.Wav
+        subtitle: Huh?
+      fr-fr:
+        file: vanilla/fr-fr/v_q113_f_1956c7fde04e1000.Wav
+        subtitle: Hein?
+    male:
+      en-us:
+        file: vanilla/en-us/v_q113_m_1956c7fde04e1000.Wav
+        subtitle: Huh?
+      fr-fr:
+        file: vanilla/fr-fr/v_q113_m_1956c7fde04e1000.Wav
+        subtitle: Hein?
+  ono_huh:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q004_f_168ac1406f29f000.Wav
+        subtitle: Huh?
+    male:
+      en-us:
+        file: vanilla/en-us/v_q004_m_168ac1406f29f000.Wav
+        subtitle: Huh?
+  ono_huhuh:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q003_f_178d53e0694b6000.Wav
+        subtitle: Huh?
+    male:
+      en-us:
+        file: vanilla/en-us/v_q003_m_178d53e0694b6000.Wav
+        subtitle: Huh?
+  biomon:
+    fem:
+      en-us:
+        file: en-us/surprised/fem_v_b_PrXR9m3y3Iss2M4JPv1y.wav
+        subtitle: Biomon'...
+    male:
+      en-us:
+        file: en-us/surprised/male_v_b_LpjCFyXmkptd2PkPwvsv.wav
+        subtitle: Biomon'...
+  as_if_I_didnt_know_already:
+    fem:
+      en-us:
+        file: en-us/disheartened/fem_v_aiidka.wav
+        subtitle: As if I didn't know already...
+    male:
+      en-us:
+        file: en-us/disheartened/male_v_aiidka.wav
+        subtitle: As if I didn't know already...
+  come_on_again:
+    fem:
+      en-us:
+        file: en-us/surprised/fem_v_coa_03.wav
+        subtitle: Come on.. Again?!
+    male:
+      en-us:
+        file: en-us/surprised/male_v_coa.wav
+        subtitle: Come on.. Again?!
+  come_on_biomon_cant_you_give_a_break:
+    fem:
+      en-us:
+        file: en-us/disheartened/fem_v_cobcygmab_02.wav
+        subtitle: Come on biomon', can't you give a break?
+    male:
+      en-us:
+        file: en-us/disheartened/male_v_cobjgmab.wav
+        subtitle: Come on biomon', can't you give a break?
+  damn_cant_you_just_leave_me_alone:
+    fem:
+      en-us:
+        file: en-us/disheartened/fem_v_dcyjlma_02.wav
+        subtitle: Damn! Can't you just leave me alone?
+    male:
+      en-us:
+        file: en-us/disheartened/male_v_dcyjlma_02.wav
+        subtitle: Damn! Can't you just leave me alone?
+  damn_thats_fucked_up:
+    fem:
+      en-us:
+        file: en-us/surprised/fem_v_dtfu.wav
+        subtitle: Damn! That's f#cked up...
+    male:
+      en-us:
+        file: en-us/surprised/male_v_dtfu.wav
+        subtitle: Damn! That's f#cked up...
+  dont_you_see_Im_in_trouble:
+    fem:
+      en-us:
+        file: en-us/pestered/fem_v_dysiit.wav
+        subtitle: Don't you see I'm in trouble?!
+    male:
+      en-us:
+        file: en-us/pestered/male_v_dysiit.wav
+        subtitle: Don't you see I'm in trouble?!
+  fuck:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q115_f_1752ea11b74e1000.wav
+        subtitle: F#ck!
+    male:
+      en-us:
+        file: vanilla/en-us/v_q115_m_1752ea11b74e1000.wav
+        subtitle: F#ck!
+  fuck_this_biomon_just_not_right_now:
+    fem:
+      en-us:
+        file: en-us/pestered/fem_v_ftbnrn.wav
+        subtitle: F#ck this biomon', just not right now!
+    male:
+      en-us:
+        file: en-us/pestered/male_v_ftbjnrn.wav
+        subtitle: F#ck this biomon', just not right now!
+  get_this_damn_UI_out_of_my_face:
+    fem:
+      en-us:
+        file: en-us/pestered/fem_v_gtduioomf_YjLBLTJrz1AHKsMqvHvY.wav
+        subtitle: Get this damn UI outta my face!
+    male:
+      en-us:
+        file: en-us/pestered/male_v_gtduioomf_02.wav
+        subtitle: Get this damn UI outta my face!
+  nah_everything_is_all_good:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_scene_dex_default_f_182ad40c364ea000.Wav
+        subtitle: Nah... Everything's all good.
+      fr-fr:
+        file: vanilla/fr-fr/v_scene_dex_default_f_182ad40c364ea000.Wav
+        subtitle: Nan... T'inquiètes je gère.
+    male:
+      en-us:
+        file: vanilla/en-us/v_scene_dex_default_m_182ad40c364ea000.Wav
+        subtitle: Nah... Everything's all good.
+      fr-fr:
+        file: vanilla/fr-fr/v_scene_dex_default_m_182ad40c364ea000.Wav
+        subtitle: Nan... T'inquiètes je gère.
+  nah_Im_cool:
+    fem:
+      en-us:
+        file: en-us/offhanded/fem_v_nic_v7VBWSUGf9Erb9upBsY2.wav
+        subtitle: Nah... I'm cool!
+    male:
+      en-us:
+        file: en-us/offhanded/male_v_nic_TMRFw1PuUP0SPTXQf2Ch.wav
+        subtitle: Nah... I'm cool!
+  noo:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_scene_mitch_default_f_1b1a38325729f000.Wav
+        subtitle: Noo!
+    male:
+      en-us:
+        file: vanilla/en-us/v_scene_mitch_default_m_1b1a38325729f000.Wav
+        subtitle: Noo!
+  oh_shit:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q000_f_1927fae1772ef000.Wav
+        subtitle: Oh.. sh!t
+    male:
+      en-us:
+        file: vanilla/en-us/v_q000_m_1927fae1772ef000.Wav
+        subtitle: Oh.. sh!t
+  shit:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q104_f_18545e4c6a4e6000.Wav
+        subtitle: Sh!t!
+    male:
+      en-us:
+        file: vanilla/en-us/v_q104_m_18545e4c6a4e6000.Wav
+        subtitle: Sh!t!
+  so_frustrating:
+    fem:
+      en-us:
+        file: en-us/pestered/fem_v_sf_03.wav
+        subtitle: SO frustrating!
+    male:
+      en-us:
+        file: en-us/pestered/male_v_sf_03.wav
+        subtitle: SO frustrating!
+  what:
+    fem:
+      en-us:
+        file: vanilla/en-us/v_q104_f_18980f710d29f000.Wav
+        subtitle: What?!
+    male:
+      en-us:
+        file: vanilla/en-us/v_q104_m_18980f710d29f000.Wav
+        subtitle: What?!
+  yeah_I_know:
+    fem:
+      en-us:
+        file: en-us/disheartened/fem_v_yik.wav
+        subtitle: Yeah.. I know.
+    male:
+      en-us:
+        file: en-us/disheartened/male_v_yik_05.wav
+        subtitle: Yeah.. I know.
+  yeah_yeah_yeah_alright:
+    fem:
+      en-us:
+        file: en-us/offhanded/fem_v_yyya_04.wav
+        subtitle: Yeah yeah yeah.. Alright.
+    male:
+      en-us:
+        file: en-us/offhanded/male_v_yyya.wav
+        subtitle: Yeah yeah yeah.. Alright.
+  yeah_yeah_yeah_who_cares:
+    fem:
+      en-us:
+        file: en-us/offhanded/fem_v_yyywc.wav
+        subtitle: Yeah yeah yeah.. Who cares?
+    male:
+      en-us:
+        file: en-us/offhanded/male_v_yyywc.wav
+        subtitle: Yeah yeah yeah.. Who cares?
+  you_tell_me_biomon:
+    fem:
+      en-us:
+        file: en-us/offhanded/fem_v_ytmb.wav
+        subtitle: You tell me biomon'
+    male:
+      en-us:
+        file: en-us/offhanded/male_v_ytmb.wav
+        subtitle: You tell me biomon'
