@@ -1,33 +1,42 @@
 set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 set dotenv-load
 
-# path to WolvenKit CLI
-wk_cli              := join(env_var_or_default("WK_CLI", ".."), "WolvenKit.CLI.exe")
+[windows]
+@dir FOLDER:
+    if (!(Test-Path "{{FOLDER}}")) { [void](New-Item "{{FOLDER}}" -ItemType Directory); Write-Host "Created folder at {{FOLDER}}"; }
 
-dir FOLDER:
-    @if (!(Test-Path "{{FOLDER}}")) { [void](New-Item "{{FOLDER}}" -ItemType Directory); Write-Host "Created folder at {{FOLDER}}"; }
+[windows]
+@rename FILE TO:
+    if (Test-Path "{{FILE}}" -PathType leaf) { Move-Item -Path '{{FILE}}' -Destination '{{TO}}' -Force } else {  Write-Host "missing {{FILE}}"; }
 
-rename FILE TO:
-    @if (Test-Path "{{FILE}}" -PathType leaf) { Move-Item -Path '{{FILE}}' -Destination '{{TO}}' -Force } else {  Write-Host "missing {{FILE}}"; }
+[windows]
+@copy FILE TO:
+    if (Test-Path "{{FILE}}" -PathType leaf) { Copy-Item -Path '{{FILE}}' -Destination '{{TO}}' -Force } else {  Write-Host "missing {{FILE}}"; }
 
-copy FILE TO:
-    @if (Test-Path "{{FILE}}" -PathType leaf) { Copy-Item -Path '{{FILE}}' -Destination '{{TO}}' -Force } else {  Write-Host "missing {{FILE}}"; }
+[windows]
+@dcopy FOLDER TO:
+    if (Test-Path "{{FOLDER}}" -PathType container) { Copy-Item -Path '{{FOLDER}}' -Destination '{{TO}}' -Force -Recurse } else {  Write-Host "missing {{FOLDER}}"; }
 
-remove FILE:
-    @if (Test-Path "{{FILE}}" -PathType leaf) { Remove-Item -Force -Path "{{FILE}}"; Write-Host "deleted {{FILE}}"; } else {  Write-Host "missing {{FILE}}"; }
+[windows]
+@rcopy FOLDER TO:
+    if (Test-Path "{{FOLDER}}" -PathType container) { Copy-Item -Path '{{ join(FOLDER, "*") }}' -Destination '{{TO}}' -Force -Recurse } else {  Write-Host "missing {{FOLDER}}"; }
 
-trash FOLDER:
-    @if (Test-Path "{{FOLDER}}" -PathType container) { Remove-Item -Force -Recurse -Path "{{FOLDER}}"; Write-Host "deleted {{FOLDER}}"; } else {  Write-Host "missing {{FOLDER}}"; }
+[windows]
+@rcopy-only FOLDER TO INCLUDE:
+    if (Test-Path "{{FOLDER}}" -PathType container) { Copy-Item -Path '{{ join(FOLDER, "*") }}' -Destination '{{TO}}' -Force -Recurse -Include *.'{{INCLUDE}}' } else {  Write-Host "missing {{FOLDER}}"; }
 
-swap BACKUP CACHE:
-    @if(Test-Path "{{BACKUP}}" ) { \
+[windows]
+@remove FILE:
+    if (Test-Path "{{FILE}}" -PathType leaf) { Remove-Item -Force -Path "{{FILE}}"; Write-Host "deleted {{FILE}}"; } else {  Write-Host "missing {{FILE}}"; }
+
+[windows]
+@trash FOLDER:
+    if (Test-Path "{{FOLDER}}" -PathType container) { Remove-Item -Force -Recurse -Path "{{FOLDER}}"; Write-Host "deleted {{FOLDER}}"; } else {  Write-Host "missing {{FOLDER}}"; }
+
+[windows]
+@swap BACKUP CACHE:
+    if (Test-Path "{{BACKUP}}") { \
         Write-Host "replacing {{CACHE}} with {{BACKUP}}"; \
         cp -Force "{{BACKUP}}' '{{CACHE}}"; \
         Remove-Item -Force -Path "{{BACKUP}}"; \
     } else { Write-Host "missing {{BACKUP}}"; }
-
-@pack FOLDER TO:
-    {{wk_cli}} pack '{{ join("..", "archives", FOLDER, "source", "archive") }}' -o '{{ join("..", "archives", FOLDER) }}'; \
-    just rename '{{ join("..", "archives", FOLDER, "archive.archive") }}' '{{ join("..", "archives", FOLDER + ".archive") }}';
-    just copy '{{ join("..", "archives", "*.archive") }}' '{{ join(TO, FOLDER + ".archive") }}';
-    if (Test-Path '{{ join("..", "archives", "*.xl") }}' -PathType leaf) { just copy '{{ join("..", "archives", "*.xl") }}' '{{TO}}'; }
