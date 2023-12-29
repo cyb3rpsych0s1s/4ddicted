@@ -58,7 +58,7 @@ mod_logs            := join(game_dir, "bin", "x64", "plugins", "cyber_engine_twe
 default:
   @just --list --unsorted
   @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
-  @echo 'e.g. RED_CLI=C:\\\\somewhere\\\\on\\\\my\\\\computer\\\\redscript-cli.exe'
+  @echo 'e.g. RED_CLI=C:\\somewhere\\on\\my\\computer\\redscript-cli.exe'
 
 # 📁 run once to create mod folders (if not exist) in game files
 setup:
@@ -79,17 +79,10 @@ import:
 
 # 📦 pack archive with WolvenKit
 pack:
-    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Icons", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Icons") }}'
-    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Icons", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Icons.archive") }}' -Force
-    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.VFX", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.VFX") }}'
-    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.VFX", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.VFX.archive") }}' -Force
-    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Biomon", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Biomon") }}'
-    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Biomon", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Biomon.archive") }}' -Force
-    {{wk_cli}} pack '{{ join(repo_dir, "archives", "Addicted.Translations", "source", "archive") }}' -o '{{ join(repo_dir, "archives", "Addicted.Translations") }}'
-    Move-Item -Path '{{ join(repo_dir, "archives", "Addicted.Translations", "archive.archive") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Translations.archive") }}' -Force
-    Copy-Item -Path '{{ join(repo_dir, "archives", "Addicted.Translations", "source", "resources", "Addicted.Translations.archive.xl") }}' -Destination '{{ join(repo_dir, "archives", "Addicted.Translations.archive.xl") }}' -Force
-    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.archive") }}' '{{archive_game_dir}}'
-    Copy-Item -Force '{{ join(justfile_directory(), "archives", "*.xl") }}' '{{archive_game_dir}}'
+    @just recipes/pack 'Addicted.Icons' '{{archive_game_dir}}'
+    @just recipes/pack 'Addicted.VFX' '{{archive_game_dir}}'
+    @just recipes/pack 'Addicted.Biomon' '{{archive_game_dir}}'
+    @just recipes/pack 'Addicted.Translations' '{{archive_game_dir}}'
 
 # ➡️  copy codebase files to game files, including archive
 [windows]
@@ -165,8 +158,8 @@ uninstall: uninstall-archives uninstall-cet uninstall-red uninstall-tweak uninst
 # 🗑️🎭  clear out mod archive files in game files
 [windows]
 uninstall-archives:
-    @just recipes/remove '{{ join(archive_game_dir, "Addicted.*.archive") }}';
-    @just recipes/remove '{{ join(archive_game_dir, "Addicted.*.archive.xl") }}';
+    @just recipes/remove '{{ join(archive_game_dir, mod_name + ".*.archive") }}';
+    @just recipes/remove '{{ join(archive_game_dir, mod_name + ".*.archive.xl") }}';
 
 # 🗑️⚙️   clear out mod CET files in game files
 [windows]
