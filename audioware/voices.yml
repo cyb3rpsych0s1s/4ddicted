@@ -60,7 +60,7 @@ voices:
       en-us:
         file: en-us/surprised/male_v_coa.wav
         subtitle: Come on.. Again?!
-  come_on_biomon_cant_you_give_a_break:
+  come_on_biomon_cant_you_give_me_a_break:
     fem:
       en-us:
         file: en-us/disheartened/fem_v_cobcygmab_02.wav
