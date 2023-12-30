@@ -10,8 +10,8 @@ tree     := 'mods'
     just dir '{{ join(TO, tree, mod) }}';
     just dir '{{ join(TO, tree, mod, LOCALE) }}';
     just dir '{{ join(TO, tree, mod, "vanilla", LOCALE) }}';
-    just dcopy '{{ join(source, LOCALE) }}' '{{ join(TO, tree, mod, LOCALE) }}'
-    just dcopy '{{ join(source, "vanilla", LOCALE) }}' '{{ join(TO, tree, mod, "vanilla", LOCALE) }}'
+    just dcopy '{{ join(source, LOCALE) }}' '{{ join(TO, tree, mod) }}'
+    just dcopy '{{ join(source, "vanilla", LOCALE) }}' '{{ join(TO, tree, mod, "vanilla") }}'
     just copy '{{ join(source, "voices." + LOCALE + ".yml") }}' '{{ join(TO, tree, mod, "voices.yml") }}'
 
 @uninstall FROM:
