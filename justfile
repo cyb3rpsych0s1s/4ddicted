@@ -11,11 +11,11 @@ default:
   @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
   @echo 'e.g. RED_CLI=C:\\somewhere\\on\\my\\computer\\redscript-cli.exe'
 
-@build TO=game:
+@build TO=game LOCALE='en-us':
     just recipes/archive/install '{{TO}}'
     just recipes/audioware/install '{{TO}}' '{{LOCALE}}'
 
-@reload TO=game LOCALE='en-us':
+@reload TO=game:
     just recipes/red/install '{{TO}}'
     just recipes/tweak/install '{{TO}}'
 
