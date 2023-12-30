@@ -5,16 +5,10 @@ voices:
       en-us:
         file: vanilla/en-us/v_q113_f_1956c7fde04e1000.Wav
         subtitle: Huh?
-      fr-fr:
-        file: vanilla/fr-fr/v_q113_f_1956c7fde04e1000.Wav
-        subtitle: Hein?
     male:
       en-us:
         file: vanilla/en-us/v_q113_m_1956c7fde04e1000.Wav
         subtitle: Huh?
-      fr-fr:
-        file: vanilla/fr-fr/v_q113_m_1956c7fde04e1000.Wav
-        subtitle: Hein?
   ono_huh:
     fem:
       en-us:
