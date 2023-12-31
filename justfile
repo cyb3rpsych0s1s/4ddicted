@@ -11,15 +11,27 @@ default:
   @echo "⚠️ on Windows, paths defined in .env must be double-escaped:"
   @echo 'e.g. RED_CLI=C:\\somewhere\\on\\my\\computer\\redscript-cli.exe'
 
-@build TO=game LOCALE='en-us':
+@archive TO=game:
     just recipes/archive/install '{{TO}}'
+
+@audioware TO=game LOCALE='en-us':
     just recipes/audioware/install '{{TO}}' '{{LOCALE}}'
 
-@reload TO=game:
+@redscript TO=game:
     just recipes/red/install '{{TO}}'
+
+@tweak TO=game:
     just recipes/tweak/install '{{TO}}'
 
+@build TO=game LOCALE='en-us': (archive TO) (audioware TO LOCALE)
+
+@reload TO=game: (redscript TO) (tweak TO)
+
 @dev: (build) (reload)
+
+@ci TO: (archive TO) (reload TO)
+
+@bundle TO LOCALE: (audioware TO LOCALE)
 
 @uninstall FROM=game:
     just recipes/archive/uninstall '{{FROM}}'
