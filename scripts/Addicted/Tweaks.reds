@@ -13,22 +13,6 @@ public let IsConsuming: BlackboardID_Bool;
 @addField(PlayerStateMachineDef)
 public let WithdrawalSymptoms: BlackboardID_Uint;
 
-@addField(PlayerPuppet)
-public let hideSubtitleCallback: DelayID;
-
-public class HideSubtitleCallback extends DelayCallback {
-  private let player: wref<PlayerPuppet>;
-  public func Call() -> Void {
-    E(s"hide subtitle");
-    let game = this.player.GetGame();
-    GameInstance
-    .GetDelaySystem(game)
-    .CancelCallback(this.player.hideSubtitleCallback);
-    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-    board.SetVariant(GetAllBlackboardDefs().UIGameData.HideDialogLine, [this.player.ReactionID()], true);
-  }
-}
-
 @addMethod(PlayerPuppet)
 public func IsPossessed() -> Bool {
   let system: ref<QuestsSystem> = GameInstance.GetQuestsSystem(this.GetGame());
@@ -149,40 +133,11 @@ public func Reacts(reaction: CName) -> Void {
   let game = this.GetGame();
   let localization = LocalizationSystem.GetInstance(game);
   let spoken = localization.GetVoiceLanguage();
-  let written = localization.GetSubtitleLanguage();
   E(s"reacts: voice language (\(NameToString(spoken)))");
   // if spoken language is not available, abort
   if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
-  // only show subtitles if they are available
-  if StrBeginsWith(NameToString(written), "en-") || StrBeginsWith(NameToString(written), "fr-") {
-    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-    let key: String = NameToString(reaction);
-    E(s"reacts: subtitle key (\(key))");
-    let subtitle: String = localization.GetSubtitle(key);
-    E(s"reacts: subtitle (\(subtitle))");
-    if StrLen(key) > 0 && NotEquals(key, subtitle) {
-      let duration: Float = 3.0;
-      let line: scnDialogLineData;
-      line.duration = duration;
-      line.id = this.ReactionID();
-      line.isPersistent = false;
-      line.speaker = this;
-      line.speakerName = "V";
-      line.text = subtitle;
-      line.type = scnDialogLineType.Regular;
-      board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-      let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-      callback.player = this;
-      this.hideSubtitleCallback = GameInstance
-      .GetDelaySystem(game)
-      .DelayCallback(callback, duration);
-    }
-  }
-  GameInstance.GetAudioSystem(this.GetGame()).Play(reaction, this.GetEntityID());
+  GameInstance.GetAudioSystem(this.GetGame()).Play(reaction, this.GetEntityID(), n"V");
 }
-
-@addMethod(PlayerPuppet)
-private func ReactionID() -> CRUID { return CreateCRUID(40015730ul); }
 
 /// replace existing status effect with modified one
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
