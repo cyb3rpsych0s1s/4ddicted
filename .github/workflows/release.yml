@@ -42,7 +42,7 @@ jobs:
       - name: Bundle files
         run: just ci 'Addicted-windows-latest-${{ github.ref_name }}'
         env:
-          WK_CLI: WolvenKit.Console-${{ env.WOLVENKIT_CLI_VERSION }}\WolvenKit.CLI.exe
+          WK_CLI: cp77tools
       - name: Zip files
         if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: thedoctor0/zip-release@0.7.6
@@ -96,7 +96,7 @@ jobs:
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       matrix:
         locale:
