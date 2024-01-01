@@ -34,7 +34,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     wrappedMethod(evt);
     let system = AddictedSystem.GetInstance(this.GetGame());
     let id = evt.staticData.GetID();
-    EI(id, s"status effect applied");
+    // EI(id, s"status effect applied");
 
     let board: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
     board.SetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, false);
