@@ -83,16 +83,15 @@ jobs:
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          filename: 'Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip'
-          directory: translation-${{ matrix.locale }}-latest
+          filename: 'translation-${{ matrix.locale }}-latest.zip'
+          directory: ./translations
           path: .
-          recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload translations
         if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
-          path: translation-${{ matrix.locale }}-latest/Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip
+          path: translations/translation-${{ matrix.locale }}-latest.zip
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
