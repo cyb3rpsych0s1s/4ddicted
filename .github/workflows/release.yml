@@ -80,10 +80,25 @@ jobs:
     runs-on: windows-latest
     needs: [bundle-mod, bundle-translations]
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Addicted-mod-windows-${{ github.ref_name }}
+          path: release
+      - name: Download English translations
+        uses: actions/download-artifact@v4
+        with:
+          name: Addicted-translation-en-us-${{ github.ref_name }}
+          path: release
+      - name: Download French translations
+        uses: actions/download-artifact@v4
+        with:
+          name: Addicted-translation-fr-fr-${{ github.ref_name }}
+          path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "Addicted-mod-*-${{ github.ref_name }},Addicted-translation-*-${{ github.ref_name }}"
+          artifacts: "release/*.zip"
           draft: ${{ env.IS_DRAFT }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifactErrorsFailBuild: true
