@@ -78,27 +78,12 @@ jobs:
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
     runs-on: windows-latest
-    strategy:
-      matrix:
-        locale:
-          - en-us
-          - fr-fr
     needs: [bundle-mod, bundle-translations]
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Addicted-mod-windows-${{ github.ref_name }}
-          path: release
-      - name: Download ${{ matrix.locale }} translations
-        uses: actions/download-artifact@v4
-        with:
-          name: Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}
-          path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "release/*.zip"
+          artifacts: "Addicted-mod-*-${{ github.ref_name }},Addicted-translation-*-${{ github.ref_name }}"
           draft: ${{ env.IS_DRAFT }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifactErrorsFailBuild: true
