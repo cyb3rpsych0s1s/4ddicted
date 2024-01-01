@@ -40,14 +40,22 @@ jobs:
         env:
           WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_CLI_VERSION }}.zip
       - name: Bundle files
-        run: just ci 'release-mod-windows-${{ github.ref_name }}'
+        run: just ci 'mod-windows'
         env:
           WK_CLI: cp77tools
+      - name: Zip files
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'Addicted-mod-windows-${{ github.ref_name }}.zip'
+          directory: ./mod-windows
+          path: .
+          recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Addicted-mod-windows-${{ github.ref_name }}
-          path: release-mod-windows-${{ github.ref_name }}
+          name: mod-windows-${{ github.ref_name }}
+          path: mod-windows/Addicted-mod-windows-${{ github.ref_name }}.zip
           if-no-files-found: error
   bundle-translations:
     runs-on: windows-latest
@@ -68,12 +76,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bundle files
-        run: just bundle 'release-voices-${{ matrix.locale }}' "${{ matrix.locale }}"
+        run: just bundle 'translation-${{ matrix.locale }}' "${{ matrix.locale }}"
+      - name: Zip files
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}.zip'
+          directory: ./translation-${{ matrix.locale }}
+          path: .
       - name: Upload translations
         uses: actions/upload-artifact@v4
         with:
-          name: Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}
-          path: release-voices-${{ matrix.locale }}
+          name: translation-${{ matrix.locale }}-${{ github.ref_name }}
+          path: translation-${{ matrix.locale }}/Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}.zip
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
@@ -83,22 +98,22 @@ jobs:
       - name: Download mod
         uses: actions/download-artifact@v4
         with:
-          name: Addicted-mod-windows-${{ github.ref_name }}
-          path: mod
+          name: mod-windows-${{ github.ref_name }}
+          path: release
       - name: Download English translations
         uses: actions/download-artifact@v4
         with:
-          name: Addicted-translation-en-us-${{ github.ref_name }}
-          path: french
+          name: translation-en-us-${{ github.ref_name }}
+          path: release
       - name: Download French translations
         uses: actions/download-artifact@v4
         with:
-          name: Addicted-translation-fr-fr-${{ github.ref_name }}
-          path: english
+          name: translation-fr-fr-${{ github.ref_name }}
+          path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "mod,english,french"
+          artifacts: "release/*.zip"
           draft: ${{ env.IS_DRAFT }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifactErrorsFailBuild: true
