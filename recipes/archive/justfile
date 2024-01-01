@@ -12,6 +12,8 @@ tree     := join('archive', 'pc', 'mod')
 @pack NAME:
     {{wk_cli}} pack '{{ join(source, NAME, "source", "archive") }}' -o '{{ join(source, NAME) }}'; \
     just rename '{{ join(source, NAME, "archive.archive") }}' '{{ join(source, NAME + ".archive") }}';
+    $xl='{{ join(source, NAME, "source", "resources", NAME + ".archive.xl") }}'; \
+    if (Test-Path $xl -PathType leaf) { just copy $xl '{{ join(source, NAME + ".archive.xl") }}'; }
 
 @install TO:
     just dir '{{ join(TO, tree) }}';
