@@ -29,9 +29,9 @@ default:
 
 @dev: (build) (reload)
 
-@ci TO: (archive TO) (reload TO)
+@ci TO: (archive absolute_path(TO)) (reload absolute_path(TO))
 
-@bundle TO LOCALE: (audioware TO LOCALE)
+@bundle TO LOCALE: (audioware absolute_path(TO) LOCALE)
 
 @uninstall FROM=game:
     just recipes/archive/uninstall '{{FROM}}'
