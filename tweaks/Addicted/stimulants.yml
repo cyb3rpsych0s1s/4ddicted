@@ -89,5 +89,5 @@ Effectors.Dizzy:
 
 UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
-  atlasPartName: craving_for_pill
-  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasPartName: craving_for_pills_icon
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas

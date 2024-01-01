@@ -2,16 +2,16 @@
 **/*.log
 **/.DS_Store
 
-/book
+/book/site
 !scripts/
 scripts/*
-!scripts/Addicted/
-/archive/install_log.xml
-/archive/Addicted.zip
-/archive/layout.xml
-/archive/source/customSounds/**/*.mp3
-/archive/source/resources/info.json
-/archive/Addicted.cpmodproj
+/archives/**/*.cpmodproj
+/archives/**/*.zip
+/archives/**/layout.xml
+/archives/**/install_log.xml
+/archives/**/packed
+/archives/*.archive
+/archives/*.xl
 
 /Addicted
 /.VSCodeCounter

@@ -1,0 +1,14 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set dotenv-load
+set fallback
+
+mod      := 'Addicted'
+source   := absolute_path(join('..', '..', 'scripts'))
+tree     := join('r6', 'scripts')
+
+@install TO:
+    just dir '{{ join(TO, tree, mod) }}';
+    just rcopy '{{ join(source, mod) }}' '{{ join(TO, tree, mod) }}'
+
+@uninstall FROM:
+    just trash '{{ join(FROM, tree, mod) }}'

@@ -9,7 +9,7 @@ on:
       - '.github'
       - 'scripts/Addicted'
 env:
-  REDSCRIPT_VERSION: '0.5.10'
+  REDSCRIPT_VERSION: '0.5.17'
   REDSCRIPT_SRC: scripts/Addicted
 
 jobs:

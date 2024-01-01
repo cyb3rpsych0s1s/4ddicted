@@ -126,8 +126,7 @@ public class Helper {
       case Consumable.BlackLace:
         return [
           t"BaseStatusEffect.BlackLaceV0",
-          t"BaseStatusEffect.BlackLaceV1",
-          t"BaseStatusEffect.BlackLaceV2"
+          t"BaseStatusEffect.BlackLaceV1"
       ];
       case Consumable.NeuroBlocker:
         return [

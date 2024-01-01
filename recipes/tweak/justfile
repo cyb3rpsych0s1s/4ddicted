@@ -1,0 +1,14 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set dotenv-load
+set fallback
+
+mod      := 'Addicted'
+source   := absolute_path(join('..', '..', 'tweaks'))
+tree     := join('r6', 'tweaks')
+
+@install TO:
+    just dir '{{ join(TO, tree, mod) }}';
+    just rcopy-only '{{ join(source, mod) }}' '{{ join(TO, tree, mod) }}' 'yml'
+
+@uninstall FROM:
+    just trash '{{ join(FROM, tree, mod) }}'

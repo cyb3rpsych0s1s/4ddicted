@@ -5,28 +5,13 @@ import Addicted.System.AddictedSystem
 import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect,Translations}
+import Addicted.Crossover.{AlterBlackLaceStatusEffects,AlterNeuroBlockerStatusEffects}
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
 
 @addField(PlayerStateMachineDef)
 public let WithdrawalSymptoms: BlackboardID_Uint;
-
-@addField(PlayerPuppet)
-public let hideSubtitleCallback: DelayID;
-
-public class HideSubtitleCallback extends DelayCallback {
-  private let player: wref<PlayerPuppet>;
-  public func Call() -> Void {
-    E(s"hide subtitle");
-    let game = this.player.GetGame();
-    GameInstance
-    .GetDelaySystem(game)
-    .CancelCallback(this.player.hideSubtitleCallback);
-    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-    board.SetVariant(GetAllBlackboardDefs().UIGameData.HideDialogLine, [this.player.ReactionID()], true);
-  }
-}
 
 @addMethod(PlayerPuppet)
 public func IsPossessed() -> Bool {
@@ -49,7 +34,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
     wrappedMethod(evt);
     let system = AddictedSystem.GetInstance(this.GetGame());
     let id = evt.staticData.GetID();
-    EI(id, s"status effect applied");
+    // EI(id, s"status effect applied");
 
     let board: ref<IBlackboard> = this.GetPlayerStateMachineBlackboard();
     board.SetBool(GetAllBlackboardDefs().PlayerStateMachine.IsConsuming, false);
@@ -61,7 +46,7 @@ protected cb func OnStatusEffectApplied(evt: ref<ApplyStatusEffectEvent>) -> Boo
 
     if Generic.IsBlackLace(id) {
       EI(id, s"consumed BlackLace");
-      let threshold: Threshold = system.HighestThreshold(Consumable.BlackLace);
+      let threshold: Threshold = system.Threshold(Consumable.BlackLace);
       let insanity = StatusEffectHelper.GetStatusEffectByID(this, t"BaseStatusEffect.Insanity");
       E(s"is defined insanity: \(IsDefined(insanity))");
       E(s"insanity: \(TDBID.ToStringDEBUG(insanity.GetRecord().GetID()))");
@@ -148,47 +133,66 @@ public func Reacts(reaction: CName) -> Void {
   let game = this.GetGame();
   let localization = LocalizationSystem.GetInstance(game);
   let spoken = localization.GetVoiceLanguage();
-  let written = localization.GetSubtitleLanguage();
   E(s"reacts: voice language (\(NameToString(spoken)))");
   // if spoken language is not available, abort
   if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
-  // only show subtitles if they are available
-  if StrBeginsWith(NameToString(written), "en-") || StrBeginsWith(NameToString(written), "fr-") {
-    let board: ref<IBlackboard> = GameInstance.GetBlackboardSystem(game).Get(GetAllBlackboardDefs().UIGameData);
-    let key: String = Translations.SubtitleKey(NameToString(reaction), NameToString(written));
-    E(s"reacts: subtitle key (\(key))");
-    let subtitle: String = localization.GetSubtitle(key);
-    E(s"reacts: subtitle (\(subtitle))");
-    if StrLen(key) > 0 && NotEquals(key, subtitle) {
-      let duration: Float = 3.0;
-      let line: scnDialogLineData;
-      line.duration = duration;
-      line.id = this.ReactionID();
-      line.isPersistent = false;
-      line.speaker = this;
-      line.speakerName = "V";
-      line.text = subtitle;
-      line.type = scnDialogLineType.Regular;
-      board.SetVariant(GetAllBlackboardDefs().UIGameData.ShowDialogLine, ToVariant([line]), true);
-      let callback: ref<HideSubtitleCallback> = new HideSubtitleCallback();
-      callback.player = this;
-      this.hideSubtitleCallback = GameInstance
-      .GetDelaySystem(game)
-      .DelayCallback(callback, duration);
-    }
-  }
-  GameObject.PlaySound(this, reaction);
+  GameInstance.GetAudioSystem(this.GetGame()).Play(reaction, this.GetEntityID(), n"V");
 }
 
-@addMethod(PlayerPuppet)
-private func ReactionID() -> CRUID { return CreateCRUID(12345ul); }
-
-// alter some effects based on addiction threshold
-@wrapMethod(ConsumeAction)
-protected func ProcessStatusEffects(actionEffects: array<wref<ObjectActionEffect_Record>>, gameInstance: GameInstance) -> Void {
+/// replace existing status effect with modified one
+/// ObjectActionEffect_Record are immutable but actionEffects can be swapped
+private func AlterStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let system = AddictedSystem.GetInstance(gameInstance);
-  let effects = system.OnProcessStatusEffects(actionEffects);
-  wrappedMethod(effects, gameInstance);
+  let altered: ref<ObjectActionEffect_Record>;
+  let consumable: Consumable;
+  let addiction: Addiction;
+  let threshold: Threshold = Threshold.Clean;
+  let others: Threshold;
+  let i: Int32 = 0;
+  while i < ArraySize(Deref(actionEffects)) {
+      LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+      consumable = Generic.Consumable(Deref(actionEffects)[i].GetID());
+      addiction = Generic.Addiction(consumable);
+      if Equals(addiction, Addiction.Healers) {
+        threshold = system.Threshold(consumable);
+        others = system.Threshold(addiction);
+        if EnumInt(threshold) < EnumInt(others) {
+          threshold = others;
+        }
+        if Equals(threshold, Threshold.Notably)       { altered = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_notably_weakened");  }
+        else if Equals(threshold, Threshold.Severely) { altered = TweakDBInterface.GetObjectActionEffectRecord(Deref(actionEffects)[i].GetID() + t"_severely_weakened"); }
+        
+        if IsDefined(altered) { Deref(actionEffects)[i] = altered; }
+        else if Helper.IsSerious(threshold) {
+          LogError(s"unknown weakened variant for \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+        }
+      } else if Equals(consumable, Consumable.BlackLace) {
+        threshold = system.Threshold(consumable);
+        if Helper.IsSerious(threshold) {
+          AlterBlackLaceStatusEffects(actionEffects, gameInstance);
+        }
+      } else if Equals(consumable, Consumable.NeuroBlocker) {
+        threshold = system.Threshold(consumable);
+        if Helper.IsSerious(threshold) {
+          AlterNeuroBlockerStatusEffects(actionEffects, gameInstance);
+        }
+      }
+      i += 1;
+  }
+}
+
+@wrapMethod(UseHealChargeAction)
+protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "on UseHealChargeAction.ProcessStatusEffects");
+    AlterStatusEffects(actionEffects, gameInstance);
+    wrappedMethod(actionEffects, gameInstance);
+}
+
+@wrapMethod(ConsumeAction)
+protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+    LogChannel(n"DEBUG", "on ConsumeAction.ProcessStatusEffects");
+    AlterStatusEffects(actionEffects, gameInstance);
+    wrappedMethod(actionEffects, gameInstance);
 }
 
 @wrapMethod(ConsumeAction)
@@ -256,7 +260,7 @@ private final func UnequipItem(itemID: ItemID) -> Void {
 }
 
 @wrapMethod(EquipmentSystemPlayerData)
-private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32) -> Void {
+private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32, opt forceRemove: Bool) -> Void {
   let itemID: ItemID = this.m_equipment.equipAreas[equipAreaIndex].equipSlots[slotIndex].itemID;
   let area: gamedataEquipmentArea = EquipmentSystem.GetEquipAreaType(itemID);
   let cyberware = InventoryDataManagerV2.IsEquipmentAreaCyberware(area);

@@ -1,0 +1,27 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set dotenv-load
+set fallback
+
+# path to WolvenKit CLI
+wk_cli   := env_var('WK_CLI')
+
+mod      := 'Addicted'
+source   := absolute_path(join('..', '..', 'archives'))
+tree     := join('archive', 'pc', 'mod')
+
+@pack NAME:
+    {{wk_cli}} pack '{{ join(source, NAME, "source", "archive") }}' -o '{{ join(source, NAME) }}'; \
+    just rename '{{ join(source, NAME, "archive.archive") }}' '{{ join(source, NAME + ".archive") }}';
+
+@install TO:
+    just dir '{{ join(TO, tree) }}';
+    just pack 'Addicted.Icons'
+    just pack 'Addicted.VFX'
+    just pack 'Addicted.Biomon'
+    just pack 'Addicted.Translations'
+    just copy '{{ join(source, "*.archive") }}' '{{ join(TO, tree) }}';
+    just copy '{{ join(source, "*.xl") }}' '{{ join(TO, tree) }}';
+
+@uninstall FROM:
+    just remove '{{ join(FROM, tree, mod + ".*.archive") }}';
+    just remove '{{ join(FROM, tree, mod + ".*.archive.xl") }}';

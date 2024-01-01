@@ -159,8 +159,8 @@ public class Consumptions {
     return Threshold.Clean;
   }
   public func Threshold(consumable: Consumable) -> Threshold {
-    let average = this.AverageConsumption(consumable);
-    return Helper.Threshold(average);
+    let total = this.TotalConsumption(consumable);
+    return Helper.Threshold(total);
   }
   public func Threshold(addiction: Addiction) -> Threshold {
     let average = this.AverageConsumption(addiction);
@@ -201,24 +201,19 @@ public class Consumptions {
     }
     return highest;
   }
-  /// average consumption for a given consumable
-  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
-  public func AverageConsumption(consumable: Consumable) -> Int32 {
+  /// total consumption for a given consumable
+  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3+ versions each)
+  public func TotalConsumption(consumable: Consumable) -> Int32 {
     let ids = Helper.Effects(consumable);
     let total = 0;
-    let found = 0;
     let consumption: wref<Consumption>;
     for id in ids {
       consumption = this.Get(id) as Consumption;
       if IsDefined(consumption) {
         total += consumption.current;
-        found += 1;
       }
     }
-    if found == 0 {
-      return 0;
-    }
-    return total / found;
+    return total;
   }
   /// average consumption for an addiction
   /// a single addiction can be shared by multiple consumables
@@ -227,7 +222,7 @@ public class Consumptions {
     let size = ArraySize(consumables);
     let total = 0;
     for consumable in consumables {
-      total += this.AverageConsumption(consumable);
+      total += this.TotalConsumption(consumable);
     }
     return total / size;
   }
@@ -343,9 +338,11 @@ enum Kind {
 }
 
 enum Addiction {
+  Invalid = -1,
   Healers = 0,
   Anabolics = 1,
   Neuros = 2,
+  BlackLace = 3,
 }
 
 enum PlaySoundPolicy {
