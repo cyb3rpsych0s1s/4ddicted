@@ -40,14 +40,14 @@ jobs:
         env:
           WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_CLI_VERSION }}.zip
       - name: Bundle files
-        run: just ci 'Addicted-windows-latest-${{ github.ref_name }}'
+        run: just ci 'release-mod-windows-${{ github.ref_name }}'
         env:
           WK_CLI: cp77tools
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-artifact
-          path: Addicted-windows-latest-${{ github.ref_name }}
+          name: Addicted-mod-windows-${{ github.ref_name }}
+          path: release-mod-windows-${{ github.ref_name }}
           if-no-files-found: error
   bundle-translations:
     runs-on: windows-latest
@@ -68,12 +68,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bundle files
-        run: just bundle 'Addicted-translation-${{ matrix.locale }}-latest' "${{ matrix.locale }}"
+        run: just bundle 'release-voices-${{ matrix.locale }}' "${{ matrix.locale }}"
       - name: Upload translations
         uses: actions/upload-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
-          path: Addicted-translation-${{ matrix.locale }}-latest
+          name: Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}
+          path: release-voices-${{ matrix.locale }}
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
@@ -88,12 +88,12 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-artifact
+          name: Addicted-mod-windows-${{ github.ref_name }}
           path: release
       - name: Download ${{ matrix.locale }} translations
         uses: actions/download-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
+          name: Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}
           path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
