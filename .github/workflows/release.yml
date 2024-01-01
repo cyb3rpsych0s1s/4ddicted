@@ -48,14 +48,14 @@ jobs:
         with:
           type: 'zip'
           filename: 'Addicted-windows-latest-${{ github.ref_name }}.zip'
-          directory: ./mod-latest
+          directory: ./Addicted-windows-latest-${{ github.ref_name }}
           path: .
           recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-artifact
-          path: mod-latest/Addicted-windows-latest-${{ github.ref_name }}.zip
+          path: Addicted-windows-latest-${{ github.ref_name }}/Addicted-windows-latest-${{ github.ref_name }}.zip
           if-no-files-found: error
   bundle-translations:
     runs-on: windows-latest
@@ -82,13 +82,13 @@ jobs:
         with:
           type: 'zip'
           filename: 'translation-${{ matrix.locale }}-latest.zip'
-          directory: ./translations
+          directory: ./translation-${{ matrix.locale }}-latest
           path: .
       - name: Upload translations
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
-          path: translations/translation-${{ matrix.locale }}-latest.zip
+          path: translation-${{ matrix.locale }}-latest/translation-${{ matrix.locale }}-latest.zip
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
