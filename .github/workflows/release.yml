@@ -44,7 +44,6 @@ jobs:
         env:
           WK_CLI: cp77tools
       - name: Zip files
-        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
@@ -53,7 +52,6 @@ jobs:
           path: .
           recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact
-        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-artifact
@@ -87,7 +85,6 @@ jobs:
           directory: ./translations
           path: .
       - name: Upload translations
-        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
