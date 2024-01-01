@@ -43,19 +43,11 @@ jobs:
         run: just ci 'Addicted-windows-latest-${{ github.ref_name }}'
         env:
           WK_CLI: cp77tools
-      - name: Zip files
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: 'Addicted-windows-latest-${{ github.ref_name }}.zip'
-          directory: ./Addicted-windows-latest-${{ github.ref_name }}
-          path: .
-          recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-artifact
-          path: Addicted-windows-latest-${{ github.ref_name }}/Addicted-windows-latest-${{ github.ref_name }}.zip
+          path: Addicted-windows-latest-${{ github.ref_name }}
           if-no-files-found: error
   bundle-translations:
     runs-on: windows-latest
@@ -76,19 +68,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bundle files
-        run: just bundle 'translation-${{ matrix.locale }}-latest' "${{ matrix.locale }}"
-      - name: Zip files
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: 'translation-${{ matrix.locale }}-latest.zip'
-          directory: ./translation-${{ matrix.locale }}-latest
-          path: .
+        run: just bundle 'Addicted-translation-${{ matrix.locale }}-latest' "${{ matrix.locale }}"
       - name: Upload translations
         uses: actions/upload-artifact@v4
         with:
           name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
-          path: translation-${{ matrix.locale }}-latest/translation-${{ matrix.locale }}-latest.zip
+          path: Addicted-translation-${{ matrix.locale }}-latest
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
