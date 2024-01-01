@@ -1,0 +1,218 @@
+version: 1.0.0
+voices:
+  ono_hhuh:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q113_f_1956c7fde04e1000.Wav
+        subtitle: Hein?
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q113_m_1956c7fde04e1000.Wav
+        subtitle: Hein?
+  ono_huh:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q004_f_168ac1406f29f000.Wav
+        subtitle: Hein?
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q004_m_168ac1406f29f000.Wav
+        subtitle: Hein?
+  ono_huhuh:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q003_f_178d53e0694b6000.Wav
+        subtitle: Hein ?
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q003_m_178d53e0694b6000.Wav
+        subtitle: Hein ?
+  biomon:
+    fem:
+      fr-fr:
+        file: fr-fr/surprised/fem_v_b_T9zcts4PeNolNadsX23D.wav
+        subtitle: Biomon'...
+    male:
+      fr-fr:
+        file: fr-fr/surprised/male_v_b_hV1W9MXQeLI4VnJEs964.wav
+        subtitle: Biomon'...
+  as_if_I_didnt_know_already:
+    fem:
+      fr-fr:
+        file: fr-fr/disheartened/fem_v_aiidka_HfhhTgyIBZaOBPgVjItb.wav
+        subtitle: Comme si j'étais pas déjà au courant...
+    male:
+      fr-fr:
+        file: fr-fr/disheartened/male_v_aiidka_pRLXRfBiQ1lVqGtuYbV9.wav
+        subtitle: Comme si j'étais pas déjà au courant...
+  come_on_again:
+    fem:
+      fr-fr:
+        file: fr-fr/surprised/fem_v_coa_N4S6D482cSLWnzOW5CPE.wav
+        subtitle: Encore toi ?!
+    male:
+      fr-fr:
+        file: fr-fr/surprised/male_v_coa_r2bIydttUuhs1RGpjAgC.wav
+        subtitle: Encore toi ?!
+  come_on_biomon_cant_you_give_me_a_break:
+    fem:
+      fr-fr:
+        file: fr-fr/disheartened/fem_v_cobcygmab_z4XArIXVpA5lG6WX8rWy.wav
+        subtitle: Eh biomon', lâche-moi un peu les basques
+    male:
+      fr-fr:
+        file: fr-fr/disheartened/male_v_cobcygmab_Xt5ugjy8W4s6jtGnEA7W.wav
+        subtitle: Eh biomon', lâche-moi un peu les basques
+  damn_cant_you_just_leave_me_alone:
+    fem:
+      fr-fr:
+        file: fr-fr/disheartened/fem_v_dcyjlma_2rJTsuemordrYXRVo30S.wav
+        subtitle: Mince.. Tu veux pas me foutre la paix un peu ?
+    male:
+      fr-fr:
+        file: fr-fr/disheartened/male_v_dcyjlma_Xt5ugjy8W4s6jtGnEA7W.wav
+        subtitle: Mince.. Tu veux pas me foutre la paix un peu ?
+  damn_thats_fucked_up:
+    fem:
+      fr-fr:
+        file: fr-fr/surprised/fem_v_dtfu_PpegYyBOS6Iaz80fqYk9.wav
+        subtitle: Sans déconner !
+    male:
+      fr-fr:
+        file: fr-fr/surprised/male_v_dtfu_JKzwXcrVyf8gfUp2VunE.wav
+        subtitle: Sans déconner !
+  dont_you_see_Im_in_trouble:
+    fem:
+      fr-fr:
+        file: fr-fr/pestered/fem_v_dysiit_Bym4zvfHx7s8BokGkuoq.wav
+        subtitle: Eh pas maintenant !!
+    male:
+      fr-fr:
+        file: fr-fr/pestered/male_v_dysiit_BA5uiNb3gxTqAi8x9v1y.wav
+        subtitle: Eh pas maintenant !!
+  fuck:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q115_f_1752ea11b74e1000.wav
+        subtitle: M*rde..
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q115_m_1752ea11b74e1000.wav
+        subtitle: M*rde..
+  fuck_this_biomon_just_not_right_now:
+    fem:
+      fr-fr:
+        file: fr-fr/pestered/fem_v_ftbnrn_61hZfhb7czEVJW8GU3BM.wav
+        subtitle: P#tain de biomon' ! Pas maintenant !!
+    male:
+      fr-fr:
+        file: fr-fr/pestered/male_v_ftbnrn_uPIygHrx6ed3upV4TPjr.wav
+        subtitle: P#tain de biomon' ! Pas maintenant !!
+  get_this_damn_UI_out_of_my_face:
+    fem:
+      fr-fr:
+        file: fr-fr/pestered/fem_v_gtduioomf_u6SzvVsDTjnxCzbsIGV3.wav
+        subtitle: Hors de ma vue !
+    male:
+      fr-fr:
+        file: fr-fr/pestered/male_v_gtduioomf_z7qQ0o8BIya4Evsjw7bx.wav
+        subtitle: Hors de ma vue !
+  nah_everything_is_all_good:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_scene_dex_default_f_182ad40c364ea000.Wav
+        subtitle: Nan.. Tout va très bien.
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_scene_dex_default_m_182ad40c364ea000.Wav
+        subtitle: Nan.. Tout va très bien.
+  nah_Im_cool:
+    fem:
+      fr-fr:
+        file: fr-fr/offhanded/fem_v_nic_BZmECzGdB509vK4aEKGM.wav
+        subtitle: Nan... T'inquiètes je gère.
+    male:
+      fr-fr:
+        file: fr-fr/offhanded/male_v_nic_JsxTz7SfZuJZVQiPNvxX.wav
+        subtitle: Nan... T'inquiètes je gère.
+  noo:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_scene_mitch_default_f_1b1a38325729f000.Wav
+        subtitle: Naan !
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_scene_mitch_default_m_1b1a38325729f000.Wav
+        subtitle: Naan !
+  oh_shit:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q000_f_1927fae1772ef000.Wav
+        subtitle: Oh.. m*rde
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q000_m_1927fae1772ef000.Wav
+        subtitle: Oh.. m*rde
+  shit:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q104_f_18545e4c6a4e6000.Wav
+        subtitle: M*rde !
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q104_m_18545e4c6a4e6000.Wav
+        subtitle: M*rde !
+  so_frustrating:
+    fem:
+      fr-fr:
+        file: fr-fr/pestered/fem_v_sf_aKT91crKTFdXrwvA1vxW.wav
+        subtitle: J'en peux plus de cette tech'...
+    male:
+      fr-fr:
+        file: fr-fr/pestered/male_v_sf_358lT1tOVwjhzOOQVRZ7.wav
+        subtitle: J'en peux plus de cette tech'...
+  what:
+    fem:
+      fr-fr:
+        file: vanilla/fr-fr/v_q104_f_18980f710d29f000.Wav
+        subtitle: Quoi ?
+    male:
+      fr-fr:
+        file: vanilla/fr-fr/v_q104_m_18980f710d29f000.Wav
+        subtitle: Quoi ?
+  yeah_I_know:
+    fem:
+      fr-fr:
+        file: fr-fr/disheartened/fem_v_yik_pMJ2gUa3ctC17rgPPdpV.wav
+        subtitle: Ouais... je sais.
+    male:
+      fr-fr:
+        file: fr-fr/disheartened/male_v_yik_yK7INLNc18j4TIKJ4rSO.wav
+        subtitle: Ouais... je sais.
+  yeah_yeah_yeah_alright:
+    fem:
+      fr-fr:
+        file: fr-fr/offhanded/fem_v_yyya_0dNPSYQSIE5JynBNQWQn.wav
+        subtitle: Ouais, ouais, ouais... c'est bon.
+    male:
+      fr-fr:
+        file: fr-fr/offhanded/male_v_yyya_q1MsrLJmATcKltwg5aHf.wav
+        subtitle: Ouais, ouais, ouais... c'est bon.
+  yeah_yeah_yeah_who_cares:
+    fem:
+      fr-fr:
+        file: fr-fr/offhanded/fem_v_yyywc_fCwgf5cvntmX6sAjox1z.wav
+        subtitle: Ouais... d'accord... on s'en tape.
+    male:
+      fr-fr:
+        file: fr-fr/offhanded/male_v_yyywc_8fIHkaa0Cvj8vsGemsfX.wav
+        subtitle: Ouais... d'accord... on s'en tape.
+  you_tell_me_biomon:
+    fem:
+      fr-fr:
+        file: fr-fr/offhanded/fem_v_ytmb_l2miMA0W7Up636NUApIv.wav
+        subtitle: Si tu l'dis, biomon'.
+    male:
+      fr-fr:
+        file: fr-fr/offhanded/male_v_ytmb_9b1st6nnc6QqzSEJb9JU.wav
+        subtitle: Si tu l'dis, biomon'.
