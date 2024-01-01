@@ -84,7 +84,7 @@ jobs:
         with:
           type: 'zip'
           filename: 'Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip'
-          directory: ./translation-${{ matrix.locale }}-latest
+          directory: translation-${{ matrix.locale }}-latest
           path: .
           recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload translations
