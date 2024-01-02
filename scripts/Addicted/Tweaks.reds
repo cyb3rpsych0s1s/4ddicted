@@ -150,7 +150,7 @@ private func AlterStatusEffects(const actionEffects: script_ref<array<wref<Objec
   let others: Threshold;
   let i: Int32 = 0;
   while i < ArraySize(Deref(actionEffects)) {
-      LogChannel(n"DEBUG", s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+      E(s"effect ID: \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
       consumable = Generic.Consumable(Deref(actionEffects)[i].GetID());
       addiction = Generic.Addiction(consumable);
       if Equals(addiction, Addiction.Healers) {
@@ -183,14 +183,14 @@ private func AlterStatusEffects(const actionEffects: script_ref<array<wref<Objec
 
 @wrapMethod(UseHealChargeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "on UseHealChargeAction.ProcessStatusEffects");
+    E("on UseHealChargeAction.ProcessStatusEffects");
     AlterStatusEffects(actionEffects, gameInstance);
     wrappedMethod(actionEffects, gameInstance);
 }
 
 @wrapMethod(ConsumeAction)
 protected func ProcessStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
-    LogChannel(n"DEBUG", "on ConsumeAction.ProcessStatusEffects");
+    E("on ConsumeAction.ProcessStatusEffects");
     AlterStatusEffects(actionEffects, gameInstance);
     wrappedMethod(actionEffects, gameInstance);
 }

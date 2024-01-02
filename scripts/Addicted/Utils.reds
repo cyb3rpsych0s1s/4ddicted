@@ -4,12 +4,12 @@ module Addicted.Utils
 
 public static func E(str: String) -> Void {
   if ShowDebugLogsAddicted() {
-    LogChannel(n"DEBUG", s"[Addicted] \(str)");
+    // LogChannel(n"DEBUG", s"[Addicted] \(str)");
   };
 }
 
 public static func F(str: String) -> Void {
-  LogError(s"[ERROR] [Addicted] \(str)");
+  // LogError(s"[ERROR] [Addicted] \(str)");
 }
 
 public static func EI(id: TweakDBID, str: String) -> Void {
