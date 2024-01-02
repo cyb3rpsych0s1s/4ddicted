@@ -5,6 +5,7 @@ import Edgerunning.System.EdgerunningSystem
 
 import Addicted.System.AddictedSystem
 import Addicted.Threshold
+import Addicted.Addiction
 import Addicted.Helper
 import Addicted.Consumable
 import Addicted.Utils.{E,F}
@@ -44,6 +45,8 @@ public static func AlterNeuroBlockerStatusEffects(const actionEffects: script_re
 @if(ModuleExists("Edgerunning.System"))
 public static func AlterNeuroBlockerStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let weakened: String = "NotablyWeakened";
+  let system = AddictedSystem.GetInstance(gameInstance);
+  let threshold = system.Threshold(Consumable.NeuroBlocker);
   if EnumInt(threshold) == EnumInt(Threshold.Severely) { weakened = "SeverelyWeakened"; }
   let effect = (Deref(actionEffects)[0] as ObjectActionEffect_Record).StatusEffect();
   let id: TweakDBID = effect.GetID();
