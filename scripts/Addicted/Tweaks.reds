@@ -164,7 +164,7 @@ private func AlterStatusEffects(const actionEffects: script_ref<array<wref<Objec
         
         if IsDefined(altered) { Deref(actionEffects)[i] = altered; }
         else if Helper.IsSerious(threshold) {
-          LogError(s"unknown weakened variant for \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
+          F(s"unknown weakened variant for \(TDBID.ToStringDEBUG(Deref(actionEffects)[i].GetID()))");
         }
       } else if Equals(consumable, Consumable.BlackLace) {
         threshold = system.Threshold(consumable);
