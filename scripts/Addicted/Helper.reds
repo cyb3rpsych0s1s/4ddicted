@@ -5,12 +5,12 @@ import Addicted.Utils.{E,EI}
 import Addicted.Helpers.*
 
 public class Helper {
-  public static func Category(id: TweakDBID) -> Category {
-    if Generic.IsBlackLace(id) { return Category.Hard; }
+  public static func Category(id: ItemID) -> Category {
+    if Generic.IsBlackLace(ItemID.GetTDBID(id)) { return Category.Hard; }
     return Category.Mild;
   }
 
-  public static func Potency(id: TweakDBID) -> Int32 {
+  public static func Potency(id: ItemID) -> Int32 {
     let category = Helper.Category(id);
     switch(category) {
       case Category.Hard:
@@ -21,7 +21,7 @@ public class Helper {
     return 1;
   }
 
-  public static func Resilience(id: TweakDBID) -> Int32 {
+  public static func Resilience(id: ItemID) -> Int32 {
     let category = Helper.Category(id);
     switch(category) {
       case Category.Hard:
@@ -54,112 +54,12 @@ public class Helper {
         return [Consumable.StaminaBooster, Consumable.CarryCapacityBooster];
       case Addiction.Neuros:
         return [Consumable.MemoryBooster, Consumable.NeuroBlocker];
+      case Addiction.BlackLace:
+        return [Consumable.BlackLace];
       default:
         break;
     }
     return [];
-  }
-
-  public static func Consumables() -> array<Consumable> {
-    return [
-      Consumable.Alcohol,
-      Consumable.MaxDOC,
-      Consumable.BounceBack,
-      Consumable.HealthBooster,
-      Consumable.MemoryBooster,
-      Consumable.OxyBooster,
-      Consumable.StaminaBooster,
-      Consumable.BlackLace,
-      Consumable.CarryCapacityBooster,
-      Consumable.NeuroBlocker
-    ];
-  }
-
-  // all related drugs (as general items name) for a given addiction
-  public static func Drugs(addiction: Addiction) -> array<TweakDBID> {
-    switch (addiction) {
-      case Addiction.Healers:
-        return [
-          t"Items.FirstAidWhiffV0",
-          t"Items.FirstAidWhiffV1",
-          t"Items.FirstAidWhiffV2",
-          t"Items.BonesMcCoy70V0",
-          t"Items.BonesMcCoy70V1",
-          t"Items.BonesMcCoy70V2",
-          t"Items.HealthBooster"
-        ];
-      case Addiction.Anabolics:
-        return [
-          t"Items.StaminaBooster",
-          t"Items.CarryCapacityBooster"
-        ];
-      case Addiction.Neuros:
-        return [
-          t"Items.MemoryBooster",
-          // Wannabe Edgerunner
-          t"Items.ripperdoc_med",
-          t"Items.ripperdoc_med_uncommon",
-          t"Items.ripperdoc_med_common"
-        ];
-      default:
-        break;
-    }
-    return [];
-  }
-
-  public static func Effects(consumable: Consumable) -> array<TweakDBID> {
-    switch (consumable) {
-      case Consumable.Alcohol:
-        return [t"BaseStatusEffect.Drunk"];
-      case Consumable.MaxDOC:
-        return Helper.EffectsByName("FirstAidWhiff");
-      case Consumable.BounceBack:
-        return Helper.EffectsByName("BonesMcCoy70");
-      case Consumable.HealthBooster:
-        return Helper.EffectsByName("HealthBooster");
-      case Consumable.MemoryBooster:
-        return Helper.EffectsByName("MemoryBooster");
-      case Consumable.OxyBooster:
-        return [t"BaseStatusEffect.OxyBooster"];
-      case Consumable.StaminaBooster:
-        return Helper.EffectsByName("StaminaBooster");
-      case Consumable.CarryCapacityBooster:
-        return Helper.EffectsByName("CarryCapacityBooster");
-      case Consumable.BlackLace:
-        return Helper.EffectsByName("BlackLace");
-      case Consumable.NeuroBlocker:
-        return [
-          t"BaseStatusEffect.RipperDocMedBuff",
-          t"BaseStatusEffect.RipperDocMedBuffUncommon",
-          t"BaseStatusEffect.RipperDocMedBuffCommon"
-        ];
-      default:
-        break;
-    }
-    return [];
-  }
-
-  private static func EffectsByName(name: String) -> array<TweakDBID> {
-    let records = TweakDBInterface.GetRecords(n"StatusEffect_Record");
-    let out: array<TweakDBID> = [];
-    let id: TweakDBID;
-    let str: String;
-    for record in records {
-      id = (record as StatusEffect_Record).GetID();
-      str = TDBID.ToStringDEBUG(id);
-      if StrBeginsWith(str, "BaseStatusEffect") && StrContains(str, name) {
-        ArrayPush(out, id);
-      }
-    }
-    return out;
-  }
-
-  public static func Addictions() -> array<Addiction> {
-    return [
-      Addiction.Healers,
-      Addiction.Anabolics,
-      Addiction.Neuros
-    ];
   }
 
   public static func IsSerious(threshold: Threshold) -> Bool {

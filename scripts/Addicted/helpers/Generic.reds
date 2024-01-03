@@ -6,24 +6,6 @@ import Addicted.Crossover.ExtraDesignation
 // effects or items agnostic
 public class Generic {
 
-  // provide a general item name no matter the TweakDBID
-  // as long as it's related to a consumable
-  // e.g. 'BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0',
-  //      'Items.FirstAidWhiffV0', etc ..
-  //       would be designated as 'Items.FirstAidWhiffV0'  
-  public static func Designation(id: TweakDBID) -> TweakDBID {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    let extra = ExtraDesignation(suffix);
-    if NotEquals(extra, t"None") { return extra; }
-    if StrContains(suffix, "NotablyWeakened") || StrContains(suffix, "SeverelyWeakened") {
-      suffix = StrReplace(suffix, "NotablyWeakened", "");
-      suffix = StrReplace(suffix, "SeverelyWeakened", "");
-      return TDBID.Create("Items." + suffix);
-    }
-    return TDBID.Create("Items." + suffix);
-  }
-
   public static func Consumable(id: TweakDBID) -> Consumable {
     if Generic.IsAlcohol(id)          { return Consumable.Alcohol; }
     if Generic.IsMaxDOC(id)           { return Consumable.MaxDOC; }
@@ -74,8 +56,8 @@ public class Generic {
     Generic.IsKit(id));
   }
 
-  public static func IsInstant(id: TweakDBID) -> Bool {
-    let record = TweakDBInterface.GetRecord(id);
+  public static func IsInstant(id: ItemID) -> Bool {
+    let record = TweakDBInterface.GetRecord(ItemID.GetTDBID(id));
     let effect = Effect.IsInstant(record);
     if effect { return true; }
     let item = Items.IsInstant(record);
