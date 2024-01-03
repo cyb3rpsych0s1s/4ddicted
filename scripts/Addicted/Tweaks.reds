@@ -201,6 +201,39 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
   wrappedMethod(gameInstance);
 }
 
+@wrapMethod(ItemActionsHelper)
+public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool) -> Bool {
+  E(s"process item action");
+  let actionUsed: Bool = wrappedMethod(gi, executor, itemData, actionID, fromInventory);
+  let system: ref<AddictedSystem>;
+  let itemID: ItemID;
+  if actionUsed {
+    system = AddictedSystem.GetInstance(gi);
+    itemID = itemData.GetID();
+    system.OnConsumeItem(itemID);
+  }
+  return actionUsed;
+}
+
+@wrapMethod(ItemActionsHelper)
+public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool, quantity: Int32) -> Bool {
+  E(s"process item action (x\(ToString(quantity)))");
+  let actionUsed = wrappedMethod(gi, executor, itemData, actionID, fromInventory, quantity);
+  let system: ref<AddictedSystem>;
+  let itemID: ItemID;
+  let i: Int32;
+  if actionUsed && quantity >= 1 {
+    system = AddictedSystem.GetInstance(gi);
+    itemID = itemData.GetID();
+    i = quantity;
+    while i > 0 {
+      system.OnConsumeItem(itemID);
+      i -= 1;
+    }
+  }
+  return actionUsed;
+}
+
 // increase score on consumption (catch direct consumption from quick slot)
 @wrapMethod(ItemActionsHelper)
 public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID, fromInventory: Bool) -> Void {
