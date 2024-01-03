@@ -403,7 +403,8 @@ public class AddictedSystem extends ScriptableSystem {
     if !this.consumptions.KeyExist(id) { return false; }
     let consumption = this.consumptions.Get(id);
     if ArraySize(consumption.doses) == 0 { return false; }
-    let last: Float = ArrayLast(consumption.doses);
+    let last: Float = consumption.LastDose();
+    if Equals(last, -1.0) { return false; }
     let difference: Float = this.restingSince - last;
     let maximum = 60. * 60.; // 1h
     return difference < maximum;
