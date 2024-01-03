@@ -24,7 +24,7 @@ The way addiction is being kept track of is the following:
 
 - whenever V consumes an addictive consumables (see which ones below),
 his/her addiction to this specific consumable increases (you can think of it as a jauge).
-- whenever V rests at home for long enough, gets energized or revigored, his/her addictions jauges decreases.
+- whenever V rests at home for long enough, gets refreshed, his/her addictions jauges decrease.
 - mild drugs decreases twice as fast as they increase.
 - hard drugs increases twice as fast as they decrease.
 
