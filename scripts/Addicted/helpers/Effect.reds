@@ -5,8 +5,11 @@ public class Effect {
 
   public static func IsHousing(id: TweakDBID) -> Bool {
     switch(id) {
+      // after sleeping
       case t"HousingStatusEffect.Rested":
+      // after taking a shower
       case t"HousingStatusEffect.Refreshed":
+      // after drinking coffee
       case t"HousingStatusEffect.Energized":
         return true;
       default:
