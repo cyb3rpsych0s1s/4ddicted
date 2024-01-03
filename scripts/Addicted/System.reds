@@ -74,8 +74,13 @@ public class AddictedSystem extends ScriptableSystem {
       this.consumptions = new Consumptions();
     }
 
-    // ModSettings.RegisterListenerToModifications(this);
+    this.OnPostAttach();
   }
+
+  @if(!ModuleExists("ModSettingsModule"))
+  private func OnPostAttach() -> Void {}
+  @if(ModuleExists("ModSettingsModule"))
+  private func OnPostAttach() -> Void { ModSettings.RegisterListenerToModifications(this); }
 
   private func OnDetach() -> Void {
     E(s"on detach system");
@@ -91,8 +96,13 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.ShrinkDoses();
 
-    // ModSettings.UnregisterListenerToModifications(this);
+    this.OnPostDetach();
   }
+
+  @if(!ModuleExists("ModSettingsModule"))
+  private func OnPostDetach() -> Void {}
+  @if(ModuleExists("ModSettingsModule"))
+  private func OnPostDetach() -> Void { ModSettings.UnregisterListenerToModifications(this); }
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
     E(s"on restored system");
