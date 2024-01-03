@@ -288,31 +288,29 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32, opt 
 }
 
 @wrapMethod(RipperDocGameController)
-private final func EquipCyberware(itemData: wref<gameItemData>) -> Void {
+private final func EquipCyberware(itemData: wref<gameItemData>) -> Bool {
   E(s"equip cyberware");
   let itemID: ItemID = itemData.GetID();
   let area: gamedataEquipmentArea = EquipmentSystem.GetEquipAreaType(itemID);
   let cyberware = InventoryDataManagerV2.IsEquipmentAreaCyberware(area);
-  wrappedMethod(itemData);
-  if cyberware {
+  let equipped = wrappedMethod(itemData);
+  if cyberware && equipped {
     E(s"installed \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     if Generic.IsBiomonitor(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnBiomonitorChanged(true);
-      return;
     }
     if Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnDetoxifierChanged(true);
-      return;
     }
     if Items.IsMetabolicEditor(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnMetabolicEditorChanged(true);
-      return;
     }
   }
+  return equipped;
 }
 
 @wrapMethod(TimeskipGameController)
