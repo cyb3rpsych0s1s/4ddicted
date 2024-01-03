@@ -189,11 +189,6 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnDissipated(id: TweakDBID) -> Void {
-    let consumption: ref<Consumption> = this.consumptions.Get(id) as Consumption;
-    if !IsDefined(consumption) {
-      FI(id, s"no consumption recorded while just dissipated");
-      return;
-    }
     this.Hint(id);
   }
 
@@ -326,7 +321,7 @@ public class AddictedSystem extends ScriptableSystem {
     let consumable = Generic.Consumable(id);
     let specific = this.consumptions.Get(id);
     let averageThreshold = this.consumptions.Threshold(consumable);
-    let specificThreshold = specific.Threshold();
+    let specificThreshold = IsDefined(specific) ? specific.Threshold() : Threshold.Clean;
     let threshold: Threshold;
     if EnumInt(specificThreshold) >= EnumInt(averageThreshold) {
       threshold = specificThreshold;
