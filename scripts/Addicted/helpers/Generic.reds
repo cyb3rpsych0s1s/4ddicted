@@ -1,7 +1,6 @@
 module Addicted.Helpers
 
 import Addicted.*
-import Addicted.Crossover.ExtraDesignation
 
 // effects or items agnostic
 public class Generic {

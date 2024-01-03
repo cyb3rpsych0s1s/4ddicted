@@ -72,24 +72,6 @@ public static func AlterBlackLaceStatusEffects(const actionEffects: script_ref<a
   }
 }
 
-@if(!ModuleExists("Edgerunning.System"))
-public static func ExtraDesignation(suffix: String) -> TweakDBID {
-  return t"None";
-}
-
-@if(ModuleExists("Edgerunning.System"))
-public static func ExtraDesignation(suffix: String) -> TweakDBID {
-  // status effects
-  if StrContains(suffix, "RipperDocMedBuffCommon") { return TDBID.Create("Items.ripperdoc_med_common"); }
-  if StrContains(suffix, "RipperDocMedBuffUncommon") { return TDBID.Create("Items.ripperdoc_med_uncommon"); }
-  if StrContains(suffix, "RipperDocMedBuff") { return TDBID.Create("Items.ripperdoc_med"); }
-  // items
-  if Equals(suffix, "ripperdoc_med") { return TDBID.Create("Items.ripperdoc_med"); }
-  if Equals(suffix, "ripperdoc_med_uncommon") { return TDBID.Create("Items.ripperdoc_med_uncommon"); }
-  if Equals(suffix, "ripperdoc_med_common") { return TDBID.Create("Items.ripperdoc_med_common"); }
-  return t"None";
-}
-
 public class NeuroBlockerTweaks extends ScriptableTweak {
   protected cb func OnApply() -> Void {
     let notably   = "NotablyWeakened";
