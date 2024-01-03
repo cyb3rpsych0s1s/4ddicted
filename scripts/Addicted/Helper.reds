@@ -110,7 +110,7 @@ public class Helper {
   public static func Effects(consumable: Consumable) -> array<TweakDBID> {
     switch (consumable) {
       case Consumable.Alcohol:
-        return [t"BaseStatusEffect.AlcoholDebuff"];
+        return [t"BaseStatusEffect.Drunk"];
       case Consumable.MaxDOC:
         return Helper.EffectsByName("FirstAidWhiff");
       case Consumable.BounceBack:
@@ -118,16 +118,15 @@ public class Helper {
       case Consumable.HealthBooster:
         return Helper.EffectsByName("HealthBooster");
       case Consumable.MemoryBooster:
-        return [t"BaseStatusEffect.MemoryBooster"];
+        return Helper.EffectsByName("MemoryBooster");
       case Consumable.OxyBooster:
         return [t"BaseStatusEffect.OxyBooster"];
       case Consumable.StaminaBooster:
-        return [t"BaseStatusEffect.StaminaBooster"];
+        return Helper.EffectsByName("StaminaBooster");
+      case Consumable.CarryCapacityBooster:
+        return Helper.EffectsByName("CarryCapacityBooster");
       case Consumable.BlackLace:
-        return [
-          t"BaseStatusEffect.BlackLaceV0",
-          t"BaseStatusEffect.BlackLaceV1"
-      ];
+        return Helper.EffectsByName("BlackLace");
       case Consumable.NeuroBlocker:
         return [
           t"BaseStatusEffect.RipperDocMedBuff",
