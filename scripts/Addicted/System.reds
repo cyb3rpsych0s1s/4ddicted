@@ -28,6 +28,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
+  private persistent let lastEnergized: Float;
 
   private persistent let hasBiomonitorEquipped: Bool;
   private persistent let hasDetoxifierEquipped: Bool;
@@ -203,12 +204,16 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func OnRested(id: TweakDBID) -> Void {
-    let sleep = Effect.IsSleep(id);
+    if Effect.IsSleep(id) { this.OnSlept(); }
+    else if Effect.IsRefreshed(id) { this.OnRefreshed(); }
+  }
+
+  private func OnSlept() -> Void {
     let now = this.timeSystem.GetGameTimeStamp();
     let duration = now - this.restingSince;
     let minimum = 60. * 60. * 6.; // 6h
     let light = duration < minimum;
-    if sleep && light {
+    if light {
       E(s"not enough sleep ! no wean off");
       return;
     }
@@ -222,34 +227,53 @@ public class AddictedSystem extends ScriptableSystem {
       let under_influence = false;
       if this.IsHard() {
         under_influence = this.SleptUnderInfluence(id) && !this.hasDetoxifierEquipped;
-        if sleep && under_influence
+        if under_influence
         { 
           E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
         }
       }
-      if consumption.current > 0 {
-        // energized and refreshed are not affected
-        if !sleep || !under_influence {
+      if !under_influence {
+        if consumption.current > 0 {
           let current = consumption.current;
           let next = Max(current - Helper.Resilience(id) - this.player.CyberwareImmunity(), 0);
           consumption.current = next;
-          if sleep {
-            E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
-          }
-          else
-          {
-            E(s"energized or refreshed, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
-          }
+          E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
+        } else {
+          this.consumptions.Remove(id);
+          E(s"clean again from \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
         }
-      } else {
-        this.consumptions.Remove(id);
-        E(s"clean again from \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
       }
     }
 
     let callback = new UpdateWithdrawalSymptomsCallback();
     callback.system = this;
     this.delaySystem.DelayCallbackNextFrame(callback);
+  }
+
+  private func OnRefreshed() -> Void {
+    let now = this.timeSystem.GetGameTimeStamp();
+    let duration = now - this.lastEnergized;
+    let minimum = 60. * 60. * 24.; // 24h
+    let less_than_a_day = duration < minimum;
+    this.lastEnergized = now;
+    if less_than_a_day {
+      E(s"refreshed bonus only applies once a day");
+      return;
+    }
+    
+    let size = this.consumptions.Size();
+    if size == 0 { return; }
+    let ids = this.consumptions.Items();
+    let consumption: ref<Consumption>;
+    for id in ids {
+      consumption = this.consumptions.Get(id) as Consumption;
+      if consumption.current > 0 {
+        let current = consumption.current;
+        let next = Max(current - 1, 0);
+        consumption.current = next;
+        E(s"well refreshed, weaning slightly off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
+      }
+    }
   }
 
   public func ShrinkDoses() -> Void {
