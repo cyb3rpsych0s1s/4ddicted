@@ -2,6 +2,8 @@
 
 Callbacks are another asynchronous mechanism.
 
+🆕 2024/01/28: as a side note callbacks scheduled with `DelaySystem` are only called once, unless manually rescheduled (inside callback's `Call` method for example).
+
 > credits to `DJ_Kovrik`
 
 ```swift
