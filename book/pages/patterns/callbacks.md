@@ -2,7 +2,7 @@
 
 Callbacks are another asynchronous mechanism.
 
-🆕 2024/01/28: as a side note callbacks scheduled with `DelaySystem` are only called once, unless manually rescheduled (inside callback's `Call` method for example).
+🆕 2024/01/28: as a side note callbacks scheduled with `DelaySystem` are only called once, unless manually rescheduled (inside callback's `Call` method for example). `DelayID` is an 8-bytes identifier, `GetInvalidDelayID()` being its smallest value. A different identifier is returned on every call to `DelayCallback()`.
 
 > credits to `DJ_Kovrik`
 
