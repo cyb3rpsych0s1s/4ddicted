@@ -75,13 +75,8 @@ public class AddictedSystem extends ScriptableSystem {
       this.consumptions = new Consumptions();
     }
 
-    this.OnPostAttach();
+    OnAddictedPostAttach(this);
   }
-
-  @if(!ModuleExists("ModSettingsModule"))
-  private func OnPostAttach() -> Void {}
-  @if(ModuleExists("ModSettingsModule"))
-  private func OnPostAttach() -> Void { ModSettings.RegisterListenerToModifications(this); }
 
   private func OnDetach() -> Void {
     E(s"on detach system");
@@ -97,13 +92,8 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.ShrinkDoses();
 
-    this.OnPostDetach();
+    OnAddictedPostDetach(this);
   }
-
-  @if(!ModuleExists("ModSettingsModule"))
-  private func OnPostDetach() -> Void {}
-  @if(ModuleExists("ModSettingsModule"))
-  private func OnPostDetach() -> Void { ModSettings.UnregisterListenerToModifications(this); }
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
     E(s"on restored system");
@@ -581,3 +571,13 @@ public class AddictedSystem extends ScriptableSystem {
     E(s"recalculated from gametime seconds  \(gt)");
   }
 }
+
+@if(!ModuleExists("ModSettingsModule"))
+private func OnAddictedPostAttach(_: ref<AddictedSystem>) -> Void {}
+@if(ModuleExists("ModSettingsModule"))
+private func OnAddictedPostAttach(system: ref<AddictedSystem>) -> Void { ModSettings.RegisterListenerToModifications(system); }
+
+@if(!ModuleExists("ModSettingsModule"))
+private func OnAddictedPostDetach(_: ref<AddictedSystem>) -> Void {}
+@if(ModuleExists("ModSettingsModule"))
+private func OnAddictedPostDetach(system: ref<AddictedSystem>) -> Void { ModSettings.UnregisterListenerToModifications(system); }
