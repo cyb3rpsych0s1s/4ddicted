@@ -35,8 +35,8 @@ set dotenv-load
 
 [windows]
 @swap BACKUP CACHE:
-    if (Test-Path "{{BACKUP}}") { \
+    if (Test-Path "{{BACKUP}}" -PathType leaf) { \
         Write-Host "replacing {{CACHE}} with {{BACKUP}}"; \
-        cp -Force "{{BACKUP}}' '{{CACHE}}"; \
+        just copy '{{BACKUP}}' '{{CACHE}}'; \
         Remove-Item -Force -Path "{{BACKUP}}"; \
     } else { Write-Host "missing {{BACKUP}}"; }
