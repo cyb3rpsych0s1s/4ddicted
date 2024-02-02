@@ -4,29 +4,29 @@ voices:
     fem:
       es-es:
         file: vanilla/es-es/v_q113_f_1956c7fde04e1000.Wav
-        subtitle: Aja?
+        subtitle: ¿Aja?
     male:
       es-es:
         file: vanilla/es-es/v_q113_m_1956c7fde04e1000.Wav
-        subtitle: Aja?
+        subtitle: ¿Aja?
   ono_huh:
     fem:
       es-es:
         file: vanilla/es-es/v_q004_f_168ac1406f29f000.Wav
-        subtitle: Que?
+        subtitle: ¿Qué?
     male:
       es-es:
         file: vanilla/es-es/v_q004_m_168ac1406f29f000.Wav
-        subtitle: Que?
+        subtitle: ¿Qué?
   ono_huhuh:
     fem:
       es-es:
         file: vanilla/es-es/v_q003_f_178d53e0694b6000.Wav
-        subtitle: Aja?
+        subtitle: ¿Aja?
     male:
       es-es:
         file: vanilla/es-es/v_q003_m_178d53e0694b6000.Wav
-        subtitle: Aja?
+        subtitle: ¿Aja?
   biomon:
     fem:
       es-es:
@@ -49,101 +49,101 @@ voices:
     fem:
       es-es:
         file: es-es/surprised/fem_v_coa.wav
-        subtitle: En serio... otra vez?!
+        subtitle: ¡¿En serio... otra vez?!
     male:
       es-es:
         file: es-es/surprised/male_v_coa.wav
-        subtitle: En serio... otra vez?!
+        subtitle: ¡¿En serio... ¡¿otra vez?!
   come_on_biomon_cant_you_give_me_a_break:
     fem:
       es-es:
         file: es-es/disheartened/fem_v_cobcygmab.wav
-        subtitle: Vamos biomon, no me puedes dar un 'break'?
+        subtitle: Vamos biomon, ¿no me puedes dar un 'break'?
     male:
       es-es:
         file: es-es/disheartened/male_v_cobcygmab.wav
-        subtitle: Vamos biomon, no me puedes dar un 'break'?
+        subtitle: Vamos biomon, ¿no me puedes dar un 'break'?
   damn_cant_you_just_leave_me_alone:
     fem:
       es-es:
         file: es-es/disheartened/fem_v_dcyjlma.wav
-        subtitle: C#ño! No me puedes dejar tranquilo?
+        subtitle: ¡C#ño! ¿No me puedes dejar tranquilo?
     male:
       es-es:
         file: es-es/disheartened/male_v_dcyjlma.wav
-        subtitle: C#ño! No me puedes dejar tranquilo?
+        subtitle: ¡C#ño! ¿No me puedes dejar tranquilo?
   damn_thats_fucked_up:
     fem:
       es-es:
         file: es-es/surprised/fem_v_dtfu.wav
-        subtitle: Diablo! es esta p#ñetero...
+        subtitle: ¡Diablo! es esta p#ñetero...
     male:
       es-es:
         file: es-es/surprised/male_v_dtfu.wav
-        subtitle: Diablo! es esta p#ñetero...
+        subtitle: ¡Diablo! es esta p#ñetero...
   dont_you_see_Im_in_trouble:
     fem:
       es-es:
         file: es-es/pestered/fem_v_dysiit.wav
-        subtitle: No ves que estoy en peligro?!
+        subtitle: ¡¿No ves que estoy en peligro?!
     male:
       es-es:
         file: es-es/pestered/male_v_dysiit.wav
-        subtitle: No ves que estoy en peligro?!
+        subtitle: ¡¿No ves que estoy en peligro?!
   fuck:
     fem:
       es-es:
         file: vanilla/es-es/v_q115_f_1752ea11b74e1000.wav
-        subtitle: Jod3r!
+        subtitle: ¡Jod3r!
     male:
       es-es:
         file: vanilla/es-es/v_q115_m_1752ea11b74e1000.wav
-        subtitle: Jod3r!
+        subtitle: ¡Jod3r!
   fuck_this_biomon_just_not_right_now:
     fem:
       es-es:
         file: es-es/pestered/fem_v_ftbnrn.wav
-        subtitle: Sea la madre biomon, Ahora no!
+        subtitle: ¡Se@ la madre biomon, Ahora no!
     male:
       es-es:
         file: es-es/pestered/male_v_ftbjnrn.wav
-        subtitle: Sea la madre biomon, Ahora no!
+        subtitle: ¡Se@ la madre biomon, Ahora no!
   get_this_damn_UI_out_of_my_face:
     fem:
       es-es:
         file: es-es/pestered/fem_v_gtduioomf.wav
-        subtitle: Quitame esta mald¡ta interfaz del medio!
+        subtitle: ¡Quítame esta mald¡ta interfaz del medio!
     male:
       es-es:
         file: es-es/pestered/male_v_gtduioomf.wav
-        subtitle: Quitame esta mald¡ta interfaz del medio!
+        subtitle: ¡Quítame esta mald¡ta interfaz del medio!
   nah_everything_is_all_good:
     fem:
       es-es:
         file: vanilla/es-es/v_scene_dex_default_f_182ad40c364ea000.Wav
-        subtitle: Que va... todo va phenomenal.
+        subtitle: Qué va... todo va fenomenal.
     male:
       es-es:
         file: vanilla/es-es/v_scene_dex_default_m_182ad40c364ea000.Wav
-        subtitle: Que va... todo va phenomenal.
+        subtitle: Qué va... todo va fenomenal.
   nah_Im_cool:
     fem:
       es-es:
         file: es-es/offhanded/fem_v_nic.wav
-        subtitle: Nah... estoy tranquilo!
+        subtitle: Nah... ¡estoy tranquilo!
     male:
       es-es:
         file: es-es/offhanded/male_v_nic.wav
-        subtitle: Nah... estoy tranquilo!
+        subtitle: Nah... ¡estoy tranquilo!
   noo:
     fem:
       es-es:
         file: vanilla/es-es/v_scene_mitch_default_f_1b1a38325729f000.Wav
-        subtitle: Noo!
+        subtitle: ¡Noo!
     male:
       es-es:
         file: vanilla/es-es/v_scene_mitch_default_m_1b1a38325729f000.Wav
-        subtitle: Noo!
+        subtitle: ¡Noo!
   oh_shit:
     fem:
       es-es:
@@ -157,56 +157,56 @@ voices:
     fem:
       es-es:
         file: vanilla/es-es/v_q104_f_18545e4c6a4e6000.Wav
-        subtitle: Hosti@!
+        subtitle: ¡Hosti@!
     male:
       es-es:
         file: vanilla/es-es/v_q104_m_18545e4c6a4e6000.Wav
-        subtitle: Hosti@!
+        subtitle: ¡Hosti@!
   so_frustrating:
     fem:
       es-es:
         file: es-es/pestered/fem_v_sf.wav
-        subtitle: Pero que jodón!
+        subtitle: ¡Pero que j#dón!
     male:
       es-es:
         file: es-es/pestered/male_v_sf.wav
-        subtitle: Pero que jodón!
+        subtitle: ¡Pero que j#dón!
   what:
     fem:
       es-es:
         file: vanilla/es-es/v_q104_f_18980f710d29f000.Wav
-        subtitle: Que?!
+        subtitle: ¡¿Qué?!
     male:
       es-es:
         file: vanilla/es-es/v_q104_m_18980f710d29f000.Wav
-        subtitle: Que?!
+        subtitle: ¡¿Qué?!
   yeah_I_know:
     fem:
       es-es:
         file: es-es/disheartened/fem_v_yik.wav
-        subtitle: Si si, ya.
+        subtitle: Sí, sí, ya.
     male:
       es-es:
         file: es-es/disheartened/male_v_yik.wav
-        subtitle: Si si, ya.
+        subtitle: Sí, sí, ya.
   yeah_yeah_yeah_alright:
     fem:
       es-es:
         file: es-es/offhanded/fem_v_yyya.wav
-        subtitle: Si, si, si... esta bien.
+        subtitle: Sí, sí, sí... está bien.
     male:
       es-es:
         file: es-es/offhanded/male_v_yyya.wav
-        subtitle: Si, si, si... esta bien.
+        subtitle: Sí, sí, sí... está bien.
   yeah_yeah_yeah_who_cares:
     fem:
       es-es:
         file: es-es/offhanded/fem_v_yyywc.wav
-        subtitle: Aja si... a quien le importa?
+        subtitle: Aja sí... ¿a quién le importa?
     male:
       es-es:
         file: es-es/offhanded/male_v_yyywc.wav
-        subtitle: Aja si... a quien le importa?
+        subtitle: Aja sí... ¿a quién le importa?
   you_tell_me_biomon:
     fem:
       es-es:
