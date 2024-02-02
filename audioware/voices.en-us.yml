@@ -122,16 +122,10 @@ voices:
       en-us:
         file: vanilla/en-us/v_scene_dex_default_f_182ad40c364ea000.Wav
         subtitle: Nah... Everything's all good.
-      fr-fr:
-        file: vanilla/fr-fr/v_scene_dex_default_f_182ad40c364ea000.Wav
-        subtitle: Nan... T'inquiètes je gère.
     male:
       en-us:
         file: vanilla/en-us/v_scene_dex_default_m_182ad40c364ea000.Wav
         subtitle: Nah... Everything's all good.
-      fr-fr:
-        file: vanilla/fr-fr/v_scene_dex_default_m_182ad40c364ea000.Wav
-        subtitle: Nan... T'inquiètes je gère.
   nah_Im_cool:
     fem:
       en-us:
