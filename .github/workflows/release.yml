@@ -9,52 +9,67 @@ on:
       - "beta*"
       - "alpha*"
 env:
-  WOLVENKIT_CORE_VERSION: '8.9.0'
-  WOLVENKIT_CLI_VERSION: '1.8.2'
+  WOLVENKIT_CORE_VERSION: '8.12.2'
+  WOLVENKIT_CLI_VERSION: '8.12.2'
+  DOTNET_VERSION: '8.0.x'
   IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
 
 jobs:
-  bundle:
+  bundle-mod:
     runs-on: windows-latest
     permissions:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Just
         uses: extractions/setup-just@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Bundle files
-        run: just bundle
-      - name: Zip files
-        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-        uses: thedoctor0/zip-release@0.7.0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          type: "zip"
-          filename: "Addicted-windows-latest-${{ github.ref_name }}.zip"
-          directory: ./Addicted
+          dotnet-version: '${{ env.DOTNET_VERSION }}'
+      - name: Setup WolvenKit CLI
+        run: |
+          C:\msys64\usr\bin\wget.exe https://github.com/WolvenKit/WolvenKit/releases/download/"${{ env.WOLVENKIT_CORE_VERSION }}"/"${{ env.WOLVENKIT_ARTIFACT }}"
+          7z x "${{ env.WOLVENKIT_ARTIFACT }}"
+          dotnet tool install -g wolvenkit.cli
+        env:
+          WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_CLI_VERSION }}.zip
+      - name: Bundle files
+        run: just ci 'mod-windows'
+        env:
+          WK_CLI: cp77tools
+      - name: Zip files
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'Addicted-mod-windows-${{ github.ref_name }}.zip'
+          directory: ./mod-windows
           path: .
           recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload artifact
-        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-artifact
-          path: Addicted/Addicted-windows-latest-${{ github.ref_name }}.zip
+          name: mod-windows-${{ github.ref_name }}
+          path: mod-windows/Addicted-mod-windows-${{ github.ref_name }}.zip
           if-no-files-found: error
   bundle-translations:
     runs-on: windows-latest
-    permissions:
-      contents: write
     strategy:
       matrix:
-        locale: ["fr-fr", "es-es"]
+        locale:
+          - en-us
+          - fr-fr
+          - es-es
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Just
@@ -62,41 +77,44 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bundle files
-        run: just bundle_lang ${{ matrix.locale }}
+        run: just bundle 'translation-${{ matrix.locale }}' "${{ matrix.locale }}"
       - name: Zip files
-        uses: thedoctor0/zip-release@0.7.0
+        uses: thedoctor0/zip-release@0.7.6
         with:
-          type: "zip"
-          filename: "Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip"
-          directory: ./Addicted
+          type: 'zip'
+          filename: 'Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}.zip'
+          directory: ./translation-${{ matrix.locale }}
           path: .
-          recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds debug.reds') || '' }}
       - name: Upload translations
-        if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-translations-${{ matrix.locale }}
-          path: Addicted/Addicted-windows-latest-${{ matrix.locale }}-${{ github.ref_name }}.zip
+          name: translation-${{ matrix.locale }}-${{ github.ref_name }}
+          path: translation-${{ matrix.locale }}/Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}.zip
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-    runs-on: ubuntu-latest
-    needs: [bundle, bundle-translations]
+    runs-on: windows-latest
+    needs: [bundle-mod, bundle-translations]
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Download mod
+        uses: actions/download-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-artifact
+          name: mod-windows-${{ github.ref_name }}
+          path: release
+      - name: Download English translations
+        uses: actions/download-artifact@v4
+        with:
+          name: translation-en-us-${{ github.ref_name }}
           path: release
       - name: Download French translations
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: windows-latest-${{ github.ref_name }}-translations-fr-fr
+          name: translation-fr-fr-${{ github.ref_name }}
           path: release
       - name: Download Spanish translations
         uses: actions/download-artifact@v3
         with:
-          name: windows-latest-${{ github.ref_name }}-translations-es-es
+          name: translation-es-es-${{ github.ref_name }}
           path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1

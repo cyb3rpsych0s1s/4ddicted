@@ -1,0 +1,36 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set dotenv-load
+set fallback
+
+# path to WolvenKit CLI
+wk_cli   := env_var('WK_CLI')
+
+mod      := 'Addicted'
+source   := absolute_path(join('..', '..', 'archives'))
+tree     := join('archive', 'pc', 'mod')
+
+@pack NAME:
+    {{wk_cli}} pack '{{ join(source, NAME, "source", "archive") }}' -o '{{ join(source, NAME) }}'; \
+    just rename '{{ join(source, NAME, "archive.archive") }}' '{{ join(source, NAME + ".archive") }}';
+    $xl='{{ join(source, NAME, "source", "resources", NAME + ".archive.xl") }}'; \
+    if (Test-Path $xl -PathType leaf) { just copy $xl '{{ join(source, NAME + ".archive.xl") }}'; }
+
+@install TO:
+    just dir '{{ join(TO, tree) }}';
+    just pack 'Addicted.Icons'
+    just pack 'Addicted.VFX'
+    just pack 'Addicted.Biomon'
+    just pack 'Addicted.Translations'
+    just copy '{{ join(source, "*.archive") }}' '{{ join(TO, tree) }}';
+    just copy '{{ join(source, "*.xl") }}' '{{ join(TO, tree) }}';
+
+@uninstall FROM:
+    just remove '{{ join(FROM, tree, mod + ".*.archive") }}';
+    just remove '{{ join(FROM, tree, mod + ".*.archive.xl") }}';
+
+@cr2w LOCALE='en-us':
+    @Write-Host "convert '{{LOCALE}}' file..."
+    @{{wk_cli}} cr2w '{{ join(source, "Addicted.Translations", "source", "archive", "addicted", "localization", LOCALE + ".json") }}' \
+    -s \
+    -o '{{ join(source, "Addicted.Translations", "source", "raw") }}'
+    @Write-Host "'{{LOCALE}}' file converted!"

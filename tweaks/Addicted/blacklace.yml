@@ -49,7 +49,7 @@ UIIcon.WithdrawnFromBlackLace:
   atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
 UIData.WithdrawnFromBlackLace:
-  $base: BaseStatusEffect.BlackLaceV0_inline2
+  $base: BaseStatusEffect.BlackLaceV0_inline7
   description: LocKey#Mod-Addicted-Withdrawn-BlackLace-Desc
   displayName: LocKey#Mod-Addicted-Craving-For-BlackLace
   iconPath: WithdrawnFromBlackLace

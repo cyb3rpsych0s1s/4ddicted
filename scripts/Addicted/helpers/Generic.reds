@@ -1,31 +1,9 @@
 module Addicted.Helpers
 
 import Addicted.*
-import Addicted.Crossover.ExtraDesignation
 
 // effects or items agnostic
 public class Generic {
-
-  // provide a general item name no matter the TweakDBID
-  // as long as it's related to a consumable
-  // e.g. 'BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0',
-  //      'Items.FirstAidWhiffV0', etc ..
-  //       would be designated as 'Items.FirstAidWhiffV0'  
-  public static func Designation(id: TweakDBID) -> TweakDBID {
-    let str = TDBID.ToStringDEBUG(id);
-    let suffix = StrAfterFirst(str, ".");
-    let extra = ExtraDesignation(suffix);
-    if NotEquals(extra, t"None") { return extra; }
-    if StrContains(suffix, "NotablyWeakened") || StrContains(suffix, "SeverelyWeakened") {
-      suffix = StrReplace(suffix, "NotablyWeakened", "");
-      suffix = StrReplace(suffix, "SeverelyWeakened", "");
-      return TDBID.Create("Items." + suffix);
-    }
-    if StrContains(str, "BlackLace") {
-      return TDBID.Create("Items.BlackLaceV0");
-    }
-    return TDBID.Create("Items." + suffix);
-  }
 
   public static func Consumable(id: TweakDBID) -> Consumable {
     if Generic.IsAlcohol(id)          { return Consumable.Alcohol; }
@@ -39,6 +17,26 @@ public class Generic {
     if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
     if Generic.IsNeuroBlocker(id)     { return Consumable.NeuroBlocker; }
     return Consumable.Invalid;
+  }
+
+  public static func Addiction(consumable: Consumable) -> Addiction {
+    switch consumable {
+      case Consumable.MaxDOC:
+      case Consumable.BounceBack:
+      case Consumable.HealthBooster:
+        return Addiction.Healers;
+      case Consumable.StaminaBooster:
+      case Consumable.CarryCapacityBooster:
+        return Addiction.Anabolics;
+      case Consumable.MemoryBooster:
+      case Consumable.NeuroBlocker:
+        return Addiction.Neuros;
+      case Consumable.BlackLace:
+        return Addiction.BlackLace;
+      default:
+        break;
+    }
+    return Addiction.Invalid;
   }
 
   public static func IsBiomonitor(id: TweakDBID) -> Bool {
@@ -57,8 +55,8 @@ public class Generic {
     Generic.IsKit(id));
   }
 
-  public static func IsInstant(id: TweakDBID) -> Bool {
-    let record = TweakDBInterface.GetRecord(id);
+  public static func IsInstant(id: ItemID) -> Bool {
+    let record = TweakDBInterface.GetRecord(ItemID.GetTDBID(id));
     let effect = Effect.IsInstant(record);
     if effect { return true; }
     let item = Items.IsInstant(record);
@@ -103,7 +101,7 @@ public class Generic {
   }
 
   public static func IsNeurotransmitter(id: TweakDBID) -> Bool {
-    return Generic.IsMemoryBooster(id);
+    return Generic.IsMemoryBooster(id) || Generic.IsNeuroBlocker(id);
   }
 
   public static func IsAlcohol(id: TweakDBID) -> Bool {

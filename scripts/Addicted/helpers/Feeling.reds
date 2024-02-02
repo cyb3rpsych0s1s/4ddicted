@@ -39,15 +39,15 @@ public class Feeling {
      "yeah_yeah_yeah_who_cares",
      "you_tell_me_biomon",
      "nah_everything_is_all_good",
-     "nah_im_cool",
+     "nah_Im_cool",
      "noo"
    ];
   }
   public static func Pestered() -> array<String> {
    return [
-     "dont_you_see_im_in_trouble",
+     "dont_you_see_Im_in_trouble",
      "fuck_this_biomon_just_not_right_now",
-     "get_this_damn_ui_out_of_my_face",
+     "get_this_damn_UI_out_of_my_face",
      "so_frustrating",
      "shit"
    ];
@@ -74,7 +74,6 @@ public class Feeling {
     let choices: array<String>;
     let size: Int32;
     let which: Int32;
-    let prefix: String = Equals(gender, gamedataGender.Female) ? "fem_v" : "male_v";
 
     switch(mood) {
       case Mood.Disheartened:
@@ -97,7 +96,7 @@ public class Feeling {
     size = ArraySize(choices);
     if size > 0 {
       which = size > 1 ? RandRange(0, size -1) : 0;
-      output = StringToName("addicted" + "." + language + "." + prefix + "_" + choices[which]);
+      output = StringToName(choices[which]);
       E(s"picked \(NameToString(output)) (\(which))");
       return IsNameValid(output) ? output : n"";
     }

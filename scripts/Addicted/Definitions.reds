@@ -98,14 +98,15 @@ public class Consumptions {
   private persistent let keys: array<TweakDBID>;
   private persistent let values: array<ref<Consumption>>;
 
-  public func Insert(id: TweakDBID, value: ref<Consumption>) -> Void {
-    let key = Generic.Designation(id);
-    if this.KeyExist(key) { return; }
+  public func Insert(id: ItemID, value: ref<Consumption>) -> Void {
+    let key: TweakDBID;
+    if this.KeyExist(id) { return; }
+    key = ItemID.GetTDBID(id);
     ArrayPush(this.values, value);
     ArrayPush(this.keys, key);
   }
-  private func Index(id: TweakDBID) -> Int32 {
-    let key = Generic.Designation(id);
+  private func Index(id: ItemID) -> Int32 {
+    let key = ItemID.GetTDBID(id);
     let idx = 0;
     let found = false;
     for existing in this.keys {
@@ -120,21 +121,21 @@ public class Consumptions {
     }
     return -1;
   }
-  public func Get(id: TweakDBID) -> ref<Consumption> {
+  public func Get(id: ItemID) -> ref<Consumption> {
     let idx = this.Index(id);
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(id: TweakDBID, value: ref<Consumption>) -> Void {
+  public func Set(id: ItemID, value: ref<Consumption>) -> Void {
     let idx = this.Index(id);
     if idx == -1 { return; }
     this.values[idx] = value;
   }
-  public func KeyExist(id: TweakDBID) -> Bool {
+  public func KeyExist(id: ItemID) -> Bool {
     let idx = this.Index(id);
     return idx != -1;
   }
-  public func Remove(id: TweakDBID) -> Void {
+  public func Remove(id: ItemID) -> Void {
     let idx = this.Index(id);
     if idx == -1 { return; }
     ArrayErase(this.keys, idx);
@@ -151,7 +152,52 @@ public class Consumptions {
   public func Keys() -> array<TweakDBID> {
     return this.keys;
   }
-  public func Threshold(id: TweakDBID) -> Threshold {
+  public func Items() -> array<ItemID> {
+    let items: array<ItemID> = [];
+    for key in this.keys {
+      ArrayPush(items, ItemID.FromTDBID(key));
+    }
+    return items;
+  }
+  private func Consumptions(consumable: Consumable) -> array<ref<Consumption>> {
+    let ids = this.Items();
+    let compared: Consumable;
+    let consumption: ref<Consumption>;
+    let out: array<ref<Consumption>> = [];
+    for id in ids {
+      compared = Generic.Consumable(ItemID.GetTDBID(id));
+      if Equals(compared, consumable) {
+        consumption = this.Get(id);
+        ArrayPush(out, consumption);
+      }
+    }
+    return out;
+  }
+  private func LastDose(consumable: Consumable) -> Float {
+    let consumptions = this.Consumptions(consumable);
+    let last: Float = -1.0;
+    let current: Float;
+    for consumption in consumptions {
+      current = consumption.LastDose();
+      if NotEquals(current, -1.0) && current > last {
+        last = current;
+      }
+    }
+    return last;
+  }
+  private func LastDose(addiction: Addiction) -> Float {
+    let consumables = Helper.Consumables(addiction);
+    let last: Float = -1.0;
+    let current: Float;
+    for consumable in consumables {
+      current = this.LastDose(consumable);
+      if NotEquals(current, -1.0) && current > last {
+        last = current;
+      }
+    }
+    return last;
+  }
+  public func Threshold(id: ItemID) -> Threshold {
     let consumption = this.Get(id);
     if IsDefined(consumption) {
       return consumption.Threshold();
@@ -159,66 +205,34 @@ public class Consumptions {
     return Threshold.Clean;
   }
   public func Threshold(consumable: Consumable) -> Threshold {
-    let average = this.AverageConsumption(consumable);
-    return Helper.Threshold(average);
+    let total = this.TotalConsumption(consumable);
+    return Helper.Threshold(total);
   }
   public func Threshold(addiction: Addiction) -> Threshold {
     let average = this.AverageConsumption(addiction);
     return Helper.Threshold(average);
   }
   public func HighestThreshold() -> Threshold {
-    let consumption: ref<Consumption>;
-    let keys = this.Keys();
-    let current: Threshold = Threshold.Clean;
-    let next: Threshold;
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        next = consumption.Threshold();
-        if EnumInt(next) > EnumInt(current) {
-          current = next;
-          if Equals(EnumInt(current), EnumInt(Threshold.Severely)) { return current; }
-        }
-      }
-    }
-    return current;
-  }
-  public func HighestThreshold(consumable: Consumable) -> Threshold {
-    let ids = Helper.Effects(consumable);
-    let consumption: wref<Consumption>;
+    let variants = Consumables();
     let highest: Threshold = Threshold.Clean;
-    let found: Threshold;
-    for id in ids {
-      E(s"consumable variant ID: \(TDBID.ToStringDEBUG(id))");
-      consumption = this.Get(id) as Consumption;
-      if IsDefined(consumption) {
-        found = consumption.Threshold();
-        if Equals(EnumInt(found), EnumInt(Threshold.Severely)) { return found; }
-        if EnumInt(found) > EnumInt(highest) {
-          highest = found;
-        }
+    let current: Threshold;
+    for variant in variants {
+      current = this.Threshold(variant);
+      if EnumInt(current) > EnumInt(highest) {
+        highest = current;
       }
     }
     return highest;
   }
-  /// average consumption for a given consumable
-  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3 versions each)
-  public func AverageConsumption(consumable: Consumable) -> Int32 {
-    let ids = Helper.Effects(consumable);
+  /// total consumption for a given consumable
+  /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3+ versions each)
+  public func TotalConsumption(consumable: Consumable) -> Int32 {
     let total = 0;
-    let found = 0;
-    let consumption: wref<Consumption>;
-    for id in ids {
-      consumption = this.Get(id) as Consumption;
-      if IsDefined(consumption) {
-        total += consumption.current;
-        found += 1;
-      }
+    let consumptions = this.Consumptions(consumable);
+    for consumption in consumptions {
+      total += consumption.current;
     }
-    if found == 0 {
-      return 0;
-    }
-    return total / found;
+    return total;
   }
   /// average consumption for an addiction
   /// a single addiction can be shared by multiple consumables
@@ -227,7 +241,7 @@ public class Consumptions {
     let size = ArraySize(consumables);
     let total = 0;
     for consumable in consumables {
-      total += this.AverageConsumption(consumable);
+      total += this.TotalConsumption(consumable);
     }
     return total / size;
   }
@@ -237,14 +251,14 @@ public class Consumptions {
     let symptom: ref<Symptom>;
     let consumption: ref<Consumption>;
     let threshold: Threshold;
-    let keys = this.Keys();
+    let keys = this.Items();
     for key in keys {
       consumption = this.Get(key);
       if IsDefined(consumption) {
         threshold = consumption.Threshold();
         if Helper.IsSerious(threshold) {
             symptom = new Symptom();
-            symptom.Title = Translations.Appellation(key);
+            symptom.Title = Translations.Appellation(ItemID.GetTDBID(key));
             symptom.Status = Translations.BiomonitorStatus(threshold);
             ArrayPush(symptoms, symptom);
         }
@@ -257,7 +271,7 @@ public class Consumptions {
     let chemicals: array<ref<Chemical>> = [];
     let chemical: ref<Chemical>;
     let consumption: ref<Consumption>;
-    let keys = this.Keys();
+    let keys = this.Items();
     let translations: array<CName>;
     let threshold: Threshold;
     let max: Int32 = 7;
@@ -267,7 +281,7 @@ public class Consumptions {
       if IsDefined(consumption) {
         threshold = consumption.Threshold();
         if Helper.IsSerious(threshold) {
-          translations = Translations.ChemicalKey(Generic.Consumable(key));
+          translations = Translations.ChemicalKey(Generic.Consumable(ItemID.GetTDBID(key)));
           for translation in translations {
             chemical = new Chemical();
             chemical.Key = translation;
@@ -288,7 +302,7 @@ public class Consumption {
   public persistent let current: Int32;
   public persistent let doses: array<Float>;
 
-  public static func Create(id: TweakDBID, amount: Int32, when: Float) -> ref<Consumption> {
+  public static func Create(amount: Int32, when: Float) -> ref<Consumption> {
     let consumption = new Consumption();
     consumption.current = amount;
     consumption.doses = [when];
@@ -297,6 +311,13 @@ public class Consumption {
 
   public func Threshold() -> Threshold {
     return Helper.Threshold(this.current);
+  }
+
+  public func LastDose() -> Float {
+    let size = ArraySize(this.doses);
+    if size == 0 { return -1.0; }
+    let last = ArrayLast(this.doses);
+    return last;
   }
 }
 
@@ -336,6 +357,21 @@ enum Consumable {
   NeuroBlocker = 10,
 }
 
+public static func Consumables() -> array<Consumable> {
+  return [
+    Consumable.Alcohol,
+    Consumable.MaxDOC,
+    Consumable.BounceBack,
+    Consumable.HealthBooster,
+    Consumable.MemoryBooster,
+    Consumable.OxyBooster,
+    Consumable.StaminaBooster,
+    Consumable.BlackLace,
+    Consumable.CarryCapacityBooster,
+    Consumable.NeuroBlocker
+  ];
+}
+
 enum Kind {
   Inhaler = 0,
   Injector = 1,
@@ -343,9 +379,20 @@ enum Kind {
 }
 
 enum Addiction {
+  Invalid = -1,
   Healers = 0,
   Anabolics = 1,
   Neuros = 2,
+  BlackLace = 3,
+}
+
+public static func Addictions() -> array<Addiction> {
+  return [
+    Addiction.Healers,
+    Addiction.Anabolics,
+    Addiction.Neuros,
+    Addiction.BlackLace
+  ];
 }
 
 enum PlaySoundPolicy {

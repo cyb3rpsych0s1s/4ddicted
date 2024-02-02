@@ -1,0 +1,4 @@
+localization:
+  onscreens:
+    en-us: addicted\localization\en-us.json
+    es-es: addicted\localization\es-es.json

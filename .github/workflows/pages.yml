@@ -5,8 +5,8 @@ on:
       - main
     paths:
       - ".github/**"
-      - "book.toml"
-      - "pages/**"
+      - "book/book.toml"
+      - "book/pages/**"
       - "**.md"
 
 jobs:
@@ -19,23 +19,23 @@ jobs:
       - name: Install mdbook
         run: |
           mkdir mdbook
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.34/mdbook-v0.4.34-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.36/mdbook-v0.4.36-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
       - name: Install mdbook-codeblocks
         run: |
           mkdir mdbook-codeblocks
-          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.10/mdbook-codeblocks-v0.1.10-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
+          curl -sSL https://github.com/Roms1383/mdbook-codeblocks/releases/download/v0.1.12/mdbook-codeblocks-v0.1.12-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
           echo `pwd`/mdbook-codeblocks >> $GITHUB_PATH
       - name: Install mdbook-admonish
         run: |
           mkdir mdbook-admonish
-          curl -sSL https://github.com/tommilligan/mdbook-admonish/releases/download/v1.10.2/mdbook-admonish-v1.10.2-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
+          curl -sSL https://github.com/tommilligan/mdbook-admonish/releases/download/v1.14.0/mdbook-admonish-v1.14.0-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-codeblocks
           echo `pwd`/mdbook-admonish >> $GITHUB_PATH
       - name: Setup rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Deploy GitHub Pages
         run: |
-          mdbook build
+          (cd book && mdbook build)
           git worktree add gh-pages
           git config user.name "Deploy from CI"
           git config user.email ""
@@ -43,7 +43,7 @@ jobs:
           # Delete the ref to avoid keeping history.
           git update-ref -d refs/heads/gh-pages
           rm -rf *
-          mv ../book/html/* .
+          mv ../book/site/html/* .
           git add .
           git commit -m "Deploy $GITHUB_SHA to gh-pages"
           git push --force --set-upstream origin gh-pages
