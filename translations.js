@@ -4,6 +4,7 @@ const yaml = require('js-yaml')
 const locales = [
     'en-us',
     'fr-fr',
+    'es-es',
 ]
 const archive = async () => {
     const at = '.\\archives\\Addicted.Translations\\source\\raw'

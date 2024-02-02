@@ -66,7 +66,9 @@ public class Feeling {
     let language = NameToString(language);
     if Equals(mood, Mood.Any) { return n""; }
     if StrLen(language) == 0 { language = "en-us"; }
-    if NotEquals(language, "en-us") && NotEquals(language, "fr-fr") { return n""; }
+    if NotEquals(language, "en-us")
+      && NotEquals(language, "fr-fr")
+      && NotEquals(language, "es-es") { return n""; }
 
     let output: CName;
     let choices: array<String>;
