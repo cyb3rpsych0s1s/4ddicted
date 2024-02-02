@@ -112,7 +112,7 @@ jobs:
           name: translation-fr-fr-${{ github.ref_name }}
           path: release
       - name: Download Spanish translations
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: translation-es-es-${{ github.ref_name }}
           path: release
