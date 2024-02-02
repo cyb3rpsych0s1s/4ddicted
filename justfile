@@ -55,3 +55,6 @@ default:
 # 📕 assemble book (for release in CI)
 @assemble:
     cd book; mdbook build
+
+@cr2w LOCALE='en-us':
+    just recipes/archive/cr2w '{{LOCALE}}'

@@ -27,3 +27,10 @@ tree     := join('archive', 'pc', 'mod')
 @uninstall FROM:
     just remove '{{ join(FROM, tree, mod + ".*.archive") }}';
     just remove '{{ join(FROM, tree, mod + ".*.archive.xl") }}';
+
+@cr2w LOCALE='en-us':
+    @Write-Host "convert '{{LOCALE}}' file..."
+    @{{wk_cli}} cr2w '{{ join(source, "Addicted.Translations", "source", "archive", "addicted", "localization", LOCALE + ".json") }}' \
+    -s \
+    -o '{{ join(source, "Addicted.Translations", "source", "raw") }}'
+    @Write-Host "'{{LOCALE}}' file converted!"
