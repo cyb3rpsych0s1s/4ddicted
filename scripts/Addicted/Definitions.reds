@@ -384,6 +384,7 @@ enum Addiction {
   Anabolics = 1,
   Neuros = 2,
   BlackLace = 3,
+  Alcohol = 4,
 }
 
 public static func Addictions() -> array<Addiction> {
@@ -391,7 +392,8 @@ public static func Addictions() -> array<Addiction> {
     Addiction.Healers,
     Addiction.Anabolics,
     Addiction.Neuros,
-    Addiction.BlackLace
+    Addiction.BlackLace,
+    Addiction.Alcohol
   ];
 }
 

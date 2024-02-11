@@ -33,6 +33,8 @@ public class Generic {
         return Addiction.Neuros;
       case Consumable.BlackLace:
         return Addiction.BlackLace;
+      case Consumable.Alcohol:
+        return Addiction.Alcohol;
       default:
         break;
     }

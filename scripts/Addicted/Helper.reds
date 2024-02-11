@@ -56,6 +56,8 @@ public class Helper {
         return [Consumable.MemoryBooster, Consumable.NeuroBlocker];
       case Addiction.BlackLace:
         return [Consumable.BlackLace];
+      case Addiction.Alcohol:
+        return [Consumable.Alcohol];
       default:
         break;
     }
