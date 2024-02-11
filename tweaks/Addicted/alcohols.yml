@@ -1,0 +1,67 @@
+Modifier.Jitters.SwayTraversalTime:
+  $type: ConstantStatModifier_Record
+  value: 0.35
+  modifierType: Multiplier
+  statType: BaseStats.SwayTraversalTime
+
+Modifier.Jitters.SwayStartDelay:
+  $type: ConstantStatModifier_Record
+  value: 1.3
+  modifierType: Multiplier
+  statType: BaseStats.SwayStartDelay
+
+Modifier.Jitters.SwayStartBlendTime:
+  $type: ConstantStatModifier_Record
+  value: 1
+  modifierType: Multiplier
+  statType: BaseStats.SwayStartBlendTime
+
+Modifier.Jitters.RecoilAllowSway:
+  $type: ConstantStatModifier_Record
+  value: 2
+  modifierType: Additive
+  statType: BaseStats.RecoilAllowSway
+
+Modifier.Jitters.SwaySideMaximumAngleDistance:
+  $type: ConstantStatModifier_Record
+  value: 1.5
+  modifierType: Multiplier
+  statType: BaseStats.SwaySideMaximumAngleDistance
+
+Modifier.Jitters.SwaySideMinimumAngleDistance:
+  $type: ConstantStatModifier_Record
+  value: 1
+  modifierType: Multiplier
+  statType: BaseStats.SwaySideMinimumAngleDistance
+
+Effector.Jitters.Weapon:
+  $type: ApplyStatGroupEffector_Record
+  applicationTarget: Weapon
+  removeWithEffector: True
+  statGroup:
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - Modifier.Jitters.SwayTraversalTime
+      - Modifier.Jitters.SwayStartDelay
+      - Modifier.Jitters.SwayStartBlendTime
+      - Modifier.Jitters.RecoilAllowSway
+      - Modifier.Jitters.SwaySideMaximumAngleDistance
+      - Modifier.Jitters.SwaySideMinimumAngleDistance
+  effectorClassName: ApplyStatGroupEffector
+  prereqRecord: Prereqs.AnyWeaponHeldPrereq
+  removeAfterActionCall: False
+  removeAfterPrereqCheck: False
+  statModifierGroups: []
+
+Package.Jitters.Weapon:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effector.Jitters.Weapon
+
+BaseStatusEffect.Jitters:
+  $base: BaseStatusEffect.Drunk
+  packages:
+    - Package.Jitters.Weapon
+    - BaseStatusEffect.Drunk_inline11
+    - BaseStatusEffect.DrillingShakeNormal_inline0
+    - BaseStatusEffect.BreathingHeavy_inline0
