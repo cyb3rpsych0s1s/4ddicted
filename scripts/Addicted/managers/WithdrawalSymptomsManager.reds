@@ -54,7 +54,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   protected func Invalidate(consumable: Consumable, withdrawing: Bool, applied: array<ref<StatusEffect>>, applicables: array<TweakDBID>) -> Void {
     let sizeApplied = ArraySize(applied);
     let sizeApplicable = ArraySize(applicables);
-    if sizeApplied == 0 || sizeApplicable != 2 { return; }
+    if sizeApplied == 0 || sizeApplicable > 2 { return; }
 
     if !withdrawing {
       let id: TweakDBID;
@@ -69,13 +69,22 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
     } else {
       if !Effect.AreApplied(applied, applicables) {
         let threshold = this.owner.Threshold(consumable);
-        switch (threshold) {
-        case Threshold.Severely:
-          StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[1]);
-          break;
-        case Threshold.Notably:
-          StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
-          break;
+        if sizeApplicable == 1 {
+          switch (threshold) {
+            case Threshold.Severely:
+            case Threshold.Notably:
+              StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
+              break;
+          }
+        } else {
+          switch (threshold) {
+            case Threshold.Severely:
+              StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[1]);
+              break;
+            case Threshold.Notably:
+              StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
+              break;
+          }
         }
       }
     }
