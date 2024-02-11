@@ -1,0 +1,6 @@
+Prereqs.IsAddict:
+  $type: IPrereq_Record
+  $props: AutoFlats
+  consumable: t"Items.FirstAidWhiffV0"
+  threshold: 60
+  prereqClassName: n"Addicted.AddictPrereq"

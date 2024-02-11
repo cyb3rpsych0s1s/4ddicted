@@ -14,4 +14,4 @@ public class AddictedConfig {
 }
 
 // Replace false with true to show full debug logs in CET console
-public static func ShowDebugLogsAddicted() -> Bool = false
+public static func ShowDebugLogsAddicted() -> Bool = true

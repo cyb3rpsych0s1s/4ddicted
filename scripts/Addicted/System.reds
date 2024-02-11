@@ -71,6 +71,10 @@ public class AddictedSystem extends ScriptableSystem {
   private func OnAttach() -> Void {
     E(s"on attach system");
 
+    let prereq = IPrereq.CreatePrereq(t"Prereqs.IsAddict");
+    let fulfilled = prereq.IsFulfilled(GetGameInstance(), null);
+    LogChannel(n"DEBUG", ToString(fulfilled));
+
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
     }
