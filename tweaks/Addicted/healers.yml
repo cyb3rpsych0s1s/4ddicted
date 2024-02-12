@@ -159,3 +159,116 @@ Items.$(prefix)$(consumable)$(version)_$(flat)_$(suffix)_weakened:
     - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: severely }
   $base: Items.$(prefix)$(consumable)$(version)_$(flat)
   statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)
+
+## additional effects
+
+Effectors.LesionChance:
+  $type: ConstantStatModifier_Record
+  value: 0.2
+  modifierType: Additive
+  statType: BaseStats.EffectorChance
+
+Effector.RiskLesion:
+  $type: ApplyStatusEffectByChanceEffector_Record
+  count: 1
+  instigator: ''
+  inverted: false
+  removeWithEffector: true
+  statusEffect: BaseStatusEffect.Lesion
+  useCountWhenRemoving: true
+  effectorClassName: ApplyStatusEffectByChanceEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  effectorChance:
+    - Effectors.LesionChance
+
+Attack.Lesion:
+  $type: Attack_GameEffect_Record
+  audioAttackIndex: 0
+  effectName: None
+  effectTag: None
+  attackType: AttackType.Effect
+  className: Attack_GameEffect
+  damageType: DamageTypes.Physical
+  explosionDamageVSVehicles: -1
+  hitReactionSeverityMax: -1
+  hitReactionSeverityMin: -1
+  playerIncomingDamageMultiplier: 1
+  range: 1
+  useDefaultAimData: false
+  userDataPath: ''
+  velocity: 3
+  hitFlags: [CanDamageSelf, DamageOverTime]
+  staminaCost: []
+  statModifiers:
+    - $type: CombinedStatModifier_Record
+      modifierType: Additive
+      refObject: Target
+      opSymbol: '*'
+      statType: BaseStats.PhysicalDamage
+      value: 0.000001
+      refStat: BaseStats.Health
+  statusEffects: []
+
+Effector.Lesion:
+  $type: TriggerAttackEffector_Record
+  attackRecord: Attack.Lesion
+  effectorClassName: TriggerAttackOnOwnerEffect
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  attackPositionSlotName: Chest
+  applicationChance: 1
+  isRandom: false
+  playerAsInstigator: true
+  triggerHitReaction: true
+
+Package.Lesion:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effector.Lesion
+
+BaseStatusEffect.Lesion:
+  $base: BaseStatusEffect.FirstAidWhiffVUncommon
+  packages:
+    - Package.Lesion
+
+Items.OverhealDuration:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  statModifiers:
+    - $type: ConstantStatModifier_Record
+      modifierType: Additive
+      statType: BaseStats.MaxDuration
+      value: 120
+  statModsLimit: -1
+  statModsLimitModifier: None
+
+Stacks.Overheal:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers:
+    - $type: ConstantStatModifier_Record
+      value: 5
+      modifierType: Additive
+      statType: BaseStats.MaxStacks
+
+Package.Overheal:
+  $type: GameplayLogicPackage_Record
+  stackable: true
+  effectors:
+    - Effector.RiskLesion
+
+BaseStatusEffect.Overheal:
+  $type: StatusEffect_Record
+  duration: Items.OverhealDuration
+  gameplayTags: [Debuff]
+  maxStacks: Stacks.Overheal
+  packages:
+    - Package.Overheal
