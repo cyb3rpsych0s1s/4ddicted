@@ -186,44 +186,52 @@ Effector.RiskLesion:
 Attack.Lesion:
   $type: Attack_GameEffect_Record
   audioAttackIndex: 0
-  effectName: None
-  effectTag: None
+  effectName: damage_over_time
+  effectTag: default
   attackType: AttackType.Effect
   className: Attack_GameEffect
   damageType: DamageTypes.Physical
   explosionDamageVSVehicles: -1
-  hitReactionSeverityMax: -1
+  hitReactionSeverityMax: 2
   hitReactionSeverityMin: -1
   playerIncomingDamageMultiplier: 1
-  range: 1
+  range: 0
   useDefaultAimData: false
   userDataPath: ''
-  velocity: 3
-  hitFlags: [CanDamageSelf, DamageOverTime]
+  velocity: -1
+  hitFlags: [CanDamageSelf, Nonlethal, DamageOverTime, ForceNoCrit]
   staminaCost: []
   statModifiers:
-    - $type: CombinedStatModifier_Record
+    - $type: ConstantStatModifier_Record
+      value: 3.25
       modifierType: Additive
-      refObject: Target
-      opSymbol: '*'
       statType: BaseStats.PhysicalDamage
-      value: 0.000001
-      refStat: BaseStats.Health
   statusEffects: []
 
+Prereqs.Lesion:
+  $type: StatPoolPrereq_Record
+  comparePercentage: true
+  comparisonType: Greater
+  listenConstantly: true
+  skipOnApply: false
+  statPoolType: AccumulatedDoT
+  prereqClassName: ConstantStatPoolPrereq
+  valueToCheck:
+    - $type: ConstantStatModifier_Record
+      value: 20
+      modifierType: Additive
+      statType: BaseStats.AccumulatedDoT
+
 Effector.Lesion:
-  $type: TriggerAttackEffector_Record
+  $type: ContinuousAttackEffector_Record
   attackRecord: Attack.Lesion
-  effectorClassName: TriggerAttackOnOwnerEffect
+  delayTime: 0.25
+  timeDilationDriver: Effectors.TDD_World
+  effectorClassName: TriggerContinuousAttackEffector
   prereqRecord: Prereqs.AlwaysTruePrereq
   removeAfterActionCall: false
   removeAfterPrereqCheck: false
   statModifierGroups: []
-  attackPositionSlotName: Chest
-  applicationChance: 1
-  isRandom: false
-  playerAsInstigator: true
-  triggerHitReaction: true
 
 Package.Lesion:
   $type: GameplayLogicPackage_Record
@@ -231,7 +239,11 @@ Package.Lesion:
     - Effector.Lesion
 
 BaseStatusEffect.Lesion:
-  $base: BaseStatusEffect.FirstAidWhiffVUncommon
+  $base: BaseStatusEffect.ContagionPoison
+  gameplayTags:
+    - Debuff
+    - DoT
+    - DamageOverTime
   packages:
     - Package.Lesion
 
