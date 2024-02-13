@@ -1,3 +1,16 @@
+## TODO: CHECK
+# BaseStatusEffect.Jitters.SFX:
+#   $type: gamedataEffector_Record
+#   effectorClassName: PlaySFXEffector
+#   prereqRecord: NewPerks.WeakspotOrHeadshotRangedHitPrereq
+#   removeAfterActionCall: false
+#   removeAfterPrereqCheck: false
+#   statModifierGroups: []
+#   activationSFXName: w_gun_perk_deadeye
+#   fireAndForget: true
+#   startOnUninitialize: false
+#   unique: false
+
 Modifier.Jitters.SwayTraversalTime:
   $type: ConstantStatModifier_Record
   value: 0.35
