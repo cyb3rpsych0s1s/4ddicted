@@ -49,8 +49,8 @@ Effector.Jitters.Weapon:
       - Modifier.Jitters.SwaySideMinimumAngleDistance
   effectorClassName: ApplyStatGroupEffector
   prereqRecord: Prereqs.AnyWeaponHeldPrereq
-  removeAfterActionCall: False
-  removeAfterPrereqCheck: False
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
   statModifierGroups: []
 
 Package.Jitters.Weapon:
