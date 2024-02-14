@@ -203,10 +203,25 @@ Attack.Lesion:
   staminaCost: []
   statModifiers:
     - $type: ConstantStatModifier_Record
-      value: 3.25
+      value: 2.1 # 0.3 for MinorBleeding, 3.25 for Contagion
       modifierType: Additive
       statType: BaseStats.PhysicalDamage
   statusEffects: []
+
+Attacks.BasePhysicalDamageOverTime_inline0:
+  $type: gamedataCurveStatModifier_Record
+  column: puppet_powerLevelToHealth_base
+  id: puppet_power_level_to_health_easy
+  refObject: Target
+  refStat: BaseStats.PowerLevel
+  modifierType: Additive
+  statType: BaseStats.PhysicalDamage
+
+Attacks.PhysicalDamageOverTime_inline0:
+  $type: gamedataConstantStatModifier_Record
+  value: 0.0399999991
+  modifierType: Multiplier
+  statType: BaseStats.PhysicalDamage
 
 Prereqs.Lesion:
   $type: StatPoolPrereq_Record

@@ -76,7 +76,7 @@ public final func ActivateCooldown(buffData: UIBuffInfo) -> Void {
 // Game.GetPlayer():DebugEffect("NotablyWithdrawnFromMemoryBooster")
 @addMethod(PlayerPuppet)
 public func DebugEffect(name: String) -> Void {
-  let c_name = "BaseStatusEffect." + name;
+  let c_name = StrContains(name, ".") ? name : "BaseStatusEffect." + name;
   let id = TDBID.Create(c_name);
   let callback: ref<TestVFXThresholdCallback> = new TestVFXThresholdCallback();
   callback.id = id;
