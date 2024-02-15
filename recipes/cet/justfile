@@ -1,0 +1,17 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set dotenv-load
+set fallback
+
+# path to WolvenKit CLI
+wk_cli   := env_var('WK_CLI')
+
+mod      := 'Addicted'
+source   := absolute_path(join('..', '..', 'mods'))
+tree     := join('bin', 'x64', 'plugins', 'cyber_engine_tweaks', 'mods')
+
+@install TO:
+    just dir '{{ join(TO, tree, mod) }}';
+    just rcopy '{{ join(source, mod) }}' '{{ join(TO, tree, mod) }}'
+
+@uninstall FROM:
+    just trash '{{ join(FROM, tree, mod) }}'
