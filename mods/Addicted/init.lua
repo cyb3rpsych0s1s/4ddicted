@@ -48,12 +48,14 @@ function addicted:new()
         local piddly_reflex_buster  = CreateVFX("piddly_reflex_buster", "addicted\\fx\\camera\\reflex_buster\\piddly_reflex_buster.effect")
         local reflex_purple         = CreateVFX("reflex_purple", "addicted\\fx\\camera\\purple_haze\\reflex_buster.effect")
         local splinter_gold         = CreateVFX("splinter_gold", "addicted\\fx\\camera\\purple_haze\\splinter_buff_fx.effect")
+        local purple_haze           = CreateVFX("purple_haze", "addicted\\fx\\camera\\purple_haze\\purple_haze.effect")
         table.insert(vfxs, mildly_splinter_buff)
         table.insert(vfxs, piddly_splinter_buff)
         table.insert(vfxs, mildly_reflex_buster)
         table.insert(vfxs, piddly_reflex_buster)
         table.insert(vfxs, reflex_purple)
         table.insert(vfxs, maitre_splinter)
+        table.insert(vfxs, purple_haze)
         return vfxs
     end
 
