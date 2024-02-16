@@ -224,6 +224,18 @@ public class Consumptions {
     }
     return highest;
   }
+  public func HighestThreshold(addiction: Addiction) -> Threshold {
+    let consumables = Helper.Consumables(addiction);
+    let highest: Threshold = Threshold.Clean;
+    let current: Threshold;
+    for consumable in consumables {
+      current = this.Threshold(consumable);
+      if EnumInt(current) > EnumInt(highest) {
+        highest = current;
+      }
+    }
+    return highest;
+  }
   /// total consumption for a given consumable
   /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3+ versions each)
   public func TotalConsumption(consumable: Consumable) -> Int32 {
@@ -384,6 +396,7 @@ enum Addiction {
   Anabolics = 1,
   Neuros = 2,
   BlackLace = 3,
+  Alcohol = 4,
 }
 
 public static func Addictions() -> array<Addiction> {
@@ -391,7 +404,8 @@ public static func Addictions() -> array<Addiction> {
     Addiction.Healers,
     Addiction.Anabolics,
     Addiction.Neuros,
-    Addiction.BlackLace
+    Addiction.BlackLace,
+    Addiction.Alcohol
   ];
 }
 

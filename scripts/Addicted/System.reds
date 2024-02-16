@@ -19,6 +19,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let player: wref<PlayerPuppet>;
   private let delaySystem: ref<DelaySystem>;
   private let timeSystem: ref<TimeSystem>;
+  private let callbackSystem: ref<CallbackSystem>;
 
   private let config: ref<AddictedConfig>;
 
@@ -41,7 +42,7 @@ public class AddictedSystem extends ScriptableSystem {
   private persistent let warnings: Uint32 = 0u;
 
   private let updateSymtomsID: DelayID;
-
+  private let healingRechargeDurationModifier: ref<gameStatModifierData>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -74,6 +75,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
+    this.callbackSystem = GameInstance.GetCallbackSystem();
+    this.callbackSystem.RegisterCallback(n"Session/BeforeSave", this, n"OnPreSave");
 
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
@@ -94,8 +97,6 @@ public class AddictedSystem extends ScriptableSystem {
     this.blacklaceManager.Unregister(this.player);
     this.blacklaceManager = null;
 
-    this.ShrinkDoses();
-
     OnAddictedPostDetach(this);
   }
 
@@ -113,6 +114,10 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);
+  }
+
+  private cb func OnPreSave(event: ref<GameSessionEvent>) {
+    this.ShrinkDoses();
   }
 
   public func RefreshConfig() -> Void {
@@ -191,8 +196,24 @@ public class AddictedSystem extends ScriptableSystem {
         this.Hint(id);
       }
       if NotEquals(EnumInt(before), EnumInt(after)) {
+        if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
         this.Warn(before, after);
       }
+    }
+  }
+
+  // HealingItemsRecharge - HealingItemsRechargeDuration (on consumption)
+  private func UpdateHealingChargeDuration(player: ref<PlayerPuppet>) -> Void {
+    let system = AddictedSystem.GetInstance(player.GetGame());
+    let threshold = system.Threshold(Addiction.Healers);
+    let serious = Helper.IsSerious(threshold);
+    let stats: ref<StatsSystem> = GameInstance.GetStatsSystem(player.GetGame());
+    if serious && !IsDefined(this.healingRechargeDurationModifier) {
+      this.healingRechargeDurationModifier = RPGManager.CreateStatModifier(gamedataStatType.HealingItemsRechargeDuration, gameStatModifierType.Multiplier, 0.8);
+      stats.AddModifier(Cast<StatsObjectID>(player.GetEntityID()), this.healingRechargeDurationModifier);
+    } else if !serious && IsDefined(this.healingRechargeDurationModifier) {
+      stats.RemoveModifier(Cast<StatsObjectID>(player.GetEntityID()), this.healingRechargeDurationModifier);
+      this.healingRechargeDurationModifier = null;
     }
   }
 
@@ -291,6 +312,7 @@ public class AddictedSystem extends ScriptableSystem {
         while idx < count {
           dose = doses[idx];
           ArrayPush(shrinked, dose);
+          idx += 1;
         }
         consumption.doses = shrinked;
       }
