@@ -41,7 +41,7 @@ public class AddictedSystem extends ScriptableSystem {
   private persistent let warnings: Uint32 = 0u;
 
   private let updateSymtomsID: DelayID;
-
+  private let healingRechargeDurationModifier: ref<gameStatModifierData>;
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
@@ -189,8 +189,24 @@ public class AddictedSystem extends ScriptableSystem {
         this.Hint(id);
       }
       if NotEquals(EnumInt(before), EnumInt(after)) {
+        if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
         this.Warn(before, after);
       }
+    }
+  }
+
+  // HealingItemsRecharge - HealingItemsRechargeDuration (on consumption)
+  private func UpdateHealingChargeDuration(player: ref<PlayerPuppet>) -> Void {
+    let system = AddictedSystem.GetInstance(player.GetGame());
+    let threshold = system.Threshold(Addiction.Healers);
+    let serious = Helper.IsSerious(threshold);
+    let stats: ref<StatsSystem> = GameInstance.GetStatsSystem(player.GetGame());
+    if serious && !IsDefined(this.healingRechargeDurationModifier) {
+      this.healingRechargeDurationModifier = RPGManager.CreateStatModifier(gamedataStatType.HealingItemsRechargeDuration, gameStatModifierType.Multiplier, 0.8);
+      stats.AddModifier(Cast<StatsObjectID>(player.GetEntityID()), this.healingRechargeDurationModifier);
+    } else if !serious && IsDefined(this.healingRechargeDurationModifier) {
+      stats.RemoveModifier(Cast<StatsObjectID>(player.GetEntityID()), this.healingRechargeDurationModifier);
+      this.healingRechargeDurationModifier = null;
     }
   }
 

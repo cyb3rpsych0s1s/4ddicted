@@ -3,8 +3,8 @@
 **/.DS_Store
 
 /book/site
-!scripts/
 scripts/*
+!scripts/Addicted
 /archives/**/*.cpmodproj
 /archives/**/*.zip
 /archives/**/layout.xml
