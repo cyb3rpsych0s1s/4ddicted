@@ -19,6 +19,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let player: wref<PlayerPuppet>;
   private let delaySystem: ref<DelaySystem>;
   private let timeSystem: ref<TimeSystem>;
+  private let callbackSystem: ref<CallbackSystem>;
 
   private let config: ref<AddictedConfig>;
 
@@ -70,6 +71,8 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
+    this.callbackSystem = GameInstance.GetCallbackSystem();
+    this.callbackSystem.RegisterCallback(n"Session/BeforeSave", this, n"OnPreSave");
 
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
@@ -90,8 +93,6 @@ public class AddictedSystem extends ScriptableSystem {
     this.blacklaceManager.Unregister(this.player);
     this.blacklaceManager = null;
 
-    this.ShrinkDoses();
-
     OnAddictedPostDetach(this);
   }
 
@@ -106,6 +107,10 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);
+  }
+
+  private cb func OnPreSave(event: ref<GameSessionEvent>) {
+    this.ShrinkDoses();
   }
 
   public func RefreshConfig() -> Void {
@@ -300,6 +305,7 @@ public class AddictedSystem extends ScriptableSystem {
         while idx < count {
           dose = doses[idx];
           ArrayPush(shrinked, dose);
+          idx += 1;
         }
         consumption.doses = shrinked;
       }
