@@ -1,3 +1,5 @@
+# following are modified variant of BaseStatusEffect.Drunk_inline2 inner stats modifiers
+
 Modifier.Jitters.SwayTraversalTime:
   $type: ConstantStatModifier_Record
   value: 0.35
@@ -34,6 +36,7 @@ Modifier.Jitters.SwaySideMinimumAngleDistance:
   modifierType: Multiplier
   statType: BaseStats.SwaySideMinimumAngleDistance
 
+# following is modified variant of BaseStatusEffect.Drunk_inline2
 Effector.Jitters.Weapon:
   $type: ApplyStatGroupEffector_Record
   applicationTarget: Weapon
@@ -53,29 +56,33 @@ Effector.Jitters.Weapon:
   removeAfterPrereqCheck: false
   statModifierGroups: []
 
-Effector.Jitters.Duration:
-  $base: Effectors.ModifyStatusEffectDurationEffector
-  change: 30
-  listenConstantly: true
-  gameplayTags: [ Jitters ]
-
 Package.Jitters.Weapon:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effector.Jitters.Weapon
 
-Package.Jitters.Duration:
-  $type: GameplayLogicPackage_Record
-  effectors:
-    - Effector.Jitters.Duration
+Modifier.Jitters.Duration:
+  $type: ConstantStatModifier_Record
+  value: 180
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+
+Duration.Jitters:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: False
+  optimiseCombinedModifiers: False
+  saveBasedOnStatType: False
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers:
+    - Modifier.Jitters.Duration
 
 BaseStatusEffect.Jitters:
   $base: BaseStatusEffect.Drunk
   gameplayTags: [ Debuff, DoT, Poison, Debuff, Jitters ]
+  duration: Duration.Jitters
   packages:
     - Package.Jitters.Weapon
-    - Package.Jitters.Duration
-    - BaseStatusEffect.Drunk_inline2
     - BaseStatusEffect.Drunk_inline11
     - BaseStatusEffect.DrillingShakeNormal_inline0
     - BaseStatusEffect.BreathingHeavy_inline0
