@@ -26,6 +26,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
   private let blacklaceManager: ref<BlackLaceManager>;
+  private let alcoholManager: ref<AlcoholManager>;
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
@@ -61,6 +62,9 @@ public class AddictedSystem extends ScriptableSystem {
 
       this.blacklaceManager = new BlackLaceManager();
       this.blacklaceManager.Register(this.player);
+
+      this.alcoholManager = new AlcoholManager();
+      this.alcoholManager.Register(this.player);
 
       this.onoManager = new AudioManager();
       this.onoManager.Register(this.player);
@@ -104,6 +108,9 @@ public class AddictedSystem extends ScriptableSystem {
 
     this.blacklaceManager = new BlackLaceManager();
     this.blacklaceManager.Register(this.player);
+
+    this.alcoholManager = new AlcoholManager();
+    this.alcoholManager.Register(this.player);
 
     this.onoManager = new AudioManager();
     this.onoManager.Register(this.player);

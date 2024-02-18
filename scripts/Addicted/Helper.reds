@@ -6,7 +6,8 @@ import Addicted.Helpers.*
 
 public class Helper {
   public static func Category(id: ItemID) -> Category {
-    if Generic.IsBlackLace(ItemID.GetTDBID(id)) { return Category.Hard; }
+    if Generic.IsBlackLace(ItemID.GetTDBID(id))
+    || Generic.IsAlcohol(ItemID.GetTDBID(id)) { return Category.Hard; }
     return Category.Mild;
   }
 
