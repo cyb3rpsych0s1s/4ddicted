@@ -53,15 +53,29 @@ Effector.Jitters.Weapon:
   removeAfterPrereqCheck: false
   statModifierGroups: []
 
+Effector.Jitters.Duration:
+  $base: Effectors.ModifyStatusEffectDurationEffector
+  change: 30
+  listenConstantly: true
+  gameplayTags: [ Jitters ]
+
 Package.Jitters.Weapon:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effector.Jitters.Weapon
 
+Package.Jitters.Duration:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effector.Jitters.Duration
+
 BaseStatusEffect.Jitters:
   $base: BaseStatusEffect.Drunk
+  gameplayTags: [ Debuff, DoT, Poison, Debuff, Jitters ]
   packages:
     - Package.Jitters.Weapon
+    - Package.Jitters.Duration
+    - BaseStatusEffect.Drunk_inline2
     - BaseStatusEffect.Drunk_inline11
     - BaseStatusEffect.DrillingShakeNormal_inline0
     - BaseStatusEffect.BreathingHeavy_inline0
