@@ -12,7 +12,7 @@ protected final func ChangeConsumableAnimFeature(stateContext: ref<StateContext>
     let threshold: Threshold;
     let player: ref<PlayerPuppet>;
     let system: ref<AddictedSystem>;
-    wrappedMethod(stateContext, scriptInterface, newState);
+    let modified: Bool = false;
     item = this.GetItemIDFromWrapperPermanentParameter(stateContext, n"consumable");
     id = ItemID.GetTDBID(item);
     addictive = Generic.IsAddictive(id);
@@ -26,7 +26,7 @@ protected final func ChangeConsumableAnimFeature(stateContext: ref<StateContext>
             let inCombat: Bool = (scriptInterface.GetPlayerSystem().GetLocalPlayerMainGameObject() as PlayerPuppet).IsInCombat();
             let isPerkFasterHealingUnlocked: Bool = PlayerDevelopmentSystem.GetData(scriptInterface.executionOwner).IsNewPerkBought(gamedataNewPerkType.Tech_Left_Perk_2_3) > 0;
             let consumableAnimFeature: ref<AnimFeature_ConsumableAnimation> = new AnimFeature_ConsumableAnimation();
-            consumableAnimFeature.useConsumable = false;
+            consumableAnimFeature.useConsumable = newState;
             switch itemType {
                 case gamedataItemType.Con_Injector:
                     consumableAnimFeature.consumableType = 0;
@@ -43,8 +43,11 @@ protected final func ChangeConsumableAnimFeature(stateContext: ref<StateContext>
                     } else {
                         consumableAnimFeature.animationScale = 1.15 + 0.2;
                     };
+                    break;
             };
             scriptInterface.SetAnimationParameterFeature(n"ConsumableFeature", consumableAnimFeature, scriptInterface.executionOwner);
+            modified = true;
         }
     }
+    if !modified { wrappedMethod(stateContext, scriptInterface, newState); }
 }
