@@ -68,4 +68,28 @@ public class StimulantManager extends WithdrawalSymptomsManager {
     this.Invalidate(Consumable.CarryCapacityBooster, this.withdrawingFromCarryCapacityBooster, applied, capacity);
     this.Invalidate(Consumable.MemoryBooster, this.withdrawingFromMemoryBooster, applied, memory);
   }
+
+  protected func Invalidate(consumable: Consumable, withdrawing: Bool, applied: array<ref<StatusEffect>>, applicables: array<TweakDBID>) -> Void {
+    let effects: array<ref<StatusEffect>>;
+    let threshold: Threshold;
+    let has: Bool = false;
+
+    super.Invalidate(consumable, withdrawing, applied, applicables);
+    
+    if EnumInt(consumable) == EnumInt(Consumable.MemoryBooster) {
+      threshold = this.owner.Threshold(consumable);
+      if EnumInt(threshold) == EnumInt(Threshold.Severely) {
+        effects = StatusEffectHelper.GetAppliedEffects(this.owner);
+        for effect in effects {
+          if Equals(effect.GetRecord().GetID(), t"BaseStatusEffect.PhotoSensitive") {
+            has = true;
+            break;
+          }
+        }
+        if !has {
+          StatusEffectHelper.ApplyStatusEffect(this.owner, t"BaseStatusEffect.PhotoSensitive", 0.2);
+        }
+      }
+    }
+  }
 }
