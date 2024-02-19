@@ -119,6 +119,11 @@ public class Generic {
     return StrContains(str, "cigar");
   }
 
+  public static func IsLighter(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    return StrContains(str, "lighter");
+  }
+
   public static func IsMaxDOC(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
