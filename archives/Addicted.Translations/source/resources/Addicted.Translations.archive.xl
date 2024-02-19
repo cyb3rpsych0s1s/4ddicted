@@ -3,3 +3,4 @@ localization:
     en-us: addicted\localization\en-us.json
     fr-fr: addicted\localization\fr-fr.json
     es-es: addicted\localization\es-es.json
+    zh-cn: addicted\localization\zh-cn.json
