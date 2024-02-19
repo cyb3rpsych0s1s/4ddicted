@@ -65,6 +65,7 @@ jobs:
           - en-us
           - fr-fr
           - es-es
+          - zh-cn
     permissions:
       contents: write
     steps:
@@ -115,6 +116,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: translation-es-es-${{ github.ref_name }}
+          path: release
+      - name: Download Chinese translations
+        uses: actions/download-artifact@v4
+        with:
+          name: translation-zh-cn-${{ github.ref_name }}
           path: release
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
