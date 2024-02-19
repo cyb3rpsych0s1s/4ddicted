@@ -16,3 +16,19 @@ tree     := 'mods'
 
 @uninstall FROM:
     just trash '{{ join(FROM, tree, mod) }}'
+
+# encode .mp3 back into .wav
+[macos]
+@encode LOCALE='en-us' OVERWRITE='false':
+  folders=('{{ join(source, "vanilla", LOCALE) }}' '{{ join(source, LOCALE, "disheartened") }}' '{{ join(source, LOCALE, "offhanded") }}' '{{ join(source, LOCALE, "pestered") }}' '{{ join(source, LOCALE, "surprised") }}'); \
+  for folder in ${folders[@]}; do \
+    just encode-folder $folder OVERWRITE='{{OVERWRITE}}'; \
+  done
+
+[macos]
+@encode-folder FOLDER OVERWRITE='false':
+  for file in `ls {{FOLDER}}`; do \
+    if [[ ('{{OVERWRITE}}' != 'false' || ! -f '{{ FOLDER }}'/${file%.mp3}.wav) && $file == *.mp3 ]]; then \
+      ffmpeg -i '{{ FOLDER }}'/$file -ar 44100 -sample_fmt s16 -y '{{ FOLDER }}'/${file%.mp3}.wav; \
+    fi \
+  done
