@@ -16,7 +16,8 @@ public class Generic {
     if Generic.IsBlackLace(id)        { return Consumable.BlackLace; }
     if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
     if Generic.IsNeuroBlocker(id)     { return Consumable.NeuroBlocker; }
-    if Generic.IsTobacco(id)          { return Consumable.Tobacco; }
+    if Generic.IsTobacco(id)
+    || Generic.IsLighter(id)          { return Consumable.Tobacco; }
     return Consumable.Invalid;
   }
 
