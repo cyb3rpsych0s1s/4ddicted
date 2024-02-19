@@ -73,22 +73,24 @@ public class StimulantManager extends WithdrawalSymptomsManager {
     let effects: array<ref<StatusEffect>>;
     let threshold: Threshold;
     let has: Bool = false;
+    let severe: Bool;
 
     super.Invalidate(consumable, withdrawing, applied, applicables);
     
     if EnumInt(consumable) == EnumInt(Consumable.MemoryBooster) {
       threshold = this.owner.Threshold(consumable);
-      if EnumInt(threshold) == EnumInt(Threshold.Severely) {
-        effects = StatusEffectHelper.GetAppliedEffects(this.owner);
-        for effect in effects {
-          if Equals(effect.GetRecord().GetID(), t"BaseStatusEffect.PhotoSensitive") {
-            has = true;
-            break;
-          }
+      effects = StatusEffectHelper.GetAppliedEffects(this.owner);
+      severe = EnumInt(threshold) == EnumInt(Threshold.Severely);
+      for effect in effects {
+        if Equals(effect.GetRecord().GetID(), t"BaseStatusEffect.PhotoSensitive") {
+          has = true;
+          break;
         }
-        if !has {
-          StatusEffectHelper.ApplyStatusEffect(this.owner, t"BaseStatusEffect.PhotoSensitive", 0.2);
-        }
+      }
+      if severe && !has {
+        StatusEffectHelper.ApplyStatusEffect(this.owner, t"BaseStatusEffect.PhotoSensitive", 0.2);
+      } else if !severe && has {
+        StatusEffectHelper.RemoveStatusEffect(this.owner, t"BaseStatusEffect.PhotoSensitive");
       }
     }
   }
