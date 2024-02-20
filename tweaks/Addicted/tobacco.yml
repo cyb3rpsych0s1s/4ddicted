@@ -1,3 +1,8 @@
+UIIcon.BreathLess:
+ $type: UIIcon_Record
+ atlasPartName: lesions_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
 Duration.ShortBreath:
   $type: ConstantStatModifier_Record
   value: 300
