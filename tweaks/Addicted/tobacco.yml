@@ -39,7 +39,7 @@ Modifier.ShortBreath.NoFreeSprint:
   modifierType: Multiplier
   statType: BaseStats.IsSprintStaminaFree
 
-Modifier.ShortBreath.NoFreeDodge:
+Modifier.BreathLess.NoFreeDodge:
   $type: ConstantStatModifier_Record
   value: 0
   modifierType: Multiplier
@@ -58,7 +58,7 @@ Package.ShortBreath:
 Package.BreathLess:
   $base: Package.ShortBreath
   stats:
-    - !append-once Modifier.ShortBreath.NoFreeDodge
+    - !append-once Modifier.BreathLess.NoFreeDodge
 
 StaminaRegenStartDelay.ShortBreath:
   $type: ConstantStatModifier_Record
