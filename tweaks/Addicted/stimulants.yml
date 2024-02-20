@@ -1,3 +1,8 @@
+UIIcon.PhotoSensitive:
+ $type: UIIcon_Record
+ atlasPartName: photosensitive_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
 UIData.WithdrawnFrom$(consumable):
   $instances:
     - { consumable: StaminaBooster,       key: Stamina-Booster }
@@ -81,7 +86,7 @@ Effectors.MigraineEnd:
 Effectors.Dizzy:
   $type: Effector_Record
   effectorClassName: PlayBreathingAnimationEffector
-  prereqRecord: Prereqs.AlwaysTruePrereq
+  prereqRecord: Prereqs.AlwaystruePrereq
   amplitudeWeight: 1.0
   animFeatureName: CameraBreathingMedium
   blendInDuration: 5.0
@@ -91,3 +96,82 @@ UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
   atlasPartName: craving_for_pills_icon
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+# photosensitive for RAM jolt
+
+Effectors.PhotoSensitive:
+  $type: Effector_Record
+  effectorClassName: ModifyStatusEffectDurationEffector
+  prereqRecord: Prereqs.AlwaystruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  gameplayTags:
+    - Blind
+    - GrenadeStatusEffect
+    - FlashEffect
+  change: 8
+  canGoOverInitialDuration: true
+  listenConstantly: true
+  isPercentage: false
+
+Package.PhotoSensitive:
+  $type: GameplayLogicPackage_Record
+  stackable: true
+  animationWrapperOverrides: []
+  effectors: [ Effectors.PhotoSensitive ]
+  items: []
+  statPools: []
+  stats: []
+
+Duration.PhotoSensitive:
+  $type: ConstantStatModifier_Record
+  value: 300
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+
+Modifier.PhotoSensitive.Duration:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers: [ Duration.PhotoSensitive ]
+
+UIData.PhotoSensitive:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-PhotoSensitive-Desc
+  displayName: LocKey#Mod-Addicted-PhotoSensitive
+  fluffText: ''
+  iconPath: PhotoSensitive
+  priority: -8
+  floatValues: []
+  intValues: []
+  nameValues: []
+  stats: []
+
+BaseStatusEffect.PhotoSensitive:
+  $type: StatusEffect_Record
+  duration: Modifier.PhotoSensitive.Duration
+  dynamicDuration: false
+  isAffectedByTimeDilationNPC: true
+  isAffectedByTimeDilationPlayer: true
+  maxStacks: RTDB.StatusEffect_inline0
+  reapplyPackagesOnMaxStacks: false
+  removeAllStacksWhenDurationEnds: true
+  removeOnStoryTier: true
+  replicated: false
+  savable: true
+  statusEffectType: BaseStatusEffectTypes.PassiveDebuff
+  stopActiveSfxOnDeactivate: true
+  uiData: UIData.PhotoSensitive
+  debugTags: []
+  gameplayTags:
+    - Debuff
+    - Blind
+  immunityStats:
+    - BaseStats.BlindImmunity
+  packages: [ Package.PhotoSensitive ]
+  SFX: []
+  VFX: []

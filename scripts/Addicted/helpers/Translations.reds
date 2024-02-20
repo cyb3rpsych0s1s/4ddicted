@@ -76,6 +76,8 @@ public class Translations {
         return [n"Mod-Addicted-Chemical-Dynorphin", n"Mod-Addicted-Chemical-Methadone"];
       case Consumable.CarryCapacityBooster:
         return [n"Mod-Addicted-Chemical-Testosterone", n"Mod-Addicted-Chemical-Oxandrin"];
+      case Consumable.Tobacco:
+        return [n"Mod-Addicted-Chemical-Nicotine"];
     }
   }
 }

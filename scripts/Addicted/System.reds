@@ -26,6 +26,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
   private let blacklaceManager: ref<BlackLaceManager>;
+  private let alcoholManager: ref<AlcoholManager>;
+  private let tobaccoManager: ref<TobaccoManager>;
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
@@ -43,10 +45,44 @@ public class AddictedSystem extends ScriptableSystem {
   private let updateSymtomsID: DelayID;
   private let healingRechargeDurationModifier: ref<gameStatModifierData>;
 
+  private func RegisterListeners(player: ref<PlayerPuppet>) -> Void {
+    this.stimulantManager = new StimulantManager();
+    this.stimulantManager.Register(player);
+
+    this.blacklaceManager = new BlackLaceManager();
+    this.blacklaceManager.Register(player);
+
+    this.alcoholManager = new AlcoholManager();
+    this.alcoholManager.Register(player);
+
+    this.tobaccoManager = new TobaccoManager();
+    this.tobaccoManager.Register(player);
+
+    this.onoManager = new AudioManager();
+    this.onoManager.Register(player);
+  }
+
+  private func UnregisterListeners(player: ref<PlayerPuppet>) -> Void {
+    this.onoManager.Unregister(player);
+    this.onoManager = null;
+
+    this.stimulantManager.Unregister(player);
+    this.stimulantManager = null;
+    
+    this.blacklaceManager.Unregister(player);
+    this.blacklaceManager = null;
+
+    this.alcoholManager.Unregister(player);
+    this.alcoholManager = null;
+
+    this.tobaccoManager.Unregister(player);
+    this.tobaccoManager = null;
+  }
+
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
-      E(s"initialize system on player attach");
+      E(s"on player attach");
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
@@ -56,17 +92,16 @@ public class AddictedSystem extends ScriptableSystem {
       callback.system = this;
       this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
 
-      this.stimulantManager = new StimulantManager();
-      this.stimulantManager.Register(this.player);
-
-      this.blacklaceManager = new BlackLaceManager();
-      this.blacklaceManager.Register(this.player);
-
-      this.onoManager = new AudioManager();
-      this.onoManager.Register(this.player);
+      this.RegisterListeners(this.player);
 
       this.RefreshConfig();
     } else { F(s"no player found!"); }
+  }
+
+  public final func OnPlayerDetach(player: ref<PlayerPuppet>) -> Void {
+    E(s"on player detach");
+    this.UnregisterListeners(this.player);
+    this.player = null;
   }
 
   private func OnAttach() -> Void {
@@ -83,30 +118,14 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnDetach() -> Void {
     E(s"on detach system");
-
-    this.onoManager.Unregister(this.player);
-    this.onoManager = null;
-    
-    this.stimulantManager.Unregister(this.player);
-    this.stimulantManager = null;
-    
-    this.blacklaceManager.Unregister(this.player);
-    this.blacklaceManager = null;
+    this.UnregisterListeners(this.player);
 
     OnAddictedPostDetach(this);
   }
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
     E(s"on restored system");
-
-    this.stimulantManager = new StimulantManager();
-    this.stimulantManager.Register(this.player);
-
-    this.blacklaceManager = new BlackLaceManager();
-    this.blacklaceManager.Register(this.player);
-
-    this.onoManager = new AudioManager();
-    this.onoManager.Register(this.player);
+    this.RegisterListeners(this.player);
   }
 
   private cb func OnPreSave(event: ref<GameSessionEvent>) {

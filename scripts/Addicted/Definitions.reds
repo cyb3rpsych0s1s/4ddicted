@@ -367,6 +367,7 @@ enum Consumable {
   BlackLace = 8,
   CarryCapacityBooster = 9,
   NeuroBlocker = 10,
+  Tobacco = 11
 }
 
 public static func Consumables() -> array<Consumable> {
@@ -380,7 +381,8 @@ public static func Consumables() -> array<Consumable> {
     Consumable.StaminaBooster,
     Consumable.BlackLace,
     Consumable.CarryCapacityBooster,
-    Consumable.NeuroBlocker
+    Consumable.NeuroBlocker,
+    Consumable.Tobacco
   ];
 }
 
@@ -397,6 +399,7 @@ enum Addiction {
   Neuros = 2,
   BlackLace = 3,
   Alcohol = 4,
+  Tobacco = 5,
 }
 
 public static func Addictions() -> array<Addiction> {
@@ -405,7 +408,8 @@ public static func Addictions() -> array<Addiction> {
     Addiction.Anabolics,
     Addiction.Neuros,
     Addiction.BlackLace,
-    Addiction.Alcohol
+    Addiction.Alcohol,
+    Addiction.Tobacco
   ];
 }
 
