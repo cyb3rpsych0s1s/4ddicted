@@ -101,6 +101,7 @@ UIIcon.WithdrawnFromPill:
 
 Effectors.PhotoSensitive:
   $type: Effector_Record
+  $props: AutoFlats
   effectorClassName: ModifyStatusEffectDurationEffector
   prereqRecord: Prereqs.AlwaystruePrereq
   removeAfterActionCall: false

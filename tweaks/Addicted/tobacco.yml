@@ -34,14 +34,12 @@ Modifier.ShortBreath.Stacks:
   statModifiers: [ Stacks.ShortBreath ]
 
 Modifier.ShortBreath.NoFreeSprint:
-  BaseStatusEffect.Blind_inline6:
   $type: ConstantStatModifier_Record
   value: 0
   modifierType: Multiplier
   statType: BaseStats.IsSprintStaminaFree
 
 Modifier.ShortBreath.NoFreeDodge:
-  BaseStatusEffect.Blind_inline6:
   $type: ConstantStatModifier_Record
   value: 0
   modifierType: Multiplier
