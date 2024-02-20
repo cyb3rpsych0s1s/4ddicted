@@ -1,9 +1,9 @@
 {
   "Header": {
-    "WolvenKitVersion": "8.11.1-nightly.2023-10-23",
+    "WolvenKitVersion": "8.12.2\u002B0e283c958d795f6aa4cd34f29d4f4409a0a1681e",
     "WKitJsonVersion": "0.0.8",
-    "GameVersion": 2000,
-    "ExportedDateTime": "2023-10-24T17:27:01.8668508Z",
+    "GameVersion": 2110,
+    "ExportedDateTime": "2024-02-20T04:20:56.8260060Z",
     "DataType": "CR2W",
     "ArchiveFileName": "C:\\Development\\4ddicted\\archives\\Addicted.Icons\\source\\archive\\addicted\\gameplay\\gui\\widgets\\healthbar\\atlas_buffinfo.inkatlas"
   },
@@ -42,6 +42,94 @@
           {
             "$type": "inkTextureSlot",
             "parts": [
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.25,
+                  "Left": 0.400000006,
+                  "Right": 0.5,
+                  "Top": 0.125
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "photosensitive_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.25,
+                  "Left": 0.300000012,
+                  "Right": 0.400000006,
+                  "Top": 0.125
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "lesions_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.25,
+                  "Left": 0.200000003,
+                  "Right": 0.300000012,
+                  "Top": 0.125
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "jitters_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.25,
+                  "Left": 0.100000001,
+                  "Right": 0.200000003,
+                  "Top": 0.125
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "breathless_icon"
+                }
+              },
               {
                 "$type": "inkTextureAtlasMapper",
                 "clippingRectInPixels": {
@@ -309,10 +397,98 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.25,
-                  "Left": 0,
-                  "Right": 0.100000001,
-                  "Top": 0.125
+                  "Bottom": 0.244140625,
+                  "Left": 0.40625,
+                  "Right": 0.493750006,
+                  "Top": 0.130859375
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "photosensitive_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.2421875,
+                  "Left": 0.3046875,
+                  "Right": 0.396874994,
+                  "Top": 0.140625
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "lesions_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.244140625,
+                  "Left": 0.212500006,
+                  "Right": 0.290625006,
+                  "Top": 0.12890625
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "jitters_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.232421875,
+                  "Left": 0.107812501,
+                  "Right": 0.1953125,
+                  "Top": 0.146484375
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "breathless_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.220703125,
+                  "Left": 0.0234375,
+                  "Right": 0.075000003,
+                  "Top": 0.158203125
                 },
                 "partName": {
                   "$type": "CName",
@@ -331,10 +507,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.899999976,
-                  "Right": 1,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.907812476,
+                  "Right": 0.990625024,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -353,10 +529,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.800000012,
-                  "Right": 0.899999976,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.810937524,
+                  "Right": 0.893750012,
+                  "Top": 0.02734375
                 },
                 "partName": {
                   "$type": "CName",
@@ -375,10 +551,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.699999988,
-                  "Right": 0.800000012,
-                  "Top": 0
+                  "Bottom": 0.1171875,
+                  "Left": 0.7109375,
+                  "Right": 0.792187512,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -397,10 +573,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.600000024,
-                  "Right": 0.699999988,
-                  "Top": 0
+                  "Bottom": 0.1171875,
+                  "Left": 0.610937476,
+                  "Right": 0.692187488,
+                  "Top": 0.02734375
                 },
                 "partName": {
                   "$type": "CName",
@@ -419,10 +595,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.5,
-                  "Right": 0.600000024,
-                  "Top": 0
+                  "Bottom": 0.11328125,
+                  "Left": 0.510937512,
+                  "Right": 0.587499976,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -441,10 +617,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
+                  "Bottom": 0.11328125,
                   "Left": 0.400000006,
-                  "Right": 0.5,
-                  "Top": 0
+                  "Right": 0.487500012,
+                  "Top": 0.01953125
                 },
                 "partName": {
                   "$type": "CName",
@@ -463,10 +639,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.300000012,
-                  "Right": 0.400000006,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.307812512,
+                  "Right": 0.390625,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -485,10 +661,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.200000003,
-                  "Right": 0.300000012,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.2109375,
+                  "Right": 0.293749988,
+                  "Top": 0.02734375
                 },
                 "partName": {
                   "$type": "CName",
@@ -510,7 +686,7 @@
                   "Bottom": 0.125,
                   "Left": 0.100000001,
                   "Right": 0.200000003,
-                  "Top": 0
+                  "Top": 0.00390625
                 },
                 "partName": {
                   "$type": "CName",
@@ -529,10 +705,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
+                  "Bottom": 0.123046875,
                   "Left": 0,
                   "Right": 0.100000001,
-                  "Top": 0
+                  "Top": 0.001953125
                 },
                 "partName": {
                   "$type": "CName",
@@ -565,10 +741,98 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.25,
-                  "Left": 0,
-                  "Right": 0.100000001,
-                  "Top": 0.125
+                  "Bottom": 0.244140625,
+                  "Left": 0.40625,
+                  "Right": 0.493750006,
+                  "Top": 0.130859375
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "photosensitive_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.2421875,
+                  "Left": 0.3046875,
+                  "Right": 0.396874994,
+                  "Top": 0.140625
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "lesions_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.244140625,
+                  "Left": 0.212500006,
+                  "Right": 0.290625006,
+                  "Top": 0.12890625
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "jitters_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.232421875,
+                  "Left": 0.107812501,
+                  "Right": 0.1953125,
+                  "Top": 0.146484375
+                },
+                "partName": {
+                  "$type": "CName",
+                  "$storage": "string",
+                  "$value": "breathless_icon"
+                }
+              },
+              {
+                "$type": "inkTextureAtlasMapper",
+                "clippingRectInPixels": {
+                  "$type": "Rect",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "clippingRectInUVCoords": {
+                  "$type": "RectF",
+                  "Bottom": 0.220703125,
+                  "Left": 0.0234375,
+                  "Right": 0.075000003,
+                  "Top": 0.158203125
                 },
                 "partName": {
                   "$type": "CName",
@@ -587,10 +851,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.899999976,
-                  "Right": 1,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.907812476,
+                  "Right": 0.990625024,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -609,10 +873,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.800000012,
-                  "Right": 0.899999976,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.810937524,
+                  "Right": 0.893750012,
+                  "Top": 0.02734375
                 },
                 "partName": {
                   "$type": "CName",
@@ -631,10 +895,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.699999988,
-                  "Right": 0.800000012,
-                  "Top": 0
+                  "Bottom": 0.1171875,
+                  "Left": 0.7109375,
+                  "Right": 0.792187512,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -653,10 +917,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.600000024,
-                  "Right": 0.699999988,
-                  "Top": 0
+                  "Bottom": 0.1171875,
+                  "Left": 0.610937476,
+                  "Right": 0.692187488,
+                  "Top": 0.02734375
                 },
                 "partName": {
                   "$type": "CName",
@@ -675,10 +939,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.5,
-                  "Right": 0.600000024,
-                  "Top": 0
+                  "Bottom": 0.11328125,
+                  "Left": 0.510937512,
+                  "Right": 0.587499976,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -697,10 +961,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
+                  "Bottom": 0.11328125,
                   "Left": 0.400000006,
-                  "Right": 0.5,
-                  "Top": 0
+                  "Right": 0.487500012,
+                  "Top": 0.01953125
                 },
                 "partName": {
                   "$type": "CName",
@@ -719,10 +983,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.300000012,
-                  "Right": 0.400000006,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.307812512,
+                  "Right": 0.390625,
+                  "Top": 0.0078125
                 },
                 "partName": {
                   "$type": "CName",
@@ -741,10 +1005,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
-                  "Left": 0.200000003,
-                  "Right": 0.300000012,
-                  "Top": 0
+                  "Bottom": 0.119140625,
+                  "Left": 0.2109375,
+                  "Right": 0.293749988,
+                  "Top": 0.02734375
                 },
                 "partName": {
                   "$type": "CName",
@@ -766,7 +1030,7 @@
                   "Bottom": 0.125,
                   "Left": 0.100000001,
                   "Right": 0.200000003,
-                  "Top": 0
+                  "Top": 0.00390625
                 },
                 "partName": {
                   "$type": "CName",
@@ -785,10 +1049,10 @@
                 },
                 "clippingRectInUVCoords": {
                   "$type": "RectF",
-                  "Bottom": 0.125,
+                  "Bottom": 0.123046875,
                   "Left": 0,
                   "Right": 0.100000001,
-                  "Top": 0
+                  "Top": 0.001953125
                 },
                 "partName": {
                   "$type": "CName",
