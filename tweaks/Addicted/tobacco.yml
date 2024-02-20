@@ -188,7 +188,7 @@ BaseStatusEffect.ShortBreath:
   packages:
     - Package.Remove.BreathLess
     - BaseStatusEffect.BreathingLow_inline1
-    - EquipmentGLP.VeryHeavyStaminaDelay
+    - Package.ShortBreath.StaminaDelay
     - Package.ShortBreath.SlowStaminaRegen
     - Package.ShortBreath
   SFX: []
@@ -201,6 +201,6 @@ BaseStatusEffect.BreathLess:
   packages:
     - Package.Remove.ShortBreath
     - BaseStatusEffect.BreathingMedium_inline0
-    - EquipmentGLP.VeryHeavyStaminaDelay
+    - Package.ShortBreath.StaminaDelay
     - Package.BreathLess.SlowStaminaRegen
-    - Package.ShortBreath
+    - Package.BreathLess
