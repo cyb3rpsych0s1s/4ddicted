@@ -62,3 +62,6 @@ default:
 
 @cr2w LOCALE='en-us':
     just recipes/archive/cr2w '{{LOCALE}}'
+
+@encode LOCALE='en-us' OVERWRITE='false':
+  just recipes/audioware/encode '{{LOCALE}}' '{{OVERWRITE}}'
