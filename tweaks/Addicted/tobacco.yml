@@ -169,6 +169,26 @@ Package.Remove.BreathLess:
   statPools: []
   stats: []
 
+# UI data
+
+UIData.ShortBreath:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-ShortBreath-Desc
+  displayName: LocKey#Mod-Addicted-ShortBreath
+  fluffText: ''
+  iconPath: BreathLess
+  priority: -8
+  floatValues: []
+  intValues: [-60]
+  nameValues: []
+  stats: []
+
+UIData.BreathLess:
+  $base: UIData.ShortBreath
+  description: LocKey#Mod-Addicted-BreathLess-Desc
+  displayName: LocKey#Mod-Addicted-BreathLess
+  intValues: [-60, 10]
+
 # status effect on notable threshold
 
 BaseStatusEffect.ShortBreath:
@@ -186,7 +206,7 @@ BaseStatusEffect.ShortBreath:
   savable: true
   statusEffectType: BaseStatusEffectTypes.PassiveDebuff
   stopActiveSfxOnDeactivate: false
-  uiData: BaseStatusEffect.Exhausted_inline1
+  uiData: UIData.ShortBreath
   debugTags: []
   gameplayTags: [ Debuff ]
   immunityStats: []
@@ -203,6 +223,7 @@ BaseStatusEffect.ShortBreath:
 
 BaseStatusEffect.BreathLess:
   $base: BaseStatusEffect.ShortBreath
+  uiData: UIData.BreathLess
   packages:
     - Package.Remove.ShortBreath
     - BaseStatusEffect.BreathingMedium_inline0
