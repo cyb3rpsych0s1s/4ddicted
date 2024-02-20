@@ -1,3 +1,8 @@
+UIIcon.Jitters:
+ $type: UIIcon_Record
+ atlasPartName: jitters_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
 # following are modified variant of BaseStatusEffect.Drunk_inline2 inner stats modifiers
 
 Modifier.Jitters.SwayTraversalTime:
