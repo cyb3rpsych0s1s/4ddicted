@@ -1,3 +1,8 @@
+UIIcon.PhotoSensitive:
+ $type: UIIcon_Record
+ atlasPartName: photosensitive_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
 UIData.WithdrawnFrom$(consumable):
   $instances:
     - { consumable: StaminaBooster,       key: Stamina-Booster }
