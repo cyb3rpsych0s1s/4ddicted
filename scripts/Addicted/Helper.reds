@@ -59,6 +59,8 @@ public class Helper {
         return [Consumable.BlackLace];
       case Addiction.Alcohol:
         return [Consumable.Alcohol];
+      case Addiction.Tobacco:
+        return [Consumable.Tobacco];
       default:
         break;
     }

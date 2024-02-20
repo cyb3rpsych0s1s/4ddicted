@@ -1,3 +1,8 @@
+UIIcon.Jitters:
+ $type: UIIcon_Record
+ atlasPartName: jitters_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
 # following are modified variant of BaseStatusEffect.Drunk_inline2 inner stats modifiers
 
 Modifier.Jitters.SwayTraversalTime:
@@ -77,10 +82,23 @@ Duration.Jitters:
   statModifiers:
     - Modifier.Jitters.Duration
 
+UIData.Jitters:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-Jitters-Desc
+  displayName: LocKey#Mod-Addicted-Jitters
+  fluffText: ''
+  iconPath: Jitters
+  priority: -8
+  floatValues: []
+  intValues: []
+  nameValues: []
+  stats: []
+
 BaseStatusEffect.Jitters:
   $base: BaseStatusEffect.Drunk
   gameplayTags: [ Debuff, DoT, Poison, Debuff, Jitters ]
   duration: Duration.Jitters
+  uiData: UIData.Jitters
   packages:
     - Package.Jitters.Weapon
     - BaseStatusEffect.Drunk_inline11
