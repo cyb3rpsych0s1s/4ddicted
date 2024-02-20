@@ -30,6 +30,7 @@ To all people who helped along the way:
 ♦ [mana](https://github.com/manavortex)
 ♦ [jekky](https://github.com/jac3km4)
 ♦ [JosephFerano](https://github.com/JosephFerano)
+♦ Vanman Zhang
 ♦ [tobozo](https://github.com/tobozo)
 ♦ [IslandDancer](https://github.com/IslandDancer)
 ♦ Auska
