@@ -16,6 +16,8 @@ public class Generic {
     if Generic.IsBlackLace(id)        { return Consumable.BlackLace; }
     if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
     if Generic.IsNeuroBlocker(id)     { return Consumable.NeuroBlocker; }
+    if Generic.IsTobacco(id)
+    || Generic.IsLighter(id)          { return Consumable.Tobacco; }
     return Consumable.Invalid;
   }
 
@@ -35,6 +37,8 @@ public class Generic {
         return Addiction.BlackLace;
       case Consumable.Alcohol:
         return Addiction.Alcohol;
+      case Consumable.Tobacco:
+        return Addiction.Tobacco;
       default:
         break;
     }
@@ -109,6 +113,16 @@ public class Generic {
   public static func IsAlcohol(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     return StrContains(str, "Alcohol");
+  }
+
+  public static func IsTobacco(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    return StrContains(str, "cigar");
+  }
+
+  public static func IsLighter(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    return StrContains(str, "lighter");
   }
 
   public static func IsMaxDOC(id: TweakDBID) -> Bool {
