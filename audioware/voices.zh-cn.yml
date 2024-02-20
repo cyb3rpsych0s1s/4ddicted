@@ -31,11 +31,11 @@ voices:
     fem:
       zh-cn:
         file: zh-cn/surprised/fem_v_b.wav
-        subtitle: 生物监测器？B？小监？
+        subtitle: Biomon……
     male:
       zh-cn:
         file: zh-cn/surprised/male_v_b.wav
-        subtitle: 生物监测器？B？小监？
+        subtitle: Biomon……
   as_if_I_didnt_know_already:
     fem:
       zh-cn:
@@ -103,11 +103,11 @@ voices:
     fem:
       zh-cn:
         file: zh-cn/pestered/fem_v_ftbnrn.wav
-        subtitle: 去他妈biomon！别添乱！
+        subtitle: 去他妈Biomon！别添乱！
     male:
       zh-cn:
         file: zh-cn/pestered/male_v_ftbnrn.wav
-        subtitle: 去他妈biomon！别添乱！
+        subtitle: 去他妈Biomon！别添乱！
   get_this_damn_UI_out_of_my_face:
     fem:
       zh-cn:
@@ -121,11 +121,11 @@ voices:
     fem:
       zh-cn:
         file: vanilla/zh-cn/v_scene_dex_default_f_182ad40c364ea000.Wav
-        subtitle: 哦，没什么事。
+        subtitle: 不用，都很好。
     male:
       zh-cn:
         file: vanilla/zh-cn/v_scene_dex_default_m_182ad40c364ea000.Wav
-        subtitle: 哦，没什么事。
+        subtitle: 不用，都很好。
   nah_Im_cool:
     fem:
       zh-cn:
@@ -175,11 +175,11 @@ voices:
     fem:
       zh-cn:
         file: vanilla/zh-cn/v_q104_f_18980f710d29f000.Wav
-        subtitle: 什么？
+        subtitle: 怎么……
     male:
       zh-cn:
         file: vanilla/zh-cn/v_q104_m_18980f710d29f000.Wav
-        subtitle: 什么？
+        subtitle: 怎么……
   yeah_I_know:
     fem:
       zh-cn:
@@ -202,17 +202,17 @@ voices:
     fem:
       zh-cn:
         file: zh-cn/offhanded/fem_v_yyywc.wav
-        subtitle: 好好好……有谁在乎？
+        subtitle: 好好好……谁在乎呢？
     male:
       zh-cn:
         file: zh-cn/offhanded/male_v_yyywc.wav
-        subtitle: 好好好……有谁在乎？
+        subtitle: 好好好……谁在乎呢？
   you_tell_me_biomon:
     fem:
       zh-cn:
         file: zh-cn/offhanded/fem_v_ytmb.wav
-        subtitle: 你说呢？biomon。
+        subtitle: 你说呢？Biomon。
     male:
       zh-cn:
         file: zh-cn/offhanded/male_v_ytmb.wav
-        subtitle: 你说呢？biomon。
+        subtitle: 你说呢？Biomon。
