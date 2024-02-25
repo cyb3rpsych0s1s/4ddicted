@@ -69,7 +69,8 @@ public class Feeling {
     if NotEquals(language, "en-us")
       && NotEquals(language, "fr-fr")
       && NotEquals(language, "es-es")
-      && NotEquals(language, "zh-cn") { return n""; }
+      && NotEquals(language, "zh-cn")
+      && NotEquals(language, "pt-br") { return n""; }
 
     let output: CName;
     let choices: array<String>;
