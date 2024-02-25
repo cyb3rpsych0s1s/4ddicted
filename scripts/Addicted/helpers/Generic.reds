@@ -48,7 +48,9 @@ public class Generic {
   public static func IsBiomonitor(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
-    return StrBeginsWith(suffix, "HealthMonitor");
+    let contains = StrContains(suffix, "HealthMonitor")
+    || StrContains(suffix, "Biomonitor");
+    return contains;
   }
 
   public static func IsAddictive(id: TweakDBID) -> Bool {
