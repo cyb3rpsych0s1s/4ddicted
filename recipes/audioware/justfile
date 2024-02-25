@@ -25,6 +25,13 @@ tree     := 'mods'
     just encode-folder $folder OVERWRITE='{{OVERWRITE}}'; \
   done
 
+[windows]
+@encode LOCALE='en-us' OVERWRITE='false':
+  $folders = @('{{ join(source, "vanilla", LOCALE) }}', '{{ join(source, LOCALE, "disheartened") }}', '{{ join(source, LOCALE, "offhanded") }}', '{{ join(source, LOCALE, "pestered") }}', '{{ join(source, LOCALE, "surprised") }}'); \
+  foreach ($folder in $folders) { \
+    just encode-folder $folder '{{OVERWRITE}}'; \
+  }
+
 [macos]
 @encode-folder FOLDER OVERWRITE='false':
   for file in `ls {{FOLDER}}`; do \
@@ -32,3 +39,10 @@ tree     := 'mods'
       ffmpeg -i '{{ FOLDER }}'/$file -ar 44100 -sample_fmt s16 -y '{{ FOLDER }}'/${file%.mp3}.wav; \
     fi \
   done
+
+[windows]
+@encode-folder FOLDER OVERWRITE='false':
+  Dir '{{FOLDER}}' -Recurse -File -Filter "*.mp3" | %{ \
+    if ($_.Name -clike "*.mp3") { $from = ".mp3"; $into = ".wav"; } else { $from = ".Mp3"; $into = ".Wav"; } \
+    if ((!(Test-Path $_.Fullname.Replace($from,$into) -PathType leaf)) -or ([System.Convert]::ToBoolean('{{OVERWRITE}}'))) { ffmpeg -i $_.Fullname -ar 44100 -sample_fmt s16 -y $_.Fullname.Replace($from,$into); } \
+  }
