@@ -35,27 +35,27 @@ Then, in any order:
    2. download [latest RED4ext release](https://github.com/WopsS/RED4ext/releases/latest)
    3. unzip at the root of your game folder
 
-3. 🔺 Audioware
-   >  used to manage custom souds and subtitles
-
-   **Only** required if you use this mod's [Optional files (audio files and subtitles)](https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files).
-   Kindly note that Audioware itself requires RED4ext (see above).
-   1. download [latest Audioware release](https://github.com/cyb3rpsych0s1s/audioware/releases/latest)
-   2. unzip at the root of your game folder
-
-4. 🔺 TweakXL
+3. 🔺 TweakXL
    > useful to create custom tweaks (modify TweakDB, REDengine 4 proprietary database)
    1. download [latest TweakXL release](https://github.com/psiberx/cp2077-tweak-xl/releases/latest)
    2. unzip at the root of your game folder
 
-5. 🔺 ArchiveXL
+4. 🔺 ArchiveXL
    > useful to package archive (load custom resources without touching original game files)
    1. download [latest ArchiveXL release](https://github.com/psiberx/cp2077-archive-xl/releases/latest)
    2. unzip at the root of your game folder
 
-6. 🔺 Codeware
+5. 🔺 Codeware
    > redscript dependency
    1. download [latest Codeware release](https://github.com/psiberx/cp2077-codeware/releases/latest)
+   2. unzip at the root of your game folder
+
+6. 🔺 Audioware
+   >  used to manage custom souds and subtitles
+
+   **Only** required if you use this mod's [Optional files (audio files and subtitles)](https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files).
+   Kindly note that Audioware itself requires both RED4ext and Codeware (see above).
+   1. download [latest Audioware release](https://github.com/cyb3rpsych0s1s/audioware/releases/latest)
    2. unzip at the root of your game folder
 
 ```admonish tip title="Addicted"
