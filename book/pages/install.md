@@ -35,7 +35,7 @@ Then, in any order:
    2. download [latest RED4ext release](https://github.com/WopsS/RED4ext/releases/latest)
    3. unzip at the root of your game folder
 
-3. 🔴 Audioware
+3. 🔺 Audioware
    >  used to manage custom souds and subtitles
 
    **Only** required if you use this mod's [Optional files (audio files and subtitles)](https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files).
