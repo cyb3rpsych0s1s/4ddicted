@@ -38,10 +38,10 @@ public class Controller extends IScriptable {
 
 public class PlayerPuppet extends ScriptedPuppet {
   private let controller: ref<Controller>;
-  private final func PlayerDetachedCallback(playerPuppet: ref<GameObject>) -> Void {
+  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
     // here controller can be attached (register)
   }
-  private final func PlayerAttachedCallback(playerPuppet: ref<GameObject>) -> Void {
+  private final func PlayerDetachedCallback(playerPuppet: ref<GameObject>) -> Void {
     // here controller can be detached (unregister/cleanup)
   }
 }
