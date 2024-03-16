@@ -1,0 +1,32 @@
+name: Quality
+on:
+  push:
+    paths:
+      - '.github'
+      - 'scripts/Addicted'
+  pull_request:
+    paths:
+      - '.github'
+      - 'scripts/Addicted'
+env:
+  DOTNET_VERSION: '8.0.x'
+  REDSCRIPT_VERSION: '0.5.18'
+  REDSCRIPT_SRC: scripts/Addicted
+
+jobs:
+  redscript:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '${{ env.DOTNET_VERSION }}'
+      - name: Setup REDscript
+        run: C:\msys64\usr\bin\wget.exe https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
+      - name: Lint code
+        run: ./redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
+        continue-on-error: true
