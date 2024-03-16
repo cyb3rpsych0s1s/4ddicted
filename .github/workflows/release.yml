@@ -9,8 +9,8 @@ on:
       - "beta*"
       - "alpha*"
 env:
-  WOLVENKIT_CORE_VERSION: '8.12.2'
-  WOLVENKIT_CLI_VERSION: '8.12.2'
+  WOLVENKIT_CORE_VERSION: '8.13.0'
+  WOLVENKIT_CLI_VERSION: '8.13.0'
   DOTNET_VERSION: '8.0.x'
   IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
 
@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Just
-        uses: extractions/setup-just@v1
+        uses: extractions/setup-just@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup .NET
@@ -75,7 +75,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Just
-        uses: extractions/setup-just@v1
+        uses: extractions/setup-just@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bundle files
@@ -98,36 +98,11 @@ jobs:
     runs-on: windows-latest
     needs: [bundle-mod, bundle-translations]
     steps:
-      - name: Download mod
+      - name: Download mod and translations
         uses: actions/download-artifact@v4
         with:
-          name: mod-windows-${{ github.ref_name }}
           path: release
-      - name: Download English translations
-        uses: actions/download-artifact@v4
-        with:
-          name: translation-en-us-${{ github.ref_name }}
-          path: release
-      - name: Download French translations
-        uses: actions/download-artifact@v4
-        with:
-          name: translation-fr-fr-${{ github.ref_name }}
-          path: release
-      - name: Download Spanish translations
-        uses: actions/download-artifact@v4
-        with:
-          name: translation-es-es-${{ github.ref_name }}
-          path: release
-      - name: Download Chinese translations
-        uses: actions/download-artifact@v4
-        with:
-          name: translation-zh-cn-${{ github.ref_name }}
-          path: release
-      - name: Download Brazilian translations
-        uses: actions/download-artifact@v4
-        with:
-          name: translation-pt-br-${{ github.ref_name }}
-          path: release
+          merge-multiple: true
       - name: Create release ${{ github.ref_name }}
         uses: ncipollo/release-action@v1
         with:
