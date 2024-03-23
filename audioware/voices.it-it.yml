@@ -76,11 +76,11 @@ voices:
     fem:
       it-it:
         file: it-it/surprised/fem_v_dtfu.wav
-        subtitle: Diamine...qui sono cazz*!
+        subtitle: Diamine...qui sono c@zzi!
     male:
       it-it:
         file: it-it/surprised/male_v_dtfu.wav
-        subtitle: Diamine...qui sono cazz*!
+        subtitle: Diamine...qui sono c@zzi!
   dont_you_see_Im_in_trouble:
     fem:
       it-it:
@@ -130,7 +130,7 @@ voices:
     fem:
       it-it:
         file: it-it/offhanded/fem_v_nic.wav
-        subtitle: Nah, sono tranquillo.
+        subtitle: Nah, sono tranquilla.
     male:
       it-it:
         file: it-it/offhanded/male_v_nic.wav
