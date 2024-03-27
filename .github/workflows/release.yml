@@ -13,6 +13,7 @@ env:
   WOLVENKIT_CLI_VERSION: '8.13.0'
   DOTNET_VERSION: '8.0.x'
   IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
+  IS_RELEASE: ${{ ! startsWith(github.ref_name, 'rc') }}
 
 jobs:
   bundle-mod:
@@ -24,6 +25,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Setup Cargo binstall
+        uses: cargo-bins/cargo-binstall@main
+      - name: Setup srgn
+        run: cargo binstall --no-confirm srgn
       - name: Setup Just
         uses: extractions/setup-just@v2
         env:
@@ -39,6 +44,9 @@ jobs:
           dotnet tool install -g wolvenkit.cli
         env:
           WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_CLI_VERSION }}.zip
+      - name: Strip files
+        if: ${{ env.IS_RELEASE }}
+        run: just sweep
       - name: Bundle files
         run: just ci 'mod-windows'
         env:
