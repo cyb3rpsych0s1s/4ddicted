@@ -12,3 +12,8 @@ tree     := join('r6', 'scripts')
 
 @uninstall FROM:
     just trash '{{ join(FROM, tree, mod) }}'
+
+@sweep:
+    cd '{{source}}'; srgn --files 'Addicted/**/*.reds' --delete '\n?[[:space:]]*///* .+'
+    cd '{{source}}'; srgn --files 'Addicted/**/*.reds' --delete '\n?[[:space:]]*(E|EI|F|FI)\(.+(?<=\);)'
+    cd '{{source}}'; srgn --files 'Addicted/**/*.reds' --delete '\n?[[:space:]]*import Addicted\.Utils\..+'
