@@ -65,3 +65,7 @@ default:
 
 @encode LOCALE='en-us' OVERWRITE='false':
   just recipes/audioware/encode '{{LOCALE}}' '{{OVERWRITE}}'
+
+# 🧹 strip comments and logs (for release in CI)
+@sweep:
+  just recipes/red/sweep
