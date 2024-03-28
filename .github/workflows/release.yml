@@ -67,6 +67,7 @@ jobs:
           - es-es
           - zh-cn
           - pt-br
+          - it-it
     permissions:
       contents: write
     steps:
