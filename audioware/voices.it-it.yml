@@ -94,11 +94,11 @@ voices:
     fem:
       it-it:
         file: vanilla/it-it/v_q115_f_1752ea11b74e1000.wav
-        subtitle: F#ck!
+        subtitle: M3rda
     male:
       it-it:
         file: vanilla/it-it/v_q115_m_1752ea11b74e1000.wav
-        subtitle: F#ck!
+        subtitle: M3rda
   fuck_this_biomon_just_not_right_now:
     fem:
       it-it:
@@ -157,11 +157,11 @@ voices:
     fem:
       it-it:
         file: vanilla/it-it/v_q104_f_18545e4c6a4e6000.Wav
-        subtitle: M3rda
+        subtitle: M3rda!!
     male:
       it-it:
         file: vanilla/it-it/v_q104_m_18545e4c6a4e6000.Wav
-        subtitle: M3rda
+        subtitle: M3rda!!
   so_frustrating:
     fem:
       it-it:
@@ -175,11 +175,11 @@ voices:
     fem:
       it-it:
         file: vanilla/it-it/v_q104_f_18980f710d29f000.Wav
-        subtitle: Ma...?
+        subtitle: Cosa!?
     male:
       it-it:
         file: vanilla/it-it/v_q104_m_18980f710d29f000.Wav
-        subtitle: Ma...?
+        subtitle: Cosa!?
   yeah_I_know:
     fem:
       it-it:
