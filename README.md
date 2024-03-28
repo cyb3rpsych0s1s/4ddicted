@@ -29,6 +29,7 @@ To all people who helped along the way:
 ♦ Technic235
 ♦ [mana](https://github.com/manavortex)
 ♦ [jekky](https://github.com/jac3km4)
+♦ [iwasniko](https://github.com/niko0991)
 ♦ Leo vdr
 ♦ [JosephFerano](https://github.com/JosephFerano)
 ♦ Vanman Zhang
