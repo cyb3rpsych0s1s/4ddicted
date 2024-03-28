@@ -135,7 +135,7 @@ public func Reacts(reaction: CName) -> Void {
   let spoken = localization.GetVoiceLanguage();
   E(s"reacts: voice language (\(NameToString(spoken)))");
   // if spoken language is not available, abort
-  if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
+  if !IsLanguageSupported(spoken) { return; }
   GameInstance.GetAudioSystem(this.GetGame()).Play(reaction, this.GetEntityID(), n"V");
 }
 

@@ -2,6 +2,7 @@ module Addicted.Helpers
 import Addicted.Mood
 import Addicted.Threshold
 import Addicted.Utils.E
+import Addicted.IsLanguageSupported
 
 public class Feeling {
   public static func OnceWarned(threshold: Threshold, warnings: Uint32) -> Mood {
@@ -63,14 +64,9 @@ public class Feeling {
   }
 
   public static func Reaction(mood: Mood, gender: gamedataGender, language: CName) -> CName {
-    let language = NameToString(language);
     if Equals(mood, Mood.Any) { return n""; }
-    if StrLen(language) == 0 { language = "en-us"; }
-    if NotEquals(language, "en-us")
-      && NotEquals(language, "fr-fr")
-      && NotEquals(language, "es-es")
-      && NotEquals(language, "zh-cn")
-      && NotEquals(language, "pt-br") { return n""; }
+    if StrLen(NameToString(language)) == 0 { language = n"en-us"; }
+    if !IsLanguageSupported(language) { return n""; }
 
     let output: CName;
     let choices: array<String>;
