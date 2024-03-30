@@ -35,14 +35,17 @@ To all people who helped along the way:
 ♦ Vanman Zhang
 ♦ [tobozo](https://github.com/tobozo)
 ♦ [IslandDancer](https://github.com/IslandDancer)
-♦ Auska
+♦ [Auska](https://github.com/effs)
+♦ [Fuzzo](https://github.com/rfuzzo)
 ♦ Lyralei
 ♦ Sürr
 ♦ Hróbjartur Fóðarsson
 ♦ [deadlymustard](https://github.com/deadlymustard)
+♦ [Yamashi](https://github.com/Yamashi)
 ♦ [Maxime](https://github.com/maximegmd)
 ♦ [WopSs](https://github.com/WopsS)
-♦ Simarilius
+♦ [WSSDude](https://github.com/WSSDude)
+♦ [Simarilius](https://github.com/Simarilius-uk)
 ♦ dddzzzkkk
 ♦ Paperclip
 ♦ donk7413
