@@ -86,7 +86,7 @@ Effectors.MigraineEnd:
 Effectors.Dizzy:
   $type: Effector_Record
   effectorClassName: PlayBreathingAnimationEffector
-  prereqRecord: Prereqs.AlwaystruePrereq
+  prereqRecord: Prereqs.AlwaysTruePrereq
   amplitudeWeight: 1.0
   animFeatureName: CameraBreathingMedium
   blendInDuration: 5.0
@@ -103,7 +103,7 @@ Effectors.PhotoSensitive:
   $type: Effector_Record
   $props: AutoFlats
   effectorClassName: ModifyStatusEffectDurationEffector
-  prereqRecord: Prereqs.AlwaystruePrereq
+  prereqRecord: Prereqs.AlwaysTruePrereq
   removeAfterActionCall: false
   removeAfterPrereqCheck: false
   statModifierGroups: []
