@@ -5,3 +5,4 @@ localization:
     es-es: addicted\localization\es-es.json
     zh-cn: addicted\localization\zh-cn.json
     pt-br: addicted\localization\pt-br.json
+    it-it: addicted\localization\it-it.json
