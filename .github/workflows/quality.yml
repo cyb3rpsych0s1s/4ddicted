@@ -10,7 +10,7 @@ on:
       - 'scripts/Addicted'
 env:
   DOTNET_VERSION: '8.0.x'
-  REDSCRIPT_VERSION: '0.5.18'
+  REDSCRIPT_VERSION: '0.5.19'
   REDSCRIPT_SRC: scripts/Addicted
 
 jobs:
