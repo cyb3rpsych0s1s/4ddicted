@@ -834,8 +834,8 @@ public class BiomonitorController extends inkGameController {
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
-            if !player.IsInCombat() {
-                E(s">>> trigger reaction on symptoms summary when not in combat");
+            if !player.IsInCombat() && !player.IsPhoneCallActive() {
+                E(s">>> trigger reaction on symptoms summary when not in combat / on call");
                 reaction = Helper.OnceWarned(gender, threshold, warnings, language);
                 E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
                 player.Reacts(reaction);
