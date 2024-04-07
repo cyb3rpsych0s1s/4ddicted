@@ -86,7 +86,18 @@ public class Helper {
       t"Items.HealthMonitorUncommon",
       t"Items.HealthMonitorRare",
       t"Items.HealthMonitorEpic",
-      t"Items.HealthMonitorLegendary"
+      t"Items.HealthMonitorLegendary",
+      t"Items.AdvancedBiomonitorCommon",
+      t"Items.AdvancedBiomonitorCommonPlus",
+      t"Items.AdvancedBiomonitorUncommon",
+      t"Items.AdvancedBiomonitorUncommonPlus",
+      t"Items.AdvancedBiomonitorRare",
+      t"Items.AdvancedBiomonitorRarePlus",
+      t"Items.AdvancedBiomonitorEpic",
+      t"Items.AdvancedBiomonitorEpicPlus",
+      t"Items.AdvancedBiomonitorLegendary",
+      t"Items.AdvancedBiomonitorLegendaryPlus",
+      t"Items.AdvancedBiomonitorLegendaryPlusPlus"
     ];
   }
 
