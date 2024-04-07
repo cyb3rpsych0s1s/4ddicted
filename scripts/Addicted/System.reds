@@ -285,6 +285,11 @@ public class AddictedSystem extends ScriptableSystem {
     let callback = new UpdateWithdrawalSymptomsCallback();
     callback.system = this;
     this.delaySystem.DelayCallbackNextFrame(callback);
+      
+    // apply a slight delay to let V time to stand up
+    let check = new CheckWarnCallback();
+    check.system = this;
+    this.delaySystem.DelayCallback(check, 5., true);
   }
 
   private func OnRefreshed() -> Void {
