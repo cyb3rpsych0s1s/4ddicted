@@ -126,11 +126,6 @@ public class Consumptions {
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(id: ItemID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(id);
-    if idx == -1 { return; }
-    this.values[idx] = value;
-  }
   public func KeyExist(id: ItemID) -> Bool {
     let idx = this.Index(id);
     return idx != -1;
