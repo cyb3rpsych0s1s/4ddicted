@@ -6,6 +6,7 @@ import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect,Translations}
 import Addicted.Crossover.{AlterBlackLaceStatusEffects,AlterNeuroBlockerStatusEffects}
+import Addicted.System.CheckWarnCallback
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -66,6 +67,19 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
       EI(id, s"addictive substance dissipated");
       system.OnDissipated(id);
     }
+
+    // when V get out of Ripperdoc's chair
+    if Equals(id, t"BaseStatusEffect.CyberwareInstallationAnimation") {
+      // if just equipped, trigger warning since V might be already addicted
+      // and didn't have a chance previously to get warned about
+
+      // a slight delay is required also to get out of the animation
+      // and avoid the UI disappearing briefly from screen
+      let callback = new CheckWarnCallback();
+      callback.system = system;
+      GameInstance.GetDelaySystem(this.GetGame()).DelayCallback(callback, 2.5, true);
+    }
+
     return wrappedMethod(evt);
 }
 
