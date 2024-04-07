@@ -83,13 +83,14 @@ protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsu
 
 @addMethod(PlayerPuppet)
 public func HasBiomonitor() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
   let biomonitors: array<TweakDBID> = Helper.Biomonitors();
   let item: ItemID;
   let equipped: Bool;
   for biomonitor in biomonitors {
     item = ItemID.CreateQuery(biomonitor);
-    equipped = system.IsEquipped(this, item);
+    equipped = data.IsEquipped(item);
+    E(s"\(TDBID.ToStringDEBUG(biomonitor)): equipped -> \(ToString(equipped))");
     if equipped {
       return true;
     }
@@ -99,17 +100,17 @@ public func HasBiomonitor() -> Bool {
 
 @addMethod(PlayerPuppet)
 public func HasDetoxifier() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
   let detox = ItemID.CreateQuery(t"Items.ToxinCleanser");
-  let equipped = system.IsEquipped(this, detox);
+  let equipped = data.IsEquipped(detox);
   return equipped;
 }
 
 @addMethod(PlayerPuppet)
 public func HasMetabolicEditor() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
   let editor = ItemID.CreateQuery(t"Items.ReverseMetabolicEnhancer");
-  let equipped = system.IsEquipped(this, editor);
+  let equipped = data.IsEquipped(editor);
   return equipped;
 }
 
