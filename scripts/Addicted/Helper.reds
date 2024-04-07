@@ -176,8 +176,9 @@ public class Helper {
       case Threshold.Mildly:
         return Threshold.Barely;
       default:
-        return Threshold.Clean;
+        break;
     }
+    return Threshold.Clean;
   }
 
   public static func Higher(threshold: Threshold) -> Threshold {
