@@ -154,8 +154,10 @@ public class Consumptions {
   }
   public func Items() -> array<ItemID> {
     let items: array<ItemID> = [];
+    let appellation: ItemID;
     for key in this.keys {
-      ArrayPush(items, ItemID.FromTDBID(key));
+      appellation = ItemID.CreateQuery(key);
+      ArrayPush(items, appellation);
     }
     return items;
   }
