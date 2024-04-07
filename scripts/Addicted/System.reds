@@ -529,7 +529,8 @@ public class AddictedSystem extends ScriptableSystem {
       // otherwise always cross the threshold
       amount = amount + 1;
     }
-    this.Consume(ItemID.FromTDBID(id), amount);
+    let item = ItemID.CreateQuery(id);
+    this.Consume(item, amount);
   }
 
   public func Checkup() -> Void {

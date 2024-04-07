@@ -126,11 +126,6 @@ public class Consumptions {
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(id: ItemID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(id);
-    if idx == -1 { return; }
-    this.values[idx] = value;
-  }
   public func KeyExist(id: ItemID) -> Bool {
     let idx = this.Index(id);
     return idx != -1;
@@ -154,8 +149,10 @@ public class Consumptions {
   }
   public func Items() -> array<ItemID> {
     let items: array<ItemID> = [];
+    let appellation: ItemID;
     for key in this.keys {
-      ArrayPush(items, ItemID.FromTDBID(key));
+      appellation = ItemID.CreateQuery(key);
+      ArrayPush(items, appellation);
     }
     return items;
   }
