@@ -417,12 +417,10 @@ public class AddictedSystem extends ScriptableSystem {
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.Chemicals = chemicals;
-    event.Dismissable = this.warned;
+    event.Dismissable = this.AlreadyWarned();
     event.boot = true;
 
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
-
-    if this.warnings == 0u && this.warned { this.warnings = 1u; } // retro-compatibility
   }
 
   public func CheckWarn() -> Void {
@@ -522,7 +520,7 @@ public class AddictedSystem extends ScriptableSystem {
     return this.OverOneDay(last);
   }
 
-  public func AlreadyWarned() -> Bool { return this.warned; }
+  public func AlreadyWarned() -> Bool { return this.warnings > 0u; }
   public func AlreadyWarned(min: Uint32) -> Bool { return this.warnings >= min; }
   public func HighestThreshold() -> Threshold { return this.consumptions.HighestThreshold(); }  
 
