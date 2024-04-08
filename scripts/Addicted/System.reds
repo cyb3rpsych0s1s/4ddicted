@@ -253,7 +253,7 @@ public class AddictedSystem extends ScriptableSystem {
     // apply a slight delay to let V time to stand up
     let check = new CheckWarnCallback();
     check.system = this;
-    this.delaySystem.DelayCallback(check, 5., true);
+    this.delaySystem.DelayCallback(check, 9., true);
     
     let now = this.timeSystem.GetGameTimeStamp();
     let duration = now - this.restingSince;

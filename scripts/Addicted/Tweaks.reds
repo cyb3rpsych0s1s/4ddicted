@@ -77,7 +77,7 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
       // and avoid the UI disappearing briefly from screen
       let callback = new CheckWarnCallback();
       callback.system = system;
-      GameInstance.GetDelaySystem(this.GetGame()).DelayCallback(callback, 3., true);
+      GameInstance.GetDelaySystem(this.GetGame()).DelayCallback(callback, 4., true);
     }
 
     return wrappedMethod(evt);
