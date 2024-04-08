@@ -46,7 +46,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
-  private persistent let warned: Bool = false;
+  private persistent let warned: Bool = false; // deprecated, use warnings instead
   private persistent let warnings: Uint32 = 0u;
 
   private let updateSymtomsID: DelayID;
