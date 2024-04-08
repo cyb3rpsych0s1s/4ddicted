@@ -6,6 +6,7 @@ import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect,Translations}
 import Addicted.Crossover.{AlterBlackLaceStatusEffects,AlterNeuroBlockerStatusEffects}
+import Addicted.System.CheckWarnCallback
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -66,6 +67,19 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
       EI(id, s"addictive substance dissipated");
       system.OnDissipated(id);
     }
+
+    // when V get out of Ripperdoc's chair
+    if Equals(id, t"BaseStatusEffect.CyberwareInstallationAnimation") {
+      // if just equipped, trigger warning since V might be already addicted
+      // and didn't have a chance previously to get warned about
+
+      // a slight delay is required also to get out of the animation
+      // and avoid the UI disappearing briefly from screen
+      let callback = new CheckWarnCallback();
+      callback.system = system;
+      GameInstance.GetDelaySystem(this.GetGame()).DelayCallback(callback, 4., true);
+    }
+
     return wrappedMethod(evt);
 }
 
@@ -83,13 +97,14 @@ protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsu
 
 @addMethod(PlayerPuppet)
 public func HasBiomonitor() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
   let biomonitors: array<TweakDBID> = Helper.Biomonitors();
   let item: ItemID;
   let equipped: Bool;
   for biomonitor in biomonitors {
     item = ItemID.CreateQuery(biomonitor);
-    equipped = system.IsEquipped(this, item);
+    equipped = data.IsEquipped(item);
+    E(s"\(TDBID.ToStringDEBUG(biomonitor)): equipped -> \(ToString(equipped))");
     if equipped {
       return true;
     }
@@ -99,17 +114,17 @@ public func HasBiomonitor() -> Bool {
 
 @addMethod(PlayerPuppet)
 public func HasDetoxifier() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
   let detox = ItemID.CreateQuery(t"Items.ToxinCleanser");
-  let equipped = system.IsEquipped(this, detox);
+  let equipped = data.IsEquipped(detox);
   return equipped;
 }
 
 @addMethod(PlayerPuppet)
 public func HasMetabolicEditor() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
   let editor = ItemID.CreateQuery(t"Items.ReverseMetabolicEnhancer");
-  let equipped = system.IsEquipped(this, editor);
+  let equipped = data.IsEquipped(editor);
   return equipped;
 }
 

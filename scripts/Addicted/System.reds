@@ -7,6 +7,13 @@ import Addicted.Manager.*
 import Addicted.Crossover.AlterNeuroBlockerStatusEffects
 import Addicted.Crossover.AlterBlackLaceStatusEffects
 
+public class CheckWarnCallback extends DelayCallback {
+  public let system: wref<AddictedSystem>;
+  public func Call() -> Void {
+    this.system.CheckWarn();
+  }
+}
+
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
   public func Call() -> Void {
@@ -39,7 +46,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
-  private persistent let warned: Bool = false;
+  private persistent let warned: Bool = false; // deprecated, use warnings instead
   private persistent let warnings: Uint32 = 0u;
 
   private let updateSymtomsID: DelayID;
@@ -209,7 +216,7 @@ public class AddictedSystem extends ScriptableSystem {
       }
       if NotEquals(EnumInt(before), EnumInt(after)) {
         if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
-        this.Warn(before, after);
+        this.CheckWarn();
       }
     }
   }
@@ -239,6 +246,15 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func OnSlept() -> Void {
+    let callback = new UpdateWithdrawalSymptomsCallback();
+    callback.system = this;
+    this.delaySystem.DelayCallbackNextFrame(callback);
+
+    // apply a slight delay to let V time to stand up
+    let check = new CheckWarnCallback();
+    check.system = this;
+    this.delaySystem.DelayCallback(check, 9., true);
+    
     let now = this.timeSystem.GetGameTimeStamp();
     let duration = now - this.restingSince;
     let minimum = 60. * 60. * 6.; // 6h
@@ -274,10 +290,6 @@ public class AddictedSystem extends ScriptableSystem {
         }
       }
     }
-
-    let callback = new UpdateWithdrawalSymptomsCallback();
-    callback.system = this;
-    this.delaySystem.DelayCallbackNextFrame(callback);
   }
 
   private func OnRefreshed() -> Void {
@@ -333,23 +345,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnBiomonitorChanged(hasBiomonitor: Bool) -> Void {
     this.hasBiomonitorEquipped = hasBiomonitor;
-    if hasBiomonitor {
-      let size = this.consumptions.Size();
-      if size == 0 { return; }
-      let threshold: Threshold;
-      let consumption: ref<Consumption>;
-      let ids = this.consumptions.Items();
-      // if just equipped, trigger warning since V might be already addicted
-      // and didn't have a chance previously to get warned about
-      for id in ids {
-        consumption = this.consumptions.Get(id);
-        threshold = Helper.Threshold(consumption.current);
-        if Helper.IsSerious(threshold) {
-          let lower = Helper.Lower(threshold);
-          this.Warn(lower, threshold);
-        }
-      }
-    }
   }
 
   public func OnDetoxifierChanged(hasDetoxifier: Bool) -> Void {
@@ -407,11 +402,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   /// warn a player with a biomonitor
-  public func Warn(before: Threshold, after: Threshold) -> Void {
-    if !this.player.HasBiomonitor() { return; }
-    // avoids meaningless notifications
-    if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
-
+  public func Warn() -> Void {
     let customer: ref<Customer> = new Customer();
     customer.FirstName = "V";
     customer.LastName = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
@@ -426,12 +417,30 @@ public class AddictedSystem extends ScriptableSystem {
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.Chemicals = chemicals;
-    event.Dismissable = this.warned;
+    event.Dismissable = this.AlreadyWarned();
     event.boot = true;
 
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
+  }
 
-    if this.warnings == 0u && this.warned { this.warnings = 1u; } // retro-compatibility
+  public func CheckWarn() -> Void {
+    if !this.player.HasBiomonitor() { return; }
+
+    let size = this.consumptions.Size();
+    if size == 0 { return; }
+    let consumables = Consumables();
+    let score: Int32;
+    let threshold: Threshold;
+    let serious: Bool;
+    for consumable in consumables {
+      score = this.consumptions.TotalConsumption(consumable);
+      threshold = Helper.Threshold(score);
+      serious = Helper.IsSerious(threshold);
+      if serious {
+        this.Warn();
+        return;
+      }
+    }
   }
 
   public func NotifyWarning() -> Void {
@@ -511,7 +520,7 @@ public class AddictedSystem extends ScriptableSystem {
     return this.OverOneDay(last);
   }
 
-  public func AlreadyWarned() -> Bool { return this.warned; }
+  public func AlreadyWarned() -> Bool { return this.warnings > 0u; }
   public func AlreadyWarned(min: Uint32) -> Bool { return this.warnings >= min; }
   public func HighestThreshold() -> Threshold { return this.consumptions.HighestThreshold(); }  
 
@@ -529,8 +538,7 @@ public class AddictedSystem extends ScriptableSystem {
       // otherwise always cross the threshold
       amount = amount + 1;
     }
-    let item = ItemID.CreateQuery(id);
-    this.Consume(item, amount);
+    this.Consume(ItemID.FromTDBID(id), amount);
   }
 
   public func Checkup() -> Void {
