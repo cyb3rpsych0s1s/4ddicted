@@ -51,6 +51,15 @@ public class AddictedSystem extends ScriptableSystem {
   private let updateSymtomsID: DelayID;
   private let healingRechargeDurationModifier: ref<gameStatModifierData>;
 
+  private func RefreshStats(player: ref<PlayerPuppet>) -> Void {
+    let stats = GameInstance.GetStatsSystem(player.GetGame());
+    let soi = Cast<StatsObjectID>(player.GetEntityID());
+    this.hasDetoxifierEquipped = stats
+      .GetStatValue(soi, gamedataStatType.HasToxicCleanser) >= 1.0;
+    this.hasMetabolicEditorEquipped = stats
+      .GetStatValue(soi, gamedataStatType.HasMetabolicEnhancer) >= 1.0;
+  }
+
   private func RegisterListeners(player: ref<PlayerPuppet>) -> Void {
     this.stimulantManager = new StimulantManager();
     this.stimulantManager.Register(player);
@@ -98,6 +107,7 @@ public class AddictedSystem extends ScriptableSystem {
       callback.system = this;
       this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
 
+      this.RefreshStats(this.player);
       this.RegisterListeners(this.player);
 
       this.RefreshConfig();
