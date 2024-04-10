@@ -297,11 +297,6 @@ private final func UnequipItem(itemID: ItemID) -> Void {
     E(s"uninstalled by item id \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     let player = this.m_owner as PlayerPuppet;
-    if IsDefined(player) && Generic.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(player.GetGame());
-      system.OnBiomonitorChanged(false);
-      return;
-    }
     if IsDefined(player) && Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnDetoxifierChanged(false);
@@ -325,11 +320,6 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32, opt 
     E(s"uninstalled by index(es) \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     let player = this.m_owner as PlayerPuppet;
-    if IsDefined(player) && Generic.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(player.GetGame());
-      system.OnBiomonitorChanged(false);
-      return;
-    }
     if IsDefined(player) && Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnDetoxifierChanged(false);
@@ -353,10 +343,6 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Bool {
   if cyberware && equipped {
     E(s"installed \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
-    if Generic.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(this.m_player.GetGame());
-      system.OnBiomonitorChanged(true);
-    }
     if Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnDetoxifierChanged(true);

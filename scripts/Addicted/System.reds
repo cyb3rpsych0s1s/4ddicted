@@ -40,7 +40,6 @@ public class AddictedSystem extends ScriptableSystem {
   public let restingSince: Float;
   private persistent let lastEnergized: Float;
 
-  private persistent let hasBiomonitorEquipped: Bool;
   private persistent let hasDetoxifierEquipped: Bool;
   private persistent let hasMetabolicEditorEquipped: Bool;
 
@@ -341,10 +340,6 @@ public class AddictedSystem extends ScriptableSystem {
         consumption.doses = shrinked;
       }
     }
-  }
-
-  public func OnBiomonitorChanged(hasBiomonitor: Bool) -> Void {
-    this.hasBiomonitorEquipped = hasBiomonitor;
   }
 
   public func OnDetoxifierChanged(hasDetoxifier: Bool) -> Void {
