@@ -254,21 +254,17 @@ public class Consumptions {
   }
   /// symptoms for biomonitor
   public func Symptoms() -> array<ref<Symptom>> {
+    let consumables: array<Consumable> = Consumables();
     let symptoms: array<ref<Symptom>> = [];
     let symptom: ref<Symptom>;
-    let consumption: ref<Consumption>;
     let threshold: Threshold;
-    let keys = this.Items();
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        threshold = consumption.Threshold();
-        if Helper.IsSerious(threshold) {
-            symptom = new Symptom();
-            symptom.Title = Translations.Appellation(ItemID.GetTDBID(key));
-            symptom.Status = Translations.BiomonitorStatus(threshold);
-            ArrayPush(symptoms, symptom);
-        }
+    for consumable in consumables {
+      threshold = this.Threshold(consumable);
+      if Helper.IsSerious(threshold) {
+        symptom = new Symptom();
+        symptom.Title = Translations.Appellation(consumable);
+        symptom.Status = Translations.BiomonitorStatus(threshold);
+        ArrayPush(symptoms, symptom);
       }
     }
     return symptoms;
