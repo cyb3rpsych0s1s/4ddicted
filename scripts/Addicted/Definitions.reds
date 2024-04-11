@@ -278,6 +278,7 @@ public class Consumptions {
     let threshold: Threshold;
     let max: Int32 = 7;
     let found: Int32 = 0;
+    let duplicate: Bool;
     // here logic is not accurate since you could end up with not the highest threshold
     // for consumables which share the same chemicals composition
     // but it's not really important in terms of gameplay
@@ -286,7 +287,8 @@ public class Consumptions {
       if Helper.IsSerious(threshold) {
         translations = Translations.ChemicalKey(consumable);
         for translation in translations {
-          if !ArrayContains(translations, translation) {
+          duplicate = Contains(chemicals, translation);
+          if !duplicate {
             chemical = new Chemical();
             chemical.Key = translation;
             chemical.From = (Cast<Float>(EnumInt(threshold)) / 2.0) + RandRangeF(-10.0, 10.0);
@@ -300,6 +302,13 @@ public class Consumptions {
     }
     return chemicals;
   }
+}
+
+public func Contains(chemicals: array<ref<Chemical>>, translation: CName) -> Bool {
+  for chemical in chemicals {
+    if Equals(chemical.Key, translation) { return true; }
+  }
+  return false;
 }
 
 public class Consumption {
