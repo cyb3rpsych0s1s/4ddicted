@@ -448,6 +448,7 @@ public class BiomonitorController extends inkGameController {
             let substance: ref<inkText>;
             let value: ref<inkText>;
             let controller: ref<inkTextValueProgressController>;
+            let pair: array<ref<inkText>>;
 
             while current < 7 {
                 substance = this.chemicals[current*2];
@@ -456,13 +457,18 @@ public class BiomonitorController extends inkGameController {
 
                 if current < found {
                     chemical = chemicals[current];
+                    substance.SetVisible(true);
+                    value.SetVisible(true);
+                    pair = this.parentheses[current];
+                    pair[0].SetVisible(true);
+                    pair[1].SetVisible(true);
                     substance.SetLocalizationKey(chemical.Key);
                     controller.SetBaseValue(chemical.From);
                     controller.SetTargetValue(chemical.To);
                 } else {
                     substance.SetVisible(false);
                     value.SetVisible(false);
-                    let pair: array<ref<inkText>> = this.parentheses[current];
+                    pair = this.parentheses[current];
                     pair[0].SetVisible(false);
                     pair[1].SetVisible(false);
                 }
