@@ -83,6 +83,9 @@ public class Translations {
         return [n"Mod-Addicted-Chemical-Nicotine"];
       case Consumable.NeuroBlocker:
         return [n"Mod-Addicted-Chemical-Prazosin", n"Mod-Addicted-Chemical-Brevibloc", n"Mod-Addicted-Chemical-Lopressor"];
+      default:
+        break;
     }
+    return [];
   }
 }
