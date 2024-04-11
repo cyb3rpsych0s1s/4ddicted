@@ -64,11 +64,11 @@ public class Translations {
       case Consumable.Alcohol:
         return [n"Mod-Addicted-Chemical-Ethanol"];
       case Consumable.MaxDOC:
-        return [];
+        return [n"Mod-Addicted-Chemical-Epinephrine", n"Mod-Addicted-Chemical-Paracetamol", n"Mod-Addicted-Chemical-Nanites"];
       case Consumable.BounceBack:
-        return [];
+        return [n"Mod-Addicted-Chemical-Epinephrine", n"Mod-Addicted-Chemical-Paracetamol", n"Mod-Addicted-Chemical-Nanites"];
       case Consumable.HealthBooster:
-        return [];
+        return [n"Mod-Addicted-Chemical-Epinephrine", n"Mod-Addicted-Chemical-Paracetamol", n"Mod-Addicted-Chemical-Nanites"];
       case Consumable.MemoryBooster:
         return [n"Mod-Addicted-Chemical-Benzedrine", n"Mod-Addicted-Chemical-Modafinil"];
       case Consumable.OxyBooster:
