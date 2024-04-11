@@ -40,7 +40,6 @@ public class AddictedSystem extends ScriptableSystem {
   public let restingSince: Float;
   private persistent let lastEnergized: Float;
 
-  private persistent let hasBiomonitorEquipped: Bool;
   private persistent let hasDetoxifierEquipped: Bool;
   private persistent let hasMetabolicEditorEquipped: Bool;
 
@@ -51,6 +50,15 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let updateSymtomsID: DelayID;
   private let healingRechargeDurationModifier: ref<gameStatModifierData>;
+
+  private func RefreshStats(player: ref<PlayerPuppet>) -> Void {
+    let stats = GameInstance.GetStatsSystem(player.GetGame());
+    let soi = Cast<StatsObjectID>(player.GetEntityID());
+    this.hasDetoxifierEquipped = stats
+      .GetStatValue(soi, gamedataStatType.HasToxicCleanser) >= 1.0;
+    this.hasMetabolicEditorEquipped = stats
+      .GetStatValue(soi, gamedataStatType.HasMetabolicEnhancer) >= 1.0;
+  }
 
   private func RegisterListeners(player: ref<PlayerPuppet>) -> Void {
     this.stimulantManager = new StimulantManager();
@@ -99,6 +107,7 @@ public class AddictedSystem extends ScriptableSystem {
       callback.system = this;
       this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
 
+      this.RefreshStats(this.player);
       this.RegisterListeners(this.player);
 
       this.RefreshConfig();
@@ -341,10 +350,6 @@ public class AddictedSystem extends ScriptableSystem {
         consumption.doses = shrinked;
       }
     }
-  }
-
-  public func OnBiomonitorChanged(hasBiomonitor: Bool) -> Void {
-    this.hasBiomonitorEquipped = hasBiomonitor;
   }
 
   public func OnDetoxifierChanged(hasDetoxifier: Bool) -> Void {

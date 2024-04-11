@@ -30,27 +30,30 @@ public class Translations {
     return GetLocalizedTextByKey(n"Mod-Addicted-Biomonitor-Status-Threshold-Notably");
   }
 
-  public static func Appellation(id: TweakDBID) -> String {
-    if Generic.IsMaxDOC(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
-    }
-    if Generic.IsBounceBack(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BounceBack");
-    }
-    if Generic.IsHealthBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-HealthBooster");
-    }
-    if Generic.IsBlackLace(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BlackLace");
-    }
-    if Generic.IsStaminaBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-StaminaBooster");
-    }
-    if Generic.IsCapacityBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-CarryCapacityBooster");
-    }
-    if Generic.IsMemoryBooster(id) {
-      return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MemoryBooster");
+  public static func Appellation(consumable: Consumable) -> String {
+    switch consumable {
+      case Consumable.Alcohol:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Alcohol");
+      case Consumable.MaxDOC:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MaxDOC");
+      case Consumable.BounceBack:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BounceBack");
+      case Consumable.HealthBooster:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-HealthBooster");
+      case Consumable.MemoryBooster:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-MemoryBooster");
+      case Consumable.StaminaBooster:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-StaminaBooster");
+      case Consumable.CarryCapacityBooster:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-CarryCapacityBooster");
+      case Consumable.BlackLace:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-BlackLace");
+      case Consumable.NeuroBlocker:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-NeuroBlocker");
+      case Consumable.Tobacco:
+        return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Tobacco");
+      default:
+        break;
     }
     return GetLocalizedTextByKey(n"Mod-Addicted-Consumable-Unknown");
   }
@@ -61,11 +64,11 @@ public class Translations {
       case Consumable.Alcohol:
         return [n"Mod-Addicted-Chemical-Ethanol"];
       case Consumable.MaxDOC:
-        return [];
+        return [n"Mod-Addicted-Chemical-Epinephrine", n"Mod-Addicted-Chemical-Paracetamol", n"Mod-Addicted-Chemical-Nanites"];
       case Consumable.BounceBack:
-        return [];
+        return [n"Mod-Addicted-Chemical-Epinephrine", n"Mod-Addicted-Chemical-Paracetamol", n"Mod-Addicted-Chemical-Nanites"];
       case Consumable.HealthBooster:
-        return [];
+        return [n"Mod-Addicted-Chemical-Epinephrine", n"Mod-Addicted-Chemical-Paracetamol", n"Mod-Addicted-Chemical-Nanites"];
       case Consumable.MemoryBooster:
         return [n"Mod-Addicted-Chemical-Benzedrine", n"Mod-Addicted-Chemical-Modafinil"];
       case Consumable.OxyBooster:
@@ -78,6 +81,11 @@ public class Translations {
         return [n"Mod-Addicted-Chemical-Testosterone", n"Mod-Addicted-Chemical-Oxandrin"];
       case Consumable.Tobacco:
         return [n"Mod-Addicted-Chemical-Nicotine"];
+      case Consumable.NeuroBlocker:
+        return [n"Mod-Addicted-Chemical-Prazosin", n"Mod-Addicted-Chemical-Brevibloc", n"Mod-Addicted-Chemical-Lopressor"];
+      default:
+        break;
     }
+    return [];
   }
 }

@@ -113,21 +113,36 @@ public class BiomonitorController extends inkGameController {
     private let insurance: ref<inkText>;
     private let chemicals: array<ref<inkText>>;
     private let vitals: array<array<ref<inkWidget>>>;
+    private let parentheses: array<array<ref<inkText>>>;
 
     private let hydroxyzine: ref<inkText>;
     private let hydroxyzineValue: ref<inkText>;
+    private let hydroxyzineLeftParen: ref<inkText>;
+    private let hydroxyzineRightParen: ref<inkText>;
     private let tramadol: ref<inkText>;
     private let tramadolValue: ref<inkText>;
+    private let tramadolLeftParen: ref<inkText>;
+    private let tramadolRightParen: ref<inkText>;
     private let desvenlafaxine: ref<inkText>;
     private let desvenlafaxineValue: ref<inkText>;
+    private let desvenlafaxineLeftParen: ref<inkText>;
+    private let desvenlafaxineRightParen: ref<inkText>;
     private let amoxapine: ref<inkText>;
     private let amoxapineValue: ref<inkText>;
+    private let amoxapineLeftParen: ref<inkText>;
+    private let amoxapineRightParen: ref<inkText>;
     private let lactobacillius: ref<inkText>;
     private let lactobacilliusValue: ref<inkText>;
+    private let lactobacilliusLeftParen: ref<inkText>;
+    private let lactobacilliusRightParen: ref<inkText>;
     private let acetaminofen: ref<inkText>;
     private let acetaminofenValue: ref<inkText>;
+    private let acetaminofenLeftParen: ref<inkText>;
+    private let acetaminofenRightParen: ref<inkText>;
     private let bupropion: ref<inkText>;
     private let bupropionValue: ref<inkText>;
+    private let bupropionLeftParen: ref<inkText>;
+    private let bupropionRightParen: ref<inkText>;
 
     private let postpone: DelayID;
     private let beep: DelayID;
@@ -172,18 +187,32 @@ public class BiomonitorController extends inkGameController {
         // defined individually because widgets path are kind of a mess
         this.hydroxyzine = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
         this.hydroxyzineValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
+        this.hydroxyzineLeftParen = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_(_text") as inkText;
+        this.hydroxyzineRightParen = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_)_text") as inkText;
         this.tramadol = topLine.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
         this.tramadolValue = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_TR2_TRAMADOL_Text") as inkText;
+        this.tramadolLeftParen = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_(_text") as inkText;
+        this.tramadolRightParen = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_)_text") as inkText;
         this.desvenlafaxine = topLine.GetWidget(n"Info_DESVENLAFAXINE_Text") as inkText;
         this.desvenlafaxineValue = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_DESVENLAFAXINE_Text") as inkText;
+        this.desvenlafaxineLeftParen = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_(_text") as inkText;
+        this.desvenlafaxineRightParen = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_)_text") as inkText;
         this.amoxapine = middleLine.GetWidget(n"Info_AMOXAPINE_Text") as inkText;
         this.amoxapineValue = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_AMOXAPINE_Text") as inkText;
+        this.amoxapineLeftParen = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_(_text") as inkText;
+        this.amoxapineRightParen = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_)_text") as inkText;
         this.lactobacillius = middleLine.GetWidget(n"Info_R7_LACTOBACILLIUS_Text") as inkText;
         this.lactobacilliusValue = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_R7_LACTOBACILLIUS_Text") as inkText;
+        this.lactobacilliusLeftParen = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_(_text") as inkText;
+        this.lactobacilliusRightParen = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_)_text") as inkText;
         this.acetaminofen = middleLine.GetWidget(n"Info_ACETAMINOFEN_Text") as inkText;
         this.acetaminofenValue = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_ACETAMINOFEN_Text") as inkText;
+        this.acetaminofenLeftParen = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_(_text") as inkText;
+        this.acetaminofenRightParen = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_)_text") as inkText;
         this.bupropion = bottomLine.GetWidget(n"Info_BUPROPION_Text") as inkText;
         this.bupropionValue = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_BUPROPION_Text") as inkText;
+        this.bupropionLeftParen = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_(_text") as inkText;
+        this.bupropionRightParen = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_)_text") as inkText;
 
         this.chemicals = [];
         ArrayPush(this.chemicals, this.hydroxyzine);
@@ -200,6 +229,15 @@ public class BiomonitorController extends inkGameController {
         ArrayPush(this.chemicals, this.acetaminofenValue);
         ArrayPush(this.chemicals, this.bupropion);
         ArrayPush(this.chemicals, this.bupropionValue);
+
+        this.parentheses = [];
+        ArrayPush(this.parentheses, [this.hydroxyzineLeftParen, this.hydroxyzineRightParen]);
+        ArrayPush(this.parentheses, [this.tramadolLeftParen, this.tramadolRightParen]);
+        ArrayPush(this.parentheses, [this.desvenlafaxineLeftParen, this.desvenlafaxineRightParen]);
+        ArrayPush(this.parentheses, [this.amoxapineLeftParen, this.amoxapineRightParen]);
+        ArrayPush(this.parentheses, [this.lactobacilliusLeftParen, this.lactobacilliusRightParen]);
+        ArrayPush(this.parentheses, [this.acetaminofenLeftParen, this.acetaminofenRightParen]);
+        ArrayPush(this.parentheses, [this.bupropionLeftParen, this.bupropionRightParen]);
 
         let row: array<ref<inkWidget>>;
         
@@ -410,6 +448,7 @@ public class BiomonitorController extends inkGameController {
             let substance: ref<inkText>;
             let value: ref<inkText>;
             let controller: ref<inkTextValueProgressController>;
+            let pair: array<ref<inkText>>;
 
             while current < 7 {
                 substance = this.chemicals[current*2];
@@ -418,13 +457,20 @@ public class BiomonitorController extends inkGameController {
 
                 if current < found {
                     chemical = chemicals[current];
+                    substance.SetVisible(true);
+                    value.SetVisible(true);
+                    pair = this.parentheses[current];
+                    pair[0].SetVisible(true);
+                    pair[1].SetVisible(true);
                     substance.SetLocalizationKey(chemical.Key);
                     controller.SetBaseValue(chemical.From);
                     controller.SetTargetValue(chemical.To);
                 } else {
-                    substance.SetLocalizationKey(n"Mod-Addicted-Chemical-Irrelevant");
-                    controller.SetBaseValue(0.0);
-                    controller.SetTargetValue(0.0);
+                    substance.SetVisible(false);
+                    value.SetVisible(false);
+                    pair = this.parentheses[current];
+                    pair[0].SetVisible(false);
+                    pair[1].SetVisible(false);
                 }
 
                 current += 1;

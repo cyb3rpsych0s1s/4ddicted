@@ -254,42 +254,41 @@ public class Consumptions {
   }
   /// symptoms for biomonitor
   public func Symptoms() -> array<ref<Symptom>> {
+    let consumables: array<Consumable> = Consumables();
     let symptoms: array<ref<Symptom>> = [];
     let symptom: ref<Symptom>;
-    let consumption: ref<Consumption>;
     let threshold: Threshold;
-    let keys = this.Items();
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        threshold = consumption.Threshold();
-        if Helper.IsSerious(threshold) {
-            symptom = new Symptom();
-            symptom.Title = Translations.Appellation(ItemID.GetTDBID(key));
-            symptom.Status = Translations.BiomonitorStatus(threshold);
-            ArrayPush(symptoms, symptom);
-        }
+    for consumable in consumables {
+      threshold = this.Threshold(consumable);
+      if Helper.IsSerious(threshold) {
+        symptom = new Symptom();
+        symptom.Title = Translations.Appellation(consumable);
+        symptom.Status = Translations.BiomonitorStatus(threshold);
+        ArrayPush(symptoms, symptom);
       }
     }
     return symptoms;
   }
   /// chemicals for biomonitor
   public func Chemicals() -> array<ref<Chemical>> {
+    let consumables = Consumables();
     let chemicals: array<ref<Chemical>> = [];
     let chemical: ref<Chemical>;
-    let consumption: ref<Consumption>;
-    let keys = this.Items();
     let translations: array<CName>;
     let threshold: Threshold;
     let max: Int32 = 7;
     let found: Int32 = 0;
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        threshold = consumption.Threshold();
-        if Helper.IsSerious(threshold) {
-          translations = Translations.ChemicalKey(Generic.Consumable(ItemID.GetTDBID(key)));
-          for translation in translations {
+    let duplicate: Bool;
+    // here logic is not accurate since you could end up with not the highest threshold
+    // for consumables which share the same chemicals composition
+    // but it's not really important in terms of gameplay
+    for consumable in consumables {
+      threshold = this.Threshold(consumable);
+      if Helper.IsSerious(threshold) {
+        translations = Translations.ChemicalKey(consumable);
+        for translation in translations {
+          duplicate = Contains(chemicals, translation);
+          if !duplicate {
             chemical = new Chemical();
             chemical.Key = translation;
             chemical.From = (Cast<Float>(EnumInt(threshold)) / 2.0) + RandRangeF(-10.0, 10.0);
@@ -303,6 +302,13 @@ public class Consumptions {
     }
     return chemicals;
   }
+}
+
+public func Contains(chemicals: array<ref<Chemical>>, translation: CName) -> Bool {
+  for chemical in chemicals {
+    if Equals(chemical.Key, translation) { return true; }
+  }
+  return false;
 }
 
 public class Consumption {
