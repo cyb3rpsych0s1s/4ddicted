@@ -271,21 +271,22 @@ public class Consumptions {
   }
   /// chemicals for biomonitor
   public func Chemicals() -> array<ref<Chemical>> {
+    let consumables = Consumables();
     let chemicals: array<ref<Chemical>> = [];
     let chemical: ref<Chemical>;
-    let consumption: ref<Consumption>;
-    let keys = this.Items();
     let translations: array<CName>;
     let threshold: Threshold;
     let max: Int32 = 7;
     let found: Int32 = 0;
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        threshold = consumption.Threshold();
-        if Helper.IsSerious(threshold) {
-          translations = Translations.ChemicalKey(Generic.Consumable(ItemID.GetTDBID(key)));
-          for translation in translations {
+    // here logic is not accurate since you could end up with not the highest threshold
+    // for consumables which share the same chemicals composition
+    // but it's not really important in terms of gameplay
+    for consumable in consumables {
+      threshold = this.Threshold(consumable);
+      if Helper.IsSerious(threshold) {
+        translations = Translations.ChemicalKey(consumable);
+        for translation in translations {
+          if !ArrayContains(translations, translation) {
             chemical = new Chemical();
             chemical.Key = translation;
             chemical.From = (Cast<Float>(EnumInt(threshold)) / 2.0) + RandRangeF(-10.0, 10.0);
