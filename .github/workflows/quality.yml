@@ -9,7 +9,8 @@ on:
       - '.github'
       - 'scripts/Addicted'
 env:
-  REDSCRIPT_VERSION: '0.5.17'
+  DOTNET_VERSION: '8.0.x'
+  REDSCRIPT_VERSION: '0.5.19'
   REDSCRIPT_SRC: scripts/Addicted
 
 jobs:
@@ -17,13 +18,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '${{ env.DOTNET_VERSION }}'
       - name: Setup REDscript
         run: C:\msys64\usr\bin\wget.exe https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
       - name: Lint code

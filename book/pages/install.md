@@ -10,18 +10,11 @@ Mandatory steps, in order:
    > this doc assumes you installed it on Steam
    > but you can easily modify it for whichever game launcher
 
-2. ⚙️ REDmod
-   >  modding tools (used to load custom souds)
-   install DLC from your launcher, e.g. Steam
-
-   ⚠️ do not forget to check "Enable mods" on your launcher too.
-
-3. ⚙️ CET
+2. ⚙️ CET
    > scripting engine, based on .lua
    1. download [latest CET release](https://github.com/yamashi/CyberEngineTweaks/releases/latest)
-   2. download [latest Cybercmd release](https://github.com/jac3km4/cybercmd/releases/latest)
-   3. unzip both at the root of your game folder
-   4. configure in-game
+   2. unzip at the root of your game folder
+   3. configure in-game
       1. Launch the game and bind the CET menu key (e.g. `Home`)
       2. Quit the game to configure the other mods
 
@@ -55,6 +48,14 @@ Then, in any order:
 5. 🔺 Codeware
    > redscript dependency
    1. download [latest Codeware release](https://github.com/psiberx/cp2077-codeware/releases/latest)
+   2. unzip at the root of your game folder
+
+6. 🔺 Audioware
+   >  used to manage custom souds and subtitles
+
+   **Only** required if you use this mod's [Optional files (audio files and subtitles)](https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files).
+   Kindly note that Audioware itself requires both RED4ext and Codeware (see above).
+   1. download [latest Audioware release](https://github.com/cyb3rpsych0s1s/audioware/releases/latest)
    2. unzip at the root of your game folder
 
 ```admonish tip title="Addicted"

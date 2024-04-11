@@ -126,11 +126,6 @@ public class Consumptions {
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(id: ItemID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(id);
-    if idx == -1 { return; }
-    this.values[idx] = value;
-  }
   public func KeyExist(id: ItemID) -> Bool {
     let idx = this.Index(id);
     return idx != -1;
@@ -218,6 +213,18 @@ public class Consumptions {
     let current: Threshold;
     for variant in variants {
       current = this.Threshold(variant);
+      if EnumInt(current) > EnumInt(highest) {
+        highest = current;
+      }
+    }
+    return highest;
+  }
+  public func HighestThreshold(addiction: Addiction) -> Threshold {
+    let consumables = Helper.Consumables(addiction);
+    let highest: Threshold = Threshold.Clean;
+    let current: Threshold;
+    for consumable in consumables {
+      current = this.Threshold(consumable);
       if EnumInt(current) > EnumInt(highest) {
         highest = current;
       }
@@ -355,6 +362,7 @@ enum Consumable {
   BlackLace = 8,
   CarryCapacityBooster = 9,
   NeuroBlocker = 10,
+  Tobacco = 11
 }
 
 public static func Consumables() -> array<Consumable> {
@@ -368,7 +376,8 @@ public static func Consumables() -> array<Consumable> {
     Consumable.StaminaBooster,
     Consumable.BlackLace,
     Consumable.CarryCapacityBooster,
-    Consumable.NeuroBlocker
+    Consumable.NeuroBlocker,
+    Consumable.Tobacco
   ];
 }
 
@@ -384,6 +393,8 @@ enum Addiction {
   Anabolics = 1,
   Neuros = 2,
   BlackLace = 3,
+  Alcohol = 4,
+  Tobacco = 5,
 }
 
 public static func Addictions() -> array<Addiction> {
@@ -391,7 +402,9 @@ public static func Addictions() -> array<Addiction> {
     Addiction.Healers,
     Addiction.Anabolics,
     Addiction.Neuros,
-    Addiction.BlackLace
+    Addiction.BlackLace,
+    Addiction.Alcohol,
+    Addiction.Tobacco
   ];
 }
 

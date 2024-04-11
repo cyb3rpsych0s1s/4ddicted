@@ -78,6 +78,11 @@ Then proceed:
 
     ![.inkatlas Part Mapping](pictures/wk-inkatlas-part-mapping.png)
 
+### Troubleshooting
+
+- in *Part mapping*, the placeholder only fits my icon, it's definitely smaller than 64x64px: then re-export from Photoshop with InkAtlas Utils plugin, making sure your 64x64 placeholders are not hidden/locked.
+- in *Part mapping*, there's 2 placeholders named after each of my icons: then open your *inkatlas* in WolvenKit and remove the duplicates in *parts* : only keep your 64x64 placeholders, these are the ones that matter for dimension purpose.
+
 ## consume in your mod
 
 - open your IDE

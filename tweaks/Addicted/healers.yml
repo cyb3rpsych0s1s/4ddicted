@@ -92,7 +92,7 @@ BaseStatusEffect.$(threshold)WeakenedHealthBooster:
   $instances:
     - { threshold: Notably,  modifier: 1.07, modifiers: 7 }
     - { threshold: Severely, modifier: 1.03, modifiers: 3 }
-  $base: BaseStatusEffect.$(prefix)HealthBooster
+  $base: BaseStatusEffect.HealthBooster
   packages:
     - $base: BaseStatusEffect.HealthBooster_inline0
       stats:
@@ -109,7 +109,7 @@ BaseStatusEffect.$(threshold)WeakenedBlackmarket_HealthBooster:
   $instances:
     - { threshold: Notably,  modifier: 1.15, modifiers: 15, malus: -0.6, maluses: 60 }
     - { threshold: Severely, modifier: 1.1,  modifiers: 10, malus: -0.7, maluses: 70 }
-  $base: BaseStatusEffect.$(prefix)HealthBooster
+  $base: BaseStatusEffect.Blackmarket_HealthBooster
   packages:
     - $base: BaseStatusEffect.Blackmarket_HealthBooster_inline0
       stats:
@@ -122,7 +122,7 @@ BaseStatusEffect.$(threshold)WeakenedBlackmarket_HealthBooster:
           statType: BaseStats.StaminaRegenRateMult
           value: $(malus)
   uiData:
-    $base: BaseStatusEffect.$(prefix)HealthBooster_inline$(inline)
+    $base: BaseStatusEffect.Blackmarket_HealthBooster_inline3
     iconPath: $(threshold)WeakenedHealthBooster
     intValues: [ $(modifiers), $(maluses) ]
 

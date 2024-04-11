@@ -1,0 +1,106 @@
+UIIcon.Jitters:
+ $type: UIIcon_Record
+ atlasPartName: jitters_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+# following are modified variant of BaseStatusEffect.Drunk_inline2 inner stats modifiers
+
+Modifier.Jitters.SwayTraversalTime:
+  $type: ConstantStatModifier_Record
+  value: 0.35
+  modifierType: Multiplier
+  statType: BaseStats.SwayTraversalTime
+
+Modifier.Jitters.SwayStartDelay:
+  $type: ConstantStatModifier_Record
+  value: 1.3
+  modifierType: Multiplier
+  statType: BaseStats.SwayStartDelay
+
+Modifier.Jitters.SwayStartBlendTime:
+  $type: ConstantStatModifier_Record
+  value: 1
+  modifierType: Multiplier
+  statType: BaseStats.SwayStartBlendTime
+
+Modifier.Jitters.RecoilAllowSway:
+  $type: ConstantStatModifier_Record
+  value: 2
+  modifierType: Additive
+  statType: BaseStats.RecoilAllowSway
+
+Modifier.Jitters.SwaySideMaximumAngleDistance:
+  $type: ConstantStatModifier_Record
+  value: 1.5
+  modifierType: Multiplier
+  statType: BaseStats.SwaySideMaximumAngleDistance
+
+Modifier.Jitters.SwaySideMinimumAngleDistance:
+  $type: ConstantStatModifier_Record
+  value: 1
+  modifierType: Multiplier
+  statType: BaseStats.SwaySideMinimumAngleDistance
+
+# following is modified variant of BaseStatusEffect.Drunk_inline2
+Effector.Jitters.Weapon:
+  $type: ApplyStatGroupEffector_Record
+  applicationTarget: Weapon
+  removeWithEffector: True
+  statGroup:
+    $type: StatModifierGroup_Record
+    statModifiers:
+      - Modifier.Jitters.SwayTraversalTime
+      - Modifier.Jitters.SwayStartDelay
+      - Modifier.Jitters.SwayStartBlendTime
+      - Modifier.Jitters.RecoilAllowSway
+      - Modifier.Jitters.SwaySideMaximumAngleDistance
+      - Modifier.Jitters.SwaySideMinimumAngleDistance
+  effectorClassName: ApplyStatGroupEffector
+  prereqRecord: Prereqs.AnyWeaponHeldPrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+
+Package.Jitters.Weapon:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effector.Jitters.Weapon
+
+Modifier.Jitters.Duration:
+  $type: ConstantStatModifier_Record
+  value: 180
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+
+Duration.Jitters:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: False
+  optimiseCombinedModifiers: False
+  saveBasedOnStatType: False
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers:
+    - Modifier.Jitters.Duration
+
+UIData.Jitters:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-Jitters-Desc
+  displayName: LocKey#Mod-Addicted-Jitters
+  fluffText: ''
+  iconPath: Jitters
+  priority: -8
+  floatValues: []
+  intValues: []
+  nameValues: []
+  stats: []
+
+BaseStatusEffect.Jitters:
+  $base: BaseStatusEffect.Drunk
+  gameplayTags: [ Debuff, DoT, Poison, Debuff, Jitters ]
+  duration: Duration.Jitters
+  uiData: UIData.Jitters
+  packages:
+    - Package.Jitters.Weapon
+    - BaseStatusEffect.Drunk_inline11
+    - BaseStatusEffect.DrillingShakeNormal_inline0
+    - BaseStatusEffect.BreathingHeavy_inline0

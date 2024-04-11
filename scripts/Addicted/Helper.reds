@@ -4,9 +4,19 @@ import Addicted.*
 import Addicted.Utils.{E,EI}
 import Addicted.Helpers.*
 
+public func IsLanguageSupported(locale: CName) -> Bool {
+  return Equals(locale, n"en-us")
+  || Equals(locale, n"fr-fr")
+  || Equals(locale, n"es-es")
+  || Equals(locale, n"zh-cn")
+  || Equals(locale, n"pt-br")
+  || Equals(locale, n"it-it");
+}
+
 public class Helper {
   public static func Category(id: ItemID) -> Category {
-    if Generic.IsBlackLace(ItemID.GetTDBID(id)) { return Category.Hard; }
+    if Generic.IsBlackLace(ItemID.GetTDBID(id))
+    || Generic.IsAlcohol(ItemID.GetTDBID(id)) { return Category.Hard; }
     return Category.Mild;
   }
 
@@ -56,6 +66,10 @@ public class Helper {
         return [Consumable.MemoryBooster, Consumable.NeuroBlocker];
       case Addiction.BlackLace:
         return [Consumable.BlackLace];
+      case Addiction.Alcohol:
+        return [Consumable.Alcohol];
+      case Addiction.Tobacco:
+        return [Consumable.Tobacco];
       default:
         break;
     }
@@ -72,7 +86,18 @@ public class Helper {
       t"Items.HealthMonitorUncommon",
       t"Items.HealthMonitorRare",
       t"Items.HealthMonitorEpic",
-      t"Items.HealthMonitorLegendary"
+      t"Items.HealthMonitorLegendary",
+      t"Items.AdvancedBiomonitorCommon",
+      t"Items.AdvancedBiomonitorCommonPlus",
+      t"Items.AdvancedBiomonitorUncommon",
+      t"Items.AdvancedBiomonitorUncommonPlus",
+      t"Items.AdvancedBiomonitorRare",
+      t"Items.AdvancedBiomonitorRarePlus",
+      t"Items.AdvancedBiomonitorEpic",
+      t"Items.AdvancedBiomonitorEpicPlus",
+      t"Items.AdvancedBiomonitorLegendary",
+      t"Items.AdvancedBiomonitorLegendaryPlus",
+      t"Items.AdvancedBiomonitorLegendaryPlusPlus"
     ];
   }
 
@@ -162,8 +187,9 @@ public class Helper {
       case Threshold.Mildly:
         return Threshold.Barely;
       default:
-        return Threshold.Clean;
+        break;
     }
+    return Threshold.Clean;
   }
 
   public static func Higher(threshold: Threshold) -> Threshold {

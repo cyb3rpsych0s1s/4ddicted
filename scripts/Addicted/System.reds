@@ -7,6 +7,13 @@ import Addicted.Manager.*
 import Addicted.Crossover.AlterNeuroBlockerStatusEffects
 import Addicted.Crossover.AlterBlackLaceStatusEffects
 
+public class CheckWarnCallback extends DelayCallback {
+  public let system: wref<AddictedSystem>;
+  public func Call() -> Void {
+    this.system.CheckWarn();
+  }
+}
+
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
   public func Call() -> Void {
@@ -26,6 +33,8 @@ public class AddictedSystem extends ScriptableSystem {
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
   private let blacklaceManager: ref<BlackLaceManager>;
+  private let alcoholManager: ref<AlcoholManager>;
+  private let tobaccoManager: ref<TobaccoManager>;
 
   private persistent let consumptions: ref<Consumptions>;
   public let restingSince: Float;
@@ -37,16 +46,50 @@ public class AddictedSystem extends ScriptableSystem {
 
   private let board: wref<IBlackboard>;
   private let quiet: Bool = false;
-  private persistent let warned: Bool = false;
+  private persistent let warned: Bool = false; // deprecated, use warnings instead
   private persistent let warnings: Uint32 = 0u;
 
   private let updateSymtomsID: DelayID;
+  private let healingRechargeDurationModifier: ref<gameStatModifierData>;
 
+  private func RegisterListeners(player: ref<PlayerPuppet>) -> Void {
+    this.stimulantManager = new StimulantManager();
+    this.stimulantManager.Register(player);
+
+    this.blacklaceManager = new BlackLaceManager();
+    this.blacklaceManager.Register(player);
+
+    this.alcoholManager = new AlcoholManager();
+    this.alcoholManager.Register(player);
+
+    this.tobaccoManager = new TobaccoManager();
+    this.tobaccoManager.Register(player);
+
+    this.onoManager = new AudioManager();
+    this.onoManager.Register(player);
+  }
+
+  private func UnregisterListeners(player: ref<PlayerPuppet>) -> Void {
+    this.onoManager.Unregister(player);
+    this.onoManager = null;
+
+    this.stimulantManager.Unregister(player);
+    this.stimulantManager = null;
+    
+    this.blacklaceManager.Unregister(player);
+    this.blacklaceManager = null;
+
+    this.alcoholManager.Unregister(player);
+    this.alcoholManager = null;
+
+    this.tobaccoManager.Unregister(player);
+    this.tobaccoManager = null;
+  }
 
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
-      E(s"initialize system on player attach");
+      E(s"on player attach");
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
@@ -56,17 +99,16 @@ public class AddictedSystem extends ScriptableSystem {
       callback.system = this;
       this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
 
-      this.stimulantManager = new StimulantManager();
-      this.stimulantManager.Register(this.player);
-
-      this.blacklaceManager = new BlackLaceManager();
-      this.blacklaceManager.Register(this.player);
-
-      this.onoManager = new AudioManager();
-      this.onoManager.Register(this.player);
+      this.RegisterListeners(this.player);
 
       this.RefreshConfig();
     } else { F(s"no player found!"); }
+  }
+
+  public final func OnPlayerDetach(player: ref<PlayerPuppet>) -> Void {
+    E(s"on player detach");
+    this.UnregisterListeners(this.player);
+    this.player = null;
   }
 
   private func OnAttach() -> Void {
@@ -83,30 +125,14 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnDetach() -> Void {
     E(s"on detach system");
-
-    this.onoManager.Unregister(this.player);
-    this.onoManager = null;
-    
-    this.stimulantManager.Unregister(this.player);
-    this.stimulantManager = null;
-    
-    this.blacklaceManager.Unregister(this.player);
-    this.blacklaceManager = null;
+    this.UnregisterListeners(this.player);
 
     OnAddictedPostDetach(this);
   }
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
     E(s"on restored system");
-
-    this.stimulantManager = new StimulantManager();
-    this.stimulantManager.Register(this.player);
-
-    this.blacklaceManager = new BlackLaceManager();
-    this.blacklaceManager.Register(this.player);
-
-    this.onoManager = new AudioManager();
-    this.onoManager.Register(this.player);
+    this.RegisterListeners(this.player);
   }
 
   private cb func OnPreSave(event: ref<GameSessionEvent>) {
@@ -189,8 +215,24 @@ public class AddictedSystem extends ScriptableSystem {
         this.Hint(id);
       }
       if NotEquals(EnumInt(before), EnumInt(after)) {
-        this.Warn(before, after);
+        if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
+        this.CheckWarn();
       }
+    }
+  }
+
+  // HealingItemsRecharge - HealingItemsRechargeDuration (on consumption)
+  private func UpdateHealingChargeDuration(player: ref<PlayerPuppet>) -> Void {
+    let system = AddictedSystem.GetInstance(player.GetGame());
+    let threshold = system.Threshold(Addiction.Healers);
+    let serious = Helper.IsSerious(threshold);
+    let stats: ref<StatsSystem> = GameInstance.GetStatsSystem(player.GetGame());
+    if serious && !IsDefined(this.healingRechargeDurationModifier) {
+      this.healingRechargeDurationModifier = RPGManager.CreateStatModifier(gamedataStatType.HealingItemsRechargeDuration, gameStatModifierType.Multiplier, 0.8);
+      stats.AddModifier(Cast<StatsObjectID>(player.GetEntityID()), this.healingRechargeDurationModifier);
+    } else if !serious && IsDefined(this.healingRechargeDurationModifier) {
+      stats.RemoveModifier(Cast<StatsObjectID>(player.GetEntityID()), this.healingRechargeDurationModifier);
+      this.healingRechargeDurationModifier = null;
     }
   }
 
@@ -204,6 +246,15 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   private func OnSlept() -> Void {
+    let callback = new UpdateWithdrawalSymptomsCallback();
+    callback.system = this;
+    this.delaySystem.DelayCallbackNextFrame(callback);
+
+    // apply a slight delay to let V time to stand up
+    let check = new CheckWarnCallback();
+    check.system = this;
+    this.delaySystem.DelayCallback(check, 9., true);
+    
     let now = this.timeSystem.GetGameTimeStamp();
     let duration = now - this.restingSince;
     let minimum = 60. * 60. * 6.; // 6h
@@ -239,10 +290,6 @@ public class AddictedSystem extends ScriptableSystem {
         }
       }
     }
-
-    let callback = new UpdateWithdrawalSymptomsCallback();
-    callback.system = this;
-    this.delaySystem.DelayCallbackNextFrame(callback);
   }
 
   private func OnRefreshed() -> Void {
@@ -298,23 +345,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   public func OnBiomonitorChanged(hasBiomonitor: Bool) -> Void {
     this.hasBiomonitorEquipped = hasBiomonitor;
-    if hasBiomonitor {
-      let size = this.consumptions.Size();
-      if size == 0 { return; }
-      let threshold: Threshold;
-      let consumption: ref<Consumption>;
-      let ids = this.consumptions.Items();
-      // if just equipped, trigger warning since V might be already addicted
-      // and didn't have a chance previously to get warned about
-      for id in ids {
-        consumption = this.consumptions.Get(id);
-        threshold = Helper.Threshold(consumption.current);
-        if Helper.IsSerious(threshold) {
-          let lower = Helper.Lower(threshold);
-          this.Warn(lower, threshold);
-        }
-      }
-    }
   }
 
   public func OnDetoxifierChanged(hasDetoxifier: Bool) -> Void {
@@ -372,11 +402,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   /// warn a player with a biomonitor
-  public func Warn(before: Threshold, after: Threshold) -> Void {
-    if !this.player.HasBiomonitor() { return; }
-    // avoids meaningless notifications
-    if EnumInt(before) == EnumInt(Threshold.Clean) && EnumInt(after) == EnumInt(Threshold.Barely) { return; }
-
+  public func Warn() -> Void {
     let customer: ref<Customer> = new Customer();
     customer.FirstName = "V";
     customer.LastName = GetLocalizedTextByKey(n"Mod-Addicted-Unknown");
@@ -391,12 +417,30 @@ public class AddictedSystem extends ScriptableSystem {
     event.Customer = customer;
     event.Symptoms = symptoms;
     event.Chemicals = chemicals;
-    event.Dismissable = this.warned;
+    event.Dismissable = this.AlreadyWarned();
     event.boot = true;
 
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
+  }
 
-    if this.warnings == 0u && this.warned { this.warnings = 1u; } // retro-compatibility
+  public func CheckWarn() -> Void {
+    if !this.player.HasBiomonitor() { return; }
+
+    let size = this.consumptions.Size();
+    if size == 0 { return; }
+    let consumables = Consumables();
+    let score: Int32;
+    let threshold: Threshold;
+    let serious: Bool;
+    for consumable in consumables {
+      score = this.consumptions.TotalConsumption(consumable);
+      threshold = Helper.Threshold(score);
+      serious = Helper.IsSerious(threshold);
+      if serious {
+        this.Warn();
+        return;
+      }
+    }
   }
 
   public func NotifyWarning() -> Void {
@@ -476,7 +520,7 @@ public class AddictedSystem extends ScriptableSystem {
     return this.OverOneDay(last);
   }
 
-  public func AlreadyWarned() -> Bool { return this.warned; }
+  public func AlreadyWarned() -> Bool { return this.warnings > 0u; }
   public func AlreadyWarned(min: Uint32) -> Bool { return this.warnings >= min; }
   public func HighestThreshold() -> Threshold { return this.consumptions.HighestThreshold(); }  
 

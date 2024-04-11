@@ -50,6 +50,10 @@ The player will get hints from V whenever (s)he gets seriously addict:
   - anabolics (Stamina Booster, Carry Capacity Booster) will make V grunts.
   - neuro transmitter (RAM Jolt) will make V experience migraine.
 
+🆕 >= beta-0.13.0
+
+These hints slightly increase foes' audio stim range while playing, making V more likely to be detected.
+
 #### Families
 
 Consumables are grouped by family, which gets their own gameplay mechanics.
@@ -65,6 +69,10 @@ Whenever V becomes notably addict to any healer, the benefits of the consumables
 
 The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.
 
+🆕 >= beta-0.13.0
+
+- V will start consuming healers faster when reaching severe addiction threshold.
+
 ![screenshot status effect BounceBack icon](./cheatsheet/pictures/ingame-custom-icons.png)
 
 ##### Stimulants
@@ -78,6 +86,10 @@ and (s)he hasn't consumed any for a certain duration, (s)he gets a debuff equals
 > e.g. if [RAM Jolt](https://cyberpunk.fandom.com/wiki/RAM_Jolt) increases max RAM units by 2, whenever V is withdrawing (s)he is at 90% memory if notably addict, or 70% memory if severely addict until (s)he consumes some again.
 
 Craving for a stimulant will also be shown in radial wheel with custom icon.
+
+🆕 >= beta-0.13.0
+
+- RAM Jolt can also cause Photosensitivity when severely withdrawn, which make impairing blinding effects (e.g. flash grenades) last longer.
 
 ##### Black Lace
 
@@ -93,6 +105,24 @@ and (s)he hasn't consumed any for a certain duration (s)he is susceptible to Fib
 When suffering from Fibromalgya, V will also express some pain.
 
 Craving for Black Lace will also be shown in radial wheel with custom icon.
+
+##### Alcohols
+
+🆕 >= beta-0.13.0
+
+Whenever V becomes notably or severely alcoholic (s)he can be subject to Jitters, greatly impairing his/her ability at aiming with ranged weapons.
+
+> This is not yet compatible with `Idle Anywhere`, because there's currently no way to track when player chooses "Drink alcohol" interation.
+
+##### Cigars and cigarettes
+
+🆕 >= beta-0.13.0
+
+Whenever V becomes notably or severely addict to tobacco (s)he can be subject:
+- Short breath (notably addict): delays + reduces Stamina regeneration, and consumes Stamina while sprinting.
+- Breathless (severely addict): delays + reduces Stamina regeneration, and consumes Stamina both while sprinting and dodging.
+
+> This is compatible with `Idle Anywhere`.
 
 ---
 
@@ -111,6 +141,8 @@ Neuroblockers addiction works a little bit like Healers, except that it weakens 
 In short: the more you're addicted to Neuroblockers, the shorter they last.
 
 The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.
+
+---
 
 ### Cyberware
 
