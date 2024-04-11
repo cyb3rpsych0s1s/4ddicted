@@ -81,6 +81,8 @@ public class Translations {
         return [n"Mod-Addicted-Chemical-Testosterone", n"Mod-Addicted-Chemical-Oxandrin"];
       case Consumable.Tobacco:
         return [n"Mod-Addicted-Chemical-Nicotine"];
+      case Consumable.NeuroBlocker:
+        return [n"Mod-Addicted-Chemical-Prazosin", n"Mod-Addicted-Chemical-Brevibloc", n"Mod-Addicted-Chemical-Lopressor"];
     }
   }
 }
