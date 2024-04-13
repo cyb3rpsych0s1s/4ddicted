@@ -729,7 +729,7 @@ public class BiomonitorController extends inkGameController {
     }
 
     protected cb func OnZone(value: Int32) -> Bool {
-        E(s"enter zone \(ToString(value))");
+        E(s"enter zone: \(ToString(IntEnum<gamePSMZones>(value)))");
         let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
         let safe: Bool = value == EnumInt(gamePSMZones.Safe);
         let mission = Cast<Bool>(quests.GetFact(n"mq055_active"));
