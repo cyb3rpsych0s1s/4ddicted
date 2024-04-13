@@ -97,6 +97,7 @@ enum BiomonitorRestrictions {
     InRadialWheel = 2,
     InQuickHackPanel = 3,
     InPhotoMode = 4,
+    InMission = 5,
 }
 
 public class BiomonitorController extends inkGameController {
@@ -159,6 +160,7 @@ public class BiomonitorController extends inkGameController {
     private let travelListener: ref<CallbackHandle>;
     private let deathListener: ref<CallbackHandle>;
     private let interactionsListener: ref<CallbackHandle>;
+    private let safeAreaListener: ref<CallbackHandle>;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
@@ -363,6 +365,11 @@ public class BiomonitorController extends inkGameController {
         if IsDefined(interactions) {
             this.interactionsListener = interactions.RegisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this, n"OnVisualizersInfo");
         }
+
+        let safe: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
+        if IsDefined(safe) {
+            this.safeAreaListener = interactions.RegisterListenerInt(definitions.PlayerStateMachine.Zones, this, n"OnZone");
+        }
     }
     protected func UnregisterListeners() -> Void {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
@@ -414,6 +421,11 @@ public class BiomonitorController extends inkGameController {
         if IsDefined(interactions) {
             interactions.UnregisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this.interactionsListener);
             this.interactionsListener = null;
+        }
+
+        let safe: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
+        if IsDefined(safe) && IsDefined(this.safeAreaListener) {
+            safe.UnregisterListenerInt(definitions.PlayerStateMachine.Zones, this.safeAreaListener);
         }
     }
 
@@ -714,6 +726,17 @@ public class BiomonitorController extends inkGameController {
         if requested == -1 {
             this.RequestShowInteractionHub();
         }
+    }
+
+    protected cb func OnZone(value: Int32) -> Bool {
+        E(s"enter zone \(ToString(value))");
+        let quests = GameInstance
+        .GetScriptableSystemsContainer(this.GetPlayerControlledObject().GetGame())
+        .Get(n"GameplayQuestSystem") as GameplayQuestSystem;
+        let safe: Bool = value == EnumInt(gamePSMZones.Safe);
+        let mission: Bool = quests.HasQuest("mq055");
+        let restricted = safe && mission;
+        this.UpdateFlag(restricted, BiomonitorRestrictions.InMission);
     }
 
     private func UpdateFlag(value: Bool, flag: BiomonitorRestrictions) -> Void {
