@@ -325,7 +325,7 @@ public class BiomonitorController extends inkGameController {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
         let definitions: ref<AllBlackboardDefinitions> = GetAllBlackboardDefs();
 
-        let state: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
+        let state: ref<IBlackboard> = this.GetPSMBlackboard(this.GetPlayerControlledObject());
         if IsDefined(state) {
             this.deathListener = state.RegisterListenerBool(definitions.PlayerStateMachine.DisplayDeathMenu, this, n"OnDeathMenu");
         }
