@@ -162,6 +162,8 @@ public class BiomonitorController extends inkGameController {
     private let interactionsListener: ref<CallbackHandle>;
     private let safeAreaListener: ref<CallbackHandle>;
 
+    private let journal: ref<JournalManager>;
+
     protected cb func OnInitialize() {
         E(s"on initialize controller");
 
@@ -370,6 +372,11 @@ public class BiomonitorController extends inkGameController {
         if IsDefined(safe) {
             this.safeAreaListener = interactions.RegisterListenerInt(definitions.PlayerStateMachine.Zones, this, n"OnZone");
         }
+
+        this.journal = GameInstance.GetJournalManager(this.GetPlayerControlledObject().GetGame());
+        if IsDefined(this.journal) {
+            this.journal.RegisterScriptCallback(this, n"OnJournal", gameJournalListenerType.State);
+        }
     }
     protected func UnregisterListeners() -> Void {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
@@ -426,6 +433,11 @@ public class BiomonitorController extends inkGameController {
         let safe: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
         if IsDefined(safe) && IsDefined(this.safeAreaListener) {
             safe.UnregisterListenerInt(definitions.PlayerStateMachine.Zones, this.safeAreaListener);
+        }
+
+        if IsDefined(this.journal) {
+            this.journal.UnregisterScriptCallback(this, n"OnJournal");
+            this.journal = null;
         }
     }
 
@@ -732,9 +744,18 @@ public class BiomonitorController extends inkGameController {
         E(s"enter zone: \(ToString(IntEnum<gamePSMZones>(value)))");
         let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
         let safe: Bool = value == EnumInt(gamePSMZones.Safe);
-        let mission = Cast<Bool>(quests.GetFact(n"mq055_active"));
+        let mission = Cast<Bool>(quests.GetFact(n"mq055_apt_interactions_off"));
         let restricted = safe && mission;
         this.UpdateFlag(restricted, BiomonitorRestrictions.InMission);
+    }
+
+    protected cb func OnJournal(hash: Uint32, className: CName, notifyOption: JournalNotifyOption, changeType: JournalChangeType) -> Bool {
+        let entry: wref<JournalEntry> = this.journal.GetEntry(hash);
+        let state: gameJournalEntryState = this.journal.GetEntryState(entry);
+        let ty: gameJournalQuestType = this.journal.GetQuestType(entry);
+        if Equals(ty, gameJournalQuestType.ApartmentQuest) {
+            E(s"apartment quest: id \(entry.GetId()) / state \(ToString(state)) / notify option \(ToString(notifyOption))");
+        }
     }
 
     private func UpdateFlag(value: Bool, flag: BiomonitorRestrictions) -> Void {
