@@ -732,7 +732,7 @@ public class BiomonitorController extends inkGameController {
         E(s"enter zone: \(ToString(IntEnum<gamePSMZones>(value)))");
         let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
         let safe: Bool = value == EnumInt(gamePSMZones.Safe);
-        let mission = Cast<Bool>(quests.GetFact(n"mq055_active"));
+        let mission = Cast<Bool>(quests.GetFact(n"mq055_apt_interactions_off"));
         let restricted = safe && mission;
         this.UpdateFlag(restricted, BiomonitorRestrictions.InMission);
     }
