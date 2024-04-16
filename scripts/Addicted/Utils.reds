@@ -2,14 +2,22 @@
 
 module Addicted.Utils
 
+private static func Exists(funcName: CName) -> Bool {
+  let global = Reflection.GetGlobalFunction(funcName);
+  let exists = IsDefined(global);
+  return exists;
+}
+
 public static func E(str: String) -> Void {
-  if ShowDebugLogsAddicted() {
-    // LogChannel(n"DEBUG", s"[Addicted] \(str)");
+  if ShowDebugLogsAddicted() && Exists(n"LogChannel") {
+    LogChannel(n"DEBUG", s"[Addicted] \(str)");
   };
 }
 
 public static func F(str: String) -> Void {
-  // LogError(s"[ERROR] [Addicted] \(str)");
+  if Exists(n"LogError") {
+    LogError(s"[ERROR] [Addicted] \(str)");
+  }
 }
 
 public static func EI(id: TweakDBID, str: String) -> Void {
