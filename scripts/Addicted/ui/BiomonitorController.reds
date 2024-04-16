@@ -1,5 +1,5 @@
 import Codeware.Localization.*
-import Addicted.Utils.E
+import Addicted.Utils.{E,F}
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
 import Addicted.Helpers.Translations
@@ -97,7 +97,7 @@ enum BiomonitorRestrictions {
     InRadialWheel = 2,
     InQuickHackPanel = 3,
     InPhotoMode = 4,
-    InMission = 5,
+    InRomance = 5,
 }
 
 public class BiomonitorController extends inkGameController {
@@ -163,6 +163,7 @@ public class BiomonitorController extends inkGameController {
     private let safeAreaListener: ref<CallbackHandle>;
 
     private let journal: ref<JournalManager>;
+    private let romanceID: Uint32;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
@@ -328,19 +329,33 @@ public class BiomonitorController extends inkGameController {
         let state: ref<IBlackboard> = this.GetPSMBlackboard(this.GetPlayerControlledObject());
         if IsDefined(state) {
             this.deathListener = state.RegisterListenerBool(definitions.PlayerStateMachine.DisplayDeathMenu, this, n"OnDeathMenu");
-        }
+            if !IsDefined(this.deathListener) { F("unable to listen to player state machine blackboard"); }
+        } else { F("unable to reach player state machine blackboard"); }
+
+        let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
+        if IsDefined(quests) {
+            this.romanceID = quests.RegisterListener(n"mq055_apt_interactions_off", this, n"OnApartmentInteraction");
+            if this.romanceID == 0u { F("unable to listen to quest"); }
+            
+            let active = Cast<Bool>(quests.GetFact(n"mq055_apt_interactions_off"));
+            if active {
+                this.UpdateFlag(true, BiomonitorRestrictions.InRomance);
+            }
+        } else { F("unable to reach quests system"); }
 
         let travel: ref<IBlackboard> = system.Get(definitions.FastTRavelSystem);
         if IsDefined(travel) {
             this.travelListener = travel.RegisterListenerBool(definitions.FastTRavelSystem.FastTravelStarted, this, n"OnFastTravel");
-        }
+            if !IsDefined(this.travelListener) { F("unable to listen to fast travel blackboard"); }
+        } else { F("unable to reach fast travel blackboard"); }
 
         let ui: ref<IBlackboard> = system.Get(definitions.UI_System);
         if IsDefined(ui) {
             this.menuListener = ui.RegisterListenerBool(definitions.UI_System.IsInMenu, this, n"OnInMenu");
             let value: Bool = ui.GetBool(definitions.UI_System.IsInMenu);
             this.flags = Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InMenu), value);
-        }
+            if !IsDefined(this.menuListener) { F("unable to listen to UI blackboard"); }
+        } else { F("unable to reach UI blackboard"); }
 
         let quick: ref<IBlackboard> = system.Get(definitions.UI_QuickSlotsData);
         if IsDefined(quick) {
@@ -351,32 +366,28 @@ public class BiomonitorController extends inkGameController {
             this.wheelListener = quick.RegisterListenerBool(definitions.UI_QuickSlotsData.UIRadialContextRequest, this, n"OnRadialWheel");
             let value: Bool = quick.GetBool(definitions.UI_QuickSlotsData.UIRadialContextRequest);
             this.flags = Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InRadialWheel), value);
-        }
+
+            if !IsDefined(this.hackListener) { F("unable to listen to UI quick slots blackboard (hack)"); }
+            if !IsDefined(this.wheelListener) { F("unable to listen to UI quick slots blackboard (wheel)"); }
+        } else { F("unable to reach UI quick slots blackboard"); }
 
         let stats: ref<IBlackboard> = system.Get(definitions.UI_PlayerStats);
         if IsDefined(stats) {
             this.replacerListener = stats.RegisterListenerBool(definitions.UI_PlayerStats.isReplacer, this, n"OnIsReplacer");
-        }
+            if !IsDefined(this.replacerListener) { F("unable to listen to player stats blackboard"); }
+        } else { F("unable to reach player stats blackboard"); }
 
         let photo: ref<IBlackboard> = system.Get(definitions.PhotoMode);
         if IsDefined(photo) {
             this.photoListener = photo.RegisterListenerBool(definitions.PhotoMode.IsActive, this, n"OnPhotoMode");
-        }
+            if !IsDefined(this.photoListener) { F("unable to listen to photomode blackboard"); }
+        } else { F("unable to reach photomode blackboard"); }
 
         let interactions: ref<IBlackboard> = system.Get(definitions.UIInteractions);
         if IsDefined(interactions) {
             this.interactionsListener = interactions.RegisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this, n"OnVisualizersInfo");
-        }
-
-        let safe: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
-        if IsDefined(safe) {
-            this.safeAreaListener = interactions.RegisterListenerInt(definitions.PlayerStateMachine.Zones, this, n"OnZone");
-        }
-
-        this.journal = GameInstance.GetJournalManager(this.GetPlayerControlledObject().GetGame());
-        if IsDefined(this.journal) {
-            this.journal.RegisterScriptCallback(this, n"OnJournal", gameJournalListenerType.State);
-        }
+            if !IsDefined(this.photoListener) { F("unable to listen to UI interactions blackboard"); }
+        } else { F("unable to reach UI interactions blackboard"); }
     }
     protected func UnregisterListeners() -> Void {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
@@ -439,18 +450,20 @@ public class BiomonitorController extends inkGameController {
             this.journal.UnregisterScriptCallback(this, n"OnJournal");
             this.journal = null;
         }
+
+        let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
+        if IsDefined(quests) {
+            if this.romanceID != 0u { quests.UnregisterListener(n"mq055_apt_interactions_off", this.romanceID); }
+        }
     }
 
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
         E(s"on biomonitor event (is already playing ? \(this.animation))");
         if !this.Playing() && this.CanPlay() {
             if this.ShouldWait() {
-              if !this.waiting {
                 E(s"postponing, there's already another UI ongoing...");
                 this.Reschedule(evt);
-
                 return false;
-              }
             } else {
               if this.waiting {
                 this.Unschedule();
@@ -740,22 +753,10 @@ public class BiomonitorController extends inkGameController {
         }
     }
 
-    protected cb func OnZone(value: Int32) -> Bool {
-        E(s"enter zone: \(ToString(IntEnum<gamePSMZones>(value)))");
-        let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
-        let safe: Bool = value == EnumInt(gamePSMZones.Safe);
-        let mission = Cast<Bool>(quests.GetFact(n"mq055_apt_interactions_off"));
-        let restricted = safe && mission;
-        this.UpdateFlag(restricted, BiomonitorRestrictions.InMission);
-    }
-
-    protected cb func OnJournal(hash: Uint32, className: CName, notifyOption: JournalNotifyOption, changeType: JournalChangeType) -> Bool {
-        let entry: wref<JournalEntry> = this.journal.GetEntry(hash);
-        let state: gameJournalEntryState = this.journal.GetEntryState(entry);
-        let ty: gameJournalQuestType = this.journal.GetQuestType(entry);
-        if Equals(ty, gameJournalQuestType.ApartmentQuest) {
-            E(s"apartment quest: id \(entry.GetId()) / state \(ToString(state)) / notify option \(ToString(notifyOption))");
-        }
+    public final func OnApartmentInteraction(factValue: Int32) -> Void {
+        E(s"on mq055_apt_interactions_off change: \(ToString(factValue))");
+        let restricted = Cast<Bool>(factValue);
+        this.UpdateFlag(restricted, BiomonitorRestrictions.InRomance);
     }
 
     private func UpdateFlag(value: Bool, flag: BiomonitorRestrictions) -> Void {
@@ -768,13 +769,14 @@ public class BiomonitorController extends inkGameController {
 
     protected func InvalidateState() -> Void {
         E(s"invalidate state: playing? \(this.Playing()), paused? \(this.Paused()), flags: \(this.flags) (casted \(Cast<Bool>(this.flags)))");
-        if this.Playing() && Cast<Bool>(this.flags) {
+        let wait = this.ShouldWait();
+        if this.Playing() && wait {
             E(s"pausing animation");
             this.animation.Pause();
             this.waiting = true;
             return;
         }
-        if this.Paused() && !Cast<Bool>(this.flags) {
+        if this.Paused() && !wait {
             E(s"resuming animation");
             this.animation.Resume();
             this.waiting = false;
@@ -783,7 +785,9 @@ public class BiomonitorController extends inkGameController {
     }
 
     public func ShouldWait() -> Bool {
-        return Cast<Bool>(this.flags);
+        let nophone = IsDefined(StatusEffectHelper.GetStatusEffectByID(this.GetPlayerControlledObject(), t"GameplayRestriction.NoPhone"));
+        let wait = Cast<Bool>(this.flags);
+        return wait || nophone;
     }
 
     public func CanPlay() -> Bool {
