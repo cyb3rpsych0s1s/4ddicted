@@ -11,7 +11,8 @@ public static func E(str: String) -> Void {
 
 // available at all time
 public static func F(str: String) -> Void {
-  ModLog(n"Addicted", AsRef(s"ERROR: \(str)"));
+  let msg = s"ERROR: \(str)";
+  ModLog(n"Addicted", AsRef(msg));
 }
 
 public static func EI(id: TweakDBID, str: String) -> Void {
