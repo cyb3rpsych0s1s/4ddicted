@@ -3,57 +3,6 @@ UIIcon.PhotoSensitive:
  atlasPartName: photosensitive_icon
  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
-UIData.WithdrawnFrom$(consumable):
-  $instances:
-    - { consumable: StaminaBooster,       key: Stamina-Booster }
-    - { consumable: CarryCapacityBooster, key: Capacity-Booster }
-    - { consumable: MemoryBooster,        key: Memory-Booster }
-  $base: BaseStatusEffect.$(consumable)_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-$(key)-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-$(key)
-  iconPath: WithdrawnFromPill
-
-BaseStatusEffect.$(threshold)WithdrawnFrom$(consumable):
-  $instances:
-    - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: 90 }
-    - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: 70 }
-    - { threshold: Notably,  consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.9, modifiers: 90 }
-    - { threshold: Severely, consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.7, modifiers: 70 }
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.$(stat)
-          value: $(modifier)
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.Grunt]
-  uiData:
-    $base: UIData.WithdrawnFrom$(consumable)
-    intValues: [ $(modifiers) ]
-
-BaseStatusEffect.$(threshold)WithdrawnFromMemoryBooster:
-  $instances:
-    - { threshold: Notably,  modifier: 0.9, modifiers: 90 }
-    - { threshold: Severely, modifier: 0.7, modifiers: 70 }
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Memory
-          value: $(modifier)
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
-    - $type: GameplayLogicPackage_Record
-      effectors:
-        - Effectors.Dizzy
-  uiData:
-    $base: UIData.WithdrawnFromMemoryBooster
-    intValues: [ $(modifiers) ]
-
 Effectors.Grunt:
   $type: Effector_Record
   effectorClassName: PlaySFXEffector
