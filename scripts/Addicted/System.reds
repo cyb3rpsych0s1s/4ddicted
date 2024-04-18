@@ -608,7 +608,7 @@ public class AddictedSystem extends ScriptableSystem {
     let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
     let before = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
     let after = Bits.Set(before, EnumInt(consumable), withdrawing);
-    blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, after);
+    blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, after, true);
   }
 
   public func DebugTime() -> Void {
