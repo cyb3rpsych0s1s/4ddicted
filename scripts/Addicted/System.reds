@@ -170,8 +170,8 @@ public class AddictedSystem extends ScriptableSystem {
     let consumables = Consumables();
     let withdrawing: Bool = false;
     for consumable in consumables {
-      now = Bits.Set(now, EnumInt(consumable), withdrawing);
       withdrawing = this.NotConsumedRecently(consumable);
+      now = Bits.Set(before, EnumInt(consumable), withdrawing);
     }
     if NotEquals(before, now) {
       blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
