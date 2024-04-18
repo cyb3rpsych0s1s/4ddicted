@@ -170,8 +170,8 @@ public class AddictedSystem extends ScriptableSystem {
     let consumables = Consumables();
     let withdrawing: Bool = false;
     for consumable in consumables {
-      withdrawing = this.IsWithdrawing(consumable);
       now = Bits.Set(now, EnumInt(consumable), withdrawing);
+      withdrawing = this.NotConsumedRecently(consumable);
     }
     if NotEquals(before, now) {
       blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
@@ -513,13 +513,13 @@ public class AddictedSystem extends ScriptableSystem {
     return chemicals;
   }
 
-  public func IsWithdrawing(addiction: Addiction) -> Bool {
+  public func NotConsumedRecently(addiction: Addiction) -> Bool {
     let last = this.consumptions.LastDose(addiction);
     if Equals(last, -1.0) { return false; }
     return this.OverOneDay(last);
   }
 
-  public func IsWithdrawing(consumable: Consumable) -> Bool {
+  public func NotConsumedRecently(consumable: Consumable) -> Bool {
     let last = this.consumptions.LastDose(consumable);
     if Equals(last, -1.0) { return false; }
     return this.OverOneDay(last);
@@ -560,7 +560,7 @@ public class AddictedSystem extends ScriptableSystem {
         let size = ArraySize(consumption.doses);
         let threshold = Helper.Threshold(consumption.current);
         let consumable = Generic.Consumable(ItemID.GetTDBID(id));
-        let withdrawing = this.IsWithdrawing(consumable);
+        let withdrawing = this.player.IsWithdrawing(consumable);
         EI(id, s"current: \(ToString(consumption.current)), doses: \(ToString(size)), threshold \(ToString(threshold)), withdrawing \(ToString(withdrawing))");
       } else {
         FI(id, s"consumption found empty");
@@ -598,7 +598,7 @@ public class AddictedSystem extends ScriptableSystem {
     let consumable: Consumable;
     for id in ids {
       consumable = Generic.Consumable(ItemID.GetTDBID(id));
-      withdrawing = this.IsWithdrawing(consumable);
+      withdrawing = this.player.IsWithdrawing(consumable);
       EI(id, s"withdrawing ? \(withdrawing)");
     }
   }
