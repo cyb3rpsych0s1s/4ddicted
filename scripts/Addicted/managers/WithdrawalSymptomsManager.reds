@@ -75,9 +75,8 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   }
 
   protected func Invalidate(consumable: Consumable, withdrawing: Bool, applied: array<ref<StatusEffect>>, applicables: array<TweakDBID>) -> Void {
-    let sizeApplied = ArraySize(applied);
     let sizeApplicable = ArraySize(applicables);
-    if sizeApplied == 0 || sizeApplicable > 2 { return; }
+    if sizeApplicable == 0 || sizeApplicable > 2 { return; }
 
     if !withdrawing {
       let id: TweakDBID;
@@ -90,25 +89,24 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
         i += 1;
       }
     } else {
-      if !Effect.AreApplied(applied, applicables) {
-        let threshold = this.owner.Threshold(consumable);
-        if sizeApplicable == 1 {
-          switch (threshold) {
-            case Threshold.Severely:
-            case Threshold.Notably:
-              StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
-              break;
-          }
-        } else {
-          switch (threshold) {
-            case Threshold.Severely:
-              StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[1]);
-              break;
-            case Threshold.Notably:
-              StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
-              break;
-          }
-        }
+      let threshold = this.owner.Threshold(consumable);
+      let unique: Bool = sizeApplicable == 1;
+      let severe: Bool = Equals(threshold, Threshold.Severely);
+      let already: Bool = unique
+      ? Effect.IsApplied(applied, applicables[0])
+      : severe
+        ? Effect.IsApplied(applied, applicables[1])
+        : Effect.IsApplied(applied, applicables[0]);
+      if already { return; }
+      if unique {
+        StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
+      }
+      else if severe {
+        StatusEffectHelper.RemoveStatusEffect(this.owner, applicables[0]);
+        StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[1]);
+      } else {
+        StatusEffectHelper.RemoveStatusEffect(this.owner, applicables[1]);
+        StatusEffectHelper.ApplyStatusEffect(this.owner, applicables[0]);
       }
     }
   }
