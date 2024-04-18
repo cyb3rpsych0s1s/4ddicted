@@ -1,15 +1,17 @@
-// inspired from DJ_Kovrik
-
 module Addicted.Utils
 
+// auto-disabled when LogChannel not in scope
 public static func E(str: String) -> Void {
-  if ShowDebugLogsAddicted() {
-    // LogChannel(n"DEBUG", s"[Addicted] \(str)");
-  };
+  let fun = Reflection.GetGlobalFunction(n"LogChannel");
+  let msg = s"[Addicted] \(str)";
+  if IsDefined(fun) {
+    fun.Call([n"DEBUG", AsRef(msg)]);
+  }
 }
 
+// available at all time
 public static func F(str: String) -> Void {
-  // LogError(s"[ERROR] [Addicted] \(str)");
+  ModLog(n"Addicted", AsRef(s"ERROR: \(str)"));
 }
 
 public static func EI(id: TweakDBID, str: String) -> Void {
