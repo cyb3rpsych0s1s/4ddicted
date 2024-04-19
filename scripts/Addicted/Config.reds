@@ -12,3 +12,6 @@ public class AddictedConfig {
   @runtimeProperty("ModSettings.displayValues.Hard", "Mod-Addicted-Mode-Hard")
   public let mode: AddictedMode = AddictedMode.Normal;
 }
+
+// Replace false with true to show full debug logs in CET console
+public static func ShowDebugLogsAddicted() -> Bool = false
