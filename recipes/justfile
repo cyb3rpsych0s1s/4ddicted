@@ -23,7 +23,7 @@ set dotenv-load
 
 [windows]
 @rcopy-only FOLDER TO INCLUDE:
-    if (Test-Path "{{FOLDER}}" -PathType container) { Copy-Item -Path '{{ join(FOLDER, "*") }}' -Destination '{{TO}}' -Force -Recurse -Include *.'{{INCLUDE}}' } else {  Write-Host "missing {{FOLDER}}"; }
+    if (Test-Path "{{FOLDER}}" -PathType container) { Copy-Item -Path '{{ FOLDER }}' -Destination '{{ parent_directory(TO) }}' -Force -Recurse -Container -Filter "*.{{INCLUDE}}" } else {  Write-Host "missing {{FOLDER}}"; }
 
 [windows]
 @remove FILE:
