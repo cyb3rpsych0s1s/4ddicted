@@ -1,8 +1,8 @@
 LootPrereqs.BlackLaceFor$(level)Player:
   $instances:
-    - { level: Trash, prereq: LootPrereqs.PlayerLevelTrashTierPrereq }
-    - { level: Weak,  prereq: LootPrereqs.PlayerLevelWeakTierPrereq  }
-    - { level: Elite, prereq: LootPrereqs.PlayerLevelEliteTierPrereq }
+    - { level: Trash,    prereq: LootPrereqs.PlayerLevelTrashTierPrereq    }
+    - { level: Weak,     prereq: LootPrereqs.PlayerLevelWeakTierPrereq     }
+    - { level: Advanced, prereq: LootPrereqs.PlayerLevelAdvancedTierPrereq }
   $type: gamedataMultiPrereq_Record
   aggregationType: AND
   prereqClassName: gameMultiPrereq
@@ -15,10 +15,10 @@ Loot.$(gang)$(likeliness)Drop_BlackLace$(version):
     # maelstrom
     - { gang: Maelstrom,  version: V0, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
     - { gang: Maelstrom,  version: V0, likeliness: Occasionally, max: 2, chance: 0.2,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
-    - { gang: Maelstrom,  version: V0, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForElitePlayer    }
+    - { gang: Maelstrom,  version: V0, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
     - { gang: Maelstrom,  version: V1, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
     - { gang: Maelstrom,  version: V1, likeliness: Occasionally, max: 2, chance: 0.2,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
-    - { gang: Maelstrom,  version: V1, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForElitePlayer    }
+    - { gang: Maelstrom,  version: V1, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
   $type: gamedataLootItem_Record
   itemID: Items.BlackLace$(version)
   dropChance: $(chance)

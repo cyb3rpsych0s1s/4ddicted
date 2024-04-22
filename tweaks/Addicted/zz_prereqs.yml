@@ -19,3 +19,6 @@ LootPrereqs.IntroducedBlackLace:
   nestedPrereqs:
     - LootPrereqs.StartedThePickupDeal
     - LootPrereqs.PastThePickup
+
+LootPrereqs.PlayerLevelAdvancedTierPrereq:
+  $base: LootPrereqs.PlayerLevelNormalTierPrereq_inline0
