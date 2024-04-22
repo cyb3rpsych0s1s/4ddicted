@@ -1,10 +1,11 @@
-LootTables.BlacklaceTable_For$(level)Player:
+LootTables.$(likeliness)BlacklaceTable_For$(level)Player:
   $instances:
-    - { level: Weak,     version: V0, prereq: LootPrereqs.BlackLaceForWeakPlayer     }
-    - { level: Advanced, version: V1, prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
+    - { level: Weak,     likeliness: '', version: V0,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
+    - { level: Advanced, likeliness: '', version: V1,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
+    - { level: Rookie,   likeliness: Seldom, version: V0, chance: 0.05, prereq: LootPrereqs.BlackLaceInKits            }
   $type: gamedataLootItem_Record
   itemID: Items.BlackLace$(version)
-  dropChance: 0.1
+  dropChance: $(chance)
   dropCountMax: 1
   dropCountMin: 1
   playerPrereqID: $(prereq)
@@ -23,6 +24,11 @@ LootTables.RandomBlacklaceTable:
   lootTableInclusions: []
   queries: []
 
+LootTables.SeldomBlacklaceTable:
+  $base: LootTables.RandomBlacklaceTable
+  lootItems:
+    - LootTables.SeldomBlacklaceTable_ForRookiePlayer
+
 LootTables.Maelstrom_LGM_locker.lootTableInclusions: &AdditionalBlackLaceInclusion
   - !append-once LootTables.RandomBlacklaceTable
 LootTables.Maelstrom_LGS_gadgets.lootTableInclusions: *AdditionalBlackLaceInclusion
@@ -34,3 +40,6 @@ LootTables.Maelstrom_MGM_locker.lootTableInclusions: *AdditionalBlackLaceInclusi
 LootTables.Maelstrom_MGS_crate.lootTableInclusions: *AdditionalBlackLaceInclusion
 LootTables.Maelstrom_MGS_gadgets.lootTableInclusions: *AdditionalBlackLaceInclusion
 # LootTables.Maelstrom_LGM_chemicals already contains LootTables.BlacklaceTable
+
+LootTables.FirstAidKits.lootTableInclusions:
+  - !append-once LootTables.SeldomBlacklaceTable

@@ -10,3 +10,11 @@ LootPrereqs.BlackLaceFor$(level)Player:
   nestedPrereqs:
     - LootPrereqs.IntroducedBlackLace
     - $(prereq)
+
+LootPrereqs.BlackLaceInKits:
+  $type: gamedataMultiPrereq_Record
+  aggregationType: AND
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - LootPrereqs.BlackLaceForRookiePlayer
+    - LootPrereqs.NoCorpoDistricts
