@@ -1,0 +1,50 @@
+LootPrereqs.BlackLaceFor$(level)Player:
+  $instances:
+    - { level: Trash, prereq: LootPrereqs.PlayerLevelTrashTierPrereq }
+    - { level: Weak,  prereq: LootPrereqs.PlayerLevelWeakTierPrereq  }
+    - { level: Elite, prereq: LootPrereqs.PlayerLevelEliteTierPrereq }
+  $type: gamedataMultiPrereq_Record
+  aggregationType: AND
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - LootPrereqs.IntroducedBlackLace
+    - $(prereq)
+
+Loot.$(gang)$(likeliness)Drop_BlackLace$(version):
+  $instances:
+    # maelstrom
+    - { gang: Maelstrom,  version: V0, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
+    - { gang: Maelstrom,  version: V0, likeliness: Occasionally, max: 2, chance: 0.2,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
+    - { gang: Maelstrom,  version: V0, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForElitePlayer    }
+    - { gang: Maelstrom,  version: V1, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
+    - { gang: Maelstrom,  version: V1, likeliness: Occasionally, max: 2, chance: 0.2,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
+    - { gang: Maelstrom,  version: V1, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForElitePlayer    }
+  $type: gamedataLootItem_Record
+  itemID: Items.BlackLace$(version)
+  dropChance: $(chance)
+  dropCountMax: $(max)
+  dropCountMin: 1
+  playerPrereqID: 
+  dropChanceModifiers: []
+  quantityModifiers: []
+  statModifiers: []
+
+Loot.MaelstromDrop.lootItems: &AdditionalBlackLaceLoot
+  - !append-once Loot.MaelstromRarelyDrop_BlackLaceV0
+  - !append-once Loot.MaelstromOccasionallyDrop_BlackLaceV0
+  - !append-once Loot.MaelstromSometimesDrop_BlackLaceV0
+  - !append-once Loot.MaelstromRarelyDrop_BlackLaceV1
+  - !append-once Loot.MaelstromOccasionallyDrop_BlackLaceV1
+  - !append-once Loot.MaelstromSometimesDrop_BlackLaceV1
+Loot.MaelstromShotgunStrongT2.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGenericRangedGruntT1_copperhead.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGenericMeleeGruntT1.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromNetrunnerNetrunnerT2.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGenericRangedGruntT2_rifle.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromSniperT2.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGenericRangedGruntT1_lexington.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGenericMeleeGruntT2_blade.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromFastMeleeFastT3.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGenericMeleeGruntT2_axe.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromFastMeleeFastT2.lootItems: *AdditionalBlackLaceLoot
+Loot.MaelstromGunnerStrongT2.lootItems: *AdditionalBlackLaceLoot
