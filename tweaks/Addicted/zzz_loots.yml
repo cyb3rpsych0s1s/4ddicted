@@ -1,15 +1,3 @@
-LootPrereqs.BlackLaceFor$(level)Player:
-  $instances:
-    - { level: Trash,    prereq: LootPrereqs.PlayerLevelTrashTierPrereq    }
-    - { level: Weak,     prereq: LootPrereqs.PlayerLevelWeakTierPrereq     }
-    - { level: Advanced, prereq: LootPrereqs.PlayerLevelAdvancedTierPrereq }
-  $type: gamedataMultiPrereq_Record
-  aggregationType: AND
-  prereqClassName: gameMultiPrereq
-  nestedPrereqs:
-    - LootPrereqs.IntroducedBlackLace
-    - $(prereq)
-
 Loot.$(gang)$(likeliness)Drop_BlackLace$(version):
   $instances:
     # maelstrom
@@ -24,7 +12,7 @@ Loot.$(gang)$(likeliness)Drop_BlackLace$(version):
   dropChance: $(chance)
   dropCountMax: $(max)
   dropCountMin: 1
-  playerPrereqID: 
+  playerPrereqID: $(prereq)
   dropChanceModifiers: []
   quantityModifiers: []
   statModifiers: []
