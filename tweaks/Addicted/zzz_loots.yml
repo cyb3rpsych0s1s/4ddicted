@@ -149,3 +149,19 @@ Character.HomelessManDE.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
 Character.HomelessManBig.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
 Character.HomelessManBackpack.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
 
+# if more needed:
+##
+# Character.lizzies_customer_XYZ
+# Character.CitizenBikerXYZ
+# Character.CreoleXYZ
+# Character.DumDum
+# Character.LowlifeXYZ
+# Loot.TygerClawsXYZ
+# Loot.ValentinosXYZ
+# Loot.KurtzXYZ
+
+# in vanilla DogTown, junkies already carries some
+# but there's also NPC like:
+##
+# Character.ep1_combat_zone_citizen_XYZ
+# Character.ep1_combat_service_sexworker_XYZ
