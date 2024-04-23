@@ -3,6 +3,7 @@ LootTables.$(likeliness)BlacklaceTable_For$(level)Player:
     - { level: Weak,     likeliness: '', version: V0,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForWeakPlayer          }
     - { level: Advanced, likeliness: '', version: V1,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer      }
     - { level: Rookie,   likeliness: Seldom, version: V0, chance: 0.05, prereq: LootPrereqs.BlackLaceOutsideCorpoDistricts  }
+    - { level: Rookie,   likeliness: Rare, version: V0,   chance: 0.02, prereq: LootPrereqs.BlackLaceOutsideCorpoDistricts  }
   $type: gamedataLootItem_Record
   itemID: Items.BlackLace$(version)
   dropChance: $(chance)
@@ -29,6 +30,11 @@ LootTables.SeldomBlacklaceTable:
   lootItems:
     - LootTables.SeldomBlacklaceTable_ForRookiePlayer
 
+LootTables.RareBlacklaceTable:
+  $base: LootTables.RandomBlacklaceTable
+  lootItems:
+    - LootTables.RareBlacklaceTable_ForRookiePlayer
+
 LootTables.Maelstrom_LGM_locker.lootTableInclusions: &AdditionalBlackLaceInclusion
   - !append-once LootTables.RandomBlacklaceTable
 LootTables.Maelstrom_LGS_gadgets.lootTableInclusions: *AdditionalBlackLaceInclusion
@@ -52,7 +58,7 @@ Character.JunkieMaleDE: *AdditionalBlackLaceLootJunkies
 Character.junkie_no_reaction: *AdditionalBlackLaceLootJunkies
 
 Character.HomelessFemale: &AdditionalBlackLaceLootHomeless
-  lootDrop: LootTables.SeldomBlacklaceTable
+  lootDrop: LootTables.RareBlacklaceTable
 Character.HomelessFemaleDE: *AdditionalBlackLaceLootHomeless
 Character.HomelessMan: *AdditionalBlackLaceLootHomeless
 Character.HomelessManDE: *AdditionalBlackLaceLootHomeless
