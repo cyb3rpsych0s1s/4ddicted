@@ -1,8 +1,8 @@
 LootTables.$(likeliness)BlacklaceTable_For$(level)Player:
   $instances:
-    - { level: Weak,     likeliness: '', version: V0,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
-    - { level: Advanced, likeliness: '', version: V1,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
-    - { level: Rookie,   likeliness: Seldom, version: V0, chance: 0.05, prereq: LootPrereqs.BlackLaceInKits            }
+    - { level: Weak,     likeliness: '', version: V0,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForWeakPlayer          }
+    - { level: Advanced, likeliness: '', version: V1,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer      }
+    - { level: Rookie,   likeliness: Seldom, version: V0, chance: 0.05, prereq: LootPrereqs.BlackLaceOutsideCorpoDistricts  }
   $type: gamedataLootItem_Record
   itemID: Items.BlackLace$(version)
   dropChance: $(chance)

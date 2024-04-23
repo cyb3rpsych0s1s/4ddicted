@@ -11,7 +11,7 @@ LootPrereqs.BlackLaceFor$(level)Player:
     - LootPrereqs.IntroducedBlackLace
     - $(prereq)
 
-LootPrereqs.BlackLaceInKits:
+LootPrereqs.BlackLaceOutsideCorpoDistricts:
   $type: gamedataMultiPrereq_Record
   aggregationType: AND
   prereqClassName: gameMultiPrereq
