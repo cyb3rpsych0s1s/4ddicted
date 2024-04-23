@@ -19,10 +19,6 @@ Loot.$(gang)$(likeliness)Drop_BlackLace$(version):
     - { gang: Animals,    version: V0, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
     # creepy follower
     - { gang: CreepyFollower, version: V0, likeliness: Sometimes, max: 1, chance: 0.2, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
-    # junkies
-    - { gang: Junkies, version: V0,    likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
-    # homeless people
-    - { gang: Homeless, version: V0,    likeliness: Barely,      max: 1, chance: 0.02, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
   $type: gamedataLootItem_Record
   itemID: Items.BlackLace$(version)
   dropChance: $(chance)
