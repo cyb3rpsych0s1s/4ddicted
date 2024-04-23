@@ -43,3 +43,7 @@ Packages.Contraindicated:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.NeuroLoad
+
+BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroStimulants
+  - !append-once Packages.Contraindicated
+BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroStimulants
