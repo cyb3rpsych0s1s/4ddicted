@@ -185,9 +185,10 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
-  public func OnConsumeItem(itemID: ItemID) -> Void {
+  public func OnConsumeItem(itemID: ItemID, opt external: Bool) -> Void {
     let id = ItemID.GetTDBID(itemID);
-    E(s"consume item \(TDBID.ToStringDEBUG(id))");
+    if !external { E(s"consume item \(TDBID.ToStringDEBUG(id))"); }
+    else { E(s"increase item addiction \(TDBID.ToStringDEBUG(id))"); }
     if !this.player.PastPrologue() {
       E(s"no consumption tracked during prologue");
       return;

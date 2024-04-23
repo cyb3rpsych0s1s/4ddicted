@@ -9,3 +9,37 @@ UIIcon.SeverelyWeakenedNeuroblocker:
   $type: UIIcon_Record
   atlasPartName: severely_weakened_inhaler_buff_icon
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+Prereqs.RipperDocMedBuff:
+  $type: StatusEffectPrereq_Record
+  prereqClassName: StatusEffectPrereq
+  statusEffect: BaseStatusEffect.RipperDocMedBuff
+
+Prereqs.RipperDocMedBuffUncommon:
+  $type: StatusEffectPrereq_Record
+  prereqClassName: StatusEffectPrereq
+  statusEffect: BaseStatusEffect.RipperDocMedBuffUncommon
+
+Prereqs.RipperDocMedBuffCommon:
+  $type: StatusEffectPrereq_Record
+  prereqClassName: StatusEffectPrereq
+  statusEffect: BaseStatusEffect.RipperDocMedBuffCommon
+
+Prereqs.ConsumedAnyNeuroBlocker:
+  $type: gamedataMultiPrereq_Record
+  aggregationType: OR
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - Prereqs.RipperDocMedBuff
+    - Prereqs.RipperDocMedBuffUncommon
+    - Prereqs.RipperDocMedBuffCommon
+
+Effectors.NeuroLoad:
+  $type: Effector_Record
+  prereq: Prereqs.ConsumedAnyNeuroBlocker
+  effectorClassName: Addicted.IncreaseNeuroBlockerEffector
+
+Packages.Contraindicated:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.NeuroLoad
