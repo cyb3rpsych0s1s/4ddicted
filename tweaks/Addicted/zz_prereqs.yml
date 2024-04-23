@@ -20,30 +20,6 @@ LootPrereqs.IntroducedBlackLace:
     - LootPrereqs.StartedThePickupDeal
     - LootPrereqs.PastThePickup
 
-LootPrereqs.CityCenter:
-  $type: gamedataDistrictPrereq_Record
-  prereqClassName: DistrictPrereq
-  district: Districts.CityCenter
-
-LootPrereqs.CorpoPlaza:
-  $type: gamedataDistrictPrereq_Record
-  prereqClassName: DistrictPrereq
-  district: Districts.CorpoPlaza
-
-LootPrereqs.NoCityCenter:
-  $type: gamedataIPrereq_Record
-  prereqClassName: gameNotPrereq
-  negatedPrereq: LootPrereqs.CityCenter
-
-LootPrereqs.NoCorpoPlaza:
-  $type: gamedataIPrereq_Record
-  prereqClassName: gameNotPrereq
-  negatedPrereq: LootPrereqs.CorpoPlaza
-
 LootPrereqs.NoCorpoDistricts:
-  $type: gamedataMultiPrereq_Record
-  aggregationType: AND
-  prereqClassName: gameMultiPrereq
-  nestedPrereqs:
-    - NoCityCenter
-    - NoCorpoPlaza
+  $type: gamedataIPrereq_Record
+  prereqClassName: Addicted.NoCorpoDistricts

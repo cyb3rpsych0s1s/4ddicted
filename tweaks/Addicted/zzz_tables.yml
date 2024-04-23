@@ -43,3 +43,18 @@ LootTables.Maelstrom_MGS_gadgets.lootTableInclusions: *AdditionalBlackLaceInclus
 
 LootTables.FirstAidKits.lootTableInclusions:
   - !append-once LootTables.SeldomBlacklaceTable
+
+Character.JunkieFemale: &AdditionalBlackLaceLootJunkies
+  lootDrop: LootTables.SeldomBlacklaceTable
+Character.JunkieFemaleDE: *AdditionalBlackLaceLootJunkies
+Character.JunkieMale: *AdditionalBlackLaceLootJunkies
+Character.JunkieMaleDE: *AdditionalBlackLaceLootJunkies
+Character.junkie_no_reaction: *AdditionalBlackLaceLootJunkies
+
+Character.HomelessFemale: &AdditionalBlackLaceLootHomeless
+  lootDrop: LootTables.SeldomBlacklaceTable
+Character.HomelessFemaleDE: *AdditionalBlackLaceLootHomeless
+Character.HomelessMan: *AdditionalBlackLaceLootHomeless
+Character.HomelessManDE: *AdditionalBlackLaceLootHomeless
+Character.HomelessManBig: *AdditionalBlackLaceLootHomeless
+Character.HomelessManBackpack: *AdditionalBlackLaceLootHomeless

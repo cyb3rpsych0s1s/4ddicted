@@ -134,21 +134,6 @@ Loot.AnimalsHeavyMeleeEliteT2_blunt.lootItems: *AdditionalBlackLaceLootAnimals
 Loot.CreepyFollower_Loot.lootItems:
   - !append-once Loot.CreepyFollowerSometimesDrop_BlackLaceV0
 
-Character.JunkieFemale.lootDrop.lootItems: &AdditionalBlackLaceLootJunkies
-  - !append-once Loot.JunkiesRarelyDrop_BlackLaceV0
-Character.JunkieFemaleDE.lootDrop.lootItems: *AdditionalBlackLaceLootJunkies
-Character.JunkieMale.lootDrop.lootItems: *AdditionalBlackLaceLootJunkies
-Character.JunkieMaleDE.lootDrop.lootItems: *AdditionalBlackLaceLootJunkies
-Character.junkie_no_reaction.lootDrop.lootItems: *AdditionalBlackLaceLootJunkies
-
-Character.HomelessFemale.lootDrop.lootItems: &AdditionalBlackLaceLootHomeless
-  - !append-once Loot.HomelessBarelyDrop_BlackLaceV0
-Character.HomelessFemaleDE.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
-Character.HomelessMan.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
-Character.HomelessManDE.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
-Character.HomelessManBig.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
-Character.HomelessManBackpack.lootDrop.lootItems: *AdditionalBlackLaceLootHomeless
-
 # if more needed:
 ##
 # Character.lizzies_customer_XYZ
