@@ -34,7 +34,7 @@ public class Helper {
 
   public static func Resilience(id: ItemID, daysSinceLastConsumed: Int32) -> Int32 {
     let consumableName = Generic.Consumable(id);
-    let resilienceModifier = Min(5, Max(1, daysSinceLastConsumed)); 
+    let resilienceModifier = Min(5, Max(1, daysSinceLastConsumed - 1)); 
 
     switch(consumableName) {
       case Consumable.BlackLace: 
