@@ -192,24 +192,24 @@ public class AddictedSystem extends ScriptableSystem {
       E(s"no consumption tracked during prologue");
       return;
     }
-    let previousThreshold: Threshold;
-    let newConsumption: Int32;
+    let before: Threshold;
+    let amount: Int32;
     let hint: Bool;
-    let newThreshold: Threshold;
+    let after: Threshold;
     let daysPast: Int32;
     if Generic.IsAddictive(id) {      
       let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
       if this.consumptions.KeyExist(itemID) {
         let consumption: ref<Consumption> = this.consumptions.Get(itemID);
-        previousThreshold = Helper.Threshold(consumption.current);
-        newConsumption = Min(consumption.current + Helper.Potency(itemID, usedToday), 100);
+        before = Helper.Threshold(consumption.current);
+        amount = Min(consumption.current + Helper.Potency(itemID, usedToday), 100);
       } else {
-        previousThreshold = Threshold.Clean;
-        newConsumption = Helper.Potency(itemID, usedToday);
+        before = Threshold.Clean;
+        amount = Helper.Potency(itemID, usedToday);
       }
 
-      newThreshold = Helper.Threshold(newConsumption);
-      hint = this.Consume(itemID, newConsumption);
+      after = Helper.Threshold(amount);
+      hint = this.Consume(itemID, amount);
 
       let consumable: Consumable = Generic.Consumable(id);
       if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
@@ -224,7 +224,7 @@ public class AddictedSystem extends ScriptableSystem {
       if hint {
         this.Hint(id);
       }
-      if NotEquals(EnumInt(previousThreshold), EnumInt(newThreshold)) {
+      if NotEquals(EnumInt(before), EnumInt(after)) {
         if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
         this.CheckWarn();
       }
