@@ -39,13 +39,13 @@ Prereqs.HighMemoryCost:
 
 Effectors.NeuroLoad:
   $type: Effector_Record
-  prereq: Prereqs.ConsumedAnyNeuroBlocker
+  prereqRecord: Prereqs.ConsumedAnyNeuroBlocker
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
 Effectors.ExhaustingHacks:
   $type: Effector_Record
-  prereq: Prereqs.HighMemoryCost
+  prereqRecord: Prereqs.HighMemoryCost
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
