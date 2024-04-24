@@ -38,6 +38,7 @@ Effectors.NeuroLoad:
   $type: Effector_Record
   prereq: Prereqs.ConsumedAnyNeuroBlocker
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
+  removeAfterActionCall: true
 
 Packages.Contraindicated:
   $type: GameplayLogicPackage_Record
