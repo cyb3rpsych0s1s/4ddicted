@@ -34,9 +34,18 @@ Prereqs.ConsumedAnyNeuroBlocker:
     - Prereqs.RipperDocMedBuffUncommon
     - Prereqs.RipperDocMedBuffCommon
 
+Prereqs.HighMemoryCost:
+  $type: StatusEffectPrereq_Record
+
 Effectors.NeuroLoad:
   $type: Effector_Record
   prereq: Prereqs.ConsumedAnyNeuroBlocker
+  effectorClassName: Addicted.IncreaseNeuroBlockerEffector
+  removeAfterActionCall: true
+
+Effectors.ExhaustingHacks:
+  $type: Effector_Record
+  prereq: Prereqs.HighMemoryCost
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
@@ -45,6 +54,14 @@ Packages.Contraindicated:
   effectors:
     - Effectors.NeuroLoad
 
+OAE.ContraindicatedHacks:
+  $type: ObjectActionEffect_Record
+  effectorToTrigger: Effectors.ExhaustingHacks
+
 BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroStimulants
   - !append-once Packages.Contraindicated
 BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroStimulants
+
+QuickHack.OverheatHack.startEffects: &NeuroHacks
+  - !append-once OAE.ContraindicatedHacks
+QuickHack.BlackWallHack.startEffects: *NeuroHacks
