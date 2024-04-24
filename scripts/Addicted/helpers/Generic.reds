@@ -4,6 +4,10 @@ import Addicted.*
 
 // effects or items agnostic
 public class Generic {
+  public static func Consumable(id: ItemID) -> Consumable {
+    let tweakId: TweakDBID = ItemID.GetTDBID(id);
+    return Generic.Consumable(tweakId);
+  }
 
   public static func Consumable(id: TweakDBID) -> Consumable {
     if Generic.IsAlcohol(id)          { return Consumable.Alcohol; }

@@ -194,22 +194,23 @@ public class AddictedSystem extends ScriptableSystem {
       return;
     }
     let before: Threshold;
-    let after: Threshold;
     let amount: Int32;
     let hint: Bool;
-    if Generic.IsAddictive(id) {
+    let after: Threshold;
+    let daysPast: Int32;
+    if Generic.IsAddictive(id) {      
+      let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
       if this.consumptions.KeyExist(itemID) {
         let consumption: ref<Consumption> = this.consumptions.Get(itemID);
         before = Helper.Threshold(consumption.current);
-        amount = Min(consumption.current + Helper.Potency(itemID), 100);
-        after = Helper.Threshold(amount); 
-        hint = this.Consume(itemID, amount);
+        amount = Min(consumption.current + Helper.Potency(itemID, usedToday), 100);
       } else {
         before = Threshold.Clean;
-        amount = Helper.Potency(itemID);
-        after = Helper.Threshold(amount);
-        hint = this.Consume(itemID, amount);
+        amount = Helper.Potency(itemID, usedToday);
       }
+
+      after = Helper.Threshold(amount);
+      hint = this.Consume(itemID, amount);
 
       let consumable: Consumable = Generic.Consumable(id);
       if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
@@ -291,7 +292,8 @@ public class AddictedSystem extends ScriptableSystem {
       if !under_influence {
         if consumption.current > 0 {
           let current = consumption.current;
-          let next = Max(current - Helper.Resilience(id) - this.player.CyberwareImmunity(), 0);
+          let daysSinceLastUsed = this.DaysSinceLastConsumption(Generic.Consumable(id));
+          let next = Max(current - Helper.Resilience(id, daysSinceLastUsed) - this.player.CyberwareImmunity(), 0);
           consumption.current = next;
           E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
         } else {
@@ -478,6 +480,18 @@ public class AddictedSystem extends ScriptableSystem {
     let difference: Float = this.restingSince - last;
     let maximum = 60. * 60.; // 1h
     return difference < maximum;
+  }
+
+
+  private func DaysSinceLastConsumption(consumable: Consumable) -> Int32 {
+    let last: Float = this.consumptions.LastDose(consumable);
+    let tms = this.timeSystem.GetGameTimeStamp();
+    let now =  Helper.MakeGameTime(tms);
+    let today = GameTime.Days(now);
+    let previous = Helper.MakeGameTime(last);
+    let previousDay = GameTime.Days(previous);
+
+    return today-previousDay;
   }
 
   /// if hasn't consumed for a day or more
