@@ -35,16 +35,17 @@ Prereqs.ConsumedAnyNeuroBlocker:
     - Prereqs.RipperDocMedBuffCommon
 
 Prereqs.HighMemoryCost:
-  $type: StatusEffectPrereq_Record
+  $type: gamedataIPrereq_Record
+  prereqClassName: Addicted.HighMemoryCost
 
-Effectors.NeuroLoad:
+Effectors.NeuroWare:
   $type: Effector_Record
   prereqRecord: Prereqs.ConsumedAnyNeuroBlocker
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
-Effectors.ExhaustingHacks:
-  $type: Effector_Record
+Effectors.NeuroHack:
+  $type: ApplyEffectorEffector_Record
   prereqRecord: Prereqs.HighMemoryCost
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
@@ -52,16 +53,22 @@ Effectors.ExhaustingHacks:
 Packages.Contraindicated:
   $type: GameplayLogicPackage_Record
   effectors:
-    - Effectors.NeuroLoad
+    - Effectors.NeuroWare
 
-OAE.ContraindicatedHacks:
+OAE.Contraindicated:
   $type: ObjectActionEffect_Record
-  effectorToTrigger: Effectors.ExhaustingHacks
+  effectorToTrigger: Effectors.NeuroHack
+  recipient: ObjectActionReference.Instigator
 
-BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroStimulants
+BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
   - !append-once Packages.Contraindicated
-BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroStimulants
+BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
 
 QuickHack.OverheatHack.startEffects: &NeuroHacks
-  - !append-once OAE.ContraindicatedHacks
+  - !append-once OAE.Contraindicated
+QuickHack.OverheatLvl1Hack.startEffects: *NeuroHacks
+QuickHack.OverheatLvl2Hack.startEffects: *NeuroHacks
+QuickHack.OverheatLvl3Hack.startEffects: *NeuroHacks
+QuickHack.OverheatLvl4Hack.startEffects: *NeuroHacks
+QuickHack.OverheatLvl4PlusPlusHack.startEffects: *NeuroHacks
 QuickHack.BlackWallHack.startEffects: *NeuroHacks
