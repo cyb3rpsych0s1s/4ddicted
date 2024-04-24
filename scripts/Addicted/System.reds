@@ -192,23 +192,24 @@ public class AddictedSystem extends ScriptableSystem {
       E(s"no consumption tracked during prologue");
       return;
     }
-    let before: Threshold;
-    let after: Threshold;
-    let amount: Int32;
+    let previousThreshold: Threshold;
+    let newConsumption: Int32;
     let hint: Bool;
-    if Generic.IsAddictive(id) {
+    let newThreshold: Threshold;
+    let daysPast: Int32;
+    if Generic.IsAddictive(id) {      
+      let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
       if this.consumptions.KeyExist(itemID) {
         let consumption: ref<Consumption> = this.consumptions.Get(itemID);
-        before = Helper.Threshold(consumption.current);
-        amount = Min(consumption.current + Helper.Potency(itemID), 100);
-        after = Helper.Threshold(amount); 
-        hint = this.Consume(itemID, amount);
+        previousThreshold = Helper.Threshold(consumption.current);
+        newConsumption = Min(consumption.current + Helper.Potency(itemID, usedToday), 100);
       } else {
-        before = Threshold.Clean;
-        amount = Helper.Potency(itemID);
-        after = Helper.Threshold(amount);
-        hint = this.Consume(itemID, amount);
+        previousThreshold = Threshold.Clean;
+        newConsumption = Helper.Potency(itemID, usedToday);
       }
+
+      newThreshold = Helper.Threshold(newConsumption);
+      hint = this.Consume(itemID, newConsumption);
 
       let consumable: Consumable = Generic.Consumable(id);
       if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
@@ -223,7 +224,7 @@ public class AddictedSystem extends ScriptableSystem {
       if hint {
         this.Hint(id);
       }
-      if NotEquals(EnumInt(before), EnumInt(after)) {
+      if NotEquals(EnumInt(previousThreshold), EnumInt(newThreshold)) {
         if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
         this.CheckWarn();
       }
@@ -290,7 +291,8 @@ public class AddictedSystem extends ScriptableSystem {
       if !under_influence {
         if consumption.current > 0 {
           let current = consumption.current;
-          let next = Max(current - Helper.Resilience(id) - this.player.CyberwareImmunity(), 0);
+          let daysSinceLastUsed = this.DaysSinceLastConsumption(Generic.Consumable(id));
+          let next = Max(current - Helper.Resilience(id, daysSinceLastUsed) - this.player.CyberwareImmunity(), 0);
           consumption.current = next;
           E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
         } else {
@@ -477,6 +479,18 @@ public class AddictedSystem extends ScriptableSystem {
     let difference: Float = this.restingSince - last;
     let maximum = 60. * 60.; // 1h
     return difference < maximum;
+  }
+
+
+  private func DaysSinceLastConsumption(consumable: Consumable) -> Int32 {
+    let last: Float = this.consumptions.LastDose(consumable);
+    let tms = this.timeSystem.GetGameTimeStamp();
+    let now =  Helper.MakeGameTime(tms);
+    let today = GameTime.Days(now);
+    let previous = Helper.MakeGameTime(last);
+    let previousDay = GameTime.Days(previous);
+
+    return today-previousDay;
   }
 
   /// if hasn't consumed for a day or more

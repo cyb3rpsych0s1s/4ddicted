@@ -14,32 +14,34 @@ public func IsLanguageSupported(locale: CName) -> Bool {
 }
 
 public class Helper {
-  public static func Category(id: ItemID) -> Category {
-    if Generic.IsBlackLace(ItemID.GetTDBID(id))
-    || Generic.IsAlcohol(ItemID.GetTDBID(id)) { return Category.Hard; }
-    return Category.Mild;
+  public static func Potency(id: ItemID, subsequentUse: Bool) -> Int32 {
+    let consumableName = Generic.Consumable(id);
+
+    switch(consumableName) {
+      case Consumable.Alcohol: 
+      case Consumable.Tobacco: 
+        return subsequentUse ? 1 : 4;
+      case Consumable.BlackLace: 
+        return subsequentUse ? 2 : 8;
+      case Consumable.HealthBooster:
+      case Consumable.StaminaBooster:
+      case Consumable.OxyBooster:
+      case Consumable.MemoryBooster:
+        return subsequentUse ? 4 : 6;
+    }
+    return subsequentUse ? 1 : 2;
   }
 
-  public static func Potency(id: ItemID) -> Int32 {
-    let category = Helper.Category(id);
-    switch(category) {
-      case Category.Hard:
-        return 2;
-      default:
-        break;
-    }
-    return 1;
-  }
+  public static func Resilience(id: ItemID, daysSinceLastConsumed: Int32) -> Int32 {
+    let consumableName = Generic.Consumable(id);
+    let resilienceModifier = Min(5, Max(1, daysSinceLastConsumed)); 
 
-  public static func Resilience(id: ItemID) -> Int32 {
-    let category = Helper.Category(id);
-    switch(category) {
-      case Category.Hard:
-        return 1;
-      default:
-        break;
+    switch(consumableName) {
+      case Consumable.BlackLace: 
+      case Consumable.Alcohol: 
+        return resilienceModifier * 1;
     }
-    return 2;
+    return resilienceModifier * 2;
   }
 
   public static func Threshold(score: Int32) -> Threshold {
