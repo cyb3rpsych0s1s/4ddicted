@@ -45,7 +45,7 @@ Effectors.NeuroWare:
   removeAfterActionCall: true
 
 Effectors.NeuroHack:
-  $type: ApplyEffectorEffector_Record
+  $type: Effector_Record
   prereqRecord: Prereqs.HighMemoryCost
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true

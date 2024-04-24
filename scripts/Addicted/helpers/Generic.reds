@@ -184,4 +184,9 @@ public class Generic {
     let suffix = StrAfterFirst(str, ".");
     return StrContains(suffix, "RipperDocMedBuff") || StrContains(suffix, "ripperdoc_med");
   }
+
+  public static func IsContraindicated(item: ItemID) -> Bool {
+    return ItemID.IsQuery(item)
+    && Equals(ItemID.GetTDBID(item), t"Items.ripperdoc_med_contraindication");
+  }
 }

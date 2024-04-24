@@ -192,7 +192,9 @@ public class AddictedSystem extends ScriptableSystem {
     let hint: Bool;
     let before: Threshold;
     let after: Threshold;
-    if Generic.IsAddictive(id) {      
+    let addictive = Generic.IsAddictive(id);
+    let contraindicated = Generic.IsContraindicated(itemID);
+    if addictive || contraindicated {      
       let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
       if this.consumptions.KeyExist(itemID) {
         let consumption: ref<Consumption> = this.consumptions.Get(itemID);
