@@ -34,68 +34,23 @@ Prereqs.ConsumedAnyNeuroBlocker:
     - Prereqs.RipperDocMedBuffUncommon
     - Prereqs.RipperDocMedBuffCommon
 
-Prereqs.HighMemoryCost:
-  $type: gamedataIPrereq_Record
-  prereqClassName: Addicted.HighMemoryCost
-
 Effectors.NeuroWare:
   $type: Effector_Record
   prereqRecord: Prereqs.ConsumedAnyNeuroBlocker
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
-Effectors.NeuroHack:
-  $type: Effector_Record
-  prereqRecord: Prereqs.HighMemoryCost
-  effectorClassName: Addicted.IncreaseNeuroBlockerEffector
-  removeAfterActionCall: true
 
 Packages.ContraindicatedWare:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.NeuroWare
 
-Packages.ContraindicatedHack:
   $type: GameplayLogicPackage_Record
-  effectors:
-    - Effectors.NeuroHack
-
-BaseStatusEffect.ContraindicatedHack:
-  $type: StatusEffect_Record
-  duration: Items.FirstAidWhiffDuration
-  maxStacks: RTDB.StatusEffect_inline0
-  dynamicDuration: false
-  isAffectedByTimeDilationNPC: false
-  isAffectedByTimeDilationPlayer: false
-  reapplyPackagesOnMaxStacks: true
-  removeAllStacksWhenDurationEnds: true
-  removeOnStoryTier: false
-  replicated: false
-  savable: false
-  statusEffectType: BaseStatusEffectTypes.Misc
-  stopActiveSfxOnDeactivate: false
-  gameplayTags:
-    - Debuff
-  packages:
-    - Packages.ContraindicatedHack
-
-OAE.ContraindicatedHack:
-  $type: ObjectActionEffect_Record
-  recipient: ObjectActionReference.Instigator
-  statusEffect: BaseStatusEffect.ContraindicatedHack
 
 BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
   - !append-once Packages.ContraindicatedWare
 BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
-
-QuickHack.OverheatHack.startEffects: &NeuroHacks
-  - !append-once OAE.ContraindicatedHack
-QuickHack.OverheatLvl1Hack.startEffects: *NeuroHacks
-QuickHack.OverheatLvl2Hack.startEffects: *NeuroHacks
-QuickHack.OverheatLvl3Hack.startEffects: *NeuroHacks
-QuickHack.OverheatLvl4Hack.startEffects: *NeuroHacks
-QuickHack.OverheatLvl4PlusPlusHack.startEffects: *NeuroHacks
-QuickHack.BlackWallHack.startEffects: *NeuroHacks
 
 Items.AdvancedCamilloRamManagerEpic.OnEquip: *NeuroWare
 Items.AdvancedCamilloRamManagerEpicPlus.OnEquip: *NeuroWare
