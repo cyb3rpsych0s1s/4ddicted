@@ -1,5 +1,11 @@
 # weakened neuroblockers status effect
 
+BaseStats.NeuroBlockersPotencyModifier:
+  $type: Stat
+  enumName: NeuroBlockersPotencyModifier
+  min: 1
+  max: 3
+
 UIIcon.NotablyWeakenedNeuroblocker:
   $type: UIIcon_Record
   atlasPartName: notably_weakened_inhaler_buff_icon
@@ -40,13 +46,21 @@ Effectors.NeuroWare:
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
+Modifiers.NeuroStimuli:
+  $type: ConstantStatModifier_Record
+  modifierType: Additive
+  statType: BaseStats.NeuroBlockersPotencyModifier
+  value: 0.5
 
 Packages.ContraindicatedWare:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.NeuroWare
 
+Packages.StimuliWare:
   $type: GameplayLogicPackage_Record
+  stats:
+    - Modifiers.NeuroStimuli
 
 BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
   - !append-once Packages.ContraindicatedWare
@@ -57,3 +71,32 @@ Items.AdvancedCamilloRamManagerEpicPlus.OnEquip: *NeuroWare
 Items.AdvancedCamilloRamManagerLegendary.OnEquip: *NeuroWare
 Items.AdvancedCamilloRamManagerLegendaryPlus.OnEquip: *NeuroWare
 Items.AdvancedCamilloRamManagerLegendaryPlusPlus.OnEquip: *NeuroWare
+
+Items.AdvancedExDiskRare.OnEquip: &StimuliWare
+  - !append-once Packages.StimuliWare
+Items.AdvancedExDiskRarePlus.OnEquip: *StimuliWare
+Items.AdvancedExDiskEpic.OnEquip: *StimuliWare
+Items.AdvancedExDiskEpicPlus.OnEquip: *StimuliWare
+Items.AdvancedExDiskLegendary.OnEquip: *StimuliWare
+Items.AdvancedExDiskLegendaryPlus.OnEquip: *StimuliWare
+Items.AdvancedExDiskLegendaryPlusPlus.OnEquip: *StimuliWare
+
+Items.AdvancedBioConductorsCommon.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsCommonPlus.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsUncommon.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsUncommonPlus.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsRare.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsRarePlus.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsEpic.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsEpicPlus.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsLegendary.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsLegendaryPlus.OnEquip: *StimuliWare
+Items.AdvancedBioConductorsLegendary_PlusPlus.OnEquip: *StimuliWare
+
+Items.IconicBioConductorsRare.OnEquip: *StimuliWare
+Items.IconicBioConductorsRarePlus.OnEquip: *StimuliWare
+Items.IconicBioConductorsEpic.OnEquip: *StimuliWare
+Items.IconicBioConductorsEpicPlus.OnEquip: *StimuliWare
+Items.IconicBioConductorsLegendary.OnEquip: *StimuliWare
+Items.IconicBioConductorsLegendaryPlus.OnEquip: *StimuliWare
+Items.IconicBioConductorsLegendaryPlusPlus.OnEquip: *StimuliWare

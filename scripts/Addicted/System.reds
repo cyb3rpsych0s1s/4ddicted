@@ -185,6 +185,40 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
+  private func ConsumedAnyNeuroBlocker() -> Bool {
+    return StatusEffectHelper.HasStatusEffectWithTagConst(this.player, n"Neuroblockers");
+  }
+
+  private func CalculateConsumptionModifier(identifier: TweakDBID) -> Int32 {
+    if !Generic.IsNeuroBlocker(identifier) || !this.ConsumedAnyNeuroBlocker() { return 1; }
+    let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
+    let applied: array<TweakDBID>;
+    packages.GetAppliedPackages(this.player, applied);
+    let specifics: array<wref<StatModifier_Record>> = [];
+    let modifiers: array<wref<StatModifier_Record>>;
+    let modifier: wref<StatModifier_Record>;
+    let package: wref<GameplayLogicPackage_Record>;
+    let id: TweakDBID;
+    let i: Int32;
+    let j: Int32;
+    while i < ArraySize(applied) {
+      ArrayClear(modifiers);
+      id = applied[i];
+      package = TweakDBInterface.GetGameplayLogicPackageRecord(id);
+      package.Stats(modifiers);
+      while j < ArraySize(modifiers) {
+        modifier = modifiers[j];
+        if Equals(EnumInt(modifier.StatType().StatType()), Cast<Int32>(EnumValueFromName(n"gamedataStatType", n"NeuroBlockersPotencyModifier"))) {
+          ArrayPush(specifics, modifier);
+        }
+        j += 1;
+      }
+      i += 1;
+    }
+    let total: Float = RPGManager.CalculateStatModifiers(specifics, this.player.GetGame(), this.player, Cast<StatsObjectID>(this.player.GetEntityID()));
+    return RoundMath(total);
+  }
+
   private func ProcessConsume(itemID: ItemID) -> Consumed {
     let id = ItemID.GetTDBID(itemID);
     let consumed: Consumed;
@@ -196,13 +230,14 @@ public class AddictedSystem extends ScriptableSystem {
     let contraindicated = Generic.IsContraindicated(itemID);
     if addictive || contraindicated {      
       let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
+      let modifier = this.CalculateConsumptionModifier(id);
       if this.consumptions.KeyExist(itemID) {
         let consumption: ref<Consumption> = this.consumptions.Get(itemID);
         before = Helper.Threshold(consumption.current);
-        amount = Min(consumption.current + Helper.Potency(itemID, usedToday), 100);
+        amount = Min(consumption.current + Helper.Potency(itemID, usedToday, modifier), 100);
       } else {
         before = Threshold.Clean;
-        amount = Helper.Potency(itemID, usedToday);
+        amount = Helper.Potency(itemID, usedToday, modifier);
       }
 
       after = Helper.Threshold(amount);

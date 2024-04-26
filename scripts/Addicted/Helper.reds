@@ -14,7 +14,7 @@ public func IsLanguageSupported(locale: CName) -> Bool {
 }
 
 public class Helper {
-  public static func Potency(id: ItemID, subsequentUse: Bool) -> Int32 {
+  public static func Potency(id: ItemID, subsequentUse: Bool, modifier: Int32) -> Int32 {
     let consumableName = Generic.Consumable(id);
 
     switch(consumableName) {
