@@ -27,11 +27,3 @@ public class NoCorpoDistricts extends IScriptablePrereq {
     return !ArrayContains(corpos, district);
   }
 }
-
-public class HighMemoryCost extends IScriptablePrereq {
-  public const func IsFulfilled(game: GameInstance, context: ref<IScriptable>) -> Bool {
-    ModLog(n"Prereqs", s"HighMemoryCost.IsFulfilled");
-    ModLog(n"???", s"what is the context: \(NameToString(context.GetClassName()))");
-    return true;
-  }
-} 
