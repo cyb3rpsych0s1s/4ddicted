@@ -44,6 +44,8 @@ Prereqs.ConsumedAnyNeuroBlocker:
     - Prereqs.RipperDocMedBuffUncommon
     - Prereqs.RipperDocMedBuffCommon
 
+# combine RAM replenishment prereq with neuroblocker consumption's
+
 Prereqs.ShouldReplenishRAM:
   $base: Items.MemoryReplenishmentEffector_inline0
 
@@ -63,10 +65,6 @@ Effectors.NeuroWare:
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
-Effectors.NeuroTrigger:
-  $base: Effectors.NeuroWare
-  prereqRecord: Prereqs.StimuliRAM
-
 Packages.ContraindicatedWare:
   $type: GameplayLogicPackage_Record
   effectors:
@@ -77,6 +75,10 @@ BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
 BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
 
 # increase neuroblocker's jauge when RAM gets replenished after consumption
+
+Effectors.NeuroTrigger:
+  $base: Effectors.NeuroWare
+  prereqRecord: Prereqs.StimuliRAM
 
 Items.AdvancedCamilloRamManagerEpic_inline0.effectors: &NeuroTrigger
   - !append-once Effectors.NeuroTrigger
