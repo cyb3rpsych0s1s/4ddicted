@@ -48,7 +48,7 @@ Effectors.NeuroWare:
 
 Modifiers.NeuroStimuli:
   $type: ConstantStatModifier_Record
-  modifierType: Additive
+  modifierType: AdditiveMultiplier
   statType: BaseStats.NeuroBlockersPotencyModifier
   value: 0.5
 

@@ -185,37 +185,30 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
-  private func ConsumedAnyNeuroBlocker() -> Bool {
-    return StatusEffectHelper.HasStatusEffectWithTagConst(this.player, n"Neuroblockers");
-  }
-
   private func CalculateConsumptionModifier(identifier: TweakDBID) -> Int32 {
-    if !Generic.IsNeuroBlocker(identifier) || !this.ConsumedAnyNeuroBlocker() { return 1; }
+    E(s"CalculateConsumptionModifier(\(TDBID.ToStringDEBUG(identifier)))");
+    if !Generic.IsNeuroBlocker(identifier) { return 1; }
     let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
     let applied: array<TweakDBID>;
     packages.GetAppliedPackages(this.player, applied);
     let specifics: array<wref<StatModifier_Record>> = [];
     let modifiers: array<wref<StatModifier_Record>>;
-    let modifier: wref<StatModifier_Record>;
     let package: wref<GameplayLogicPackage_Record>;
+    let modifier: wref<StatModifier_Record>;
     let id: TweakDBID;
     let i: Int32;
-    let j: Int32;
     while i < ArraySize(applied) {
       ArrayClear(modifiers);
       id = applied[i];
-      package = TweakDBInterface.GetGameplayLogicPackageRecord(id);
-      package.Stats(modifiers);
-      while j < ArraySize(modifiers) {
-        modifier = modifiers[j];
-        if Equals(EnumInt(modifier.StatType().StatType()), Cast<Int32>(EnumValueFromName(n"gamedataStatType", n"NeuroBlockersPotencyModifier"))) {
-          ArrayPush(specifics, modifier);
-        }
-        j += 1;
+      if Equals(id, t"Packages.StimuliWare") {
+        package = TweakDBInterface.GetGameplayLogicPackageRecord(id);
+        modifier = package.GetStatsItem(0);
+        ArrayPush(specifics, modifier);
       }
       i += 1;
     }
     let total: Float = RPGManager.CalculateStatModifiers(specifics, this.player.GetGame(), this.player, Cast<StatsObjectID>(this.player.GetEntityID()));
+    E(s"total: \(total)");
     return RoundMath(total);
   }
 
