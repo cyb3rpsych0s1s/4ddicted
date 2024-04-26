@@ -14,15 +14,15 @@ public class Items {
     return suffix;
   }
   private static func SuffixContains(id: TweakDBID, keyword: String) -> Bool {
-    let suffix: String = Suffix(id);
+    let suffix: String = Items.Suffix(id);
     return StrContains(suffix, keyword);
   }
   public static func IsDetoxifier(id: TweakDBID) -> Bool { return Equals(id, t"Items.ToxinCleanser"); }
   public static func IsMetabolicEditor(id: TweakDBID) -> Bool { return Equals(id, t"Items.ReverseMetabolicEnhancer"); }
-  public static func IsBioconductor(id: TweakDBID) -> Bool { return StrBeginsWith(Suffix(id), "AdvancedBioConductors"); }
-  public static func IsCOX2(id: TweakDBID) -> Bool { return StrBeginsWith(Suffix(id), "IconicBioConductors"); }
-  public static func IsExDisk(id: TweakDBID) -> Bool { return StrBeginsWith(Suffix(id), "AdvancedExDisk"); }
-  public static func IsCamillo(id: TweakDBID) -> Bool { return StrBeginsWith(Suffix(id), "AdvancedCamilloRamManager"); }
+  public static func IsBioconductor(id: TweakDBID) -> Bool { return StrBeginsWith(Items.Suffix(id), "AdvancedBioConductors"); }
+  public static func IsCOX2(id: TweakDBID) -> Bool { return StrBeginsWith(Items.Suffix(id), "IconicBioConductors"); }
+  public static func IsExDisk(id: TweakDBID) -> Bool { return StrBeginsWith(Items.Suffix(id), "AdvancedExDisk"); }
+  public static func IsCamillo(id: TweakDBID) -> Bool { return StrBeginsWith(Items.Suffix(id), "AdvancedCamilloRamManager"); }
   
   public static func IsInstant(record: ref<TweakDBRecord>) -> Bool {
     // TODO: refactor based on duration < 1
