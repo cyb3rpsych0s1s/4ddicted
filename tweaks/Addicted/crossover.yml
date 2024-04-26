@@ -50,22 +50,46 @@ Effectors.NeuroHack:
   effectorClassName: Addicted.IncreaseNeuroBlockerEffector
   removeAfterActionCall: true
 
-Packages.Contraindicated:
+Packages.ContraindicatedWare:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.NeuroWare
 
-OAE.Contraindicated:
+Packages.ContraindicatedHack:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.NeuroHack
+
+BaseStatusEffect.ContraindicatedHack:
+  $type: StatusEffect_Record
+  duration: Items.FirstAidWhiffDuration
+  maxStacks: RTDB.StatusEffect_inline0
+  dynamicDuration: false
+  isAffectedByTimeDilationNPC: false
+  isAffectedByTimeDilationPlayer: false
+  reapplyPackagesOnMaxStacks: true
+  removeAllStacksWhenDurationEnds: true
+  removeOnStoryTier: false
+  replicated: false
+  savable: false
+  statusEffectType: BaseStatusEffectTypes.Misc
+  stopActiveSfxOnDeactivate: false
+  gameplayTags:
+    - Debuff
+  packages:
+    - Packages.ContraindicatedHack
+
+OAE.ContraindicatedHack:
   $type: ObjectActionEffect_Record
-  effectorToTrigger: Effectors.NeuroHack
   recipient: ObjectActionReference.Instigator
+  statusEffect: BaseStatusEffect.ContraindicatedHack
 
 BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
-  - !append-once Packages.Contraindicated
+  - !append-once Packages.ContraindicatedWare
 BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
 
 QuickHack.OverheatHack.startEffects: &NeuroHacks
-  - !append-once OAE.Contraindicated
+  - !append-once OAE.ContraindicatedHack
 QuickHack.OverheatLvl1Hack.startEffects: *NeuroHacks
 QuickHack.OverheatLvl2Hack.startEffects: *NeuroHacks
 QuickHack.OverheatLvl3Hack.startEffects: *NeuroHacks
