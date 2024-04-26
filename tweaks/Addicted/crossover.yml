@@ -73,6 +73,7 @@ Packages.ContraindicatedWare:
 BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
   - !append-once Packages.ContraindicatedWare
 BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
+BaseStatusEffect.KerenzikovsBoostSystemBuff.packages: *NeuroWare
 
 # increase neuroblocker's jauge when RAM gets replenished after consumption
 
