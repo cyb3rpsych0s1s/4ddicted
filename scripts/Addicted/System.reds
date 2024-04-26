@@ -200,7 +200,9 @@ public class AddictedSystem extends ScriptableSystem {
     while i < ArraySize(applied) {
       ArrayClear(modifiers);
       id = applied[i];
-      if Equals(id, t"Packages.StimuliWare") {
+      if Equals(id, t"Packages.NeuroStimuliExDisk")
+      || Equals(id, t"Packages.NeuroStimuliBioconductor")
+      || Equals(id, t"Packages.NeuroStimuliCOX2") {
         package = TweakDBInterface.GetGameplayLogicPackageRecord(id);
         modifier = package.GetStatsItem(0);
         ArrayPush(specifics, modifier);
