@@ -96,3 +96,9 @@ QuickHack.OverheatLvl3Hack.startEffects: *NeuroHacks
 QuickHack.OverheatLvl4Hack.startEffects: *NeuroHacks
 QuickHack.OverheatLvl4PlusPlusHack.startEffects: *NeuroHacks
 QuickHack.BlackWallHack.startEffects: *NeuroHacks
+
+Items.AdvancedCamilloRamManagerEpic.OnEquip: *NeuroWare
+Items.AdvancedCamilloRamManagerEpicPlus.OnEquip: *NeuroWare
+Items.AdvancedCamilloRamManagerLegendary.OnEquip: *NeuroWare
+Items.AdvancedCamilloRamManagerLegendaryPlus.OnEquip: *NeuroWare
+Items.AdvancedCamilloRamManagerLegendaryPlusPlus.OnEquip: *NeuroWare
