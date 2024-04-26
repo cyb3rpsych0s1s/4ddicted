@@ -1,9 +1,6 @@
 module Addicted
 
 public class NoCorpoDistricts extends IScriptablePrereq {
-
-  protected func Initialize(recordID: TweakDBID) -> Void {}
-
   public const func IsFulfilled(game: GameInstance, context: ref<IScriptable>) -> Bool {
     let ps: ref<PreventionSystem> = GameInstance.GetScriptableSystemsContainer(game).Get(n"PreventionSystem") as PreventionSystem;
     let district = ps.GetCurrentDistrict().GetDistrictID();

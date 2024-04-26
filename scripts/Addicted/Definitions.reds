@@ -150,7 +150,11 @@ public class Consumptions {
   public func Items() -> array<ItemID> {
     let items: array<ItemID> = [];
     for key in this.keys {
-      ArrayPush(items, ItemID.FromTDBID(key));
+      if Generic.IsContraindicated(key) {
+        ArrayPush(items, ItemID.CreateQuery(key));
+      } else {
+        ArrayPush(items, ItemID.FromTDBID(key));
+      }
     }
     return items;
   }

@@ -356,3 +356,9 @@ private final func Apply() -> Void {
   }
   wrappedMethod();
 }
+
+@wrapMethod(RPGManager)
+public final static func IncrementQuickHackBlackboard(gameInstance: GameInstance, actionID: TweakDBID) -> Void {
+    ModLog(n"RPGManager.IncrementQuickHackBlackboard", TDBID.ToStringDEBUG(actionID));
+    wrappedMethod(gameInstance, actionID);
+}
