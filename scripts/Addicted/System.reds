@@ -185,9 +185,9 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
-  private func CalculateConsumptionModifier(identifier: TweakDBID) -> Int32 {
+  private func CalculateConsumptionModifier(identifier: TweakDBID) -> Float {
     E(s"CalculateConsumptionModifier(\(TDBID.ToStringDEBUG(identifier)))");
-    if !Generic.IsNeuroBlocker(identifier) { return 1; }
+    if !Generic.IsNeuroBlocker(identifier) { return 1.0; }
     let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
     let applied: array<TweakDBID>;
     packages.GetAppliedPackages(this.player, applied);
@@ -208,8 +208,11 @@ public class AddictedSystem extends ScriptableSystem {
       i += 1;
     }
     let total: Float = RPGManager.CalculateStatModifiers(specifics, this.player.GetGame(), this.player, Cast<StatsObjectID>(this.player.GetEntityID()));
+    if total < 1.0 {
+      total = 1.0;
+    }
     E(s"total: \(total)");
-    return RoundMath(total);
+    return total;
   }
 
   private func ProcessConsume(itemID: ItemID) -> Consumed {
@@ -223,7 +226,7 @@ public class AddictedSystem extends ScriptableSystem {
     let contraindicated = Generic.IsContraindicated(itemID);
     if addictive || contraindicated {      
       let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
-      let modifier = this.CalculateConsumptionModifier(id);
+      let modifier: Float = this.CalculateConsumptionModifier(id);
       if this.consumptions.KeyExist(itemID) {
         let consumption: ref<Consumption> = this.consumptions.Get(itemID);
         before = Helper.Threshold(consumption.current);

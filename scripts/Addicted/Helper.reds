@@ -14,7 +14,7 @@ public func IsLanguageSupported(locale: CName) -> Bool {
 }
 
 public class Helper {
-  public static func Potency(id: ItemID, subsequentUse: Bool, modifier: Int32) -> Int32 {
+  public static func Potency(id: ItemID, subsequentUse: Bool, modifier: Float) -> Int32 {
     let consumableName = Generic.Consumable(id);
 
     switch(consumableName) {
@@ -28,6 +28,8 @@ public class Helper {
       case Consumable.OxyBooster:
       case Consumable.MemoryBooster:
         return subsequentUse ? 4 : 6;
+      case Consumable.NeuroBlocker:
+        return subsequentUse ? RoundMath(1. * modifier) : RoundMath(3. * modifier);
     }
     return subsequentUse ? 1 : 2;
   }
