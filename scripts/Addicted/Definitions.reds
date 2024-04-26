@@ -150,10 +150,10 @@ public class Consumptions {
   public func Items() -> array<ItemID> {
     let items: array<ItemID> = [];
     for key in this.keys {
-      if NotEquals(key, t"Items.ripperdoc_med_contraindication") {
-        ArrayPush(items, ItemID.FromTDBID(key));
-      } else {
+      if Generic.IsContraindicated(key) {
         ArrayPush(items, ItemID.CreateQuery(key));
+      } else {
+        ArrayPush(items, ItemID.FromTDBID(key));
       }
     }
     return items;

@@ -186,7 +186,14 @@ public class Generic {
   }
 
   public static func IsContraindicated(item: ItemID) -> Bool {
-    return ItemID.IsQuery(item)
-    && Equals(ItemID.GetTDBID(item), t"Items.ripperdoc_med_contraindication");
+    if !ItemID.IsQuery(item) { return false; }
+    let id = ItemID.GetTDBID(item);
+    return Generic.IsContraindicated(id);
+  }
+
+  public static func IsContraindicated(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "contraindication");
   }
 }
