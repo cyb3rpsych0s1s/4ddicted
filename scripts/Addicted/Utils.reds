@@ -1,13 +1,9 @@
 module Addicted.Utils
 
 // auto-disabled when LogChannel not in scope
-public static func E(str: String) -> Void {
+public static func E(msg: String) -> Void {
   if ShowDebugLogsAddicted() {
-    let fun = Reflection.GetGlobalFunction(n"LogChannel");
-    let msg = s"[Addicted] \(str)";
-    if IsDefined(fun) {
-      fun.Call([n"DEBUG", AsRef(msg)]);
-    }
+    ModLog(n"Addicted", AsRef(msg));
   }
 }
 
