@@ -225,7 +225,7 @@ public class AddictedSystem extends ScriptableSystem {
     let before: Threshold;
     let after: Threshold;
     let addictive = Generic.IsAddictive(id);
-    let contraindicated = Generic.IsContraindicated(itemID);
+    let contraindicated = Generic.IsContraindicated(id);
     if addictive || contraindicated {      
       let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
       let modifier: Float = this.CalculateConsumptionModifier(id);

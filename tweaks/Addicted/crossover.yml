@@ -73,7 +73,7 @@ Packages.ContraindicatedWare:
 BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
   - !append-once Packages.ContraindicatedWare
 BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
-BaseStatusEffect.KerenzikovsBoostSystemBuff.packages: *NeuroWare
+# BaseStatusEffect.KerenzikovsBoostSystemBuff.packages: *NeuroWare
 
 # increase neuroblocker's jauge when RAM gets replenished after consumption
 
@@ -83,10 +83,10 @@ Effectors.NeuroTrigger:
 
 Items.AdvancedCamilloRamManagerEpic_inline0.effectors: &NeuroTrigger
   - !append-once Effectors.NeuroTrigger
-Items.AdvancedCamilloRamManagerEpicPlus_inline1.effectors: *NeuroTrigger
-Items.AdvancedCamilloRamManagerLegendary_inline1.effectors: *NeuroTrigger
-Items.AdvancedCamilloRamManagerLegendaryPlus_inline1.effectors: *NeuroTrigger
-Items.AdvancedCamilloRamManagerLegendaryPlusPlus_inline1.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerEpicPlus_inline0.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerLegendary_inline0.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerLegendaryPlus_inline0.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerLegendaryPlusPlus_inline0.effectors: *NeuroTrigger
 
 # using neuro-stimuli intensive wares increase its potency
 

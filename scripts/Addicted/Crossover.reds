@@ -85,7 +85,14 @@ public class NeuroBlockerTweaks extends ScriptableTweak {
 
     if edgerunner {
       this.Derive(prefixes, item, ["", "Uncommon", "Common"]);
+      this.CreateContraindicationItem();
     }
+  }
+
+  private func CreateContraindicationItem() -> Void {
+    let fake = "Items.ripperdoc_med_contraindication";
+    TweakDBManager.CloneRecord(StringToName(fake), t"Items.ripperdoc_med_common");
+    TweakDBManager.UpdateRecord(TDBID.Create(fake));
   }
 
   // create object action effect for weakened neuroblockers :

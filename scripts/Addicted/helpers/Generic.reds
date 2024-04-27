@@ -185,12 +185,6 @@ public class Generic {
     return StrContains(suffix, "RipperDocMedBuff") || StrContains(suffix, "ripperdoc_med");
   }
 
-  public static func IsContraindicated(item: ItemID) -> Bool {
-    if !ItemID.IsQuery(item) { return false; }
-    let id = ItemID.GetTDBID(item);
-    return Generic.IsContraindicated(id);
-  }
-
   public static func IsContraindicated(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");

@@ -6,11 +6,11 @@ import Addicted.Utils.F
 public class IncreaseNeuroBlockerEffector extends Effector {
     protected func ActionOn(owner: ref<GameObject>) -> Void {
         let system = AddictedSystem.GetInstance(owner.GetGame());
-        let id = TDBID.Create("Items.ripperdoc_med_contraindication");
-        // grant a unique ID to differentiate, see:
+        // use a fake ID to differentiate, see:
         // - Generic.IsNeuroBlocker
         // - Generic.IsContraindicated
         // - Consumptions.Items
-        system.OnContraindication(ItemID.CreateQuery(id));
+        // - NeuroBlockerTweaks
+        system.OnContraindication(ItemID.FromTDBID(t"Items.ripperdoc_med_contraindication"));
     }
 }
