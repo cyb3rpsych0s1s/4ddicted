@@ -220,10 +220,10 @@ public class AddictedSystem extends ScriptableSystem {
   private func ProcessConsume(itemID: ItemID) -> Consumed {
     let id = ItemID.GetTDBID(itemID);
     let consumed: Consumed;
-    let amount: Int32;
-    let hint: Bool;
-    let before: Threshold;
-    let after: Threshold;
+    let amount: Int32 = 0;
+    let hint: Bool = false;
+    let before: Threshold = Threshold.Clean;
+    let after: Threshold = Threshold.Clean;
     let addictive = Generic.IsAddictive(id);
     let contraindicated = Generic.IsContraindicated(id);
     if addictive || contraindicated {      
@@ -432,7 +432,7 @@ public class AddictedSystem extends ScriptableSystem {
       EI(id, s"additional consumption \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) \(ToString(old)) -> \(ToString(consumption.current))");
       return (amount > old) && Generic.IsInstant(id);
     } else {
-      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) -> \(ToString(amount))");
+      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) => \(ToString(amount))");
       this.consumptions.Insert(id, Consumption.Create(amount, now));
       return true;
     }
@@ -543,6 +543,7 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func DaysSinceLastConsumption(consumable: Consumable) -> Int32 {
     let last: Float = this.consumptions.LastDose(consumable);
+    if last == -1.0 { return -1; }
     let tms = this.timeSystem.GetGameTimeStamp();
     let now =  Helper.MakeGameTime(tms);
     let today = GameTime.Days(now);
