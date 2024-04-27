@@ -185,31 +185,34 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
+  /// deadlock on packages.GetAppliedPackages
   private func CalculateConsumptionModifier(identifier: TweakDBID) -> Float {
-    E(s"CalculateConsumptionModifier(\(TDBID.ToStringDEBUG(identifier)))");
-    if !Generic.IsNeuroBlocker(identifier) { return 1.0; }
-    let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
+    return 1.0; // until method fixed
+
     let applied: array<TweakDBID>;
-    packages.GetAppliedPackages(this.player, applied);
-    let specifics: array<wref<StatModifier_Record>> = [];
-    let modifiers: array<wref<StatModifier_Record>>;
+    let stimuli: array<wref<StatModifier_Record>> = [];
     let package: wref<GameplayLogicPackage_Record>;
     let modifier: wref<StatModifier_Record>;
     let id: TweakDBID;
     let i: Int32;
+
+    if !Generic.IsNeuroBlocker(identifier) { return 1.0; }
+    let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
+    packages.GetAppliedPackages(this.player, applied);
     while i < ArraySize(applied) {
-      ArrayClear(modifiers);
       id = applied[i];
       if Equals(id, t"Packages.NeuroStimuliExDisk")
       || Equals(id, t"Packages.NeuroStimuliBioconductor")
       || Equals(id, t"Packages.NeuroStimuliCOX2") {
         package = TweakDBInterface.GetGameplayLogicPackageRecord(id);
         modifier = package.GetStatsItem(0);
-        ArrayPush(specifics, modifier);
+        ArrayPush(stimuli, modifier);
       }
       i += 1;
     }
-    let total: Float = RPGManager.CalculateStatModifiers(specifics, this.player.GetGame(), this.player, Cast<StatsObjectID>(this.player.GetEntityID()));
+    if ArraySize(stimuli) == 0 { return 1.0; }
+    let total: Float = RPGManager
+    .CalculateStatModifiers(stimuli, this.player.GetGame(), this.player, Cast<StatsObjectID>(this.player.GetEntityID()));
     if total < 1.0 {
       total = 1.0;
     }
