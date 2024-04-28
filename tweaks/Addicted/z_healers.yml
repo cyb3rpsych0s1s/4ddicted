@@ -159,3 +159,23 @@ Items.$(prefix)$(consumable)$(version)_$(flat)_$(suffix)_weakened:
     - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: severely }
   $base: Items.$(prefix)$(consumable)$(version)_$(flat)
   statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)
+
+UIData.FirstAidWhiff:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-MaxDOC-Notice
+
+Package.FirstAidWhiffNotice:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.FirstAidWhiff
+
+Items.FirstAidWhiffV0.OnEquip: &MaxDOCNotice
+  - !append-once Package.FirstAidWhiffNotice
+Items.FirstAidWhiffV1.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffV2.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVCommonPlus.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVEpic.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVEpicPlus.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVLegendaryPlus.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVRarePlus.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVUncommon.OnEquip: *MaxDOCNotice
+Items.FirstAidWhiffVUncommonPlus.OnEquip: *MaxDOCNotice
