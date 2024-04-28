@@ -1,0 +1,25 @@
+LootPrereqs.StartedThePickupDeal:
+  $type: gamedataIPrereq_Record
+  prereqClassName: FactValuePrereq
+  fact: q003_deal_started
+  comparisonType: Greater
+  value: 0
+
+LootPrereqs.PastThePickup:
+  $type: gamedataIPrereq_Record
+  prereqClassName: FactValuePrereq
+  fact: q003_done
+  comparisonType: Greater
+  value: 0
+
+LootPrereqs.IntroducedBlackLace:
+  $type: gamedataMultiPrereq_Record
+  aggregationType: OR
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - LootPrereqs.StartedThePickupDeal
+    - LootPrereqs.PastThePickup
+
+LootPrereqs.NoCorpoDistricts:
+  $type: gamedataIPrereq_Record
+  prereqClassName: Addicted.NoCorpoDistricts

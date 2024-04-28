@@ -224,6 +224,7 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
   wrappedMethod(gameInstance);
 }
 
+// increase score on consumption (catch interaction in backpack)
 @wrapMethod(ItemActionsHelper)
 public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool) -> Bool {
   E(s"process item action");
@@ -238,6 +239,7 @@ public final static func ProcessItemAction(gi: GameInstance, executor: wref<Game
   return actionUsed;
 }
 
+// increase score on consumption (catch interaction in backpack)
 @wrapMethod(ItemActionsHelper)
 public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool, quantity: Int32) -> Bool {
   E(s"process item action (x\(ToString(quantity)))");
@@ -271,15 +273,6 @@ public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID,
   } else { E(s"undefined player (consume item)"); }
 
   wrappedMethod(executor, itemID, fromInventory);
-}
-
-// increase score on consumption (catch interaction in backpack)
-@wrapMethod(ItemActionsHelper)
-public final static func PerformItemAction(executor: wref<GameObject>, itemID: ItemID) -> Void {
-  let system = AddictedSystem.GetInstance(executor.GetGame());
-  system.OnConsumeItem(itemID);
-
-  wrappedMethod(executor, itemID);
 }
 
 @addMethod(StatusEffectEvent)
@@ -362,4 +355,10 @@ private final func Apply() -> Void {
     system.OnSkipTime();
   }
   wrappedMethod();
+}
+
+@wrapMethod(RPGManager)
+public final static func IncrementQuickHackBlackboard(gameInstance: GameInstance, actionID: TweakDBID) -> Void {
+    ModLog(n"RPGManager.IncrementQuickHackBlackboard", TDBID.ToStringDEBUG(actionID));
+    wrappedMethod(gameInstance, actionID);
 }

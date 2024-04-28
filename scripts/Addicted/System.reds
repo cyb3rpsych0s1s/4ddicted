@@ -185,30 +185,93 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
+  /// deadlock on packages.GetAppliedPackages
+  private func CalculateConsumptionModifier(identifier: TweakDBID) -> Float {
+    return 1.0; // until method fixed
+
+    let applied: array<TweakDBID>;
+    let stimuli: array<wref<StatModifier_Record>> = [];
+    let package: wref<GameplayLogicPackage_Record>;
+    let modifier: wref<StatModifier_Record>;
+    let id: TweakDBID;
+    let i: Int32;
+
+    if !Generic.IsNeuroBlocker(identifier) { return 1.0; }
+    let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
+    packages.GetAppliedPackages(this.player, applied);
+    while i < ArraySize(applied) {
+      id = applied[i];
+      if Equals(id, t"Packages.NeuroStimuliExDisk")
+      || Equals(id, t"Packages.NeuroStimuliBioconductor")
+      || Equals(id, t"Packages.NeuroStimuliCOX2") {
+        package = TweakDBInterface.GetGameplayLogicPackageRecord(id);
+        modifier = package.GetStatsItem(0);
+        ArrayPush(stimuli, modifier);
+      }
+      i += 1;
+    }
+    if ArraySize(stimuli) == 0 { return 1.0; }
+    let total: Float = RPGManager
+    .CalculateStatModifiers(stimuli, this.player.GetGame(), this.player, Cast<StatsObjectID>(this.player.GetEntityID()));
+    if total < 1.0 {
+      total = 1.0;
+    }
+    E(s"total: \(total)");
+    return total;
+  }
+
+  private func ProcessConsume(itemID: ItemID) -> Consumed {
+    let id = ItemID.GetTDBID(itemID);
+    let consumed: Consumed;
+    let amount: Int32 = 0;
+    let hint: Bool = false;
+    let before: Threshold = Threshold.Clean;
+    let after: Threshold = Threshold.Clean;
+    let addictive = Generic.IsAddictive(id);
+    let contraindicated = Generic.IsContraindicated(id);
+    if addictive || contraindicated {      
+      let usedToday = this.DaysSinceLastConsumption(Generic.Consumable(id)) == 0;
+      let modifier: Float = this.CalculateConsumptionModifier(id);
+      if this.consumptions.KeyExist(itemID) {
+        let consumption: ref<Consumption> = this.consumptions.Get(itemID);
+        before = Helper.Threshold(consumption.current);
+        amount = Min(consumption.current + Helper.Potency(itemID, usedToday, modifier), 100);
+      } else {
+        before = Threshold.Clean;
+        amount = Helper.Potency(itemID, usedToday, modifier);
+      }
+
+      after = Helper.Threshold(amount);
+      hint = this.Consume(itemID, amount);
+    }
+    consumed.amount = amount;
+    consumed.hint = hint;
+    consumed.before = before;
+    consumed.after = after;
+    return consumed;
+  }
+
+  public func OnContraindication(itemID: ItemID) -> Void {
+    let id = ItemID.GetTDBID(itemID);
+    E(s"contraindicated usage \(TDBID.ToStringDEBUG(id))");
+
+    let consumed: Consumed = this.ProcessConsume(itemID);
+    
+    if NotEquals(EnumInt(consumed.before), EnumInt(consumed.after)) {
+      this.CheckWarn();
+    }
+  }
+
   public func OnConsumeItem(itemID: ItemID) -> Void {
+    let consumed: Consumed;
     let id = ItemID.GetTDBID(itemID);
     E(s"consume item \(TDBID.ToStringDEBUG(id))");
     if !this.player.PastPrologue() {
       E(s"no consumption tracked during prologue");
       return;
     }
-    let before: Threshold;
-    let after: Threshold;
-    let amount: Int32;
-    let hint: Bool;
-    if Generic.IsAddictive(id) {
-      if this.consumptions.KeyExist(itemID) {
-        let consumption: ref<Consumption> = this.consumptions.Get(itemID);
-        before = Helper.Threshold(consumption.current);
-        amount = Min(consumption.current + Helper.Potency(itemID), 100);
-        after = Helper.Threshold(amount); 
-        hint = this.Consume(itemID, amount);
-      } else {
-        before = Threshold.Clean;
-        amount = Helper.Potency(itemID);
-        after = Helper.Threshold(amount);
-        hint = this.Consume(itemID, amount);
-      }
+    if Generic.IsAddictive(id) {      
+      consumed = this.ProcessConsume(itemID);
 
       let consumable: Consumable = Generic.Consumable(id);
       if NotEquals(EnumInt(consumable), EnumInt(Consumable.Invalid)) {
@@ -219,11 +282,11 @@ public class AddictedSystem extends ScriptableSystem {
         blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, next, true);
       } else { F(s"invalid consumable: \(TDBID.ToStringDEBUG(id))"); }
 
-      E(s"consumption hint: \(ToString(hint))");
-      if hint {
+      E(s"consumption hint: \(ToString(consumed.hint))");
+      if consumed.hint {
         this.Hint(id);
       }
-      if NotEquals(EnumInt(before), EnumInt(after)) {
+      if NotEquals(EnumInt(consumed.before), EnumInt(consumed.after)) {
         if Generic.IsHealer(id) { this.UpdateHealingChargeDuration(this.player); }
         this.CheckWarn();
       }
@@ -290,7 +353,8 @@ public class AddictedSystem extends ScriptableSystem {
       if !under_influence {
         if consumption.current > 0 {
           let current = consumption.current;
-          let next = Max(current - Helper.Resilience(id) - this.player.CyberwareImmunity(), 0);
+          let daysSinceLastUsed = this.DaysSinceLastConsumption(Generic.Consumable(id));
+          let next = Max(current - Helper.Resilience(id, daysSinceLastUsed) - this.player.CyberwareImmunity(), 0);
           consumption.current = next;
           E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
         } else {
@@ -371,7 +435,7 @@ public class AddictedSystem extends ScriptableSystem {
       EI(id, s"additional consumption \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) \(ToString(old)) -> \(ToString(consumption.current))");
       return (amount > old) && Generic.IsInstant(id);
     } else {
-      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) -> \(ToString(amount))");
+      EI(id, s"first time consumption for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) => \(ToString(amount))");
       this.consumptions.Insert(id, Consumption.Create(amount, now));
       return true;
     }
@@ -477,6 +541,19 @@ public class AddictedSystem extends ScriptableSystem {
     let difference: Float = this.restingSince - last;
     let maximum = 60. * 60.; // 1h
     return difference < maximum;
+  }
+
+
+  private func DaysSinceLastConsumption(consumable: Consumable) -> Int32 {
+    let last: Float = this.consumptions.LastDose(consumable);
+    if last == -1.0 { return -1; }
+    let tms = this.timeSystem.GetGameTimeStamp();
+    let now =  Helper.MakeGameTime(tms);
+    let today = GameTime.Days(now);
+    let previous = Helper.MakeGameTime(last);
+    let previousDay = GameTime.Days(previous);
+
+    return today-previousDay;
   }
 
   /// if hasn't consumed for a day or more
@@ -636,3 +713,10 @@ private func OnAddictedPostAttach(system: ref<AddictedSystem>) -> Void { ModSett
 private func OnAddictedPostDetach(_: ref<AddictedSystem>) -> Void {}
 @if(ModuleExists("ModSettingsModule"))
 private func OnAddictedPostDetach(system: ref<AddictedSystem>) -> Void { ModSettings.UnregisterListenerToModifications(system); }
+
+struct Consumed {
+  let amount: Int32;
+  let hint: Bool;
+  let before: Threshold;
+  let after: Threshold;
+}

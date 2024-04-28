@@ -1,0 +1,66 @@
+LootTables.$(likeliness)BlacklaceTable_For$(level)Player:
+  $instances:
+    - { level: Weak,     likeliness: '', version: V0,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForWeakPlayer          }
+    - { level: Advanced, likeliness: '', version: V1,     chance: 0.1,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer      }
+    - { level: Rookie,   likeliness: Seldom, version: V0, chance: 0.05, prereq: LootPrereqs.BlackLaceOutsideCorpoDistricts  }
+    - { level: Rookie,   likeliness: Rare, version: V0,   chance: 0.02, prereq: LootPrereqs.BlackLaceOutsideCorpoDistricts  }
+  $type: gamedataLootItem_Record
+  itemID: Items.BlackLace$(version)
+  dropChance: $(chance)
+  dropCountMax: 1
+  dropCountMin: 1
+  playerPrereqID: $(prereq)
+  dropChanceModifiers: []
+  quantityModifiers: []
+  statModifiers: []
+
+LootTables.RandomBlacklaceTable:
+  $type: gamedataLootTable_Record
+  lootGenerationType: dropChance
+  maxItemsToLoot: 1
+  minItemsToLoot: 1
+  lootItems:
+    - LootTables.BlacklaceTable_ForWeakPlayer
+    - LootTables.BlacklaceTable_ForAdvancedPlayer
+  lootTableInclusions: []
+  queries: []
+
+LootTables.SeldomBlacklaceTable:
+  $base: LootTables.RandomBlacklaceTable
+  lootItems:
+    - LootTables.SeldomBlacklaceTable_ForRookiePlayer
+
+LootTables.RareBlacklaceTable:
+  $base: LootTables.RandomBlacklaceTable
+  lootItems:
+    - LootTables.RareBlacklaceTable_ForRookiePlayer
+
+LootTables.Maelstrom_LGM_locker.lootTableInclusions: &AdditionalBlackLaceInclusion
+  - !append-once LootTables.RandomBlacklaceTable
+LootTables.Maelstrom_LGS_gadgets.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_LGS_valuable.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_LGM_safe.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_LGS_suitcase.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_MGM_safe.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_MGM_locker.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_MGS_crate.lootTableInclusions: *AdditionalBlackLaceInclusion
+LootTables.Maelstrom_MGS_gadgets.lootTableInclusions: *AdditionalBlackLaceInclusion
+# LootTables.Maelstrom_LGM_chemicals already contains LootTables.BlacklaceTable
+
+LootTables.FirstAidKits.lootTableInclusions:
+  - !append-once LootTables.SeldomBlacklaceTable
+
+Character.JunkieFemale: &AdditionalBlackLaceLootJunkies
+  lootDrop: LootTables.SeldomBlacklaceTable
+Character.JunkieFemaleDE: *AdditionalBlackLaceLootJunkies
+Character.JunkieMale: *AdditionalBlackLaceLootJunkies
+Character.JunkieMaleDE: *AdditionalBlackLaceLootJunkies
+Character.junkie_no_reaction: *AdditionalBlackLaceLootJunkies
+
+Character.HomelessFemale: &AdditionalBlackLaceLootHomeless
+  lootDrop: LootTables.RareBlacklaceTable
+Character.HomelessFemaleDE: *AdditionalBlackLaceLootHomeless
+Character.HomelessMan: *AdditionalBlackLaceLootHomeless
+Character.HomelessManDE: *AdditionalBlackLaceLootHomeless
+Character.HomelessManBig: *AdditionalBlackLaceLootHomeless
+Character.HomelessManBackpack: *AdditionalBlackLaceLootHomeless

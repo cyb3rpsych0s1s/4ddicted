@@ -1,0 +1,148 @@
+Loot.$(gang)$(likeliness)Drop_BlackLace$(version):
+  $instances:
+    # maelstrom
+    - { gang: Maelstrom,  version: V0, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
+    - { gang: Maelstrom,  version: V0, likeliness: Occasionally, max: 2, chance: 0.2,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
+    - { gang: Maelstrom,  version: V0, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
+    - { gang: Maelstrom,  version: V1, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
+    - { gang: Maelstrom,  version: V1, likeliness: Occasionally, max: 2, chance: 0.2,  prereq: LootPrereqs.BlackLaceForWeakPlayer     }
+    - { gang: Maelstrom,  version: V1, likeliness: Sometimes,    max: 1, chance: 0.3,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
+    # scavengers
+    - { gang: Scavengers, version: V0, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForTrashPlayer    }
+    - { gang: Scavengers, version: V0, likeliness: Occasionally, max: 1, chance: 0.1,  prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
+    # wraiths
+    - { gang: Wraiths,    version: V0, likeliness: Rarely,       max: 1, chance: 0.1,  prereq: LootPrereqs.BlackLaceForTrashPlayer    }
+    - { gang: Wraiths,    version: V0, likeliness: Occasionally, max: 1, chance: 0.15, prereq: LootPrereqs.BlackLaceForAdvancedPlayer }
+    # 6th street
+    - { gang: SixthStreet,version: V0, likeliness: Sometimes,    max: 1, chance: 0.25, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
+    # animals
+    - { gang: Animals,    version: V0, likeliness: Rarely,       max: 1, chance: 0.05, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
+    # creepy follower
+    - { gang: CreepyFollower, version: V0, likeliness: Sometimes, max: 1, chance: 0.2, prereq: LootPrereqs.BlackLaceForRookiePlayer   }
+  $type: gamedataLootItem_Record
+  itemID: Items.BlackLace$(version)
+  dropChance: $(chance)
+  dropCountMax: $(max)
+  dropCountMin: 1
+  playerPrereqID: $(prereq)
+  dropChanceModifiers: []
+  quantityModifiers: []
+  statModifiers: []
+
+Loot.MaelstromDrop.lootItems: &AdditionalBlackLaceLootMaelstrom
+  - !append-once Loot.MaelstromRarelyDrop_BlackLaceV0
+  - !append-once Loot.MaelstromOccasionallyDrop_BlackLaceV0
+  - !append-once Loot.MaelstromSometimesDrop_BlackLaceV0
+  - !append-once Loot.MaelstromRarelyDrop_BlackLaceV1
+  - !append-once Loot.MaelstromOccasionallyDrop_BlackLaceV1
+  - !append-once Loot.MaelstromSometimesDrop_BlackLaceV1
+Loot.MaelstromShotgunStrongT2.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGenericRangedGruntT1_copperhead.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGenericMeleeGruntT1.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromNetrunnerNetrunnerT2.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGenericRangedGruntT2_rifle.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromSniperT2.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGenericRangedGruntT1_lexington.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGenericMeleeGruntT2_blade.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromFastMeleeFastT3.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGenericMeleeGruntT2_axe.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromFastMeleeFastT2.lootItems: *AdditionalBlackLaceLootMaelstrom
+Loot.MaelstromGunnerStrongT2.lootItems: *AdditionalBlackLaceLootMaelstrom
+
+Loot.ScavengersGenericMeleeGruntT2_blunt.lootItems: &AdditionalBlackLaceLootScavengers
+  - !append-once Loot.ScavengersRarelyDrop_BlackLaceV0
+  - !append-once Loot.ScavengersOccasionallyDrop_BlackLaceV0
+Loot.ScavengersGenericMeleeGruntT2_knife.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersHeavyMeleeButcherT2.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersFastMeleeFastT2.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGenericRangedGruntT2_rifle.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGenericMeleeGruntT1_blunt.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersShotgunEliteT2.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersNetrunnerGruntT2.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersDrop.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersFastMeleeFastT3.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersNetrunnerNetrunnerT2.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGenericRangedGruntT2_sniper.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGunnerStrongT2.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGenericRangedGruntT1_smg.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGenericMeleeGruntT1_fists.lootItems: *AdditionalBlackLaceLootScavengers
+Loot.ScavengersGenericRangedGruntT1_handgun.lootItems: *AdditionalBlackLaceLootScavengers
+
+Loot.WraithsDrop.lootItems: &AdditionalBlackLaceLootWraiths
+  - !append-once Loot.WraithsRarelyDrop_BlackLaceV0
+  - !append-once Loot.WraithsOccasionallyDrop_BlackLaceV0 
+Loot.WraithsGenericRangedWarriorT3.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsSniperGhostT2.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsFastMeleePrisonerT3.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGenericMeleeWarriorT3.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGenericRangedGruntT2.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGenericRangedGruntT1_pulsar.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGenericMeleeGruntT1.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGunnerStrongT3.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGenericRangedGruntT1_nova.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsShotgunOperatorT2.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsGenericMeleeGruntT2.lootItems: *AdditionalBlackLaceLootWraiths
+Loot.WraithsShotgunWarriorT3.lootItems: *AdditionalBlackLaceLootWraiths
+
+Loot.SixthStreetDrop.lootItems: &AdditionalBlackLaceLootSixthStreet
+  - !append-once Loot.SixthStreetSometimesDrop_BlackLaceV0
+Loot.SixthStreetGenericRangedPatrolT2.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetShotgunMenaceT2.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericMeleeHooliganT1_blunt.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericRangedHooliganT1_saratoga.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericRangedVeteranT2.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetShotgunPatrolT3.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetFastMeleeMenaceT2.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericMeleeHooliganT1_blade.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetSniperSniperT2.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericMeleePatrolT2_blunt.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericMeleePatrolT2_knife.lootItems: *AdditionalBlackLaceLootSixthStreet
+Loot.SixthStreetGenericRangedHooliganT1_nova.lootItems: *AdditionalBlackLaceLootSixthStreet
+
+Loot.AnimalsDrop.lootItems: &AdditionalBlackLaceLootAnimals
+  - !append-once Loot.AnimalsRarelyDrop_BlackLaceV0
+Loot.AnimalsGenericMeleeGruntT2_blade.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedBouncerT2_handgunTech.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericMeleeBouncerT1.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedBouncerT1.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeBouncerT2_blunt.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeEliteT2_fist.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsShotgunGruntT2.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeBouncerT3.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeGruntT2_blunt.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsShotgunEliteT3.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedGruntT1_nova.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericMeleeGruntT2_blunt.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedEliteT3.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericMeleeBouncerT2.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGunnerEliteT3.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeGruntT2_fist.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeBouncerT2_fist.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericMeleeGruntT1_fist.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericMeleeGruntT1_blunt.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeEliteT3.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGunnerGruntT2.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedGruntT2.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedGruntT1_pulsar.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsGenericRangedBouncerT2_handgun.lootItems: *AdditionalBlackLaceLootAnimals
+Loot.AnimalsHeavyMeleeEliteT2_blunt.lootItems: *AdditionalBlackLaceLootAnimals
+
+Loot.CreepyFollower_Loot.lootItems:
+  - !append-once Loot.CreepyFollowerSometimesDrop_BlackLaceV0
+
+# if more needed:
+##
+# Character.lizzies_customer_XYZ
+# Character.CitizenBikerXYZ
+# Character.CreoleXYZ
+# Character.DumDum
+# Character.LowlifeXYZ
+# Loot.TygerClawsXYZ
+# Loot.ValentinosXYZ
+# Loot.KurtzXYZ
+
+# in vanilla DogTown, junkies already carries some
+# but there's also NPC like:
+##
+# Character.ep1_combat_zone_citizen_XYZ
+# Character.ep1_combat_service_sexworker_XYZ
