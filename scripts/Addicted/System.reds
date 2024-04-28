@@ -185,10 +185,7 @@ public class AddictedSystem extends ScriptableSystem {
     this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
   }
 
-  /// deadlock on packages.GetAppliedPackages
   private func CalculateConsumptionModifier(identifier: TweakDBID) -> Float {
-    return 1.0; // until method fixed
-
     let applied: array<TweakDBID>;
     let stimuli: array<wref<StatModifier_Record>> = [];
     let package: wref<GameplayLogicPackage_Record>;
@@ -198,6 +195,7 @@ public class AddictedSystem extends ScriptableSystem {
 
     if !Generic.IsNeuroBlocker(identifier) { return 1.0; }
     let packages = GameInstance.GetGameplayLogicPackageSystem(this.player.GetGame());
+    // should NEVER be called DIRECTLY from inside a GameplayLogicPackage (deadlock) 
     packages.GetAppliedPackages(this.player, applied);
     while i < ArraySize(applied) {
       id = applied[i];
