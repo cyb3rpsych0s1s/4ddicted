@@ -104,3 +104,54 @@ BaseStatusEffect.Jitters:
     - BaseStatusEffect.Drunk_inline11
     - BaseStatusEffect.DrillingShakeNormal_inline0
     - BaseStatusEffect.BreathingHeavy_inline0
+
+UIData.AlcoholsCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-Alcohols-Caution
+
+Package.AlcoholsCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.AlcoholsCaution
+
+Items.Alcohol.OnEquip: &AlcoholsCaution
+  - !append-once Package.AlcoholsCaution
+Items.ExquisiteQualityAlcohol.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol1.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol2.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol3.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol4.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol5.OnEquip: *AlcoholsCaution
+Items.GoodQualityAlcohol6.OnEquip: *AlcoholsCaution
+Items.KerryAlcohol1.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol1.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol2.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol3.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol4.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol5.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol6.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol7.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol8.OnEquip: *AlcoholsCaution
+Items.LowQualityAlcohol9.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol1.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol2.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol3.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol4.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol5.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol6.OnEquip: *AlcoholsCaution
+Items.MediumQualityAlcohol7.OnEquip: *AlcoholsCaution
+Items.NomadsAlcohol1.OnEquip: *AlcoholsCaution
+Items.NomadsAlcohol2.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol1.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol2.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol3.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol4.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol5.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol6.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol7.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol8.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol9.OnEquip: *AlcoholsCaution
+Items.TopQualityAlcohol10.OnEquip: *AlcoholsCaution
