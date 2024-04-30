@@ -125,3 +125,15 @@ BaseStatusEffect.PhotoSensitive:
   packages: [ Package.PhotoSensitive ]
   SFX: []
   VFX: []
+
+UIData.MemoryBoosterCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-MemoryBooster-Caution
+
+Package.MemoryBoosterCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.MemoryBoosterCaution
+
+Items.MemoryBooster.OnEquip: &MemoryBoosterCaution
+  - !append-once Package.MemoryBoosterCaution
+Items.Blackmarket_MemoryBooster.OnEquip: *MemoryBoosterCaution
