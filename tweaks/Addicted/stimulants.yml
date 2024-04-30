@@ -137,3 +137,27 @@ Package.MemoryBoosterCaution:
 Items.MemoryBooster.OnEquip: &MemoryBoosterCaution
   - !append-once Package.MemoryBoosterCaution
 Items.Blackmarket_MemoryBooster.OnEquip: *MemoryBoosterCaution
+
+UIData.StaminaBoosterCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-StaminaBooster-Caution
+
+Package.StaminaBoosterCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.StaminaBoosterCaution
+
+Items.StaminaBooster.OnEquip: &StaminaBoosterCaution
+  - !append-once Package.StaminaBoosterCaution
+Items.Blackmarket_StaminaBooster.OnEquip: *StaminaBoosterCaution
+
+UIData.CarryCapacityBoosterCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-CarryCapacityBooster-Caution
+
+Package.CarryCapacityBoosterCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.CarryCapacityBoosterCaution
+
+Items.CarryCapacityBooster.OnEquip: &CarryCapacityBoosterCaution
+  - !append-once Package.CarryCapacityBoosterCaution
+Items.Blackmarket_CarryCapacityBooster.OnEquip: *CarryCapacityBoosterCaution
