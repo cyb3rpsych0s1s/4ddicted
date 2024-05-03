@@ -65,11 +65,40 @@ Effectors.PhotoSensitive:
   listenConstantly: true
   isPercentage: false
 
+Effectors.BlinkEyes:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: False
+  removeAfterPrereqCheck: False
+  statModifierGroups: []
+  startOnUninitialize: False
+  vfxName: blink_fast
+
+Effectors.BlinkEyesTwice:
+  $base: Effectors.BlinkEyes
+  vfxName: eyes_blinking
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 0.7
+    randRange: 0
+
 Package.PhotoSensitive:
   $type: GameplayLogicPackage_Record
   stackable: true
   animationWrapperOverrides: []
   effectors: [ Effectors.PhotoSensitive ]
+  items: []
+  statPools: []
+  stats: []
+
+Package.BlinkEyes:
+  $type: GameplayLogicPackage_Record
+  stackable: false
+  animationWrapperOverrides: []
+  effectors:
+    - Effectors.BlinkEyes
+    - Effectors.BlinkEyesTwice
   items: []
   statPools: []
   stats: []
@@ -122,6 +151,8 @@ BaseStatusEffect.PhotoSensitive:
     - Blind
   immunityStats:
     - BaseStats.BlindImmunity
-  packages: [ Package.PhotoSensitive ]
+  packages: 
+    - Package.PhotoSensitive
+    - Package.BlinkEyes
   SFX: []
   VFX: []
