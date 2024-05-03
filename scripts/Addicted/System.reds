@@ -16,8 +16,9 @@ public class CheckWarnCallback extends DelayCallback {
 
 public class UpdateWithdrawalSymptomsCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
+  public let force: Bool;
   public func Call() -> Void {
-    this.system.OnUpdateWithdrawalSymptoms();
+    this.system.OnUpdateWithdrawalSymptoms(this.force);
   }
 }
 
@@ -47,6 +48,7 @@ public class AddictedSystem extends ScriptableSystem {
   private let quiet: Bool = false;
   private persistent let warned: Bool = false; // deprecated, use warnings instead
   private persistent let warnings: Uint32 = 0u;
+  private persistent let withdrawalSymptomsLastUpdated: GameTime;
 
   private let updateSymtomsID: DelayID;
   private let healingRechargeDurationModifier: ref<gameStatModifierData>;
@@ -105,7 +107,8 @@ public class AddictedSystem extends ScriptableSystem {
 
       let callback = new UpdateWithdrawalSymptomsCallback();
       callback.system = this;
-      this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
+      callback.force = false;
+      this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 60., true);
 
       this.RefreshStats(this.player);
       this.RegisterListeners(this.player);
@@ -162,19 +165,26 @@ public class AddictedSystem extends ScriptableSystem {
     return container.Get(n"Addicted.System.AddictedSystem") as AddictedSystem;
   }
 
-  public func OnUpdateWithdrawalSymptoms() -> Void {
-    E(s"on update withdrawal symptoms");
-    let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
-    let before = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
-    let now: Uint32 = 0u;
-    let consumables = Consumables();
-    let withdrawing: Bool = false;
-    for consumable in consumables {
-      withdrawing = this.NotConsumedRecently(consumable);
-      now = Bits.Set(before, EnumInt(consumable), withdrawing);
-    }
-    if NotEquals(before, now) {
-      blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
+  public func OnUpdateWithdrawalSymptoms(force: Bool) -> Void {
+    let now = this.timeSystem.GetGameTime();
+    let elapsed = GameTime.Hours(now - this.withdrawalSymptomsLastUpdated);
+    let update = elapsed > 0;
+    // E(s"now: \(GameTime.ToString(now)), last updated: \(GameTime.ToString(this.withdrawalSymptomsLastUpdated)), hour(s) elapsed: \(ToString(elapsed)), update: \(ToString(update)), force: \(ToString(force))");
+    if force || update {
+      E(s"on update withdrawal symptoms");
+      this.withdrawalSymptomsLastUpdated = now;
+      let blackboard: ref<IBlackboard> = this.player.GetPlayerStateMachineBlackboard();
+      let before = blackboard.GetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms);
+      let now: Uint32 = 0u;
+      let consumables = Consumables();
+      let withdrawing: Bool = false;
+      for consumable in consumables {
+        withdrawing = this.NotConsumedRecently(consumable);
+        now = Bits.Set(before, EnumInt(consumable), withdrawing);
+      }
+      if NotEquals(before, now) {
+        blackboard.SetUint(GetAllBlackboardDefs().PlayerStateMachine.WithdrawalSymptoms, now);
+      }
     }
 
     if NotEquals(this.updateSymtomsID, GetInvalidDelayID()) {
@@ -182,7 +192,8 @@ public class AddictedSystem extends ScriptableSystem {
     }
     let callback = new UpdateWithdrawalSymptomsCallback();
     callback.system = this;
-    this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 600., true);
+    callback.force = false;
+    this.updateSymtomsID = this.delaySystem.DelayCallback(callback, 60., true);
   }
 
   private func CalculateConsumptionModifier(identifier: TweakDBID) -> Float {
@@ -318,6 +329,7 @@ public class AddictedSystem extends ScriptableSystem {
   private func OnSlept() -> Void {
     let callback = new UpdateWithdrawalSymptomsCallback();
     callback.system = this;
+    callback.force = true;
     this.delaySystem.DelayCallbackNextFrame(callback);
 
     // apply a slight delay to let V time to stand up
