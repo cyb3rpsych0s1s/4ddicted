@@ -1,0 +1,129 @@
+# Game.AddToInventory("Items.AdvancedDrugPumpCommon")
+# Game.AddToInventory("Items.AdvancedDrugPumpUncommon")
+# Game.AddToInventory("Items.AdvancedDrugPumpUncommonPlus")
+# Game.AddToInventory("Items.AdvancedDrugPumpRare")
+# Game.AddToInventory("Items.AdvancedDrugPumpRarePlus")
+# Game.AddToInventory("Items.AdvancedDrugPumpEpic")
+# Game.AddToInventory("Items.AdvancedDrugPumpEpicPlus")
+# Game.AddToInventory("Items.AdvancedDrugPumpLegendary")
+# Game.AddToInventory("Items.AdvancedDrugPumpLegendaryPlus")
+# Game.AddToInventory("Items.AdvancedDrugPumpLegendaryPlusPlus")
+Items.AdvancedDrugPump$(tier):
+  $instances: &DrugPumpInstances
+    - { tier: Common, upgrade: Uncommon, humanity: 4, consumechance: 90 }
+    - { tier: Uncommon, upgrade: UncommonPlus, humanity: 6, consumechance: 80 }
+    - { tier: UncommonPlus, upgrade: Rare, humanity: 6, consumechance: 80 }
+    - { tier: Rare, upgrade: RarePlus, humanity: 8, consumechance: 70 }
+    - { tier: RarePlus, upgrade: Epic, humanity: 8, consumechance: 70 }
+    - { tier: Epic, upgrade: EpicPlus, humanity: 10, consumechance: 60 }
+    - { tier: EpicPlus, upgrade: Legendary, humanity: 10, consumechance: 60 }
+    - { tier: Legendary, upgrade: LegendaryPlus, humanity: 12, consumechance: 50 }
+    - { tier: LegendaryPlus, upgrade: LegendaryPlusPlus, humanity: 12, consumechance: 50 }
+    - { tier: LegendaryPlusPlus, upgrade: None, humanity: 12, consumechance: 50 }
+  $base: Items.AdvancedBloodPump$(tier)
+  displayName: LocKey#Gameplay-Cyberware-DisplayName-DrugPump
+  localizedDescription: LocKey#Gameplay-Cyberware-LocalizedDescription-DrugPump
+  icon:
+    atlasResourcePath: addicted\gameplay\gui\common\icons\items\DrugPump.inkatlas
+    atlasPartName: cw_circulatory_drugpump
+  appearanceName: None
+  appearanceResourceName: None
+  quality: Quality.$(tier)
+  nextUpgradeItem: Items.AdvancedDrugPump$(upgrade)
+  variants:
+    - Variants.Humanity$(humanity)Cost
+  OnEquip:
+    - Items.AdvancedBloodPump$(tier)_inline0
+    - Items.AdvancedDrugPump$(tier)Logic
+    - Attunements.TechConsumableEffectiveness
+  objectActions:
+    - CyberwareAction.Use$(tier)DrugPump
+
+Items.AdvancedDrugPumpNone: # Fake item to prevent error in log
+  $type: gamedataItem_Record
+  displayName: LocKey#UI-Settings-Language-Debug
+
+Items.AdvancedDrugPump$(tier)Logic:
+  $instances: *DrugPumpInstances
+  $type: gamedataGameplayLogicPackage_Record
+  stackable: True
+  UIData:
+    $type: gamedataGameplayLogicPackageUIData_Record
+    intValues:
+      - $(consumechance)
+    localizedDescription: LocKey#Gameplay-Cyberware-Abilities-DrugPump
+
+CyberwareAction.Use$(tier)DrugPump:
+  $instances: *DrugPumpInstances
+  $type: gamedataItemAction_Record
+  isDefaultLootChoice: False
+  removeAfterUse: False
+  actionName: Use
+  hackCategory: HackCategory.NotAHack
+  objectActionType: ObjectActionType.Item
+  priority: 0
+  activationTime: []
+  completionEffects:
+    - $type: gamedataObjectActionEffect_Record
+      effectorToTrigger: Effectors.BlackLaceVXConsumption$(tier)Chance
+      recipient: ObjectActionReference.Instigator
+      statusEffect: {}
+    - CyberwareAction.UseBloodPump_inline6
+    - CyberwareAction.UseBloodPump_inline7
+    - CyberwareAction.UseBloodPump_inline11
+  costs: []
+  durationTime: []
+  instigatorActivePrereqs: []
+  instigatorPrereqs:
+    - CyberwareAction.UseBloodPump_inline0
+  interruptionPrereqs: []
+  rewards: []
+  startEffects:
+    - ItemAction.UseHealCharge_inline0
+    - CyberwareAction.UseBloodPump_inline2
+#   - CyberwareAction.BloodPumpSFXObjectActionEffect
+    - CyberwareAction.BloodPumpVFXObjectActionEffect
+    - $type: gamedataObjectActionEffect_Record
+      effectorToTrigger: Effectors.DrugPumpSFX
+      recipient: ObjectActionReference.Instigator
+      statusEffect: {}
+  targetActivePrereqs: []
+  targetPrereqs: []
+
+Effectors.BlackLaceVXConsumption$(tier)Chance:
+  $instances: *DrugPumpInstances
+  $type: gamedataApplyStatusEffectByChanceEffector_Record
+  statusEffect: BaseStatusEffect.Pain # Placeholder
+  effectorClassName: DrugPump.DrugPumpConsumptionEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  effectorChance:
+    - $type: gamedataConstantStatModifier_Record
+      value: $(consumechance)
+      modifierType: Additive
+      statType: BaseStats.EffectorChance
+
+Effectors.DrugPumpSFX:
+  $type: gamedataEffector_Record
+  effectorClassName: PlaySFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  activationSFXName: vfx_fullscreen_drugged_start
+
+Loot.MaelstromVeryRareDrop_DrugPumpCommon:
+  $type: gamedataLootItem_Record
+  itemID: Items.AdvancedDrugPumpCommon
+  dropChance: 0.025 # 2.5%
+  dropCountMax: 1
+  dropCountMin: 1
+  playerPrereqID: {}
+  dropChanceModifiers: []
+  quantityModifiers: []
+  statModifiers: []
+
+Loot.MaelstromGunnerStrongT2.lootItems: 
+  - !append-once Loot.MaelstromVeryRareDrop_DrugPumpCommon
+
+Loot.MaelstromShotgunStrongT2.lootItems: 
+  - !append-once Loot.MaelstromVeryRareDrop_DrugPumpCommon
+
+Loot.MaelstromSniperT2.lootItems:
+  - !append-once Loot.MaelstromVeryRareDrop_DrugPumpCommon
