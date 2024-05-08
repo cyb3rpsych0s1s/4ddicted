@@ -11,7 +11,10 @@ tree     := join('archive', 'pc', 'mod')
 
 @pack NAME:
     {{wk_cli}} pack '{{ join(source, NAME, "source", "archive") }}' -o '{{ join(source, NAME) }}'; \
-    just rename '{{ join(source, NAME, "archive.archive") }}' '{{ join(source, NAME + ".archive") }}';
+    just rename '{{ join(source, NAME, "archive.archive") }}' '{{ join(source, NAME + ".archive") }}'; \
+    just xl '{{NAME}}';
+
+@xl NAME:
     $xl='{{ join(source, NAME, "source", "resources", NAME + ".archive.xl") }}'; \
     if (Test-Path $xl -PathType leaf) { just copy $xl '{{ join(source, NAME + ".archive.xl") }}'; }
 
@@ -21,6 +24,8 @@ tree     := join('archive', 'pc', 'mod')
     just pack 'Addicted.VFX'
     just pack 'Addicted.Biomon'
     just pack 'Addicted.Translations'
+    just pack 'Addicted.DrugPump'
+    just xl 'DrugPump'
     just copy '{{ join(source, "*.archive") }}' '{{ join(TO, tree) }}';
     just copy '{{ join(source, "*.xl") }}' '{{ join(TO, tree) }}';
 
