@@ -119,10 +119,22 @@ Loot.MaelstromVeryRareDrop_DrugPumpCommon:
   quantityModifiers: []
   statModifiers: []
 
-Loot.MaelstromGunnerStrongT2.lootItems: 
+LootTables.MaelstromOfficerTable:
+  $type: gamedataLootTable_Record
+  lootGenerationType: dropChance
+  maxItemsToLoot: 1
+  minItemsToLoot: 1
+  lootItems:
+    - Items.AdvancedDrugPumpCommon
+  lootTableInclusions: []
+  queries: []
+
+Character.maelstrom_officer_officer_lexington_ma.lootDrop: LootTables.MaelstromOfficerTable
+
+Loot.MaelstromGunnerStrongT2.lootItems:
   - !append-once Loot.MaelstromVeryRareDrop_DrugPumpCommon
 
-Loot.MaelstromShotgunStrongT2.lootItems: 
+Loot.MaelstromShotgunStrongT2.lootItems:
   - !append-once Loot.MaelstromVeryRareDrop_DrugPumpCommon
 
 Loot.MaelstromSniperT2.lootItems:
