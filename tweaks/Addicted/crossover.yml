@@ -150,3 +150,13 @@ Items.IconicBioConductorsEpicPlus.OnEquip: *NeuroStimuliCOX2
 Items.IconicBioConductorsLegendary.OnEquip: *NeuroStimuliCOX2
 Items.IconicBioConductorsLegendaryPlus.OnEquip: *NeuroStimuliCOX2
 Items.IconicBioConductorsLegendaryPlusPlus.OnEquip: *NeuroStimuliCOX2
+
+# ui data
+
+UIData.NeuroBlockerCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-NeuroBlocker-Caution
+
+Package.NeuroBlockerCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.NeuroBlockerCaution

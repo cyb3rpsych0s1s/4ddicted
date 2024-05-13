@@ -228,3 +228,22 @@ BaseStatusEffect.BreathLess:
     - Package.ShortBreath.StaminaDelay
     - Package.BreathLess.SlowStaminaRegen
     - Package.BreathLess
+
+# ui data
+
+UIData.TobaccoCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-Tobacco-Caution
+
+Package.TobaccoCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.TobaccoCaution
+
+Items.cigar.OnEquip: &TobaccoCaution
+  - !append-once Package.TobaccoCaution
+Items.cigarette_i_stick.OnEquip: *TobaccoCaution
+Items.crowd_cigar.OnEquip: *TobaccoCaution
+Items.crowd_cigarette_i_stick.OnEquip: *TobaccoCaution
+Items.locomotion_crowd_cigarette_i_stick.OnEquip: *TobaccoCaution
+Items.q105_evelyns_cigarette_case.OnEquip: *TobaccoCaution
+Items.q204_yeheyuan_cigarettes.OnEquip: *TobaccoCaution
