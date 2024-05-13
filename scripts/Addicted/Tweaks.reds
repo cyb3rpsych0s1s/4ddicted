@@ -166,7 +166,7 @@ public func Reacts(reaction: CName) -> Void {
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
 private func AlterStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let system = AddictedSystem.GetInstance(gameInstance);
-  let altered: ref<ObjectActionEffect_Record>;
+  let altered: wref<ObjectActionEffect_Record>;
   let consumable: Consumable;
   let addiction: Addiction;
   let threshold: Threshold = Threshold.Clean;

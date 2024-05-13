@@ -1,6 +1,5 @@
 module Addicted.Utils
 
-// auto-disabled when LogChannel not in scope
 public static func E(msg: String) -> Void {
   if ShowDebugLogsAddicted() {
     ModLog(n"Addicted", AsRef(msg));

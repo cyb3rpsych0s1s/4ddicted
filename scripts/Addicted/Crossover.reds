@@ -131,10 +131,10 @@ public class NeuroBlockerTweaks extends ScriptableTweak {
   // with status effect set as BaseStatusEffect.NotablyWeakenedRipperDocMedBuff
   private func Derive(prefixes: array<String>, diminutive: String, suffixes: array<String>) -> Void {
     for suffix in suffixes {
-      let effect: ref<StatusEffect_Record> = TweakDBInterface.GetStatusEffectRecord(TDBID.Create("BaseStatusEffect." + diminutive + suffix));
-      let duration: ref<StatModifierGroup_Record> = effect.Duration();
-      let uiData: ref<StatusEffectUIData_Record> = effect.UiData();
-      let modifier: ref<ConstantStatModifier_Record> = duration.GetStatModifiersItem(0) as ConstantStatModifier_Record;
+      let effect: wref<StatusEffect_Record> = TweakDBInterface.GetStatusEffectRecord(TDBID.Create("BaseStatusEffect." + diminutive + suffix));
+      let duration: wref<StatModifierGroup_Record> = effect.Duration();
+      let uiData: wref<StatusEffectUIData_Record> = effect.UiData();
+      let modifier: wref<ConstantStatModifier_Record> = duration.GetStatModifiersItem(0) as ConstantStatModifier_Record;
       let updated: Float;
 
       let value: Float = modifier.Value();
