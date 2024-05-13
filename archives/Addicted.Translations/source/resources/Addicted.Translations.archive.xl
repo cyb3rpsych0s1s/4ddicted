@@ -6,3 +6,4 @@ localization:
     zh-cn: addicted\localization\zh-cn.json
     pt-br: addicted\localization\pt-br.json
     it-it: addicted\localization\it-it.json
+    kr-kr: addicted\localization\kr-kr.json

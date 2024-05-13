@@ -10,7 +10,8 @@ public func IsLanguageSupported(locale: CName) -> Bool {
   || Equals(locale, n"es-es")
   || Equals(locale, n"zh-cn")
   || Equals(locale, n"pt-br")
-  || Equals(locale, n"it-it");
+  || Equals(locale, n"it-it")
+  || Equals(locale, n"kr-kr");
 }
 
 public class Helper {
