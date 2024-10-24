@@ -9,6 +9,7 @@ scripts/*
 /archives/**/*.zip
 /archives/**/layout.xml
 /archives/**/install_log.xml
+/archives/**/fileTreeState.json
 /archives/**/packed
 /archives/*.archive
 /archives/*.xl
