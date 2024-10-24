@@ -1,0 +1,14 @@
+{
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.workspace.preloadFileSize": 15360,
+    "Lua.workspace.library": [
+        "C:\\Development\\cet-lua-b-1.18.0-211124"
+    ],
+    "redscript.gameDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cyberpunk 2077",
+    "redHotTools.gameDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cyberpunk 2077",
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#1D331E",
+      "titleBar.activeBackground": "#29472A",
+      "titleBar.activeForeground": "#F8FBF8"
+    }
+}
