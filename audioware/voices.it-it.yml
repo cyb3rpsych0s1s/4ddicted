@@ -1,218 +1,122 @@
 version: 1.0.0
 voices:
   ono_hhuh:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q113_f_1956c7fde04e1000.Wav
-        subtitle: Eh??
-    male:
-      it-it:
-        file: vanilla/it-it/v_q113_m_1956c7fde04e1000.Wav
-        subtitle: Eh??
+    it-it:
+      fem: vanilla/it-it/v_q113_f_1956c7fde04e1000.Wav
+      male: vanilla/it-it/v_q113_m_1956c7fde04e1000.Wav
+      subtitle: Eh??
   ono_huh:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q004_f_168ac1406f29f000.Wav
-        subtitle: Cosa...?
-    male:
-      it-it:
-        file: vanilla/it-it/v_q004_m_168ac1406f29f000.Wav
-        subtitle: Cosa...?
+    it-it:
+      fem: vanilla/it-it/v_q004_f_168ac1406f29f000.Wav
+      male: vanilla/it-it/v_q004_m_168ac1406f29f000.Wav
+      subtitle: Cosa...?
   ono_huhuh:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q003_f_178d53e0694b6000.Wav
-        subtitle: Mhm...
-    male:
-      it-it:
-        file: vanilla/it-it/v_q003_m_178d53e0694b6000.Wav
-        subtitle: Mhm...
+    it-it:
+      fem: vanilla/it-it/v_q003_f_178d53e0694b6000.Wav
+      male: vanilla/it-it/v_q003_m_178d53e0694b6000.Wav
+      subtitle: Mhm...
   biomon:
-    fem:
-      it-it:
-        file: it-it/surprised/fem_v_b.wav
-        subtitle: Biomon...
-    male:
-      it-it:
-        file: it-it/surprised/male_v_b.wav
-        subtitle: Biomon...
+    it-it:
+      fem: it-it/surprised/fem_v_b.wav
+      male: it-it/surprised/male_v_b.wav
+      subtitle: Biomon...
   as_if_I_didnt_know_already:
-    fem:
-      it-it:
-        file: it-it/disheartened/fem_v_aiidka.wav
-        subtitle: Come se già non lo sapessi...
-    male:
-      it-it:
-        file: it-it/disheartened/male_v_aiidka.wav
-        subtitle: Come se già non lo sapessi...
+    it-it:
+      fem: it-it/disheartened/fem_v_aiidka.wav
+      male: it-it/disheartened/male_v_aiidka.wav
+      subtitle: Come se già non lo sapessi...
   come_on_again:
-    fem:
-      it-it:
-        file: it-it/surprised/fem_v_coa.wav
-        subtitle: Oh, andiamo...di nuovo?!?
-    male:
-      it-it:
-        file: it-it/surprised/male_v_coa.wav
-        subtitle: Oh, andiamo...di nuovo?!?
+    it-it:
+      fem: it-it/surprised/fem_v_coa.wav
+      male: it-it/surprised/male_v_coa.wav
+      subtitle: Oh, andiamo...di nuovo?!?
   come_on_biomon_cant_you_give_me_a_break:
-    fem:
-      it-it:
-        file: it-it/disheartened/fem_v_cobcygmab.wav
-        subtitle: Andiamo, biomon...non puoi darmi tregua?
-    male:
-      it-it:
-        file: it-it/disheartened/male_v_cobjgmab.wav
-        subtitle: Andiamo, biomon...non puoi darmi tregua?
+    it-it:
+      fem: it-it/disheartened/fem_v_cobcygmab.wav
+      male: it-it/disheartened/male_v_cobjgmab.wav
+      subtitle: Andiamo, biomon...non puoi darmi tregua?
   damn_cant_you_just_leave_me_alone:
-    fem:
-      it-it:
-        file: it-it/disheartened/fem_v_dcyjlma.wav
-        subtitle: Accidenti...non puoi lasciarmi in pace?
-    male:
-      it-it:
-        file: it-it/disheartened/male_v_dcyjlma.wav
-        subtitle: Accidenti...non puoi lasciarmi in pace?
+    it-it:
+      fem: it-it/disheartened/fem_v_dcyjlma.wav
+      male: it-it/disheartened/male_v_dcyjlma.wav
+      subtitle: Accidenti...non puoi lasciarmi in pace?
   damn_thats_fucked_up:
-    fem:
-      it-it:
-        file: it-it/surprised/fem_v_dtfu.wav
-        subtitle: Diamine...qui sono c@zzi!
-    male:
-      it-it:
-        file: it-it/surprised/male_v_dtfu.wav
-        subtitle: Diamine...qui sono c@zzi!
+    it-it:
+      fem: it-it/surprised/fem_v_dtfu.wav
+      male: it-it/surprised/male_v_dtfu.wav
+      subtitle: Diamine...qui sono c@zzi!
   dont_you_see_Im_in_trouble:
-    fem:
-      it-it:
-        file: it-it/pestered/fem_v_dysiit.wav
-        subtitle: Non vedi che sono nei guai?
-    male:
-      it-it:
-        file: it-it/pestered/male_v_dysiit.wav
-        subtitle: Non vedi che sono nei guai?
+    it-it:
+      fem: it-it/pestered/fem_v_dysiit.wav
+      male: it-it/pestered/male_v_dysiit.wav
+      subtitle: Non vedi che sono nei guai?
   fuck:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q115_f_1752ea11b74e1000.wav
-        subtitle: M3rda
-    male:
-      it-it:
-        file: vanilla/it-it/v_q115_m_1752ea11b74e1000.wav
-        subtitle: M3rda
+    it-it:
+      fem: vanilla/it-it/v_q115_f_1752ea11b74e1000.wav
+      male: vanilla/it-it/v_q115_m_1752ea11b74e1000.wav
+      subtitle: M3rda
   fuck_this_biomon_just_not_right_now:
-    fem:
-      it-it:
-        file: it-it/pestered/fem_v_ftbnrn.wav
-        subtitle: Fottiti biomon! Non è il momento!!
-    male:
-      it-it:
-        file: it-it/pestered/male_v_ftbnrn.wav
-        subtitle: Fottiti biomon! Non è il momento!!
+    it-it:
+      fem: it-it/pestered/fem_v_ftbnrn.wav
+      male: it-it/pestered/male_v_ftbnrn.wav
+      subtitle: Fottiti biomon! Non è il momento!!
   get_this_damn_UI_out_of_my_face:
-    fem:
-      it-it:
-        file: it-it/pestered/fem_v_gtduioomf.wav
-        subtitle: Togli sto maledetto HUD dalla mia vista!
-    male:
-      it-it:
-        file: it-it/pestered/male_v_gtduioomf.wav
-        subtitle: Togli sto maledetto HUD dalla mia vista!
+    it-it:
+      fem: it-it/pestered/fem_v_gtduioomf.wav
+      male: it-it/pestered/male_v_gtduioomf.wav
+      subtitle: Togli sto maledetto HUD dalla mia vista!
   nah_everything_is_all_good:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_scene_dex_default_f_182ad40c364ea000.Wav
-        subtitle: Naaah...tutto apposto
-    male:
-      it-it:
-        file: vanilla/it-it/v_scene_dex_default_m_182ad40c364ea000.Wav
-        subtitle: Naaah...tutto apposto
+    it-it:
+      fem: vanilla/it-it/v_scene_dex_default_f_182ad40c364ea000.Wav
+      male: vanilla/it-it/v_scene_dex_default_m_182ad40c364ea000.Wav
+      subtitle: Naaah...tutto apposto
   nah_Im_cool:
-    fem:
-      it-it:
-        file: it-it/offhanded/fem_v_nic.wav
-        subtitle: Nah, sono tranquilla.
-    male:
-      it-it:
-        file: it-it/offhanded/male_v_nic.wav
-        subtitle: Nah, sono tranquillo.
+    it-it:
+      fem: it-it/offhanded/fem_v_nic.wav
+      male: it-it/offhanded/male_v_nic.wav
+      subtitle: Nah, sono tranquillo.
   noo:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_scene_mitch_default_f_1b1a38325729f000.Wav
-        subtitle: Noooo
-    male:
-      it-it:
-        file: vanilla/it-it/v_scene_mitch_default_m_1b1a38325729f000.Wav
-        subtitle: Noooo
+    it-it:
+      fem: vanilla/it-it/v_scene_mitch_default_f_1b1a38325729f000.Wav
+      male: vanilla/it-it/v_scene_mitch_default_m_1b1a38325729f000.Wav
+      subtitle: Noooo
   oh_shit:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q000_f_1927fae1772ef000.Wav
-        subtitle: Oh cazz*..
-    male:
-      it-it:
-        file: vanilla/it-it/v_q000_m_1927fae1772ef000.Wav
-        subtitle: Oh cazz*..
+    it-it:
+      fem: vanilla/it-it/v_q000_f_1927fae1772ef000.Wav
+      male: vanilla/it-it/v_q000_m_1927fae1772ef000.Wav
+      subtitle: Oh cazz*..
   shit:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q104_f_18545e4c6a4e6000.Wav
-        subtitle: M3rda!!
-    male:
-      it-it:
-        file: vanilla/it-it/v_q104_m_18545e4c6a4e6000.Wav
-        subtitle: M3rda!!
+    it-it:
+      fem: vanilla/it-it/v_q104_f_18545e4c6a4e6000.Wav
+      male: vanilla/it-it/v_q104_m_18545e4c6a4e6000.Wav
+      subtitle: M3rda!!
   so_frustrating:
-    fem:
-      it-it:
-        file: it-it/pestered/fem_v_sf.wav
-        subtitle: E' così snervante!!
-    male:
-      it-it:
-        file: it-it/pestered/male_v_sf.wav
-        subtitle: E' così snervante!!
+    it-it:
+      fem: it-it/pestered/fem_v_sf.wav
+      male: it-it/pestered/male_v_sf.wav
+      subtitle: E' così snervante!!
   what:
-    fem:
-      it-it:
-        file: vanilla/it-it/v_q104_f_18980f710d29f000.Wav
-        subtitle: Cosa!?
-    male:
-      it-it:
-        file: vanilla/it-it/v_q104_m_18980f710d29f000.Wav
-        subtitle: Cosa!?
+    it-it:
+      fem: vanilla/it-it/v_q104_f_18980f710d29f000.Wav
+      male: vanilla/it-it/v_q104_m_18980f710d29f000.Wav
+      subtitle: Cosa!?
   yeah_I_know:
-    fem:
-      it-it:
-        file: it-it/disheartened/fem_v_yik.wav
-        subtitle: Si...lo so.
-    male:
-      it-it:
-        file: it-it/disheartened/male_v_yik.wav
-        subtitle: Si...lo so.
+    it-it:
+      fem: it-it/disheartened/fem_v_yik.wav
+      male: it-it/disheartened/male_v_yik.wav
+      subtitle: Si...lo so.
   yeah_yeah_yeah_alright:
-    fem:
-      it-it:
-        file: it-it/offhanded/fem_v_yyya.wav
-        subtitle: Si, si, si...va bene.
-    male:
-      it-it:
-        file: it-it/offhanded/male_v_yyya.wav
-        subtitle: Si, si, si...va bene.
+    it-it:
+      fem: it-it/offhanded/fem_v_yyya.wav
+      male: it-it/offhanded/male_v_yyya.wav
+      subtitle: Si, si, si...va bene.
   yeah_yeah_yeah_who_cares:
-    fem:
-      it-it:
-        file: it-it/offhanded/fem_v_yyywc.wav
-        subtitle: Si, si, si, chi se ne importa?
-    male:
-      it-it:
-        file: it-it/offhanded/male_v_yyywc.wav
-        subtitle: Si, si, si, chi se ne importa?
+    it-it:
+      fem: it-it/offhanded/fem_v_yyywc.wav
+      male: it-it/offhanded/male_v_yyywc.wav
+      subtitle: Si, si, si, chi se ne importa?
   you_tell_me_biomon:
-    fem:
-      it-it:
-        file: it-it/offhanded/fem_v_ytmb.wav
-        subtitle: Me lo devi dire tu, biomon
-    male:
-      it-it:
-        file: it-it/offhanded/male_v_ytmb.wav
-        subtitle: Me lo devi dire tu, biomon
+    it-it:
+      fem: it-it/offhanded/fem_v_ytmb.wav
+      male: it-it/offhanded/male_v_ytmb.wav
+      subtitle: Me lo devi dire tu, biomon
