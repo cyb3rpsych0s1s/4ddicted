@@ -7,6 +7,8 @@ public class LocalizationProvider extends ModLocalizationProvider {
         switch language {
             case n"en-us":  return new English();
             case n"fr-fr":  return new French();
+            case n"es-mx":  return new Spanish();
+            case n"es-es":  return new Spanish();
             default:        return null;
         }
     }
