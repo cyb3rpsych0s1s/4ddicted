@@ -4,6 +4,8 @@ import Codeware.Localization.*
 
 public class English extends ModLocalizationPackage {
     protected func DefineTexts() -> Void {
+        super.DefineTexts();
+
         // base vocabulary
         this.Text("Mod-Addicted-Thresholds",                            "Thresholds");
         this.Text("Mod-Addicted-Threshold-Barely-Desc",                 "V start getting barely addicted past this threshold");
@@ -29,12 +31,9 @@ public class English extends ModLocalizationPackage {
         this.Text("Mod-Addicted-Biomonitor-Booting",                    "BOOTING");
         // different types of consumables
         this.Text("Mod-Addicted-Consumable-Unknown",                    "Unknown consumable");
-        this.Text("Mod-Addicted-Consumable-MaxDOC",                     "MaxDOC");
-        this.Text("Mod-Addicted-Consumable-BounceBack",                 "BounceBack");
-        this.Text("Mod-Addicted-Consumable-HealthBooster",              "Health Booster");
+        this.Text("Mod-Addicted-Consumable-MaxDOC",                     "MaxDoc");
+        this.Text("Mod-Addicted-Consumable-BounceBack",                 "Bounce Back");
         this.Text("Mod-Addicted-Consumable-BlackLace",                  "BlackLace");
-        this.Text("Mod-Addicted-Consumable-StaminaBooster",             "Stamina Booster");
-        this.Text("Mod-Addicted-Consumable-CarryCapacityBooster",       "Carry Capacity Booster");
         this.Text("Mod-Addicted-Consumable-MemoryBooster",              "RAM Jolt");
         // addictions state warnings (biomonitor UI)
         this.Text("Mod-Addicted-Biomonitor-Status-Threshold-Severely",  "SERIOUS ADDICTION SYMPTOMS");

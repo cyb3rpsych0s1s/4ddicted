@@ -14,3 +14,12 @@ public class LocalizationProvider extends ModLocalizationProvider {
         return n"en-us";
     }
 }
+
+private abstract class LocalizationPackage extends ModLocalizationPackage {
+    protected func DefineTexts() -> Void {
+        this.Text("Mod-Addicted-Consumable-HealthBooster",        GetLocalizedTextByKey(n"Gameplay-Consumables-LongLasting-DisplayName-HealthBooster"));
+        this.Text("Mod-Addicted-Consumable-StaminaBooster",       GetLocalizedTextByKey(n"Gameplay-Consumables-LongLasting-DisplayName-StaminaBooster"));
+        this.Text("Mod-Addicted-Consumable-MemoryBooster",        GetLocalizedTextByKey(n"Gameplay-Consumables-LongLasting-DisplayName-MemoryBooster"));
+        this.Text("Mod-Addicted-Consumable-CarryCapacityBooster", GetLocalizedTextByKey(n"Gameplay-Consumables-LongLasting-DisplayName-CarryCapacityBooster"));
+    }
+}
