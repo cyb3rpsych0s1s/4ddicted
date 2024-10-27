@@ -10,10 +10,6 @@ public class French extends ModLocalizationPackage {
         this.Text("Mod-Addicted-Thresholds",                            "Paliers");
         this.Text("Mod-Addicted-Threshold-Barely-Desc",                 "V commence à être à peine accro à ce stade");
         this.Text("Mod-Addicted-Threshold-Mildly-Desc",                 "V commence à être passablement accro à ce stade");
-        // mod difficulty
-        this.Text("Mod-Addicted-Mode",                                  "Mode");
-        this.Text("Mod-Addicted-Mode-Normal",                           "les doigts dans le nez");
-        this.Text("Mod-Addicted-Mode-Hard",                             "plus... mortel");
         // addiction vocabulary
         this.Text("Mod-Addicted-Substance",                             "substance");
         this.Text("Mod-Addicted-Threshold",                             "palier");
