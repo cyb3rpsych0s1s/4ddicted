@@ -29,8 +29,6 @@ public class AddictedSystem extends ScriptableSystem {
   private let timeSystem: ref<TimeSystem>;
   private let callbackSystem: ref<CallbackSystem>;
 
-  private let config: ref<AddictedConfig>;
-
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
   private let blacklaceManager: ref<BlackLaceManager>;
@@ -113,7 +111,6 @@ public class AddictedSystem extends ScriptableSystem {
       this.RefreshStats(this.player);
       this.RegisterListeners(this.player);
 
-      this.RefreshConfig();
     } else { F(s"no player found!"); }
   }
 
@@ -131,15 +128,11 @@ public class AddictedSystem extends ScriptableSystem {
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
     }
-
-    OnAddictedPostAttach(this);
   }
 
   private func OnDetach() -> Void {
     E(s"on detach system");
     this.UnregisterListeners(this.player);
-
-    OnAddictedPostDetach(this);
   }
 
   private func OnRestored(saveVersion: Int32, gameVersion: Int32) -> Void {
@@ -149,15 +142,6 @@ public class AddictedSystem extends ScriptableSystem {
 
   private cb func OnPreSave(event: ref<GameSessionEvent>) {
     this.ShrinkDoses();
-  }
-
-  public func RefreshConfig() -> Void {
-    E(s"refresh config");
-    this.config = new AddictedConfig();
-  }
-
-  public func OnModSettingsChange() -> Void {
-    this.RefreshConfig();
   }
   
   public final static func GetInstance(gameInstance: GameInstance) -> ref<AddictedSystem> {
@@ -535,7 +519,11 @@ public class AddictedSystem extends ScriptableSystem {
     GameInstance.GetUISystem(this.player.GetGame()).QueueEvent(event);
   }
 
-  public func IsHard() -> Bool { return Equals(EnumInt(this.config.mode), EnumInt(AddictedMode.Hard)); }
+  public func IsHard() -> Bool {
+    let difficulty = GameInstance.GetStatsDataSystem(this.GetGameInstance()).GetDifficulty();
+    return Equals(difficulty, gameDifficulty.Hard)
+    || Equals(difficulty, gameDifficulty.VeryHard);
+  }
 
   public func UnderInfluence(id: TweakDBID) -> Bool {
     let effect = StatusEffectHelper.GetStatusEffectByID(this.player, id);
@@ -713,16 +701,6 @@ public class AddictedSystem extends ScriptableSystem {
     E(s"recalculated from gametime seconds  \(gt)");
   }
 }
-
-@if(!ModuleExists("ModSettingsModule"))
-private func OnAddictedPostAttach(_: ref<AddictedSystem>) -> Void {}
-@if(ModuleExists("ModSettingsModule"))
-private func OnAddictedPostAttach(system: ref<AddictedSystem>) -> Void { ModSettings.RegisterListenerToModifications(system); }
-
-@if(!ModuleExists("ModSettingsModule"))
-private func OnAddictedPostDetach(_: ref<AddictedSystem>) -> Void {}
-@if(ModuleExists("ModSettingsModule"))
-private func OnAddictedPostDetach(system: ref<AddictedSystem>) -> Void { ModSettings.UnregisterListenerToModifications(system); }
 
 struct Consumed {
   let amount: Int32;
