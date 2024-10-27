@@ -101,7 +101,7 @@ public class French extends ModLocalizationPackage {
         this.Text("Mod-Addicted-Consumable-BlackLace-Caution",          "\n<Rich color=\"MainColors.ActiveRed\" style=\"Semi-Bold\">Warning</>\nLe Lien Noir est une substance prohibée qui provoque une forte accoutumance. Une consommation régulière vous expose à de graves phénomènes d'accoutumance et de nombreux effets indésirables, tels que la fibromyalgie et une plus grande propention à la Cyberpsychose. L'usage de cette substance est fortement déconseillée et peut gravement nuire à votre santé ainsi qu'à votre bien-être.");
         this.Text("Mod-Addicted-Consumable-NeuroBlocker-Caution",       "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Caution</>\nLes inhibiteurs neuraux, bien qu'initialement prévus pour atténuer la fatigue mentale et les risques de Cyberpsychose, peuvent rapidement devenir addictifs lorsqu'ils sont utilisés conjointement avec des neuros-stimulants cybernétiques tels que le Sandevistan ou l'Ex-Disk, entre autres. Veuillez en user avec modération, et n'hésitez pas à consulter en cas d'accoutumance.");
         // Drug Pump
-        this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "Pompe à Lien Noir");
+        this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "Pompe noire");
         this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "Cette Pompe sanguine trafiquée augmente la capacité de guérison de son détenteur en lui injectant du Lien Noir dans les veines directement.");
         this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "\nConsomme un Lien Noir, si possédé, seulement <Rich color=\"TooltipText.cyberwareDescriptionHighlightColor\" style=\"Semi-Bold\">{int_0}%</> du temps.");
     }
