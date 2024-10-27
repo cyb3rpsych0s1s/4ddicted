@@ -98,6 +98,8 @@ public class AddictedSystem extends ScriptableSystem {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
       E(s"on player attach");
+      RegisterVFXs(player);
+
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
