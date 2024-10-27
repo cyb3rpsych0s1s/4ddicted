@@ -28,7 +28,7 @@ default:
 
 @build TO=game LOCALE='en-us': (archive TO) (audioware TO LOCALE)
 
-@reload TO=game: (cet TO) (redscript TO) (tweak TO)
+@reload TO=game: (redscript TO) (tweak TO)
 
 @dev: (build) (reload)
 
