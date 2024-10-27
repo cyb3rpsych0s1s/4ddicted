@@ -102,7 +102,7 @@ public class French extends ModLocalizationPackage {
         this.Text("Mod-Addicted-Consumable-NeuroBlocker-Caution",       "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Caution</>\nLes inhibiteurs neuraux, bien qu'initialement prévus pour atténuer la fatigue mentale et les risques de Cyberpsychose, peuvent rapidement devenir addictifs lorsqu'ils sont utilisés conjointement avec des neuros-stimulants cybernétiques tels que le Sandevistan ou l'Ex-Disk, entre autres. Veuillez en user avec modération, et n'hésitez pas à consulter en cas d'accoutumance.");
         // Drug Pump
         this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "Pompe noire");
-        this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "Cette Pompe sanguine trafiquée augmente la capacité de guérison de son détenteur en lui injectant du Lien Noir dans les veines directement.");
+        this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "Cette Pompe sanguine trafiquée augmente la capacité de guérison de son détenteur, en lui injectant directement du Lien Noir dans le sang.");
         this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "\nConsomme un Lien Noir, si possédé, seulement <Rich color=\"TooltipText.cyberwareDescriptionHighlightColor\" style=\"Semi-Bold\">{int_0}%</> du temps.");
     }
 }
