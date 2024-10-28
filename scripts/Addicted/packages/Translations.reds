@@ -13,6 +13,7 @@ public class LocalizationProvider extends ModLocalizationProvider {
             case n"pt-br":  return new Brazilian();
             case n"zh-cn":  return new SimplifiedChinese();
             case n"zh-tw":  return new SimplifiedChinese(); // TODO: new TraditionalChinese();
+            case n"kr-kr":  return new Korean();
             default:        return null;
         }
     }
