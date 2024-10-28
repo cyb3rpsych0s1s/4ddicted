@@ -22,7 +22,7 @@ public class LocalizationProvider extends ModLocalizationProvider {
     }
 }
 
-private abstract class LocalizationPackage extends ModLocalizationPackage {
+public abstract class LocalizationPackage extends ModLocalizationPackage {
     protected func DefineTexts() -> Void {
         this.Text("Mod-Addicted-Consumable-HealthBooster",        GetLocalizedTextByKey(n"Gameplay-Consumables-LongLasting-DisplayName-HealthBooster"));
         this.Text("Mod-Addicted-Consumable-StaminaBooster",       GetLocalizedTextByKey(n"Gameplay-Consumables-LongLasting-DisplayName-StaminaBooster"));

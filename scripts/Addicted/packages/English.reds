@@ -2,7 +2,7 @@ module Addicted
 
 import Codeware.Localization.*
 
-public class English extends ModLocalizationPackage {
+public class English extends LocalizationPackage {
     protected func DefineTexts() -> Void {
         super.DefineTexts();
 

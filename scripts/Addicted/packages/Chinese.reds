@@ -2,7 +2,7 @@ module Addicted
 
 import Codeware.Localization.*
 
-public class SimplifiedChinese extends ModLocalizationPackage {
+public class SimplifiedChinese extends LocalizationPackage {
     protected func DefineTexts() -> Void {
         super.DefineTexts();
 
