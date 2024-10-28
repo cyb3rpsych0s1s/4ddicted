@@ -10,6 +10,7 @@ public class LocalizationProvider extends ModLocalizationProvider {
             case n"es-mx":  return new Spanish();
             case n"es-es":  return new Spanish();
             case n"it-it":  return new Italian();
+            case n"pt-br":  return new Brazilian();
             default:        return null;
         }
     }
