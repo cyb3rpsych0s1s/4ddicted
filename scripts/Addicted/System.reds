@@ -27,7 +27,6 @@ public class AddictedSystem extends ScriptableSystem {
   private let player: wref<PlayerPuppet>;
   private let delaySystem: ref<DelaySystem>;
   private let timeSystem: ref<TimeSystem>;
-  private let callbackSystem: ref<CallbackSystem>;
 
   private let onoManager: ref<AudioManager>;
   private let stimulantManager: ref<StimulantManager>;
@@ -94,12 +93,16 @@ public class AddictedSystem extends ScriptableSystem {
     this.tobaccoManager = null;
   }
 
+  private cb func OnPlayerInitialize(event: ref<EntityLifecycleEvent>) {
+    E(s"on player initialize");
+    let player = event.GetEntity() as PlayerPuppet;
+    RegisterVFXs(player);
+  }
+
   private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
     let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
     if IsDefined(player) {
       E(s"on player attach");
-      RegisterVFXs(player);
-
       this.player = player;
       this.delaySystem = GameInstance.GetDelaySystem(this.player.GetGame());
       this.timeSystem = GameInstance.GetTimeSystem(this.player.GetGame());
@@ -124,8 +127,11 @@ public class AddictedSystem extends ScriptableSystem {
 
   private func OnAttach() -> Void {
     E(s"on attach system");
-    this.callbackSystem = GameInstance.GetCallbackSystem();
-    this.callbackSystem.RegisterCallback(n"Session/BeforeSave", this, n"OnPreSave");
+    GameInstance.GetCallbackSystem()
+    .RegisterCallback(n"Session/BeforeSave", this, n"OnPreSave");
+    GameInstance.GetCallbackSystem()
+    .RegisterCallback(n"Entity/Initialize", this, n"OnPlayerInitialize")
+    .AddTarget(EntityTarget.Type(n"PlayerPuppet"));
 
     if !IsDefined(this.consumptions) {
       this.consumptions = new Consumptions();
