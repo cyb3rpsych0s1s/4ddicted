@@ -22,6 +22,7 @@ private func CreateVFXs() -> array<ref<entEffectDesc>> {
     return vfxs;
 }
 
+/// register VFX from WolvenKit archive
 public func RegisterVFXs(player: ref<PlayerPuppet>) {
     let vfxs = CreateVFXs();
     let size = ArraySize(vfxs);
