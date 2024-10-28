@@ -88,17 +88,17 @@ public class Spanish extends ModLocalizationPackage {
         this.Text("Mod-Addicted-PhotoSensitive",                        "Fotosensible");
         this.Text("Mod-Addicted-PhotoSensitive-Desc",                   "Las granadas de destello te afectan durante más tiempo");
         // cautions (inventory tooltip UI)
-        this.Text("Mod-Addicted-Consumable-Healers-Caution",            "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nAunque nuestros productos de sanación en <Rich color=\"MainColors.ActiveBlue\">TraumaTeam</> ofrecen un alivio potente y casi instantáneo, no son un sustituto del descanso adecuado y la curación natural. El uso excesivo puede disminuir su eficacia y retrasar la recuperación.");
-        this.Text("Mod-Addicted-Consumable-Alcohols-Caution",           "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nSi bien todos apreciamos las cualidades de lubricación social del alcohol, se les advierte que el consumo excesivo puede resultar en la aparición de temblores \"espirituosos\". Recuerden, la moderación es la receta para una experiencia más fluida, tanto social como fisiológicamente.");
-        this.Text("Mod-Addicted-Consumable-MemoryBooster-Caution",      "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nEl consumo excesivo de Estímulo de RAM puede provocar efectos adversos, incluidos síntomas de abstinencia, disminución de la capacidad de memoria, migrañas y aumento de la fotosensibilidad. Por favor, úselo de manera responsable y consulte a un profesional médico calificado si experimenta alguna reacción negativa.\n<Rich color=\"MainColors.ActiveBlue\">Arasaka</> no puede ser responsabilizada en ninguna circunstancia por un uso indebido.");
-        this.Text("Mod-Addicted-Consumable-StaminaBooster-Caution",     "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nEl consumo excesivo de Potenciador de Resistencia puede resultar en efectos adversos, incluyendo disminución de la resistencia, fatiga y posible deterioro del rendimiento. Por favor, úselo de manera responsable y consulte a un profesional médico calificado si experimenta alguna reacción negativa.\n<Rich color=\"MainColors.ActiveBlue\">Militech Corporation</> no puede ser responsabilizada en ninguna circunstancia por un uso indebido.");
-        this.Text("Mod-Addicted-Consumable-CarryCapacityBooster-Caution","\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nEl consumo excesivo de Potenciador de Capacidad de Carga puede provocar efectos adversos, incluyendo disminución de la movilidad, fatiga muscular y posible tensión en el cuerpo. Por favor, úselo de manera responsable y consulte a un profesional médico calificado si experimenta alguna reacción negativa.\n<Rich color=\"MainColors.ActiveBlue\">Kang Tao Corporation</> no puede ser responsabilizada en ninguna circunstancia por un uso indebido.");
-        this.Text("Mod-Addicted-Consumable-Tobacco-Caution",            "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nEl consumo de tabaco, incluyendo cigarrillos y puros, puede provocar falta de aliento o dificultad para respirar. Por favor, úselo con precaución y considere los riesgos potenciales para la salud asociados con fumar.");
-        this.Text("Mod-Addicted-Consumable-BlackLace-Caution",          "\n<Rich color=\"MainColors.ActiveRed\" style=\"Semi-Bold\">Advertencia</>\nBlackLace es una sustancia ilegal potente y altamente adictiva. El consumo regular puede provocar síntomas de abstinencia severos y efectos adversos, incluyendo fibromialgia y una mayor susceptibilidad a la ciberpsicosis. Se desaconseja fuertemente el uso de esta sustancia, ya que puede tener serias consecuencias para su salud y bienestar.");
-        this.Text("Mod-Addicted-Consumable-NeuroBlocker-Caution",       "\n<Rich color=\"MainColors.ActiveYellow\" style=\"Semi-Bold\">Cuidado</>\nNeuroBlocker, aunque inicialmente es útil para manejar la sobrecarga cognitiva y los síntomas de ciberpsicosis, puede llevar a una rápida adicción cuando se usa junto con ciberware basado en neuroestímulos, como Sandevistan y Ex-Disk, entre otros. Por favor, úselo con moderación y busque consejo médico si se desarrolla dependencia.");
+        this.Text("Mod-Addicted-Consumable-Healers-Caution",            "");
+        this.Text("Mod-Addicted-Consumable-Alcohols-Caution",           "");
+        this.Text("Mod-Addicted-Consumable-MemoryBooster-Caution",      "");
+        this.Text("Mod-Addicted-Consumable-StaminaBooster-Caution",     "");
+        this.Text("Mod-Addicted-Consumable-CarryCapacityBooster-Caution","");
+        this.Text("Mod-Addicted-Consumable-Tobacco-Caution",            "");
+        this.Text("Mod-Addicted-Consumable-BlackLace-Caution",          "");
+        this.Text("Mod-Addicted-Consumable-NeuroBlocker-Caution",       "");
         // Drug Pump
-        this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "Bomba Negra");
-        this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "Esta bomba de sangre modificada en la calle acelera la curación de su poseedor mientras inyecta BlackLace en su torrente sanguíneo.");
-        this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "\nUtiliza BlackLace, si se posee, pero con solo un <Rich color=\"TooltipText.cyberwareDescriptionHighlightColor\" style=\"Semi-Bold\">{int_0}%</> de probabilidad de consumir el objeto.");
+        this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "");
+        this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "");
+        this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "");
     }
 }
