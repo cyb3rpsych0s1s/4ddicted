@@ -6,6 +6,8 @@ import Addicted.Helpers.*
 import Addicted.Manager.*
 import Addicted.Crossover.AlterNeuroBlockerStatusEffects
 import Addicted.Crossover.AlterBlackLaceStatusEffects
+import Addicted.Crossover.StressPreventWeanOff
+import Addicted.Crossover.ConditionModifier
 
 public class CheckWarnCallback extends DelayCallback {
   public let system: wref<AddictedSystem>;
@@ -345,20 +347,34 @@ public class AddictedSystem extends ScriptableSystem {
     for id in ids {
       consumption = this.consumptions.Get(id) as Consumption;
       let under_influence = false;
+      let stressed = StressPreventWeanOff(this.GetGameInstance());
       if this.IsHard() {
         under_influence = this.SleptUnderInfluence(id) && !this.hasDetoxifierEquipped;
         if under_influence
         { 
           E(s"slept under influence, no weaning off for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
         }
+        if stressed {
+          E(s"poor overall condition, no weaning off for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
+        }
       }
-      if !under_influence {
+      if !under_influence && !stressed {
         if consumption.current > 0 {
           let current = consumption.current;
           let daysSinceLastUsed = this.DaysSinceLastConsumption(Generic.Consumable(id));
-          let next = Max(current - Helper.Resilience(id, daysSinceLastUsed) - this.player.CyberwareImmunity(), 0);
-          consumption.current = next;
-          E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
+          let resilience = Helper.Resilience(id, daysSinceLastUsed);
+          let immunity = this.player.CyberwareImmunity();
+          let condition = ConditionModifier(this.GetGameInstance());
+          let weanoff = Max(resilience + immunity + condition, 0);
+          if weanoff == 0 {
+            let next = Max(current - weanoff, 0);
+            consumption.current = next;
+            E(s"didn't sleep well because of overall condition, no weaning off for for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) (modifier: \(ToString(condition)))");
+          } else {
+            let next = Max(current - weanoff, 0);
+            consumption.current = next;
+            E(s"slept well, weaning off \(ToString(current)) -> \(ToString(next)) for \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id))) (modifier: \(ToString(condition)))");
+          }
         } else {
           this.consumptions.Remove(id);
           E(s"clean again from \(TDBID.ToStringDEBUG(ItemID.GetTDBID(id)))");
