@@ -64,3 +64,33 @@ public class CruciateEffector extends TriggerContinuousAttackEffector {
         }
     }
 }
+
+public class PainfulLandingEffector extends TriggerAttackOnOwnerEffect {
+    private let callback: ref<CallbackHandle>;
+    protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
+        super.Initialize(record, game, parentRecord);
+        let v = this.GetOwner() as PlayerPuppet;
+        if !IsDefined(v) { F("player is undefined"); }
+        let board = GameInstance.GetBlackboardSystem(v.GetGame()).GetLocalInstanced(v.GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
+        this.callback = board.RegisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Landing, this, n"OnLandingChange", true);
+    }
+    protected func Uninitialize(game: GameInstance) -> Void {
+        if IsDefined(this.callback) {
+            let v = this.GetOwner() as PlayerPuppet;
+            let board = GameInstance.GetBlackboardSystem(v.GetGame()).GetLocalInstanced(v.GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
+            board.UnregisterListenerInt(GetAllBlackboardDefs().PlayerStateMachine.Landing, this.callback);
+            this.callback = null;
+        }
+    }
+    protected func ActionOn(owner: ref<GameObject>) -> Void {
+        this.m_owner = owner;
+        let board = GameInstance.GetBlackboardSystem(owner.GetGame()).GetLocalInstanced(owner.GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
+        let value = board.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Landing);
+        this.OnLandingChange(value);
+    }
+    protected cb func OnLandingChange(value: Int32) -> Bool {
+        if Equals(value, EnumInt(LandingType.Hard)) || Equals(value, EnumInt(LandingType.VeryHard)) || Equals(value, EnumInt(LandingType.Superhero)) {
+            this.RepeatedAction(this.m_owner);
+        }
+    }
+}

@@ -20,10 +20,10 @@ UIIcon.CruciateArms:
   atlasPartName: quickhack_brainmelt
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
-UIData.CruciateArms:
+UIData.Lesions:
   $type: StatusEffectUIData_Record
-  description: LocKey#Mod-Addicted-Cruciate-Arms-Desc
-  displayName: LocKey#Mod-Addicted-Cruciate-Arms
+  description: LocKey#Mod-Addicted-Lesions-Desc
+  displayName: LocKey#Mod-Addicted-Lesions
   fluffText: ''
   iconPath: CruciateArms
   priority: -8
@@ -68,18 +68,65 @@ Effectors.CruciateArms:
   # playerAsInstigator: true
   # instigator: Player
 
-Package.CruciateArms:
+Attacks.Modifier.PainfulLanding:
+  $type: CombinedStatModifier_Record
+  opSymbol: '*'
+  refObject: Target
+  refStat: BaseStats.Health
+  value: 0.1
+  modifierType: Additive
+  statType: BaseStats.PhysicalDamage
+
+Attacks.PainfulLanding:
+  $type: Attack_GameEffect_Record
+  audioAttackIndex: 0
+  effectName: damage_over_time
+  effectTag: default
+  attackType: AttackType.Effect
+  className: Attack_GameEffect
+  explosionDamageVSVehicles: -1
+  hitReactionSeverityMax: -1
+  hitReactionSeverityMin: -1
+  playerIncomingDamageMultiplier: 1
+  range: 0
+  useDefaultAimData: False
+  userDataPath: ''
+  velocity: -1
+  hitFlags:
+    - FriendlyFire
+    - CanDamageSelf
+  staminaCost: []
+  statModifiers:
+    - Attacks.Modifier.PainfulLanding
+  statusEffects: []
+
+Effectors.PainfulLanding:
+  $type: TriggerAttackEffector_Record
+  attackRecord: 
+  effectorClassName: Addicted.PainfulLandingEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  attackPositionSlotName: Knee
+  applicationChance: 1
+  isRandom: false
+  playerAsInstigator: true
+  triggerHitReaction: true
+
+Package.Lesions:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.CruciateArms
+    - Effectors.CruciateArms
 
-Modifier.CruciateArms.Duration:
+Modifier.Lesions.Duration:
   $type: ConstantStatModifier_Record
   value: 180
   modifierType: Additive
-  statType: BaseStats.MaxDuration
+  statType: BaseStats.PainfulLanding
 
-Duration.CruciateArms:
+Duration.Lesions:
   $type: StatModifierGroup_Record
   drawBasedOnStatType: False
   optimiseCombinedModifiers: False
@@ -87,15 +134,15 @@ Duration.CruciateArms:
   statModsLimit: -1
   relatedModifierGroups: []
   statModifiers:
-    - Modifier.CruciateArms.Duration
+    - Modifier.Lesions.Duration
 
-Stacks.CruciateArms:
+Stacks.Lesions:
   $type: ConstantStatModifier_Record
   value: 1
   modifierType: Additive
   statType: BaseStats.MaxStacks
 
-Modifier.CruciateArms.Stacks:
+Modifier.Lesions.Stacks:
   $type: StatModifierGroup_Record
   drawBasedOnStatType: true
   optimiseCombinedModifiers: false
@@ -103,11 +150,11 @@ Modifier.CruciateArms.Stacks:
   statModsLimit: 1
   relatedModifierGroups: []
   statModifiers:
-    - Stacks.CruciateArms
+    - Stacks.Lesions
 
-BaseStatusEffect.CruciateArms:
+BaseStatusEffect.Lesions:
   $base: BaseStatusEffect.HealthBooster
-  duration: Duration.CruciateArms
+  duration: Duration.Lesions
   statusEffectType: BaseStatusEffectTypes.Misc
   gameplayTags:
     - Debuff
@@ -116,8 +163,8 @@ BaseStatusEffect.CruciateArms:
   savable: true
   isAffectedByTimeDilationNPC: true
   isAffectedByTimeDilationPlayer: true
-  maxStacks: Modifier.CruciateArms.Stacks
+  maxStacks: Modifier.Lesions.Stacks
   packages:
-    - Package.CruciateArms
+    - Package.Lesions
   stopActiveSfxOnDeactivate: false
-  uiData: UIData.CruciateArms
+  uiData: UIData.Lesions
