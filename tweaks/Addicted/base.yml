@@ -14,3 +14,73 @@ Items.ShortLastingAddictionDuration:
       value: 900
   statModsLimit: -1
   statModsLimitModifier: None
+
+UIIcon.CruciateArms:
+  $type: gamedataUIIcon_Record
+  atlasPartName: quickhack_brainmelt
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+UIData.CruciateArms:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-Cruciate-Arms-Desc
+  displayName: LocKey#Mod-Addicted-Cruciate-Arms
+  fluffText: ''
+  iconPath: CruciateArms
+  priority: -8
+  floatValues: []
+  intValues: []
+  nameValues: []
+  stats: []
+
+Attacks.Modifier.CruciateArms:
+  $type: CombinedStatModifier_Record
+  opSymbol: '*'
+  refObject: Target
+  refStat: BaseStats.Health
+  value: 0.05
+  modifierType: Additive
+  statType: BaseStats.PhysicalDamage
+
+Attacks.CruciateArms:
+  $base: Attacks.OutOfOxygenDamageOverTime
+  attackTag: Bleeding
+  damageType: DamageTypes.Physical
+  hitFlags:
+    - !append-from Attacks.OutOfOxygenDamageOverTime.hitFlags
+    - BleedingDot
+
+Effectors.CruciateArms:
+  $type: ContinuousAttackEffector_Record
+  attackRecord: Attacks.CruciateArms # Attacks.BaseDOTTick - Attacks.AccumulatedDoTTick
+  delayTime: 0.5
+  effectorClassName: Addicted.CruciateEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  timeDilationDriver: Effectors.TDD_World
+  # $base: Effectors.ApplyAccumulatedDoTEffector
+  # applicationTarget: Owner
+  # instigator: Player
+  # attackPositionSlotName: Arms
+  # playerAsInstigator: true
+
+Package.CruciateArms:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.CruciateArms
+
+BaseStatusEffect.CruciateArms:
+  $base: BaseStatusEffect.HealthBooster
+  # TODO: duration + extend on re-consumption ?
+  statusEffectType: BaseStatusEffectTypes.Misc
+  gameplayTags:
+    - Debuff
+    - DoT
+    - DamageOverTime
+  savable: true
+  isAffectedByTimeDilationNPC: true
+  isAffectedByTimeDilationPlayer: true
+  packages:
+    - Package.CruciateArms
+  stopActiveSfxOnDeactivate: false
+  uiData: UIData.CruciateArms

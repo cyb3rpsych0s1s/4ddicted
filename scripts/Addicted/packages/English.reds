@@ -100,5 +100,8 @@ public class English extends LocalizationPackage {
         this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "Black Lace Pump");
         this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "This street-modified blood pump accelerates its possessor's healing while spiking their bloodstream with Black Lace.");
         this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "\nUses Black Lace, if possessed, but with only a <Rich color=\"TooltipText.cyberwareDescriptionHighlightColor\" style=\"Semi-Bold\">{int_0}%</> chance to consume the item.");
+
+        this.Text("Mod-Addicted-Cruciate-Arms-Desc",                    "Force-opening any door in this state exposes you to continuous arms damages");
+        this.Text("Mod-Addicted-Cruciate-Arms",                         "Cruciate arms");
     }
 }
