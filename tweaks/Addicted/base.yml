@@ -46,32 +46,68 @@ Attacks.CruciateArms:
   attackTag: Bleeding
   damageType: DamageTypes.Physical
   hitFlags:
-    - !append-from Attacks.OutOfOxygenDamageOverTime.hitFlags
+    - CanDamageSelf
+    - Nonlethal
+    - DamageOverTime
+    - IgnoreDifficulty
     - BleedingDot
+    - CannotKillPlayer
+  statModifiers:
+    - Attacks.Modifier.CruciateArms
 
 Effectors.CruciateArms:
   $type: ContinuousAttackEffector_Record
-  attackRecord: Attacks.CruciateArms # Attacks.BaseDOTTick - Attacks.AccumulatedDoTTick
-  delayTime: 0.5
+  attackRecord: Attacks.CruciateArms
+  delayTime: 1.0
   effectorClassName: Addicted.CruciateEffector
   prereqRecord: Prereqs.AlwaysTruePrereq
   removeAfterActionCall: false
   removeAfterPrereqCheck: false
   timeDilationDriver: Effectors.TDD_World
-  # $base: Effectors.ApplyAccumulatedDoTEffector
   # applicationTarget: Owner
-  # instigator: Player
-  # attackPositionSlotName: Arms
   # playerAsInstigator: true
+  # instigator: Player
 
 Package.CruciateArms:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.CruciateArms
 
+Modifier.CruciateArms.Duration:
+  $type: ConstantStatModifier_Record
+  value: 180
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+
+Duration.CruciateArms:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: False
+  optimiseCombinedModifiers: False
+  saveBasedOnStatType: False
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers:
+    - Modifier.CruciateArms.Duration
+
+Stacks.CruciateArms:
+  $type: ConstantStatModifier_Record
+  value: 1
+  modifierType: Additive
+  statType: BaseStats.MaxStacks
+
+Modifier.CruciateArms.Stacks:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: true
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: 1
+  relatedModifierGroups: []
+  statModifiers:
+    - Stacks.CruciateArms
+
 BaseStatusEffect.CruciateArms:
   $base: BaseStatusEffect.HealthBooster
-  # TODO: duration + extend on re-consumption ?
+  duration: Duration.CruciateArms
   statusEffectType: BaseStatusEffectTypes.Misc
   gameplayTags:
     - Debuff
@@ -80,6 +116,7 @@ BaseStatusEffect.CruciateArms:
   savable: true
   isAffectedByTimeDilationNPC: true
   isAffectedByTimeDilationPlayer: true
+  maxStacks: Modifier.CruciateArms.Stacks
   packages:
     - Package.CruciateArms
   stopActiveSfxOnDeactivate: false

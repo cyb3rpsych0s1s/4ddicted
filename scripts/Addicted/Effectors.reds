@@ -28,10 +28,11 @@ public class IncreaseNeuroBlockerEffector extends Effector {
 
 public class CruciateEffector extends TriggerContinuousAttackEffector {
     public let isForceOpening: Bool;
+    public let wasForceOpening: Bool;
+    public let applied: Bool;
     private let callback: ref<CallbackHandle>;
     protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
         super.Initialize(record, game, parentRecord);
-        E("Initialize cruciate effector");
         let v = this.GetOwner() as PlayerPuppet;
         if !IsDefined(v) { F("player is undefined"); }
         let board = GameInstance.GetBlackboardSystem(v.GetGame()).GetLocalInstanced(v.GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
@@ -39,7 +40,6 @@ public class CruciateEffector extends TriggerContinuousAttackEffector {
     }
     protected func Uninitialize(game: GameInstance) -> Void {
         if IsDefined(this.callback) {
-            E("Uninitialize cruciate effector");
             let v = this.GetOwner() as PlayerPuppet;
             let board = GameInstance.GetBlackboardSystem(v.GetGame()).GetLocalInstanced(v.GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
             board.UnregisterListenerBool(GetAllBlackboardDefs().PlayerStateMachine.IsForceOpeningDoor, this.callback);
@@ -47,23 +47,20 @@ public class CruciateEffector extends TriggerContinuousAttackEffector {
         }
     }
     protected func ContinuousAction(owner: ref<GameObject>, instigator: ref<GameObject>) -> Void {
-        E("Continuous action cruciate effector");
-
         if this.isForceOpening {
             super.ContinuousAction(owner, instigator);
+        } else if this.wasForceOpening {
+            this.m_attack.StopAttack();
+            this.m_attack = null;
+            this.wasForceOpening = false;
         }
     }
     protected cb func OnForceOpeningChange(value: Bool) -> Bool {
-        E("On force opening change for cruciate effector");
         if NotEquals(this.isForceOpening, value) {
+            if !value {
+                this.wasForceOpening = true;
+            }
             this.isForceOpening = value;
         }
     }
 }
-// ContinuousAttackEffector_Record
-// Effectors.WeaponMalfunctionBlowUpWeapon
-// Attacks.WeaponMalfunctionBlowWeaponHackAttack (Attack_GameEffect)
-// TriggerAttackEffectorWithDelay (Event)
-// TriggerAttackByChanceEffector
-// Effectors.TriggerAttackOnOwnerEffect => TriggerAttackOnOwnerEffect
-// AIDeathReactionsTask.SpawnBloodPuddle(scriptedPuppet)
