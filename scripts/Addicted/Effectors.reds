@@ -30,6 +30,7 @@ public class CruciateEffector extends TriggerContinuousAttackEffector {
     public let isForceOpening: Bool;
     public let wasForceOpening: Bool;
     public let applied: Bool;
+    public let bloodied: Bool;
     private let callback: ref<CallbackHandle>;
     protected func Initialize(record: TweakDBID, game: GameInstance, parentRecord: TweakDBID) -> Void {
         super.Initialize(record, game, parentRecord);
@@ -51,10 +52,18 @@ public class CruciateEffector extends TriggerContinuousAttackEffector {
             super.ContinuousAction(owner, instigator);
             GameInstance.GetEffectorSystem(owner.GetGame()).ApplyEffector(owner.GetEntityID(), GameInstance.GetPlayerSystem(owner.GetGame()).GetLocalPlayerControlledGameObject(), t"Effectors.BloodyRightHandVFX");
             GameInstance.GetEffectorSystem(owner.GetGame()).ApplyEffector(owner.GetEntityID(), GameInstance.GetPlayerSystem(owner.GetGame()).GetLocalPlayerControlledGameObject(), t"Effectors.BloodyLeftHandVFX");
+            if !this.bloodied {
+                GameInstance.GetEffectorSystem(owner.GetGame()).ApplyEffector(owner.GetEntityID(), GameInstance.GetPlayerSystem(owner.GetGame()).GetLocalPlayerControlledGameObject(), t"Effectors.BloodOnScreenVFX");
+                this.bloodied = true;
+            }
         } else if this.wasForceOpening {
             this.m_attack.StopAttack();
             this.m_attack = null;
             this.wasForceOpening = false;
+            if this.bloodied {
+                GameInstance.GetEffectorSystem(owner.GetGame()).RemoveEffector(owner.GetEntityID(), t"Effectors.BloodOnScreenVFX");
+                this.bloodied = false;
+            }
         }
     }
     protected cb func OnForceOpeningChange(value: Bool) -> Bool {

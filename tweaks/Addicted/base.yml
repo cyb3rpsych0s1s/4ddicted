@@ -132,6 +132,15 @@ Effectors.BloodyLeftHandVFX:
   statModifierGroups: []
   vfxName: fist_blood_l
 
+Effectors.BloodOnScreenVFX:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  vfxName: blood_onscreen
+
 Package.Lesions:
   $type: GameplayLogicPackage_Record
   effectors:
