@@ -136,7 +136,7 @@ Package.Lesions:
   $type: GameplayLogicPackage_Record
   effectors:
     - Effectors.CruciateArms
-    - Effectors.CruciateArms
+    - Effectors.PainfulLanding
 
 Modifier.Lesions.Duration:
   $type: ConstantStatModifier_Record
