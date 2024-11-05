@@ -114,6 +114,24 @@ Effectors.PainfulLanding:
   playerAsInstigator: true
   triggerHitReaction: true
 
+Effectors.BloodyRightHandVFX:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: true
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  vfxName: fist_blood_r
+
+Effectors.BloodyLeftHandVFX:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: true
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  vfxName: fist_blood_l
+
 Package.Lesions:
   $type: GameplayLogicPackage_Record
   effectors:

@@ -49,6 +49,8 @@ public class CruciateEffector extends TriggerContinuousAttackEffector {
     protected func ContinuousAction(owner: ref<GameObject>, instigator: ref<GameObject>) -> Void {
         if this.isForceOpening {
             super.ContinuousAction(owner, instigator);
+            GameInstance.GetEffectorSystem(owner.GetGame()).ApplyEffector(owner.GetEntityID(), GameInstance.GetPlayerSystem(owner.GetGame()).GetLocalPlayerControlledGameObject(), t"Effectors.BloodyRightHandVFX");
+            GameInstance.GetEffectorSystem(owner.GetGame()).ApplyEffector(owner.GetEntityID(), GameInstance.GetPlayerSystem(owner.GetGame()).GetLocalPlayerControlledGameObject(), t"Effectors.BloodyLeftHandVFX");
         } else if this.wasForceOpening {
             this.m_attack.StopAttack();
             this.m_attack = null;
