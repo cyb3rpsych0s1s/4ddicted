@@ -9,9 +9,9 @@ on:
       - "book/pages/**"
       - "**.md"
 env:
-  MDBOOK_VERSION: '0.4.37'
-  MDBOOK_CODEBLOCKS_VERSION: '0.1.14'
-  MDBOOK_ADMONISH_VERSION: '1.15.0'
+  MDBOOK_VERSION: '0.4.47'
+  MDBOOK_CODEBLOCKS_VERSION: '0.1.20'
+  MDBOOK_ADMONISH_VERSION: '1.19.0'
 
 jobs:
   deploy:
