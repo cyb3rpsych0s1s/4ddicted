@@ -1,23 +1,29 @@
 module Addicted.Crossover
 
 import Addicted.System.AddictedSystem
+import Addicted.Utils.{E,EI}
+import Codeware.Localization.{LocalizationSystem,LocalizationEntry}
 
 public class IdleAnywhereSubSystem extends ScriptableSystem {
 
     private let player: wref<PlayerPuppet>;
 
-    private let onDrink: Uint32;
-    private let lastDrink: Int32 = 0;
+    private let listener: Uint32;
+    private let fact: Int32;
 
     private func RegisterListeners(player: ref<PlayerPuppet>) -> Void {
-        this.onDrink = GameInstance.GetQuestsSystem(this.GetGameInstance()).RegisterListener(n"dec_dark_alco", this, n"OnDrink");
+		E(s"Idle Anywhere: register listeners (\(ToString(GameInstance.GetQuestsSystem(this.GetGameInstance()).GetFact(n"dec_dark_alco"))))");
+		this.fact = GameInstance.GetQuestsSystem(this.GetGameInstance()).GetFact(n"dec_dark_alco");
+        this.listener = GameInstance.GetQuestsSystem(this.GetGameInstance()).RegisterListener(n"dec_dark_alco", this, n"OnDrink");
     }
 
     private func UnregisterListeners(player: ref<PlayerPuppet>) -> Void {
-        GameInstance.GetQuestsSystem(this.GetGameInstance()).UnregisterListener(n"dec_dark_alco", this.onDrink);
+        GameInstance.GetQuestsSystem(this.GetGameInstance()).UnregisterListener(n"dec_dark_alco", this.listener);
+		this.listener = 0u;
     }
 
     private final func OnPlayerAttach(request: ref<PlayerAttachRequest>) -> Void {
+		E("Idle Anywhere: on player attach");
         let player: ref<PlayerPuppet> = GetPlayer(this.GetGameInstance());
         if IsDefined(player) {
             this.player = player;
@@ -31,17 +37,19 @@ public class IdleAnywhereSubSystem extends ScriptableSystem {
     }
 
     private final func OnDrink(value: Int32) -> Void {
-        if Equals(this.lastDrink, -1) && value >= 0 { // -1 == Ready, >= 0 == Alcohol Consumed
+		E(s"Idle Anywhere: on drink (\(ToString(value)))");
+        if Equals(this.fact, -1) || value >= 0 { // -1 == Ready, >= 0 == Alcohol Consumed
             let tdbid: TweakDBID = GetAlcoholRecordFromIdleAnywhereFactValue(value);
-            if NotEquals(tdbid, t"") {
+            if NotEquals(tdbid, TDBID.None()) {
                 AddictedSystem.GetInstance(this.GetGameInstance()).OnConsumeItem(ItemID.FromTDBID(tdbid));
             }
         }
-        this.lastDrink = value;
+        this.fact = value;
     }
 }
 
 private final static func GetAlcoholRecordFromIdleAnywhereFactValue(value: Int32) -> TweakDBID {
+    E(s"Idle Anywhere: fact \(ToString(value))");
 	switch value {
 		case 0:
 			return t"Items.LowQualityAlcohol";
@@ -161,7 +169,7 @@ private final static func GetAlcoholRecordFromIdleAnywhereFactValue(value: Int32
 			return t"Items.NomadsAlcohol2";
 			break;
 		default:
-			return t"";
+			return TDBID.None();
 			break;
 	}
 }
