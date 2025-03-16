@@ -180,3 +180,46 @@ public func Checkup() -> Void {
 public func DebugSound(sound: String) -> Void {
   GameInstance.GetAudioSystem(this.GetGame()).Play(StringToName(sound), this.GetEntityID(), n"V");
 }
+
+// use like: Game.GetPlayer():AddAllAlcohols();
+@addMethod(PlayerPuppet)
+public func AddAllAlcohols() -> Void {
+  let game = this.GetGame();
+  AddAlcoholVariant(game, "", -1);
+  AddAlcoholVariant(game, "ExquisiteQuality", -1);
+  AddAlcoholVariant(game, "GoodQuality", 6);
+  AddAlcoholVariant(game, "Kerry", 1);
+  AddAlcoholVariant(game, "LowQuality", -1);
+  AddAlcoholVariant(game, "LowQuality", 9);
+  AddAlcoholVariant(game, "MediumQuality", -1);
+  AddAlcoholVariant(game, "MediumQuality", 7);
+  AddAlcoholVariant(game, "Nomads", 2);
+  AddAlcoholVariant(game, "TopQuality", -1);
+  AddAlcoholVariant(game, "TopQuality", 10);
+}
+
+public final static func AddAlcoholVariant(game: GameInstance, prefix: String, count: Int32) -> Void {
+  if Equals(count, -1) {
+    AddToInventory(game, "Items." + prefix + "Alcohol", ToString(5));
+  } else {
+    let i: Int32 = 1;
+    while i <= count {
+      AddToInventory(game, "Items." + prefix + "Alcohol" + ToString(i), ToString(5));
+      i += 1;
+    }
+  }
+}
+
+public static exec func AddToInventory(inst: GameInstance, itemString: String, opt quantityString: String) -> Void {
+  let equipmentUIBBRequest: ref<EquipmentUIBBRequest>;
+  let itemID: ItemID;
+  let quantity: Int32 = StringToInt(quantityString);
+  if quantity <= 0 {
+    quantity = 1;
+  };
+  itemID = ItemID.FromTDBID(TDBID.Create(itemString));
+  GameInstance.GetTransactionSystem(inst).GiveItem(GetPlayer(inst), itemID, quantity);
+  equipmentUIBBRequest = new EquipmentUIBBRequest();
+  equipmentUIBBRequest.owner = GetPlayer(inst);
+  GameInstance.GetScriptableSystemsContainer(inst).Get(n"EquipmentSystem").QueueRequest(equipmentUIBBRequest);
+}

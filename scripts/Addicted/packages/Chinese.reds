@@ -201,5 +201,8 @@ public class TraditionalChinese extends ModLocalizationPackage {
         this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "");
         this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "");
         this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "");
+        // status effect
+        this.Text("Mod-Addicted-Lesions-Desc",                          "");
+        this.Text("Mod-Addicted-Lesions",                               "");
     }
 }

@@ -14,3 +14,184 @@ Items.ShortLastingAddictionDuration:
       value: 900
   statModsLimit: -1
   statModsLimitModifier: None
+
+UIIcon.CruciateArms:
+  $type: gamedataUIIcon_Record
+  atlasPartName: quickhack_brainmelt
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+UIData.Lesions:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-Lesions-Desc
+  displayName: LocKey#Mod-Addicted-Lesions
+  fluffText: ''
+  iconPath: CruciateArms
+  priority: -8
+  floatValues: []
+  intValues: []
+  nameValues: []
+  stats: []
+
+Attacks.Modifier.CruciateArms:
+  $type: CombinedStatModifier_Record
+  opSymbol: '*'
+  refObject: Target
+  refStat: BaseStats.Health
+  value: 0.05
+  modifierType: Additive
+  statType: BaseStats.PhysicalDamage
+
+Attacks.CruciateArms:
+  $base: Attacks.OutOfOxygenDamageOverTime
+  attackTag: Bleeding
+  damageType: DamageTypes.Physical
+  hitFlags:
+    - CanDamageSelf
+    - Nonlethal
+    - DamageOverTime
+    - IgnoreDifficulty
+    - BleedingDot
+    - CannotKillPlayer
+  statModifiers:
+    - Attacks.Modifier.CruciateArms
+
+Effectors.CruciateArms:
+  $type: ContinuousAttackEffector_Record
+  attackRecord: Attacks.CruciateArms
+  delayTime: 1.0
+  effectorClassName: Addicted.CruciateEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  timeDilationDriver: Effectors.TDD_World
+  # applicationTarget: Owner
+  # playerAsInstigator: true
+  # instigator: Player
+
+Attacks.Modifier.PainfulLanding:
+  $type: CombinedStatModifier_Record
+  opSymbol: '*'
+  refObject: Target
+  refStat: BaseStats.Health
+  value: 0.1
+  modifierType: Additive
+  statType: BaseStats.PhysicalDamage
+
+Attacks.PainfulLanding:
+  $type: Attack_GameEffect_Record
+  audioAttackIndex: 0
+  effectName: damage_over_time
+  effectTag: default
+  attackType: AttackType.Effect
+  className: Attack_GameEffect
+  explosionDamageVSVehicles: -1
+  hitReactionSeverityMax: -1
+  hitReactionSeverityMin: -1
+  playerIncomingDamageMultiplier: 1
+  range: 0
+  useDefaultAimData: False
+  userDataPath: ''
+  velocity: -1
+  hitFlags:
+    - FriendlyFire
+    - CanDamageSelf
+  staminaCost: []
+  statModifiers:
+    - Attacks.Modifier.PainfulLanding
+  statusEffects: []
+
+Effectors.PainfulLanding:
+  $type: TriggerAttackEffector_Record
+  attackRecord: 
+  effectorClassName: Addicted.PainfulLandingEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  attackPositionSlotName: Knee
+  applicationChance: 1
+  isRandom: false
+  playerAsInstigator: true
+  triggerHitReaction: true
+
+Effectors.BloodyRightHandVFX:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: true
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  vfxName: fist_blood_r
+
+Effectors.BloodyLeftHandVFX:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: true
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  vfxName: fist_blood_l
+
+Effectors.BloodOnScreenVFX:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  vfxName: blood_onscreen
+
+Package.Lesions:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.CruciateArms
+    - Effectors.PainfulLanding
+
+Modifier.Lesions.Duration:
+  $type: ConstantStatModifier_Record
+  value: 180
+  modifierType: Additive
+  statType: BaseStats.PainfulLanding
+
+Duration.Lesions:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: False
+  optimiseCombinedModifiers: False
+  saveBasedOnStatType: False
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers:
+    - Modifier.Lesions.Duration
+
+Stacks.Lesions:
+  $type: ConstantStatModifier_Record
+  value: 1
+  modifierType: Additive
+  statType: BaseStats.MaxStacks
+
+Modifier.Lesions.Stacks:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: true
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: 1
+  relatedModifierGroups: []
+  statModifiers:
+    - Stacks.Lesions
+
+BaseStatusEffect.Lesions:
+  $base: BaseStatusEffect.HealthBooster
+  duration: Duration.Lesions
+  statusEffectType: BaseStatusEffectTypes.Misc
+  gameplayTags:
+    - Debuff
+    - DoT
+    - DamageOverTime
+  savable: true
+  isAffectedByTimeDilationNPC: true
+  isAffectedByTimeDilationPlayer: true
+  maxStacks: Modifier.Lesions.Stacks
+  packages:
+    - Package.Lesions
+  stopActiveSfxOnDeactivate: false
+  uiData: UIData.Lesions
