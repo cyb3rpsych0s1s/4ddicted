@@ -101,7 +101,7 @@ public class French extends LocalizationPackage {
         this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "Cette Pompe sanguine trafiquée augmente la capacité de guérison de son détenteur, en lui injectant directement du Lien Noir dans le sang.");
         this.Text("Gameplay-Cyberware-Abilities-DrugPump",              "\nConsomme un Lien Noir, si possédé, seulement <Rich color=\"TooltipText.cyberwareDescriptionHighlightColor\" style=\"Semi-Bold\">{int_0}%</> du temps.");
         // status effect
-        this.Text("Mod-Addicted-Lesions-Desc",                          "");
-        this.Text("Mod-Addicted-Lesions",                               "");
+        this.Text("Mod-Addicted-Lesions-Desc",                          "Ouvrir une porte de force ou atterir avec fracas causent des dégâts additionnels.");
+        this.Text("Mod-Addicted-Lesions",                               "Lésions");
     }
 }
