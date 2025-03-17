@@ -1,0 +1,20 @@
+LootPrereqs.BlackLaceFor$(level)Player:
+  $instances:
+    - { level: Trash,    prereq: LootPrereqs.PlayerLevelTrashTierPrereq      }
+    - { level: Rookie,   prereq: LootPrereqs.PlayerLevel_Tier_2_Start_Prereq }
+    - { level: Weak,     prereq: LootPrereqs.PlayerLevelWeakTierPrereq       }
+    - { level: Advanced, prereq: LootPrereqs.PlayerLevel_Tier_3_Start_Prereq }
+  $type: gamedataMultiPrereq_Record
+  aggregationType: AND
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - LootPrereqs.IntroducedBlackLace
+    - $(prereq)
+
+LootPrereqs.BlackLaceOutsideCorpoDistricts:
+  $type: gamedataMultiPrereq_Record
+  aggregationType: AND
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - LootPrereqs.BlackLaceForRookiePlayer
+    - LootPrereqs.NoCorpoDistricts

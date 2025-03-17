@@ -1,0 +1,122 @@
+version: 1.0.0
+voices:
+  ono_hhuh:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q113_f_1956c7fde04e1000.Wav
+      male: vanilla/zh-cn/v_q113_m_1956c7fde04e1000.Wav
+      subtitle: 哼？
+  ono_huh:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q004_f_168ac1406f29f000.Wav
+      male: vanilla/zh-cn/v_q004_m_168ac1406f29f000.Wav
+      subtitle: 什么？
+  ono_huhuh:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q003_f_178d53e0694b6000.Wav
+      male: vanilla/zh-cn/v_q003_m_178d53e0694b6000.Wav
+      subtitle: 嗯哼……
+  biomon:
+    zh-cn:
+      fem: zh-cn/surprised/fem_v_b.wav
+      male: zh-cn/surprised/male_v_b.wav
+      subtitle: Biomon……
+  as_if_I_didnt_know_already:
+    zh-cn:
+      fem: zh-cn/disheartened/fem_v_aiidka.wav
+      male: zh-cn/disheartened/male_v_aiidka.wav
+      subtitle: 好像我不知道似的……
+  come_on_again:
+    zh-cn:
+      fem: zh-cn/surprised/fem_v_coa.wav
+      male: zh-cn/surprised/male_v_coa.wav
+      subtitle: 拜托……还来？
+  come_on_biomon_cant_you_give_me_a_break:
+    zh-cn:
+      fem: zh-cn/disheartened/fem_v_cobcygmab.wav
+      male: zh-cn/disheartened/male_v_cobcygmab.wav
+      subtitle: 拜托biomon，就不能放过我？
+  damn_cant_you_just_leave_me_alone:
+    zh-cn:
+      fem: zh-cn/disheartened/fem_v_dcyjlma.wav
+      male: zh-cn/disheartened/male_v_dcyjlma.wav
+      subtitle: 该死，能别打扰我吗？
+  damn_thats_fucked_up:
+    zh-cn:
+      fem: zh-cn/surprised/fem_v_dtfu.wav
+      male: zh-cn/surprised/male_v_dtfu.wav
+      subtitle: 见鬼，太操蛋了！
+  dont_you_see_Im_in_trouble:
+    zh-cn:
+      fem: zh-cn/pestered/fem_v_dysiit.wav
+      male: zh-cn/pestered/male_v_dysiit.wav
+      subtitle: 看不出来我忙着呢吗
+  fuck:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q115_f_1752ea11b74e1000.wav
+      male: vanilla/zh-cn/v_q115_m_1752ea11b74e1000.wav
+      subtitle: 操……
+  fuck_this_biomon_just_not_right_now:
+    zh-cn:
+      fem: zh-cn/pestered/fem_v_ftbnrn.wav
+      male: zh-cn/pestered/male_v_ftbnrn.wav
+      subtitle: 去他妈Biomon！别添乱！
+  get_this_damn_UI_out_of_my_face:
+    zh-cn:
+      fem: zh-cn/pestered/fem_v_gtduioomf.wav
+      male: zh-cn/pestered/male_v_gtduioomf.wav
+      subtitle: 让这界面从我面前消失！
+  nah_everything_is_all_good:
+    zh-cn:
+      fem: vanilla/zh-cn/v_scene_dex_default_f_182ad40c364ea000.Wav
+      male: vanilla/zh-cn/v_scene_dex_default_m_182ad40c364ea000.Wav
+      subtitle: 不用，都很好。
+  nah_Im_cool:
+    zh-cn:
+      fem: zh-cn/offhanded/fem_v_nic.wav
+      male: zh-cn/offhanded/male_v_nic.wav
+      subtitle: 不用，我没事。
+  noo:
+    zh-cn:
+      fem: vanilla/zh-cn/v_scene_mitch_default_f_1b1a38325729f000.Wav
+      male: vanilla/zh-cn/v_scene_mitch_default_m_1b1a38325729f000.Wav
+      subtitle: 哦，我操！
+  oh_shit:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q000_f_1927fae1772ef000.Wav
+      male: vanilla/zh-cn/v_q000_m_1927fae1772ef000.Wav
+      subtitle: 妈的……
+  shit:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q104_f_18545e4c6a4e6000.Wav
+      male: vanilla/zh-cn/v_q104_m_18545e4c6a4e6000.Wav
+      subtitle: 操！
+  so_frustrating:
+    zh-cn:
+      fem: zh-cn/pestered/fem_v_sf.wav
+      male: zh-cn/pestered/male_v_sf.wav
+      subtitle: 太烦了！
+  what:
+    zh-cn:
+      fem: vanilla/zh-cn/v_q104_f_18980f710d29f000.Wav
+      male: vanilla/zh-cn/v_q104_m_18980f710d29f000.Wav
+      subtitle: 怎么……
+  yeah_I_know:
+    zh-cn:
+      fem: zh-cn/disheartened/fem_v_yik.wav
+      male: zh-cn/disheartened/male_v_yik.wav
+      subtitle: 对，我明白。
+  yeah_yeah_yeah_alright:
+    zh-cn:
+      fem: zh-cn/offhanded/fem_v_yyya.wav
+      male: zh-cn/offhanded/male_v_yyya.wav
+      subtitle: 对对对……好吧。
+  yeah_yeah_yeah_who_cares:
+    zh-cn:
+      fem: zh-cn/offhanded/fem_v_yyywc.wav
+      male: zh-cn/offhanded/male_v_yyywc.wav
+      subtitle: 好好好……谁在乎呢？
+  you_tell_me_biomon:
+    zh-cn:
+      fem: zh-cn/offhanded/fem_v_ytmb.wav
+      male: zh-cn/offhanded/male_v_ytmb.wav
+      subtitle: 你说呢？Biomon。

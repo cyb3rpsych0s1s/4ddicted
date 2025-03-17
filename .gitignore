@@ -3,12 +3,15 @@
 **/.DS_Store
 
 /book/site
-!scripts/
 scripts/*
+!scripts/Addicted
 /archives/**/*.cpmodproj
 /archives/**/*.zip
 /archives/**/layout.xml
 /archives/**/install_log.xml
+/archives/**/fileTreeState.json
+/archives/**/custom_refs.txt
+/archives/**/GraphEditorStates/
 /archives/**/packed
 /archives/*.archive
 /archives/*.xl

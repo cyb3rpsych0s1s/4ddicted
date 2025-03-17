@@ -1,11 +1,162 @@
-# weakened neuroblockers status effect
+# neuroblocker potency's modifier
+
+BaseStats.NeuroBlockersPotencyModifier:
+  $type: Stat
+  enumName: NeuroBlockersPotencyModifier
+  min: 1
+  max: 3
+
+# weakened neuroblocker icons
 
 UIIcon.NotablyWeakenedNeuroblocker:
   $type: UIIcon_Record
-  atlasPartName: notably_inhaler_buff_icon
-  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasPartName: notably_weakened_inhaler_buff_icon
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
 UIIcon.SeverelyWeakenedNeuroblocker:
   $type: UIIcon_Record
-  atlasPartName: severely_inhaler_buff_icon
-  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+  atlasPartName: severely_weakened_inhaler_buff_icon
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+# check if any neuroblocker has been consumed
+
+Prereqs.RipperDocMedBuff:
+  $type: StatusEffectPrereq_Record
+  prereqClassName: StatusEffectPrereq
+  statusEffect: BaseStatusEffect.RipperDocMedBuff
+
+Prereqs.RipperDocMedBuffUncommon:
+  $type: StatusEffectPrereq_Record
+  prereqClassName: StatusEffectPrereq
+  statusEffect: BaseStatusEffect.RipperDocMedBuffUncommon
+
+Prereqs.RipperDocMedBuffCommon:
+  $type: StatusEffectPrereq_Record
+  prereqClassName: StatusEffectPrereq
+  statusEffect: BaseStatusEffect.RipperDocMedBuffCommon
+
+Prereqs.ConsumedAnyNeuroBlocker:
+  $type: gamedataMultiPrereq_Record
+  aggregationType: OR
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - Prereqs.RipperDocMedBuff
+    - Prereqs.RipperDocMedBuffUncommon
+    - Prereqs.RipperDocMedBuffCommon
+
+# combine RAM replenishment prereq with neuroblocker consumption's
+
+Prereqs.ShouldReplenishRAM:
+  $base: Items.MemoryReplenishmentEffector_inline0
+
+Prereqs.StimuliRAM:
+  $type: gamedataMultiPrereq_Record
+  aggregationType: AND
+  prereqClassName: gameMultiPrereq
+  nestedPrereqs:
+    - Prereqs.ConsumedAnyNeuroBlocker
+    - Prereqs.ShouldReplenishRAM
+
+# increase neuroblocker's jauge when using time dilation wares after consumption
+
+Effectors.NeuroWare:
+  $type: Effector_Record
+  prereqRecord: Prereqs.ConsumedAnyNeuroBlocker
+  effectorClassName: Addicted.IncreaseNeuroBlockerEffector
+  removeAfterActionCall: true
+
+Packages.ContraindicatedWare:
+  $type: GameplayLogicPackage_Record
+  effectors:
+    - Effectors.NeuroWare
+
+BaseStatusEffect.SandevistanPlayerBuff.packages: &NeuroWare
+  - !append-once Packages.ContraindicatedWare
+BaseStatusEffect.KerenzikovPlayerBuff.packages: *NeuroWare
+BaseStatusEffect.KerenzikovsBoostSystemBuff.packages: *NeuroWare
+
+# increase neuroblocker's jauge when RAM gets replenished after consumption
+
+Effectors.NeuroTrigger:
+  $base: Effectors.NeuroWare
+  prereqRecord: Prereqs.StimuliRAM
+
+Items.AdvancedCamilloRamManagerEpic_inline0.effectors: &NeuroTrigger
+  - !append-once Effectors.NeuroTrigger
+Items.AdvancedCamilloRamManagerEpicPlus_inline0.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerLegendary_inline0.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerLegendaryPlus_inline0.effectors: *NeuroTrigger
+Items.AdvancedCamilloRamManagerLegendaryPlusPlus_inline0.effectors: *NeuroTrigger
+
+# using neuro-stimuli intensive wares increase its potency
+
+Modifiers.NeuroStimuli:
+  $type: ConstantStatModifier_Record
+  modifierType: AdditiveMultiplier
+  statType: BaseStats.NeuroBlockersPotencyModifier
+  value: 0.5
+
+Modifiers.NeuroStimuliExDisk:
+  $base: Modifiers.NeuroStimuli
+
+Modifiers.NeuroStimuliBioconductor:
+  $base: Modifiers.NeuroStimuli
+
+Modifiers.NeuroStimuliCOX2:
+  $base: Modifiers.NeuroStimuli
+
+Packages.NeuroStimuliExDisk:
+  $type: GameplayLogicPackage_Record
+  stats:
+    - Modifiers.NeuroStimuliExDisk
+
+Packages.NeuroStimuliBioconductor:
+  $type: GameplayLogicPackage_Record
+  stats:
+    - Modifiers.NeuroStimuliBioconductor
+
+Packages.NeuroStimuliCOX2:
+  $type: GameplayLogicPackage_Record
+  stats:
+    - Modifiers.NeuroStimuliCOX2
+
+Items.AdvancedExDiskRare.OnEquip: &NeuroStimuliExDisk
+  - !append-once Packages.NeuroStimuliExDisk
+Items.AdvancedExDiskRarePlus.OnEquip: *NeuroStimuliExDisk
+Items.AdvancedExDiskEpic.OnEquip: *NeuroStimuliExDisk
+Items.AdvancedExDiskEpicPlus.OnEquip: *NeuroStimuliExDisk
+Items.AdvancedExDiskLegendary.OnEquip: *NeuroStimuliExDisk
+Items.AdvancedExDiskLegendaryPlus.OnEquip: *NeuroStimuliExDisk
+Items.AdvancedExDiskLegendaryPlusPlus.OnEquip: *NeuroStimuliExDisk
+
+Items.AdvancedBioConductorsCommon.OnEquip: &NeuroStimuliBioconductor
+  - !append-once Packages.NeuroStimuliBioconductor
+Items.AdvancedBioConductorsCommonPlus.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsUncommon.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsUncommonPlus.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsRare.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsRarePlus.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsEpic.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsEpicPlus.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsLegendary.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsLegendaryPlus.OnEquip: *NeuroStimuliBioconductor
+Items.AdvancedBioConductorsLegendary_PlusPlus.OnEquip: *NeuroStimuliBioconductor
+
+Items.IconicBioConductorsRare.OnEquip: &NeuroStimuliCOX2
+  - !append-once Packages.NeuroStimuliCOX2
+Items.IconicBioConductorsRarePlus.OnEquip: *NeuroStimuliCOX2
+Items.IconicBioConductorsEpic.OnEquip: *NeuroStimuliCOX2
+Items.IconicBioConductorsEpicPlus.OnEquip: *NeuroStimuliCOX2
+Items.IconicBioConductorsLegendary.OnEquip: *NeuroStimuliCOX2
+Items.IconicBioConductorsLegendaryPlus.OnEquip: *NeuroStimuliCOX2
+Items.IconicBioConductorsLegendaryPlusPlus.OnEquip: *NeuroStimuliCOX2
+
+# ui data
+
+UIData.NeuroBlockerCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-NeuroBlocker-Caution
+
+Package.NeuroBlockerCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.NeuroBlockerCaution

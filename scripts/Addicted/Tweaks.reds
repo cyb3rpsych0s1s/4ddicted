@@ -6,6 +6,7 @@ import Addicted.Helper
 import Addicted.Utils.{E,EI,F}
 import Addicted.Helpers.{Bits,Generic,Items,Effect,Translations}
 import Addicted.Crossover.{AlterBlackLaceStatusEffects,AlterNeuroBlockerStatusEffects}
+import Addicted.System.CheckWarnCallback
 
 @addField(PlayerStateMachineDef)
 public let IsConsuming: BlackboardID_Bool;
@@ -66,6 +67,19 @@ protected cb func OnStatusEffectRemoved(evt: ref<RemoveStatusEffect>) -> Bool {
       EI(id, s"addictive substance dissipated");
       system.OnDissipated(id);
     }
+
+    // when V get out of Ripperdoc's chair
+    if Equals(id, t"BaseStatusEffect.CyberwareInstallationAnimation") {
+      // if just equipped, trigger warning since V might be already addicted
+      // and didn't have a chance previously to get warned about
+
+      // a slight delay is required also to get out of the animation
+      // and avoid the UI disappearing briefly from screen
+      let callback = new CheckWarnCallback();
+      callback.system = system;
+      GameInstance.GetDelaySystem(this.GetGame()).DelayCallback(callback, 4., true);
+    }
+
     return wrappedMethod(evt);
 }
 
@@ -83,10 +97,15 @@ protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsu
 
 @addMethod(PlayerPuppet)
 public func HasBiomonitor() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
-  let biomonitors = Helper.Biomonitors();
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
+  let biomonitors: array<TweakDBID> = Helper.Biomonitors();
+  let item: ItemID;
+  let equipped: Bool;
   for biomonitor in biomonitors {
-    if system.IsEquipped(this, ItemID.FromTDBID(biomonitor)) {
+    item = ItemID.CreateQuery(biomonitor);
+    equipped = data.IsEquipped(item);
+    E(s"\(TDBID.ToStringDEBUG(biomonitor)): equipped -> \(ToString(equipped))");
+    if equipped {
       return true;
     }
   }
@@ -95,14 +114,18 @@ public func HasBiomonitor() -> Bool {
 
 @addMethod(PlayerPuppet)
 public func HasDetoxifier() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
-  return system.IsEquipped(this, ItemID.FromTDBID(t"Items.ToxinCleanser"));
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
+  let detox = ItemID.CreateQuery(t"Items.ToxinCleanser");
+  let equipped = data.IsEquipped(detox);
+  return equipped;
 }
 
 @addMethod(PlayerPuppet)
 public func HasMetabolicEditor() -> Bool {
-  let system = EquipmentSystem.GetInstance(this);
-  return system.IsEquipped(this, ItemID.FromTDBID(t"Items.ReverseMetabolicEnhancer"));
+  let data: ref<EquipmentSystemPlayerData> = EquipmentSystem.GetData(this);
+  let editor = ItemID.CreateQuery(t"Items.ReverseMetabolicEnhancer");
+  let equipped = data.IsEquipped(editor);
+  return equipped;
 }
 
 @addMethod(PlayerPuppet)
@@ -135,7 +158,7 @@ public func Reacts(reaction: CName) -> Void {
   let spoken = localization.GetVoiceLanguage();
   E(s"reacts: voice language (\(NameToString(spoken)))");
   // if spoken language is not available, abort
-  if !StrBeginsWith(NameToString(spoken), "en-") && !StrBeginsWith(NameToString(spoken), "fr-") { return; }
+  if !IsLanguageSupported(spoken) { return; }
   GameInstance.GetAudioSystem(this.GetGame()).Play(reaction, this.GetEntityID(), n"V");
 }
 
@@ -143,7 +166,7 @@ public func Reacts(reaction: CName) -> Void {
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
 private func AlterStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let system = AddictedSystem.GetInstance(gameInstance);
-  let altered: ref<ObjectActionEffect_Record>;
+  let altered: wref<ObjectActionEffect_Record>;
   let consumable: Consumable;
   let addiction: Addiction;
   let threshold: Threshold = Threshold.Clean;
@@ -201,6 +224,7 @@ public func CompleteAction(gameInstance: GameInstance) -> Void {
   wrappedMethod(gameInstance);
 }
 
+// increase score on consumption (catch interaction in backpack)
 @wrapMethod(ItemActionsHelper)
 public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool) -> Bool {
   E(s"process item action");
@@ -215,6 +239,7 @@ public final static func ProcessItemAction(gi: GameInstance, executor: wref<Game
   return actionUsed;
 }
 
+// increase score on consumption (catch interaction in backpack)
 @wrapMethod(ItemActionsHelper)
 public final static func ProcessItemAction(gi: GameInstance, executor: wref<GameObject>, itemData: wref<gameItemData>, actionID: TweakDBID, fromInventory: Bool, quantity: Int32) -> Bool {
   E(s"process item action (x\(ToString(quantity)))");
@@ -250,15 +275,6 @@ public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID,
   wrappedMethod(executor, itemID, fromInventory);
 }
 
-// increase score on consumption (catch interaction in backpack)
-@wrapMethod(ItemActionsHelper)
-public final static func PerformItemAction(executor: wref<GameObject>, itemID: ItemID) -> Void {
-  let system = AddictedSystem.GetInstance(executor.GetGame());
-  system.OnConsumeItem(itemID);
-
-  wrappedMethod(executor, itemID);
-}
-
 @addMethod(StatusEffectEvent)
 public func IsAddictive() -> Bool {
   let id = this.staticData.GetID();
@@ -274,11 +290,6 @@ private final func UnequipItem(itemID: ItemID) -> Void {
     E(s"uninstalled by item id \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     let player = this.m_owner as PlayerPuppet;
-    if IsDefined(player) && Generic.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(player.GetGame());
-      system.OnBiomonitorChanged(false);
-      return;
-    }
     if IsDefined(player) && Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnDetoxifierChanged(false);
@@ -302,11 +313,6 @@ private final func UnequipItem(equipAreaIndex: Int32, opt slotIndex: Int32, opt 
     E(s"uninstalled by index(es) \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
     let player = this.m_owner as PlayerPuppet;
-    if IsDefined(player) && Generic.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(player.GetGame());
-      system.OnBiomonitorChanged(false);
-      return;
-    }
     if IsDefined(player) && Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(player.GetGame());
       system.OnDetoxifierChanged(false);
@@ -330,10 +336,6 @@ private final func EquipCyberware(itemData: wref<gameItemData>) -> Bool {
   if cyberware && equipped {
     E(s"installed \(TDBID.ToStringDEBUG(ItemID.GetTDBID(itemID)))");
     let id = ItemID.GetTDBID(itemID);
-    if Generic.IsBiomonitor(id) {
-      let system = AddictedSystem.GetInstance(this.m_player.GetGame());
-      system.OnBiomonitorChanged(true);
-    }
     if Items.IsDetoxifier(id) {
       let system = AddictedSystem.GetInstance(this.m_player.GetGame());
       system.OnDetoxifierChanged(true);
@@ -353,4 +355,10 @@ private final func Apply() -> Void {
     system.OnSkipTime();
   }
   wrappedMethod();
+}
+
+@wrapMethod(RPGManager)
+public final static func IncrementQuickHackBlackboard(gameInstance: GameInstance, actionID: TweakDBID) -> Void {
+    ModLog(n"RPGManager.IncrementQuickHackBlackboard", TDBID.ToStringDEBUG(actionID));
+    wrappedMethod(gameInstance, actionID);
 }

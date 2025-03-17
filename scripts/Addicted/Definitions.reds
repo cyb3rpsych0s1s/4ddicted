@@ -126,11 +126,6 @@ public class Consumptions {
     if idx == -1 { return null; }
     return this.values[idx];
   }
-  public func Set(id: ItemID, value: ref<Consumption>) -> Void {
-    let idx = this.Index(id);
-    if idx == -1 { return; }
-    this.values[idx] = value;
-  }
   public func KeyExist(id: ItemID) -> Bool {
     let idx = this.Index(id);
     return idx != -1;
@@ -224,6 +219,18 @@ public class Consumptions {
     }
     return highest;
   }
+  public func HighestThreshold(addiction: Addiction) -> Threshold {
+    let consumables = Helper.Consumables(addiction);
+    let highest: Threshold = Threshold.Clean;
+    let current: Threshold;
+    for consumable in consumables {
+      current = this.Threshold(consumable);
+      if EnumInt(current) > EnumInt(highest) {
+        highest = current;
+      }
+    }
+    return highest;
+  }
   /// total consumption for a given consumable
   /// each consumable can have one or many versions (e.g maxdoc and bounceback have 3+ versions each)
   public func TotalConsumption(consumable: Consumable) -> Int32 {
@@ -247,42 +254,41 @@ public class Consumptions {
   }
   /// symptoms for biomonitor
   public func Symptoms() -> array<ref<Symptom>> {
+    let consumables: array<Consumable> = Consumables();
     let symptoms: array<ref<Symptom>> = [];
     let symptom: ref<Symptom>;
-    let consumption: ref<Consumption>;
     let threshold: Threshold;
-    let keys = this.Items();
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        threshold = consumption.Threshold();
-        if Helper.IsSerious(threshold) {
-            symptom = new Symptom();
-            symptom.Title = Translations.Appellation(ItemID.GetTDBID(key));
-            symptom.Status = Translations.BiomonitorStatus(threshold);
-            ArrayPush(symptoms, symptom);
-        }
+    for consumable in consumables {
+      threshold = this.Threshold(consumable);
+      if Helper.IsSerious(threshold) {
+        symptom = new Symptom();
+        symptom.Title = Translations.Appellation(consumable);
+        symptom.Status = Translations.BiomonitorStatus(threshold);
+        ArrayPush(symptoms, symptom);
       }
     }
     return symptoms;
   }
   /// chemicals for biomonitor
   public func Chemicals() -> array<ref<Chemical>> {
+    let consumables = Consumables();
     let chemicals: array<ref<Chemical>> = [];
     let chemical: ref<Chemical>;
-    let consumption: ref<Consumption>;
-    let keys = this.Items();
     let translations: array<CName>;
     let threshold: Threshold;
     let max: Int32 = 7;
     let found: Int32 = 0;
-    for key in keys {
-      consumption = this.Get(key);
-      if IsDefined(consumption) {
-        threshold = consumption.Threshold();
-        if Helper.IsSerious(threshold) {
-          translations = Translations.ChemicalKey(Generic.Consumable(ItemID.GetTDBID(key)));
-          for translation in translations {
+    let duplicate: Bool;
+    // here logic is not accurate since you could end up with not the highest threshold
+    // for consumables which share the same chemicals composition
+    // but it's not really important in terms of gameplay
+    for consumable in consumables {
+      threshold = this.Threshold(consumable);
+      if Helper.IsSerious(threshold) {
+        translations = Translations.ChemicalKey(consumable);
+        for translation in translations {
+          duplicate = Contains(chemicals, translation);
+          if !duplicate {
             chemical = new Chemical();
             chemical.Key = translation;
             chemical.From = (Cast<Float>(EnumInt(threshold)) / 2.0) + RandRangeF(-10.0, 10.0);
@@ -296,6 +302,13 @@ public class Consumptions {
     }
     return chemicals;
   }
+}
+
+public func Contains(chemicals: array<ref<Chemical>>, translation: CName) -> Bool {
+  for chemical in chemicals {
+    if Equals(chemical.Key, translation) { return true; }
+  }
+  return false;
 }
 
 public class Consumption {
@@ -355,6 +368,7 @@ enum Consumable {
   BlackLace = 8,
   CarryCapacityBooster = 9,
   NeuroBlocker = 10,
+  Tobacco = 11
 }
 
 public static func Consumables() -> array<Consumable> {
@@ -368,7 +382,8 @@ public static func Consumables() -> array<Consumable> {
     Consumable.StaminaBooster,
     Consumable.BlackLace,
     Consumable.CarryCapacityBooster,
-    Consumable.NeuroBlocker
+    Consumable.NeuroBlocker,
+    Consumable.Tobacco
   ];
 }
 
@@ -384,6 +399,8 @@ enum Addiction {
   Anabolics = 1,
   Neuros = 2,
   BlackLace = 3,
+  Alcohol = 4,
+  Tobacco = 5,
 }
 
 public static func Addictions() -> array<Addiction> {
@@ -391,7 +408,9 @@ public static func Addictions() -> array<Addiction> {
     Addiction.Healers,
     Addiction.Anabolics,
     Addiction.Neuros,
-    Addiction.BlackLace
+    Addiction.BlackLace,
+    Addiction.Alcohol,
+    Addiction.Tobacco
   ];
 }
 

@@ -1,0 +1,195 @@
+# weakened status effect icons
+
+UIIcon.$(threshold)Weakened$(consumable):
+  $instances:
+    - { threshold: Notably,  consumable: FirstAidWhiff, part_prefix: notably,  part_suffix: first_aid_whiff }
+    - { threshold: Severely, consumable: FirstAidWhiff, part_prefix: severely, part_suffix: first_aid_whiff }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  part_prefix: notably,  part_suffix: regeneration_icon }
+    - { threshold: Severely, consumable: BonesMcCoy70,  part_prefix: severely, part_suffix: regeneration_icon }
+    - { threshold: Notably,  consumable: HealthBooster, part_prefix: notably,  part_suffix: slot_consumable_hp }
+    - { threshold: Severely, consumable: HealthBooster, part_prefix: severely, part_suffix: slot_consumable_hp }
+  $type: UIIcon_Record
+  atlasPartName: $(part_prefix)_weakened_$(part_suffix)
+  atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+# status effect
+
+## first aid whiff (a.k.a maxdoc)
+
+BaseStatusEffect.$(threshold)WeakenedFirstAidWhiff$(version):
+  $instances:
+    - { threshold: Notably,  intensity: mildly, version: V0, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: V0, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V1, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: V1, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: V2, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: V2, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: VUncommon, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: VUncommon, value: 0.3 }
+    - { threshold: Notably,  intensity: mildly, version: VEpic, value: 0.7 }
+    - { threshold: Severely, intensity: piddly, version: VEpic, value: 0.3 }
+  $base: BaseStatusEffect.FirstAidWhiff$(version)
+  packages:
+    - $base: BaseStatusEffect.FirstAidWhiff_inline0
+      effectors:
+        - $base: BaseStatusEffect.FirstAidWhiff_inline1
+          statPoolUpdates:
+            - $base: BaseStatusEffect.FirstAidWhiff_inline3
+              statModifiers:
+                - $base: BaseStatusEffect.FirstAidWhiff_inline4
+                  value: $(value)
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: $(intensity)_splinter_buff
+      shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiff_inline5
+    iconPath: $(threshold)WeakenedFirstAidWhiff
+
+## bounce back (a.k.a bones mccoy)
+
+BaseStatusEffect.$(threshold)WeakenedBonesMcCoy70$(version):
+  $instances:
+    - { threshold: Notably,  intensity: mildly, version: V0, modifier: 7, value: 0.7, inline: 12 }
+    - { threshold: Severely, intensity: piddly, version: V0, modifier: 3, value: 0.3, inline: 12 }
+    - { threshold: Notably,  intensity: mildly, version: V1, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: V1, modifier: 3, value: 0.3, inline: 0 }
+    - { threshold: Notably,  intensity: mildly, version: V2, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: V2, modifier: 3, value: 0.3, inline: 0 }
+    - { threshold: Notably,  intensity: mildly, version: VUncommon, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: VUncommon, modifier: 3, value: 0.3, inline: 0 }
+    - { threshold: Notably,  intensity: mildly, version: VEpic, modifier: 7, value: 0.7, inline: 0 }
+    - { threshold: Severely, intensity: piddly, version: VEpic, modifier: 3, value: 0.3, inline: 0 }
+  $base: BaseStatusEffect.BonesMcCoy70$(version)
+  packages:
+    - $base: BaseStatusEffect.BonesMcCoy70V0_inline0
+      effectors:
+        # regeneration
+        - $base: BaseStatusEffect.BonesMcCoy70V0_inline1
+          poolModifier:
+            $base: BaseStatusEffect.BonesMcCoy70V0_inline2
+            valuePerSecMods:
+              - $base: BaseStatusEffect.BonesMcCoy70V0_inline8
+                value: $(value)
+        # health
+        - $base: BaseStatusEffect.BonesMcCoy70V0_inline9
+          statPoolUpdates:
+            - $base: BaseStatusEffect.BonesMcCoy70V0_inline10
+              statPoolValue: $(value)
+        - Effectors.UsedHealingItemOrCyberwareEffector
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: $(intensity)_reflex_buster
+      shouldReapply: false
+  uiData:
+    $base: BaseStatusEffect.BonesMcCoy70$(version)_inline$(inline)
+    iconPath: $(threshold)WeakenedBonesMcCoy70
+    intValues: [ $(modifier) ]
+
+## health booster
+
+BaseStatusEffect.$(threshold)WeakenedHealthBooster:
+  $instances:
+    - { threshold: Notably,  modifier: 1.07, modifiers: 7 }
+    - { threshold: Severely, modifier: 1.03, modifiers: 3 }
+  $base: BaseStatusEffect.HealthBooster
+  packages:
+    - $base: BaseStatusEffect.HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: $(modifier)
+  uiData:
+    $base: BaseStatusEffect.HealthBooster_inline2
+    iconPath: $(threshold)WeakenedHealthBooster
+    intValues: [ $(modifiers) ]
+
+BaseStatusEffect.$(threshold)WeakenedBlackmarket_HealthBooster:
+  $instances:
+    - { threshold: Notably,  modifier: 1.15, modifiers: 15, malus: -0.6, maluses: 60 }
+    - { threshold: Severely, modifier: 1.1,  modifiers: 10, malus: -0.7, maluses: 70 }
+  $base: BaseStatusEffect.Blackmarket_HealthBooster
+  packages:
+    - $base: BaseStatusEffect.Blackmarket_HealthBooster_inline0
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Health
+          value: $(modifier)
+        - $type: ConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.StaminaRegenRateMult
+          value: $(malus)
+  uiData:
+    $base: BaseStatusEffect.Blackmarket_HealthBooster_inline3
+    iconPath: $(threshold)WeakenedHealthBooster
+    intValues: [ $(modifiers), $(maluses) ]
+
+# completion effect (object action effect)
+
+Items.$(prefix)$(consumable)$(version)_$(flat)_$(suffix)_weakened:
+  $instances:
+    # maxdoc
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V0, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V1, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: V2, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: VUncommon, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: FirstAidWhiff, version: VEpic, flat: inline3, prefix: '', suffix: severely }
+    # bounce back
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V0, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V1, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: V2, flat: inline3, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: VUncommon, flat: inline8, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: BonesMcCoy70,  version: VEpic, flat: inline8, prefix: '', suffix: severely }
+    # health booster
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: '', suffix: notably }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: '', suffix: severely }
+    - { threshold: Notably,  consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: notably }
+    - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: severely }
+  $base: Items.$(prefix)$(consumable)$(version)_$(flat)
+  statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)
+
+UIData.HealersCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-Healers-Caution
+
+Package.HealersCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.HealersCaution
+
+Items.FirstAidWhiffV0.OnEquip: &HealersCaution
+  - !append-once Package.HealersCaution
+Items.FirstAidWhiffV1.OnEquip: *HealersCaution
+Items.FirstAidWhiffV2.OnEquip: *HealersCaution
+Items.FirstAidWhiffVCommonPlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVEpic.OnEquip: *HealersCaution
+Items.FirstAidWhiffVEpicPlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVLegendaryPlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVRarePlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVUncommon.OnEquip: *HealersCaution
+Items.FirstAidWhiffVUncommonPlus.OnEquip: *HealersCaution
+
+Items.BonesMcCoy70V0.OnEquip: *HealersCaution
+Items.BonesMcCoy70V1.OnEquip: *HealersCaution
+Items.BonesMcCoy70V2.OnEquip: *HealersCaution
+Items.BonesMcCoy70VCommonPlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VEpic.OnEquip: *HealersCaution
+Items.BonesMcCoy70VEpicPlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VLegendaryPlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VRarePlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VUncommon.OnEquip: *HealersCaution
+Items.BonesMcCoy70VUncommonPlus.OnEquip: *HealersCaution
+
+Items.HealthBooster.OnEquip: *HealersCaution
+Items.Blackmarket_HealthBooster.OnEquip: *HealersCaution

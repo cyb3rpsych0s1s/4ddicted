@@ -1,0 +1,249 @@
+UIIcon.BreathLess:
+ $type: UIIcon_Record
+ atlasPartName: breathless_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+Duration.ShortBreath:
+  $type: ConstantStatModifier_Record
+  value: 300
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+
+Modifier.ShortBreath.Duration:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers: [ Duration.ShortBreath ]
+
+Stacks.ShortBreath:
+  $type: ConstantStatModifier_Record
+  value: 3
+  modifierType: Additive
+  statType: BaseStats.MaxStacks
+
+Modifier.ShortBreath.Stacks:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers: [ Stacks.ShortBreath ]
+
+Modifier.ShortBreath.NoFreeSprint:
+  $type: ConstantStatModifier_Record
+  value: 0
+  modifierType: Multiplier
+  statType: BaseStats.IsSprintStaminaFree
+
+Modifier.BreathLess.NoFreeDodge:
+  $type: ConstantStatModifier_Record
+  value: 0
+  modifierType: Multiplier
+  statType: BaseStats.IsDodgeStaminaFree
+
+Package.ShortBreath:
+  $type: GameplayLogicPackage_Record
+  stackable: false
+  animationWrapperOverrides: []
+  effectors: []
+  items: []
+  statPools: []
+  stats:
+    - Modifier.ShortBreath.NoFreeSprint
+
+Package.BreathLess:
+  $base: Package.ShortBreath
+  stats:
+    - !append-once Modifier.BreathLess.NoFreeDodge
+
+StaminaRegenStartDelay.ShortBreath:
+  $type: ConstantStatModifier_Record
+  value: 0.1
+  modifierType: Additive
+  statType: BaseStats.StaminaRegenStartDelay
+
+Modifier.ShortBreath.StaminaDelay:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers:
+    - StaminaRegenStartDelay.ShortBreath
+
+Effector.ShortBreath.StaminaDelay:
+  $type: ApplyStatGroupEffector_Record
+  applicationTarget: Player
+  removeWithEffector: true
+  statGroup: Modifier.ShortBreath.StaminaDelay
+  effectorClassName: ApplyStatGroupEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+
+Package.ShortBreath.SlowStaminaRegen:
+  $base: EquipmentGLP.SlowStaminaRegen
+
+Package.BreathLess.SlowStaminaRegen:
+  $base: Package.ShortBreath.SlowStaminaRegen
+  effectors:
+    - $base: EquipmentGLP.SlowStaminaRegen_inline0
+      statGroup:
+        $base: EquipmentGLP.SlowStaminaRegen_inline1
+        statModifiers:
+          - $base: EquipmentGLP.SlowStaminaRegen_inline2
+            value: -0.6
+
+# small debuff, but it can stack
+
+Package.ShortBreath.StaminaDelay:
+  $base: EquipmentGLP.VeryHeavyStaminaDelay
+  stackable: true
+  animationWrapperOverrides: []
+  effectors: [ Effector.ShortBreath.StaminaDelay ]
+  items: []
+  statPools: []
+  stats: []
+
+# applying one remove the other, and vice-versa
+
+Prereqs.ShortBreath.Applied:
+  $type: StatusEffectPrereq_Record
+  evaluateOnRegister: true
+  invert: false
+  statusEffect: BaseStatusEffect.ShortBreath
+  prereqClassName: StatusEffectPrereq
+
+Prereqs.BreathLess.Applied:
+  $type: StatusEffectPrereq_Record
+  evaluateOnRegister: true
+  invert: false
+  statusEffect: BaseStatusEffect.BreathLess
+  prereqClassName: StatusEffectPrereq
+
+Effector.Remove.ShortBreath:
+  $type: Effector_Record
+  effectorClassName: RemoveStatusEffectsEffector
+  prereqRecord: Prereqs.ShortBreath.Applied
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  effectTags: []
+  effectTypes: []
+  statusEffects: [ "BaseStatus.ShortBreath" ]
+
+Effector.Remove.BreathLess:
+  $type: Effector_Record
+  effectorClassName: RemoveStatusEffectsEffector
+  prereqRecord: Prereqs.BreathLess.Applied
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  effectTags: []
+  effectTypes: []
+  statusEffects: [ "BaseStatus.BreathLess" ]
+
+Package.Remove.ShortBreath:
+  $type: GameplayLogicPackage_Record
+  stackable: false
+  animationWrapperOverrides: []
+  effectors: [ Effector.Remove.ShortBreath ]
+  items: []
+  statPools: []
+  stats: []
+
+Package.Remove.BreathLess:
+  $type: GameplayLogicPackage_Record
+  stackable: false
+  animationWrapperOverrides: []
+  effectors: [ Effector.Remove.BreathLess ]
+  items: []
+  statPools: []
+  stats: []
+
+# UI data
+
+UIData.ShortBreath:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-ShortBreath-Desc
+  displayName: LocKey#Mod-Addicted-ShortBreath
+  fluffText: ''
+  iconPath: BreathLess
+  priority: -8
+  floatValues: []
+  intValues: [-60]
+  nameValues: []
+  stats: []
+
+UIData.BreathLess:
+  $base: UIData.ShortBreath
+  description: LocKey#Mod-Addicted-BreathLess-Desc
+  displayName: LocKey#Mod-Addicted-BreathLess
+  intValues: [-60, 10]
+
+# status effect on notable threshold
+
+BaseStatusEffect.ShortBreath:
+  $type: StatusEffect_Record
+  gameplayTags: [ Debuff ]
+  duration: Modifier.ShortBreath.Duration
+  dynamicDuration: false
+  isAffectedByTimeDilationNPC: true
+  isAffectedByTimeDilationPlayer: true
+  maxStacks: Modifier.ShortBreath.Stacks
+  reapplyPackagesOnMaxStacks: false
+  removeAllStacksWhenDurationEnds: false
+  removeOnStoryTier: false
+  replicated: true
+  savable: true
+  statusEffectType: BaseStatusEffectTypes.PassiveDebuff
+  stopActiveSfxOnDeactivate: false
+  uiData: UIData.ShortBreath
+  debugTags: []
+  gameplayTags: [ Debuff ]
+  immunityStats: []
+  packages:
+    - Package.Remove.BreathLess
+    - BaseStatusEffect.BreathingLow_inline1
+    - Package.ShortBreath.StaminaDelay
+    - Package.ShortBreath.SlowStaminaRegen
+    - Package.ShortBreath
+  SFX: []
+  VFX: []
+
+# status effect on severe threshold
+
+BaseStatusEffect.BreathLess:
+  $base: BaseStatusEffect.ShortBreath
+  uiData: UIData.BreathLess
+  packages:
+    - Package.Remove.ShortBreath
+    - BaseStatusEffect.BreathingMedium_inline0
+    - Package.ShortBreath.StaminaDelay
+    - Package.BreathLess.SlowStaminaRegen
+    - Package.BreathLess
+
+# ui data
+
+UIData.TobaccoCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-Tobacco-Caution
+
+Package.TobaccoCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.TobaccoCaution
+
+Items.cigar.OnEquip: &TobaccoCaution
+  - !append-once Package.TobaccoCaution
+Items.cigarette_i_stick.OnEquip: *TobaccoCaution
+Items.crowd_cigar.OnEquip: *TobaccoCaution
+Items.crowd_cigarette_i_stick.OnEquip: *TobaccoCaution
+Items.locomotion_crowd_cigarette_i_stick.OnEquip: *TobaccoCaution
+Items.q105_evelyns_cigarette_case.OnEquip: *TobaccoCaution
+Items.q204_yeheyuan_cigarettes.OnEquip: *TobaccoCaution

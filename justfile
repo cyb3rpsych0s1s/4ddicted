@@ -17,6 +17,9 @@ default:
 @audioware TO=game LOCALE='en-us':
     just recipes/audioware/install '{{TO}}' '{{LOCALE}}'
 
+@cet TO=game:
+    just recipes/cet/install '{{TO}}'
+
 @redscript TO=game:
     just recipes/red/install '{{TO}}'
 
@@ -35,6 +38,7 @@ default:
 
 @uninstall FROM=game:
     just recipes/archive/uninstall '{{FROM}}'
+    just recipes/cet/uninstall '{{FROM}}'
     just recipes/red/uninstall '{{FROM}}'
     just recipes/tweak/uninstall '{{FROM}}'
     just recipes/audioware/uninstall '{{FROM}}'
@@ -58,3 +62,6 @@ default:
 
 @cr2w LOCALE='en-us':
     just recipes/archive/cr2w '{{LOCALE}}'
+
+@encode LOCALE='en-us' OVERWRITE='false':
+  just recipes/audioware/encode '{{LOCALE}}' '{{OVERWRITE}}'

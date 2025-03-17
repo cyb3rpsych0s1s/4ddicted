@@ -114,7 +114,7 @@ protected cb func OnGameAttached() -> Bool {
 
 ### event inherited from RED Event
 
-see [cyberdoc](https://jac3km4.github.io/cyberdoc/#27273)
+see [cyberdoc](https://jac3km4.github.io/cyberdoc/#11485)
 
 ```swift
 public native class GameObject extends GameEntity {

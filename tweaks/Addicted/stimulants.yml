@@ -1,53 +1,7 @@
-UIData.WithdrawnFrom$(consumable):
-  $instances:
-    - { consumable: StaminaBooster,       key: Stamina-Booster }
-    - { consumable: CarryCapacityBooster, key: Capacity-Booster }
-    - { consumable: MemoryBooster,        key: Memory-Booster }
-  $base: BaseStatusEffect.$(consumable)_inline2
-  description: LocKey#Mod-Addicted-Withdrawn-$(key)-Desc
-  displayName: LocKey#Mod-Addicted-Craving-For-$(key)
-  iconPath: WithdrawnFromPill
-
-BaseStatusEffect.$(threshold)WithdrawnFrom$(consumable):
-  $instances:
-    - { threshold: Notably,  consumable: StaminaBooster,       stat: Stamina,       modifier: 0.9, modifiers: 90 }
-    - { threshold: Severely, consumable: StaminaBooster,       stat: Stamina,       modifier: 0.7, modifiers: 70 }
-    - { threshold: Notably,  consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.9, modifiers: 90 }
-    - { threshold: Severely, consumable: CarryCapacityBooster, stat: CarryCapacity, modifier: 0.7, modifiers: 70 }
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.$(stat)
-          value: $(modifier)
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.Grunt]
-  uiData:
-    $base: UIData.WithdrawnFrom$(consumable)
-    intValues: [ $(modifiers) ]
-
-BaseStatusEffect.$(threshold)WithdrawnFromMemoryBooster:
-  $instances:
-    - { threshold: Notably,  modifier: 0.9, modifiers: 90 }
-    - { threshold: Severely, modifier: 0.7, modifiers: 70 }
-  $base: BaseStatusEffect.WithdrawalSymptom
-  packages:
-    - $type: GameplayLogicPackage_Record
-      stats:
-        - $type: ConstantStatModifier_Record
-          modifierType: Multiplier
-          statType: BaseStats.Memory
-          value: $(modifier)
-    - $type: GameplayLogicPackage_Record
-      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
-    - $type: GameplayLogicPackage_Record
-      effectors:
-        - Effectors.Dizzy
-  uiData:
-    $base: UIData.WithdrawnFromMemoryBooster
-    intValues: [ $(modifiers) ]
+UIIcon.PhotoSensitive:
+ $type: UIIcon_Record
+ atlasPartName: photosensitive_icon
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
 Effectors.Grunt:
   $type: Effector_Record
@@ -91,3 +45,150 @@ UIIcon.WithdrawnFromPill:
   $type: UIIcon_Record
   atlasPartName: craving_for_pills_icon
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
+
+# photosensitive for RAM jolt
+
+Effectors.PhotoSensitive:
+  $type: Effector_Record
+  $props: AutoFlats
+  effectorClassName: ModifyStatusEffectDurationEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: false
+  removeAfterPrereqCheck: false
+  statModifierGroups: []
+  gameplayTags:
+    - Blind
+    - GrenadeStatusEffect
+    - FlashEffect
+  change: 8
+  canGoOverInitialDuration: true
+  listenConstantly: true
+  isPercentage: false
+
+Effectors.BlinkEyes:
+  $type: Effector_Record
+  effectorClassName: PlayVFXEffector
+  prereqRecord: Prereqs.AlwaysTruePrereq
+  removeAfterActionCall: False
+  removeAfterPrereqCheck: False
+  statModifierGroups: []
+  startOnUninitialize: False
+  vfxName: blink_fast
+
+Effectors.BlinkEyesTwice:
+  $base: Effectors.BlinkEyes
+  vfxName: eyes_blinking
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 0.7
+    randRange: 0
+
+Package.PhotoSensitive:
+  $type: GameplayLogicPackage_Record
+  stackable: true
+  animationWrapperOverrides: []
+  effectors: [ Effectors.PhotoSensitive ]
+  items: []
+  statPools: []
+  stats: []
+
+Package.BlinkEyes:
+  $type: GameplayLogicPackage_Record
+  stackable: false
+  animationWrapperOverrides: []
+  effectors:
+    - Effectors.BlinkEyes
+    - Effectors.BlinkEyesTwice
+  items: []
+  statPools: []
+  stats: []
+
+Duration.PhotoSensitive:
+  $type: ConstantStatModifier_Record
+  value: 300
+  modifierType: Additive
+  statType: BaseStats.MaxDuration
+
+Modifier.PhotoSensitive.Duration:
+  $type: StatModifierGroup_Record
+  drawBasedOnStatType: false
+  optimiseCombinedModifiers: false
+  saveBasedOnStatType: false
+  statModsLimit: -1
+  relatedModifierGroups: []
+  statModifiers: [ Duration.PhotoSensitive ]
+
+UIData.PhotoSensitive:
+  $type: StatusEffectUIData_Record
+  description: LocKey#Mod-Addicted-PhotoSensitive-Desc
+  displayName: LocKey#Mod-Addicted-PhotoSensitive
+  fluffText: ''
+  iconPath: PhotoSensitive
+  priority: -8
+  floatValues: []
+  intValues: []
+  nameValues: []
+  stats: []
+
+BaseStatusEffect.PhotoSensitive:
+  $type: StatusEffect_Record
+  duration: Modifier.PhotoSensitive.Duration
+  dynamicDuration: false
+  isAffectedByTimeDilationNPC: true
+  isAffectedByTimeDilationPlayer: true
+  maxStacks: RTDB.StatusEffect_inline0
+  reapplyPackagesOnMaxStacks: false
+  removeAllStacksWhenDurationEnds: true
+  removeOnStoryTier: true
+  replicated: false
+  savable: true
+  statusEffectType: BaseStatusEffectTypes.PassiveDebuff
+  stopActiveSfxOnDeactivate: true
+  uiData: UIData.PhotoSensitive
+  debugTags: []
+  gameplayTags:
+    - Debuff
+    - Blind
+  immunityStats:
+    - BaseStats.BlindImmunity
+  packages: 
+    - Package.PhotoSensitive
+    - Package.BlinkEyes
+  SFX: []
+  VFX: []
+
+UIData.MemoryBoosterCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-MemoryBooster-Caution
+
+Package.MemoryBoosterCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.MemoryBoosterCaution
+
+Items.MemoryBooster.OnEquip: &MemoryBoosterCaution
+  - !append-once Package.MemoryBoosterCaution
+Items.Blackmarket_MemoryBooster.OnEquip: *MemoryBoosterCaution
+
+UIData.StaminaBoosterCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-StaminaBooster-Caution
+
+Package.StaminaBoosterCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.StaminaBoosterCaution
+
+Items.StaminaBooster.OnEquip: &StaminaBoosterCaution
+  - !append-once Package.StaminaBoosterCaution
+Items.Blackmarket_StaminaBooster.OnEquip: *StaminaBoosterCaution
+
+UIData.CarryCapacityBoosterCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-CarryCapacityBooster-Caution
+
+Package.CarryCapacityBoosterCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.CarryCapacityBoosterCaution
+
+Items.CarryCapacityBooster.OnEquip: &CarryCapacityBoosterCaution
+  - !append-once Package.CarryCapacityBoosterCaution
+Items.Blackmarket_CarryCapacityBooster.OnEquip: *CarryCapacityBoosterCaution

@@ -4,6 +4,10 @@ import Addicted.*
 
 // effects or items agnostic
 public class Generic {
+  public static func Consumable(id: ItemID) -> Consumable {
+    let tweakId: TweakDBID = ItemID.GetTDBID(id);
+    return Generic.Consumable(tweakId);
+  }
 
   public static func Consumable(id: TweakDBID) -> Consumable {
     if Generic.IsAlcohol(id)          { return Consumable.Alcohol; }
@@ -16,6 +20,8 @@ public class Generic {
     if Generic.IsBlackLace(id)        { return Consumable.BlackLace; }
     if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
     if Generic.IsNeuroBlocker(id)     { return Consumable.NeuroBlocker; }
+    if Generic.IsTobacco(id)
+    || Generic.IsLighter(id)          { return Consumable.Tobacco; }
     return Consumable.Invalid;
   }
 
@@ -33,6 +39,10 @@ public class Generic {
         return Addiction.Neuros;
       case Consumable.BlackLace:
         return Addiction.BlackLace;
+      case Consumable.Alcohol:
+        return Addiction.Alcohol;
+      case Consumable.Tobacco:
+        return Addiction.Tobacco;
       default:
         break;
     }
@@ -42,7 +52,9 @@ public class Generic {
   public static func IsBiomonitor(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
-    return StrBeginsWith(suffix, "HealthMonitor");
+    let contains = StrContains(suffix, "HealthMonitor")
+    || StrContains(suffix, "Biomonitor");
+    return contains;
   }
 
   public static func IsAddictive(id: TweakDBID) -> Bool {
@@ -109,6 +121,16 @@ public class Generic {
     return StrContains(str, "Alcohol");
   }
 
+  public static func IsTobacco(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    return StrContains(str, "cigar");
+  }
+
+  public static func IsLighter(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    return StrContains(str, "lighter");
+  }
+
   public static func IsMaxDOC(id: TweakDBID) -> Bool {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
@@ -161,5 +183,11 @@ public class Generic {
     let str = TDBID.ToStringDEBUG(id);
     let suffix = StrAfterFirst(str, ".");
     return StrContains(suffix, "RipperDocMedBuff") || StrContains(suffix, "ripperdoc_med");
+  }
+
+  public static func IsContraindicated(id: TweakDBID) -> Bool {
+    let str = TDBID.ToStringDEBUG(id);
+    let suffix = StrAfterFirst(str, ".");
+    return StrContains(suffix, "contraindication");
   }
 }

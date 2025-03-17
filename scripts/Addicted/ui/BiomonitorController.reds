@@ -1,5 +1,5 @@
 import Codeware.Localization.*
-import Addicted.Utils.E
+import Addicted.Utils.{E,F}
 import Addicted.System.AddictedSystem
 import Addicted.Helpers.Bits
 import Addicted.Helpers.Translations
@@ -97,6 +97,7 @@ enum BiomonitorRestrictions {
     InRadialWheel = 2,
     InQuickHackPanel = 3,
     InPhotoMode = 4,
+    InRomance = 5,
 }
 
 public class BiomonitorController extends inkGameController {
@@ -113,21 +114,36 @@ public class BiomonitorController extends inkGameController {
     private let insurance: ref<inkText>;
     private let chemicals: array<ref<inkText>>;
     private let vitals: array<array<ref<inkWidget>>>;
+    private let parentheses: array<array<ref<inkText>>>;
 
     private let hydroxyzine: ref<inkText>;
     private let hydroxyzineValue: ref<inkText>;
+    private let hydroxyzineLeftParen: ref<inkText>;
+    private let hydroxyzineRightParen: ref<inkText>;
     private let tramadol: ref<inkText>;
     private let tramadolValue: ref<inkText>;
+    private let tramadolLeftParen: ref<inkText>;
+    private let tramadolRightParen: ref<inkText>;
     private let desvenlafaxine: ref<inkText>;
     private let desvenlafaxineValue: ref<inkText>;
+    private let desvenlafaxineLeftParen: ref<inkText>;
+    private let desvenlafaxineRightParen: ref<inkText>;
     private let amoxapine: ref<inkText>;
     private let amoxapineValue: ref<inkText>;
+    private let amoxapineLeftParen: ref<inkText>;
+    private let amoxapineRightParen: ref<inkText>;
     private let lactobacillius: ref<inkText>;
     private let lactobacilliusValue: ref<inkText>;
+    private let lactobacilliusLeftParen: ref<inkText>;
+    private let lactobacilliusRightParen: ref<inkText>;
     private let acetaminofen: ref<inkText>;
     private let acetaminofenValue: ref<inkText>;
+    private let acetaminofenLeftParen: ref<inkText>;
+    private let acetaminofenRightParen: ref<inkText>;
     private let bupropion: ref<inkText>;
     private let bupropionValue: ref<inkText>;
+    private let bupropionLeftParen: ref<inkText>;
+    private let bupropionRightParen: ref<inkText>;
 
     private let postpone: DelayID;
     private let beep: DelayID;
@@ -144,6 +160,10 @@ public class BiomonitorController extends inkGameController {
     private let travelListener: ref<CallbackHandle>;
     private let deathListener: ref<CallbackHandle>;
     private let interactionsListener: ref<CallbackHandle>;
+    private let safeAreaListener: ref<CallbackHandle>;
+
+    private let journal: ref<JournalManager>;
+    private let romanceID: Uint32;
 
     protected cb func OnInitialize() {
         E(s"on initialize controller");
@@ -172,18 +192,32 @@ public class BiomonitorController extends inkGameController {
         // defined individually because widgets path are kind of a mess
         this.hydroxyzine = topLine.GetWidget(n"Info_N_HYDROXYZINE_text") as inkText;
         this.hydroxyzineValue = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_170_text") as inkText;
+        this.hydroxyzineLeftParen = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_(_text") as inkText;
+        this.hydroxyzineRightParen = topLine.GetWidget(n"inkHorizontalPanelWidget2/170/Info_)_text") as inkText;
         this.tramadol = topLine.GetWidget(n"Info_TR2_TRAMADOL_Text") as inkText;
         this.tramadolValue = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_TR2_TRAMADOL_Text") as inkText;
+        this.tramadolLeftParen = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_(_text") as inkText;
+        this.tramadolRightParen = topLine.GetWidget(n"inkHorizontalPanelWidget3/720/Info_)_text") as inkText;
         this.desvenlafaxine = topLine.GetWidget(n"Info_DESVENLAFAXINE_Text") as inkText;
         this.desvenlafaxineValue = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_DESVENLAFAXINE_Text") as inkText;
+        this.desvenlafaxineLeftParen = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_(_text") as inkText;
+        this.desvenlafaxineRightParen = topLine.GetWidget(n"inkHorizontalPanelWidget4/300/Info_)_text") as inkText;
         this.amoxapine = middleLine.GetWidget(n"Info_AMOXAPINE_Text") as inkText;
         this.amoxapineValue = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_AMOXAPINE_Text") as inkText;
+        this.amoxapineLeftParen = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_(_text") as inkText;
+        this.amoxapineRightParen = middleLine.GetWidget(n"inkHorizontalPanelWidget5/220/Info_)_text") as inkText;
         this.lactobacillius = middleLine.GetWidget(n"Info_R7_LACTOBACILLIUS_Text") as inkText;
         this.lactobacilliusValue = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_R7_LACTOBACILLIUS_Text") as inkText;
+        this.lactobacilliusLeftParen = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_(_text") as inkText;
+        this.lactobacilliusRightParen = middleLine.GetWidget(n"inkHorizontalPanelWidget6/400/Info_)_text") as inkText;
         this.acetaminofen = middleLine.GetWidget(n"Info_ACETAMINOFEN_Text") as inkText;
         this.acetaminofenValue = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_ACETAMINOFEN_Text") as inkText;
+        this.acetaminofenLeftParen = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_(_text") as inkText;
+        this.acetaminofenRightParen = middleLine.GetWidget(n"inkHorizontalPanelWidget7/250/Info_)_text") as inkText;
         this.bupropion = bottomLine.GetWidget(n"Info_BUPROPION_Text") as inkText;
         this.bupropionValue = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_BUPROPION_Text") as inkText;
+        this.bupropionLeftParen = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_(_text") as inkText;
+        this.bupropionRightParen = bottomLine.GetWidget(n"inkHorizontalPanelWidget5/Info_)_text") as inkText;
 
         this.chemicals = [];
         ArrayPush(this.chemicals, this.hydroxyzine);
@@ -200,6 +234,15 @@ public class BiomonitorController extends inkGameController {
         ArrayPush(this.chemicals, this.acetaminofenValue);
         ArrayPush(this.chemicals, this.bupropion);
         ArrayPush(this.chemicals, this.bupropionValue);
+
+        this.parentheses = [];
+        ArrayPush(this.parentheses, [this.hydroxyzineLeftParen, this.hydroxyzineRightParen]);
+        ArrayPush(this.parentheses, [this.tramadolLeftParen, this.tramadolRightParen]);
+        ArrayPush(this.parentheses, [this.desvenlafaxineLeftParen, this.desvenlafaxineRightParen]);
+        ArrayPush(this.parentheses, [this.amoxapineLeftParen, this.amoxapineRightParen]);
+        ArrayPush(this.parentheses, [this.lactobacilliusLeftParen, this.lactobacilliusRightParen]);
+        ArrayPush(this.parentheses, [this.acetaminofenLeftParen, this.acetaminofenRightParen]);
+        ArrayPush(this.parentheses, [this.bupropionLeftParen, this.bupropionRightParen]);
 
         let row: array<ref<inkWidget>>;
         
@@ -283,22 +326,36 @@ public class BiomonitorController extends inkGameController {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
         let definitions: ref<AllBlackboardDefinitions> = GetAllBlackboardDefs();
 
-        let state: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
+        let state: ref<IBlackboard> = this.GetPSMBlackboard(this.GetPlayerControlledObject());
         if IsDefined(state) {
             this.deathListener = state.RegisterListenerBool(definitions.PlayerStateMachine.DisplayDeathMenu, this, n"OnDeathMenu");
-        }
+            if !IsDefined(this.deathListener) { F("unable to listen to player state machine blackboard"); }
+        } else { F("unable to reach player state machine blackboard"); }
+
+        let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
+        if IsDefined(quests) {
+            this.romanceID = quests.RegisterListener(n"mq055_apt_interactions_off", this, n"OnApartmentInteraction");
+            if this.romanceID == 0u { F("unable to listen to quest"); }
+            
+            let active = Cast<Bool>(quests.GetFact(n"mq055_apt_interactions_off"));
+            if active {
+                this.UpdateFlag(true, BiomonitorRestrictions.InRomance);
+            }
+        } else { F("unable to reach quests system"); }
 
         let travel: ref<IBlackboard> = system.Get(definitions.FastTRavelSystem);
         if IsDefined(travel) {
             this.travelListener = travel.RegisterListenerBool(definitions.FastTRavelSystem.FastTravelStarted, this, n"OnFastTravel");
-        }
+            if !IsDefined(this.travelListener) { F("unable to listen to fast travel blackboard"); }
+        } else { F("unable to reach fast travel blackboard"); }
 
         let ui: ref<IBlackboard> = system.Get(definitions.UI_System);
         if IsDefined(ui) {
             this.menuListener = ui.RegisterListenerBool(definitions.UI_System.IsInMenu, this, n"OnInMenu");
             let value: Bool = ui.GetBool(definitions.UI_System.IsInMenu);
             this.flags = Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InMenu), value);
-        }
+            if !IsDefined(this.menuListener) { F("unable to listen to UI blackboard"); }
+        } else { F("unable to reach UI blackboard"); }
 
         let quick: ref<IBlackboard> = system.Get(definitions.UI_QuickSlotsData);
         if IsDefined(quick) {
@@ -309,22 +366,28 @@ public class BiomonitorController extends inkGameController {
             this.wheelListener = quick.RegisterListenerBool(definitions.UI_QuickSlotsData.UIRadialContextRequest, this, n"OnRadialWheel");
             let value: Bool = quick.GetBool(definitions.UI_QuickSlotsData.UIRadialContextRequest);
             this.flags = Bits.Set(this.flags, EnumInt(BiomonitorRestrictions.InRadialWheel), value);
-        }
+
+            if !IsDefined(this.hackListener) { F("unable to listen to UI quick slots blackboard (hack)"); }
+            if !IsDefined(this.wheelListener) { F("unable to listen to UI quick slots blackboard (wheel)"); }
+        } else { F("unable to reach UI quick slots blackboard"); }
 
         let stats: ref<IBlackboard> = system.Get(definitions.UI_PlayerStats);
         if IsDefined(stats) {
             this.replacerListener = stats.RegisterListenerBool(definitions.UI_PlayerStats.isReplacer, this, n"OnIsReplacer");
-        }
+            if !IsDefined(this.replacerListener) { F("unable to listen to player stats blackboard"); }
+        } else { F("unable to reach player stats blackboard"); }
 
         let photo: ref<IBlackboard> = system.Get(definitions.PhotoMode);
         if IsDefined(photo) {
             this.photoListener = photo.RegisterListenerBool(definitions.PhotoMode.IsActive, this, n"OnPhotoMode");
-        }
+            if !IsDefined(this.photoListener) { F("unable to listen to photomode blackboard"); }
+        } else { F("unable to reach photomode blackboard"); }
 
         let interactions: ref<IBlackboard> = system.Get(definitions.UIInteractions);
         if IsDefined(interactions) {
             this.interactionsListener = interactions.RegisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this, n"OnVisualizersInfo");
-        }
+            if !IsDefined(this.photoListener) { F("unable to listen to UI interactions blackboard"); }
+        } else { F("unable to reach UI interactions blackboard"); }
     }
     protected func UnregisterListeners() -> Void {
         let system: ref<BlackboardSystem> = this.GetBlackboardSystem();
@@ -377,18 +440,30 @@ public class BiomonitorController extends inkGameController {
             interactions.UnregisterListenerVariant(definitions.UIInteractions.VisualizersInfo, this.interactionsListener);
             this.interactionsListener = null;
         }
+
+        let safe: ref<IBlackboard> = system.Get(definitions.PlayerStateMachine);
+        if IsDefined(safe) && IsDefined(this.safeAreaListener) {
+            safe.UnregisterListenerInt(definitions.PlayerStateMachine.Zones, this.safeAreaListener);
+        }
+
+        if IsDefined(this.journal) {
+            this.journal.UnregisterScriptCallback(this, n"OnJournal");
+            this.journal = null;
+        }
+
+        let quests = GameInstance.GetQuestsSystem(this.GetPlayerControlledObject().GetGame());
+        if IsDefined(quests) {
+            if this.romanceID != 0u { quests.UnregisterListener(n"mq055_apt_interactions_off", this.romanceID); }
+        }
     }
 
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
         E(s"on biomonitor event (is already playing ? \(this.animation))");
         if !this.Playing() && this.CanPlay() {
             if this.ShouldWait() {
-              if !this.waiting {
                 E(s"postponing, there's already another UI ongoing...");
                 this.Reschedule(evt);
-
                 return false;
-              }
             } else {
               if this.waiting {
                 this.Unschedule();
@@ -410,6 +485,7 @@ public class BiomonitorController extends inkGameController {
             let substance: ref<inkText>;
             let value: ref<inkText>;
             let controller: ref<inkTextValueProgressController>;
+            let pair: array<ref<inkText>>;
 
             while current < 7 {
                 substance = this.chemicals[current*2];
@@ -418,13 +494,20 @@ public class BiomonitorController extends inkGameController {
 
                 if current < found {
                     chemical = chemicals[current];
+                    substance.SetVisible(true);
+                    value.SetVisible(true);
+                    pair = this.parentheses[current];
+                    pair[0].SetVisible(true);
+                    pair[1].SetVisible(true);
                     substance.SetLocalizationKey(chemical.Key);
                     controller.SetBaseValue(chemical.From);
                     controller.SetTargetValue(chemical.To);
                 } else {
-                    substance.SetLocalizationKey(n"Mod-Addicted-Chemical-Irrelevant");
-                    controller.SetBaseValue(0.0);
-                    controller.SetTargetValue(0.0);
+                    substance.SetVisible(false);
+                    value.SetVisible(false);
+                    pair = this.parentheses[current];
+                    pair[0].SetVisible(false);
+                    pair[1].SetVisible(false);
                 }
 
                 current += 1;
@@ -670,6 +753,12 @@ public class BiomonitorController extends inkGameController {
         }
     }
 
+    public final func OnApartmentInteraction(factValue: Int32) -> Void {
+        E(s"on mq055_apt_interactions_off change: \(ToString(factValue))");
+        let restricted = Cast<Bool>(factValue);
+        this.UpdateFlag(restricted, BiomonitorRestrictions.InRomance);
+    }
+
     private func UpdateFlag(value: Bool, flag: BiomonitorRestrictions) -> Void {
         let current : Bool = Bits.Has(this.flags, EnumInt(flag));
         if NotEquals(current, value) {
@@ -680,13 +769,14 @@ public class BiomonitorController extends inkGameController {
 
     protected func InvalidateState() -> Void {
         E(s"invalidate state: playing? \(this.Playing()), paused? \(this.Paused()), flags: \(this.flags) (casted \(Cast<Bool>(this.flags)))");
-        if this.Playing() && Cast<Bool>(this.flags) {
+        let wait = this.ShouldWait();
+        if this.Playing() && wait {
             E(s"pausing animation");
             this.animation.Pause();
             this.waiting = true;
             return;
         }
-        if this.Paused() && !Cast<Bool>(this.flags) {
+        if this.Paused() && !wait {
             E(s"resuming animation");
             this.animation.Resume();
             this.waiting = false;
@@ -695,7 +785,9 @@ public class BiomonitorController extends inkGameController {
     }
 
     public func ShouldWait() -> Bool {
-        return Cast<Bool>(this.flags);
+        let nophone = IsDefined(StatusEffectHelper.GetStatusEffectByID(this.GetPlayerControlledObject(), t"GameplayRestriction.NoPhone"));
+        let wait = Cast<Bool>(this.flags);
+        return wait || nophone;
     }
 
     public func CanPlay() -> Bool {
@@ -834,8 +926,8 @@ public class BiomonitorController extends inkGameController {
         if EnumInt(this.state) == EnumInt(BiomonitorState.Summarizing) {
             this.state = BiomonitorState.Closing;
             let closed = this.Close(4.0);
-            if !player.IsInCombat() {
-                E(s">>> trigger reaction on symptoms summary when not in combat");
+            if !player.IsInCombat() && !player.IsPhoneCallActive() {
+                E(s">>> trigger reaction on symptoms summary when not in combat / on call");
                 reaction = Helper.OnceWarned(gender, threshold, warnings, language);
                 E(s"warned: \(ToString(warnings)) time(s), highest threshold: \(ToString(threshold)), reaction: \(NameToString(reaction))");
                 player.Reacts(reaction);

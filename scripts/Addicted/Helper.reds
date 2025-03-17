@@ -4,32 +4,46 @@ import Addicted.*
 import Addicted.Utils.{E,EI}
 import Addicted.Helpers.*
 
+public func IsLanguageSupported(locale: CName) -> Bool {
+  return Equals(locale, n"en-us")
+  || Equals(locale, n"fr-fr")
+  || Equals(locale, n"es-es")
+  || Equals(locale, n"zh-cn")
+  || Equals(locale, n"pt-br")
+  || Equals(locale, n"it-it");
+}
+
 public class Helper {
-  public static func Category(id: ItemID) -> Category {
-    if Generic.IsBlackLace(ItemID.GetTDBID(id)) { return Category.Hard; }
-    return Category.Mild;
+  public static func Potency(id: ItemID, subsequentUse: Bool, modifier: Float) -> Int32 {
+    let consumableName = Generic.Consumable(id);
+
+    switch(consumableName) {
+      case Consumable.Alcohol: 
+      case Consumable.Tobacco: 
+        return subsequentUse ? 1 : 4;
+      case Consumable.BlackLace: 
+        return subsequentUse ? 2 : 8;
+      case Consumable.HealthBooster:
+      case Consumable.StaminaBooster:
+      case Consumable.OxyBooster:
+      case Consumable.MemoryBooster:
+        return subsequentUse ? 4 : 6;
+      case Consumable.NeuroBlocker:
+        return subsequentUse ? RoundMath(1. * modifier) : RoundMath(3. * modifier);
+    }
+    return subsequentUse ? 1 : 2;
   }
 
-  public static func Potency(id: ItemID) -> Int32 {
-    let category = Helper.Category(id);
-    switch(category) {
-      case Category.Hard:
-        return 2;
-      default:
-        break;
-    }
-    return 1;
-  }
+  public static func Resilience(id: ItemID, daysSinceLastConsumed: Int32) -> Int32 {
+    let consumableName = Generic.Consumable(id);
+    let resilienceModifier = Min(5, Max(1, daysSinceLastConsumed - 1)); 
 
-  public static func Resilience(id: ItemID) -> Int32 {
-    let category = Helper.Category(id);
-    switch(category) {
-      case Category.Hard:
-        return 1;
-      default:
-        break;
+    switch(consumableName) {
+      case Consumable.BlackLace: 
+      case Consumable.Alcohol: 
+        return resilienceModifier * 1;
     }
-    return 2;
+    return resilienceModifier * 2;
   }
 
   public static func Threshold(score: Int32) -> Threshold {
@@ -56,6 +70,10 @@ public class Helper {
         return [Consumable.MemoryBooster, Consumable.NeuroBlocker];
       case Addiction.BlackLace:
         return [Consumable.BlackLace];
+      case Addiction.Alcohol:
+        return [Consumable.Alcohol];
+      case Addiction.Tobacco:
+        return [Consumable.Tobacco];
       default:
         break;
     }
@@ -72,7 +90,18 @@ public class Helper {
       t"Items.HealthMonitorUncommon",
       t"Items.HealthMonitorRare",
       t"Items.HealthMonitorEpic",
-      t"Items.HealthMonitorLegendary"
+      t"Items.HealthMonitorLegendary",
+      t"Items.AdvancedBiomonitorCommon",
+      t"Items.AdvancedBiomonitorCommonPlus",
+      t"Items.AdvancedBiomonitorUncommon",
+      t"Items.AdvancedBiomonitorUncommonPlus",
+      t"Items.AdvancedBiomonitorRare",
+      t"Items.AdvancedBiomonitorRarePlus",
+      t"Items.AdvancedBiomonitorEpic",
+      t"Items.AdvancedBiomonitorEpicPlus",
+      t"Items.AdvancedBiomonitorLegendary",
+      t"Items.AdvancedBiomonitorLegendaryPlus",
+      t"Items.AdvancedBiomonitorLegendaryPlusPlus"
     ];
   }
 
@@ -162,8 +191,9 @@ public class Helper {
       case Threshold.Mildly:
         return Threshold.Barely;
       default:
-        return Threshold.Clean;
+        break;
     }
+    return Threshold.Clean;
   }
 
   public static func Higher(threshold: Threshold) -> Threshold {

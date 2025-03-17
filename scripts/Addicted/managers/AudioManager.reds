@@ -56,8 +56,12 @@ public class AudioManager extends IScriptable {
 
   private let callbackID: DelayID;
 
+  private let audioStimMultiplier: ref<gameStatModifierData>;
+  private let audioStimMultiplierActive: Bool = false;
+
   public func Register(player: ref<PlayerPuppet>) -> Void {
     E(s"register audio manager");
+    this.audioStimMultiplier = RPGManager.CreateStatModifier(gamedataStatType.AudioStimRangeMultiplier, gameStatModifierType.Additive, 0.2);
     let board: ref<IBlackboard>;
     if player != null {
       this.owner = player;
@@ -168,6 +172,10 @@ public class AudioManager extends IScriptable {
   }
 
   public func Play(tracked: ref<TrackedHint>) -> Void {
+    let ongoing = !tracked.got.IsLoop();
+    if ongoing && !this.audioStimMultiplierActive {
+      this.ToggleAudioStims(true);
+    }
     let policy = this.ToPolicy();
     E(s"-----------------------------------------------");
     E(s"play");
@@ -189,6 +197,10 @@ public class AudioManager extends IScriptable {
   public func Stop(sound: CName) -> Void {
     GameInstance.GetAudioSystem(this.owner.GetGame())
       .Stop(sound, this.owner.GetEntityID(), n"Addicted");
+    let finished = ArraySize(this.oneshot) == 0;
+    if finished && this.audioStimMultiplierActive {
+      this.ToggleAudioStims(false);
+    }
   }
 
   public func StopAll() -> Void {
@@ -402,5 +414,15 @@ public class AudioManager extends IScriptable {
       this.inVehicle = value;
       this.InvalidateState();
     }
+  }
+
+  private func ToggleAudioStims(active: Bool) -> Void {
+    let stats: ref<StatsSystem> = GameInstance.GetStatsSystem(this.owner.GetGame());
+    if active {
+      stats.AddModifier(Cast<StatsObjectID>(this.owner.GetEntityID()), this.audioStimMultiplier);
+    } else {
+      stats.RemoveModifier(Cast<StatsObjectID>(this.owner.GetEntityID()), this.audioStimMultiplier);
+    }
+    this.audioStimMultiplierActive = active;
   }
 }

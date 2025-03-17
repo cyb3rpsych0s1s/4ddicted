@@ -1,15 +1,15 @@
-// inspired from DJ_Kovrik
-
 module Addicted.Utils
 
-public static func E(str: String) -> Void {
+public static func E(msg: String) -> Void {
   if ShowDebugLogsAddicted() {
-    // LogChannel(n"DEBUG", s"[Addicted] \(str)");
-  };
+    ModLog(n"Addicted", AsRef(msg));
+  }
 }
 
+// available at all time
 public static func F(str: String) -> Void {
-  // LogError(s"[ERROR] [Addicted] \(str)");
+  let msg = s"ERROR: \(str)";
+  ModLog(n"Addicted", AsRef(msg));
 }
 
 public static func EI(id: TweakDBID, str: String) -> Void {

@@ -20,7 +20,6 @@ tree     := join('archive', 'pc', 'mod')
     just pack 'Addicted.Icons'
     just pack 'Addicted.VFX'
     just pack 'Addicted.Biomon'
-    just pack 'Addicted.Translations'
     just copy '{{ join(source, "*.archive") }}' '{{ join(TO, tree) }}';
     just copy '{{ join(source, "*.xl") }}' '{{ join(TO, tree) }}';
 
