@@ -15,9 +15,9 @@ Items.ShortLastingAddictionDuration:
   statModsLimit: -1
   statModsLimitModifier: None
 
-UIIcon.CruciateArms:
-  $type: gamedataUIIcon_Record
-  atlasPartName: quickhack_brainmelt
+UIIcon.Lesions:
+  $type: UIIcon_Record
+  atlasPartName: lesions_icon
   atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_buffinfo.inkatlas
 
 UIData.Lesions:
@@ -25,7 +25,7 @@ UIData.Lesions:
   description: LocKey#Mod-Addicted-Lesions-Desc
   displayName: LocKey#Mod-Addicted-Lesions
   fluffText: ''
-  iconPath: CruciateArms
+  iconPath: Lesions
   priority: -8
   floatValues: []
   intValues: []
