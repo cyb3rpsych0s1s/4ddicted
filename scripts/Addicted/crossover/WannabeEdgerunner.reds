@@ -86,13 +86,44 @@ public class NeuroBlockerTweaks extends ScriptableTweak {
     if edgerunner {
       this.Derive(prefixes, item, ["", "Uncommon", "Common"]);
       this.CreateContraindicationItem();
+      this.AppendCautionNotice();
     }
   }
 
+  // create a fake item to hold track of addiction gained from contraindicated usage
   private func CreateContraindicationItem() -> Void {
     let fake = "Items.ripperdoc_med_contraindication";
     TweakDBManager.CloneRecord(StringToName(fake), t"Items.ripperdoc_med_common");
     TweakDBManager.UpdateRecord(TDBID.Create(fake));
+  }
+
+  // append caution notice in inventory tooltip
+  private func AppendCautionNotice() -> Void {
+    let neuroblockers: array<String> = [
+      "Items.ripperdoc_med",
+      "Items.ripperdoc_med_common",
+      "ripperdoc_med_uncommon"
+    ];
+    let caution = t"Package.NeuroBlockerCaution";
+    let consumable: wref<ConsumableItem_Record>;
+    let packages: array<wref<GameplayLogicPackage_Record>>;
+    let ids: array<TweakDBID>;
+    let i: Int32;
+    let j: Int32;
+    while i < ArraySize(neuroblockers) {
+      consumable = TweakDBInterface.GetConsumableItemRecord(TDBID.Create(neuroblockers[i]));
+      consumable.OnEquip(packages);
+      j = 0;
+      ids = [];
+      while j < ArraySize(packages) {
+        ArrayPush(ids, packages[j].GetID());
+        j += 1;
+      }
+      ArrayPush(ids, caution);
+      TweakDBManager.SetFlat(TDBID.Create(neuroblockers[i] + ".OnEquip"), ids);
+      TweakDBManager.UpdateRecord(TDBID.Create(neuroblockers[i]));
+      i += 1;
+    }
   }
 
   // create object action effect for weakened neuroblockers :

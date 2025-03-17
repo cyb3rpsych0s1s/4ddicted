@@ -159,3 +159,37 @@ Items.$(prefix)$(consumable)$(version)_$(flat)_$(suffix)_weakened:
     - { threshold: Severely, consumable: HealthBooster, version: "", flat: inline1, prefix: 'Blackmarket_', suffix: severely }
   $base: Items.$(prefix)$(consumable)$(version)_$(flat)
   statusEffect: BaseStatusEffect.$(threshold)Weakened$(consumable)$(version)
+
+UIData.HealersCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-Healers-Caution
+
+Package.HealersCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.HealersCaution
+
+Items.FirstAidWhiffV0.OnEquip: &HealersCaution
+  - !append-once Package.HealersCaution
+Items.FirstAidWhiffV1.OnEquip: *HealersCaution
+Items.FirstAidWhiffV2.OnEquip: *HealersCaution
+Items.FirstAidWhiffVCommonPlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVEpic.OnEquip: *HealersCaution
+Items.FirstAidWhiffVEpicPlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVLegendaryPlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVRarePlus.OnEquip: *HealersCaution
+Items.FirstAidWhiffVUncommon.OnEquip: *HealersCaution
+Items.FirstAidWhiffVUncommonPlus.OnEquip: *HealersCaution
+
+Items.BonesMcCoy70V0.OnEquip: *HealersCaution
+Items.BonesMcCoy70V1.OnEquip: *HealersCaution
+Items.BonesMcCoy70V2.OnEquip: *HealersCaution
+Items.BonesMcCoy70VCommonPlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VEpic.OnEquip: *HealersCaution
+Items.BonesMcCoy70VEpicPlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VLegendaryPlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VRarePlus.OnEquip: *HealersCaution
+Items.BonesMcCoy70VUncommon.OnEquip: *HealersCaution
+Items.BonesMcCoy70VUncommonPlus.OnEquip: *HealersCaution
+
+Items.HealthBooster.OnEquip: *HealersCaution
+Items.Blackmarket_HealthBooster.OnEquip: *HealersCaution

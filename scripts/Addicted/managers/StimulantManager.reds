@@ -93,5 +93,22 @@ public class StimulantManager extends WithdrawalSymptomsManager {
         StatusEffectHelper.RemoveStatusEffect(this.owner, t"BaseStatusEffect.PhotoSensitive");
       }
     }
+    
+    if EnumInt(consumable) == EnumInt(Consumable.StaminaBooster) {
+      threshold = this.owner.Threshold(consumable);
+      effects = StatusEffectHelper.GetAppliedEffects(this.owner);
+      severe = EnumInt(threshold) == EnumInt(Threshold.Severely);
+      for effect in effects {
+        if Equals(effect.GetRecord().GetID(), t"BaseStatusEffect.Lesions") {
+          has = true;
+          break;
+        }
+      }
+      if severe && !has {
+        StatusEffectHelper.ApplyStatusEffect(this.owner, t"BaseStatusEffect.Lesions", 0.2);
+      } else if !severe && has {
+        StatusEffectHelper.RemoveStatusEffect(this.owner, t"BaseStatusEffect.Lesions");
+      }
+    }
   }
 }
