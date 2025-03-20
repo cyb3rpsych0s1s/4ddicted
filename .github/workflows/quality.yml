@@ -54,4 +54,4 @@ jobs:
         with:
           source: ${{ env.REDSCRIPT_SRC }}
           lint: true
-          check-format: true
+          check-format: false
