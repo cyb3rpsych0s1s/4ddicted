@@ -31,7 +31,7 @@ jobs:
         uses: jac3km4/redscript-action@v0.1.3
         continue-on-error: true
         with:
-          source: scripts/Addicted
+          source: ${{ env.REDSCRIPT_SRC }}
           lint: true
           check-format: true
           version: ${{ env.REDSCRIPT_VERSION }}
