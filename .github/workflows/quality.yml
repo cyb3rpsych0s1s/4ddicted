@@ -44,7 +44,9 @@ jobs:
           extract: true
           out-file-path: deps
       - name: Inspect downloaded files
-        run: Get-ChildItem -Path deps -Force | Format-Table -AutoSize
+        run: |
+          Get-ChildItem -Path deps -Force | Format-Table -AutoSize
+          Get-ChildItem -Path deps/r6 -Force | Format-Table -AutoSize
       - name: Lint code
         uses: jac3km4/redscript-action@v0.1.3
         continue-on-error: true
