@@ -43,6 +43,8 @@ jobs:
           tarBall: false
           extract: true
           out-file-path: deps
+      - name: Inspect downloaded files
+        run: ls -ahl deps
       - name: Lint code
         uses: jac3km4/redscript-action@v0.1.3
         continue-on-error: true
