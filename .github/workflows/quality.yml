@@ -28,5 +28,10 @@ jobs:
       - name: Setup REDscript
         run: C:\msys64\usr\bin\wget.exe https://github.com/jac3km4/redscript/releases/download/v${{ env.REDSCRIPT_VERSION }}/redscript-cli.exe
       - name: Lint code
-        run: ./redscript-cli.exe lint --src ${{ env.REDSCRIPT_SRC }}
+        uses: jac3km4/redscript-action@v0.1.3
         continue-on-error: true
+        with:
+          source: scripts/Addicted
+          lint: true
+          check-format: true
+          version: ${{ env.REDSCRIPT_VERSION }}
