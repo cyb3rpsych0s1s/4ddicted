@@ -12,6 +12,8 @@ env:
   DOTNET_VERSION: '8.0.x'
   REDSCRIPT_VERSION: '0.5.28'
   REDSCRIPT_SRC: scripts/Addicted
+  CODEWARE_VERSION: '1.15.0'
+  TWEAKXL_VERSION: '1.10.9'
 
 jobs:
   redscript:
@@ -25,6 +27,26 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '${{ env.DOTNET_VERSION }}'
+      - name: Download Codeware
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: psiberx/cp2077-codeware
+          tag: v${{ env.CODEWARE_VERSION }}
+          fileName: Codeware-${{ env.CODEWARE_VERSION }}.zip
+          zipBall: false
+          tarBall: false
+          extract: true
+          out-file-path: deps
+      - name: Download TweakXL
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: psiberx/cp2077-tweak-xl
+          tag: v${{ env.TWEAKXL_VERSION }}
+          fileName: TweakXL-${{ env.TWEAKXL_VERSION }}.zip
+          zipBall: false
+          tarBall: false
+          extract: true
+          out-file-path: deps
       - name: Lint code
         uses: jac3km4/redscript-action@v0.1.3
         continue-on-error: true
