@@ -52,6 +52,6 @@ jobs:
         uses: jac3km4/redscript-action@v0.1.3
         continue-on-error: true
         with:
-          source: ${{ env.REDSCRIPT_SRC }}
+          source: .
           lint: true
           check-format: false
