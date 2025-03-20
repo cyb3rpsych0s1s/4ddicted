@@ -2,12 +2,12 @@ name: Quality
 on:
   push:
     paths:
-      - '.github'
-      - 'scripts/Addicted'
+      - '.github/**'
+      - 'scripts/Addicted/**'
   pull_request:
     paths:
-      - '.github'
-      - 'scripts/Addicted'
+      - '.github/**'
+      - 'scripts/Addicted/**'
 env:
   DOTNET_VERSION: '8.0.x'
   REDSCRIPT_VERSION: '0.5.28'
