@@ -49,7 +49,7 @@ jobs:
           Get-ChildItem -Path deps/Codeware -Force | Format-Table -AutoSize
           Get-ChildItem -Path deps/TweakXL -Force | Format-Table -AutoSize
       - name: Lint code
-        uses: jac3km4/redscript-action@v0.1.3
+        uses: jac3km4/redscript-action@v0.1.4
         continue-on-error: true
         with:
           source: .
