@@ -19,7 +19,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        redscript_version: ['0.5.28', '0.5.29', 'v1.0.0-preview.15']
+        redscript_version: ['0.5.28', '0.5.29', '1.0.0-preview.15']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
