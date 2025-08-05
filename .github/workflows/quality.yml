@@ -10,7 +10,7 @@ on:
       - 'scripts/Addicted/**'
 env:
   DOTNET_VERSION: '8.0.x'
-  REDSCRIPT_SRC: scripts/Addicted
+  REDSCRIPT_SRC: '.'
   CODEWARE_VERSION: '1.17.0'
   TWEAKXL_VERSION: '1.11.0'
 
