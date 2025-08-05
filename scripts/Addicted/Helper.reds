@@ -4,14 +4,8 @@ import Addicted.*
 import Addicted.Utils.{E,EI}
 import Addicted.Helpers.*
 
-public func IsLanguageSupported(locale: CName) -> Bool {
-  return Equals(locale, n"en-us")
-  || Equals(locale, n"fr-fr")
-  || Equals(locale, n"es-es")
-  || Equals(locale, n"zh-cn")
-  || Equals(locale, n"pt-br")
-  || Equals(locale, n"it-it");
-}
+public func IsLanguageSupported(locale: CName) -> Bool = Equals(locale, n"en-us")
+|| Equals(locale, n"fr-fr") || Equals(locale, n"es-es") || Equals(locale, n"zh-cn") || Equals(locale, n"pt-br") || Equals(locale, n"it-it");
 
 public class Helper {
   public static func Potency(id: ItemID, subsequentUse: Bool, modifier: Float) -> Int32 {

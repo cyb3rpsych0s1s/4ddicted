@@ -965,11 +965,6 @@ public class BiomonitorController extends inkGameController {
         this.state = BiomonitorState.Idle;
     }
 
-    public func Playing() -> Bool {
-        return IsDefined(this.animation) && this.animation.IsPlaying();
-    }
-
-    public func Paused() -> Bool {
-        return IsDefined(this.animation) && this.animation.IsPaused();
-    }
+    public func Playing() -> Bool = IsDefined(this.animation) && this.animation.IsPlaying();
+    public func Paused() -> Bool  = IsDefined(this.animation) && this.animation.IsPaused();
 }

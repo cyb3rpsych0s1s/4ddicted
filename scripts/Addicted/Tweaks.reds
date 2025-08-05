@@ -144,10 +144,7 @@ public func IsWithdrawing(consumable: Consumable) -> Bool {
 }
 
 @addMethod(PlayerPuppet)
-public func Threshold(consumable: Consumable) -> Threshold {
-  let system = AddictedSystem.GetInstance(this.GetGame());
-  return system.Threshold(consumable);
-}
+public func Threshold(consumable: Consumable) -> Threshold = AddictedSystem.GetInstance(this.GetGame()).Threshold(consumable);
 
 @addMethod(PlayerPuppet)
 public func Reacts(reaction: CName) -> Void {
@@ -276,10 +273,7 @@ public final static func ConsumeItem(executor: wref<GameObject>, itemID: ItemID,
 }
 
 @addMethod(StatusEffectEvent)
-public func IsAddictive() -> Bool {
-  let id = this.staticData.GetID();
-  return Generic.IsAddictive(id);
-}
+public func IsAddictive() -> Bool = Generic.IsAddictive(this.staticData.GetID());
 
 @wrapMethod(EquipmentSystemPlayerData)
 private final func UnequipItem(itemID: ItemID) -> Void {
