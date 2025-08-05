@@ -38,12 +38,12 @@ protected func HandleHumanityPenalty(count: Int32, threshold: Threshold) -> Void
 }
 
 @if(!ModuleExists("Edgerunning.System"))
-public static func AlterNeuroBlockerStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {}
+public func AlterNeuroBlockerStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {}
 
 /// replace existing status effect with modified one
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
 @if(ModuleExists("Edgerunning.System"))
-public static func AlterNeuroBlockerStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+public func AlterNeuroBlockerStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let weakened: String = "NotablyWeakened";
   let system = AddictedSystem.GetInstance(gameInstance);
   let threshold = system.Threshold(Consumable.NeuroBlocker);
@@ -59,11 +59,11 @@ public static func AlterNeuroBlockerStatusEffects(const actionEffects: script_re
 }
 
 @if(!ModuleExists("Edgerunning.System"))
-public static func AlterBlackLaceStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {}
+public func AlterBlackLaceStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {}
 /// append status effect to existing one(s)
 /// ObjectActionEffect_Record are immutable but actionEffects can be swapped
 @if(ModuleExists("Edgerunning.System"))
-public static func AlterBlackLaceStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
+public func AlterBlackLaceStatusEffects(const actionEffects: script_ref<array<wref<ObjectActionEffect_Record>>>, gameInstance: GameInstance) -> Void {
   let insanity = TweakDBInterface.GetObjectActionEffectRecord(t"Items.BlacklaceInsanityObjectActionEffect");
   if !IsDefined(insanity) { F(s"could not find Items.BlacklaceInsanityObjectActionEffect"); }
   else if !ArrayContains(Deref(actionEffects), insanity) {

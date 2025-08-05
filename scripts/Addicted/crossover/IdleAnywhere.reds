@@ -48,7 +48,7 @@ public class IdleAnywhereSubSystem extends ScriptableSystem {
     }
 }
 
-private final static func GetAlcoholRecordFromIdleAnywhereFactValue(value: Int32) -> TweakDBID {
+private func GetAlcoholRecordFromIdleAnywhereFactValue(value: Int32) -> TweakDBID {
     E(s"Idle Anywhere: fact \(ToString(value))");
 	switch value {
 		case 0:
