@@ -28,3 +28,6 @@ saved.json
 redscript-cli.exe
 WolvenKit.CLI.exe
 REDmodLog.txt
+
+**/raw/base/**
+**/raw/ep1/**
