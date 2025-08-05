@@ -23,7 +23,7 @@ protected cb func OnInitialize() -> Bool {
     this.biomonitorWidget = this.SpawnFromExternal(container, r"addicted\\gameplay\\gui\\widgets\\biomonitor\\biomonitor_overlay.inkwidget", n"Root:BiomonitorController");
 }
 
-enum BiomonitorState {
+public enum BiomonitorState {
     Idle = 0,
     Booting = 1,
     Analyzing = 2,
@@ -32,7 +32,7 @@ enum BiomonitorState {
     Dismissing = 5,
 }
 
-enum BloodGroup {
+public enum BloodGroup {
     Unknown = 0,
     A = 1,
     B = 2,
@@ -92,7 +92,7 @@ public class ClosingBeepCallback extends DelayCallback {
     }            
 }
 
-enum BiomonitorRestrictions {
+public enum BiomonitorRestrictions {
     InMenu = 1,
     InRadialWheel = 2,
     InQuickHackPanel = 3,
