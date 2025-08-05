@@ -383,7 +383,7 @@ public enum Consumable {
   Tobacco = 11
 }
 
-public static func Consumables() -> array<Consumable> {
+public func Consumables() -> array<Consumable> {
   return [
     Consumable.Alcohol,
     Consumable.MaxDOC,
@@ -415,7 +415,7 @@ public enum Addiction {
   Tobacco = 5,
 }
 
-public static func Addictions() -> array<Addiction> {
+public func Addictions() -> array<Addiction> {
   return [
     Addiction.Healers,
     Addiction.Anabolics,
