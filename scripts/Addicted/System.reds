@@ -595,6 +595,7 @@ public class AddictedSystem extends ScriptableSystem {
   }
 
   public func Threshold(addiction: Addiction) -> Threshold {
+    if Equals(addiction, Addiction.Healers) { return this.consumptions.HighestThreshold(addiction); }
     return this.consumptions.Threshold(addiction);
   }
 
