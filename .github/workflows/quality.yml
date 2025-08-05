@@ -10,7 +10,7 @@ on:
       - 'scripts/Addicted/**'
 env:
   DOTNET_VERSION: '8.0.x'
-  REDSCRIPT_SRC: '.'
+  REDSCRIPT_SRC: scripts
   CODEWARE_VERSION: '1.17.0'
   TWEAKXL_VERSION: '1.11.0'
 
@@ -34,7 +34,7 @@ jobs:
           zipBall: false
           tarBall: false
           extract: true
-          out-file-path: deps/Codeware
+          out-file-path: ${{ env.REDSCRIPT_SRC }}/Codeware
       - name: Download TweakXL
         uses: robinraju/release-downloader@v1
         with:
@@ -44,12 +44,12 @@ jobs:
           zipBall: false
           tarBall: false
           extract: true
-          out-file-path: deps/TweakXL
+          out-file-path: ${{ env.REDSCRIPT_SRC }}/TweakXL
       - name: Inspect downloaded files
         run: |
-          Get-ChildItem -Path deps -Force | Format-Table -AutoSize
-          Get-ChildItem -Path deps/Codeware -Force | Format-Table -AutoSize
-          Get-ChildItem -Path deps/TweakXL -Force | Format-Table -AutoSize
+          Get-ChildItem -Path ${{ env.REDSCRIPT_SRC }} -Force | Format-Table -AutoSize
+          Get-ChildItem -Path ${{ env.REDSCRIPT_SRC }}/Codeware -Force | Format-Table -AutoSize
+          Get-ChildItem -Path ${{ env.REDSCRIPT_SRC }}/TweakXL -Force | Format-Table -AutoSize
       - name: Lint code
         uses: jac3km4/redscript-action@v0.1.4
         continue-on-error: true
