@@ -10,7 +10,6 @@ on:
       - 'scripts/Addicted/**'
 env:
   DOTNET_VERSION: '8.0.x'
-  REDSCRIPT_VERSION: '0.5.28'
   REDSCRIPT_SRC: scripts/Addicted
   CODEWARE_VERSION: '1.17.0'
   TWEAKXL_VERSION: '1.11.0'
@@ -18,6 +17,9 @@ env:
 jobs:
   redscript:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        redscript_version: ['0.5.28', '0.5.29', 'v1.0.0-preview.15']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,6 +54,7 @@ jobs:
         uses: jac3km4/redscript-action@v0.1.4
         continue-on-error: true
         with:
-          source: .
+          source: ${{ env.REDSCRIPT_SRC }}
           lint: true
           check-format: false
+          version: ${{ matrix.redscript_version }}
