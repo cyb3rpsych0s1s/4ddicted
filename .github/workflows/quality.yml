@@ -12,8 +12,8 @@ env:
   DOTNET_VERSION: '8.0.x'
   REDSCRIPT_VERSION: '0.5.28'
   REDSCRIPT_SRC: scripts/Addicted
-  CODEWARE_VERSION: '1.15.0'
-  TWEAKXL_VERSION: '1.10.9'
+  CODEWARE_VERSION: '1.17.0'
+  TWEAKXL_VERSION: '1.11.0'
 
 jobs:
   redscript:
