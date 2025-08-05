@@ -37,6 +37,18 @@ public abstract class Hint {
     let delay = RandRangeF(least, most);
     return delay;
   }
+  public func GetThreshold() -> Threshold = this.threshold;
+  public func SetThreshold(value: Threshold) -> Void {
+    this.threshold = value;
+  }
+  public func GetUntil() -> Float = this.until;
+  public func SetUntil(value: Float) -> Void {
+    this.until = value;
+  }
+  public func GetTimes() -> Int32 = this.times;
+  public func SetTimes(value: Int32) -> Void {
+    this.times = value;
+  }
 }
 
 // hint for inhalers
@@ -168,7 +180,7 @@ public class Consumptions {
     }
     return out;
   }
-  private func LastDose(consumable: Consumable) -> Float {
+  public func LastDose(consumable: Consumable) -> Float {
     let consumptions = this.Consumptions(consumable);
     let last: Float = -1.0;
     let current: Float;
@@ -180,7 +192,7 @@ public class Consumptions {
     }
     return last;
   }
-  private func LastDose(addiction: Addiction) -> Float {
+  public func LastDose(addiction: Addiction) -> Float {
     let consumables = Helper.Consumables(addiction);
     let last: Float = -1.0;
     let current: Float;

@@ -49,8 +49,8 @@ public class AudioManager extends IScriptable {
   private let onTierChanged: ref<CallbackHandle>;
   private let onEnteredOrLeftVehicle: ref<CallbackHandle>;
 
-  private let ambient: ref<TrackedHint>;
-  private let oneshot: array<ref<TrackedHint>>;
+  public let ambient: ref<TrackedHint>;
+  public let oneshot: array<ref<TrackedHint>>;
   private let ambientSFX: ref<PlaySoundEvent>;
   private let oneshotSFX: array<ref<PlaySoundEvent>>;
 
@@ -227,7 +227,7 @@ public class AudioManager extends IScriptable {
       .GetGameTimeStamp();
     if IsDefined(this.ambient) && this.Done(this.ambient, now) {
       E(s"now: \(now)");
-      E(s"ambient is done, stopin... \(ToString(this.ambient.got.until))");
+      E(s"ambient is done, stopin... \(ToString(this.ambient.got.GetUntil()))");
       this.Stop(this.ambient.got.Sound());
       this.ambientSFX = null;
       this.ambient = null;
@@ -238,13 +238,13 @@ public class AudioManager extends IScriptable {
       if size == 2 {
         if this.Done(this.oneshot[1], now) {
           E(s"now: \(now)");
-          E(s"secondary ono is done, popin... \(ToString(this.oneshot[1].got.until))");
+          E(s"secondary ono is done, popin... \(ToString(this.oneshot[1].got.GetUntil()))");
           this.Pop();
         }
       }
       if this.Done(this.oneshot[0], now) {
         E(s"now: \(now)");
-        E(s"primary ono is done, popin... \(ToString(this.oneshot[0].got.until))");
+        E(s"primary ono is done, popin... \(ToString(this.oneshot[0].got.GetUntil()))");
         this.Pop();
       }
     }
@@ -262,8 +262,8 @@ public class AudioManager extends IScriptable {
     {
       if Equals(this.ambient.got.Sound(), hint.Sound())
       {
-        if hint.until > this.ambient.got.until {
-          this.ambient.got.until = hint.until;
+        if hint.GetUntil() > this.ambient.got.GetUntil() {
+          this.ambient.got.SetUntil(hint.GetUntil());
         }
         return;
       }
@@ -300,13 +300,13 @@ public class AudioManager extends IScriptable {
     for shot in this.oneshot {
       if Equals(shot.got.Sound(), hint.Sound()) {
         E(s"same ono, augmenting initial hint...");
-        if hint.until > shot.got.until {
-          E(s"will last to \(ToString(hint.until)) instead of \(ToString(shot.got.until))");
-          shot.got.until = hint.until;
+        if hint.GetUntil() > shot.got.GetUntil() {
+          E(s"will last to \(ToString(hint.GetUntil())) instead of \(ToString(shot.got.GetUntil()))");
+          shot.got.SetUntil(hint.GetUntil());
         }
-        if shot.got.times < Cast<Int32>(hint.AtMost()) {
-          E(s"times increased: \(ToString(shot.got.times)) -> \(ToString(shot.got.times+1))");
-          shot.got.times += 1;
+        if shot.got.GetTimes() < Cast<Int32>(hint.AtMost()) {
+          E(s"times increased: \(ToString(shot.got.GetTimes())) -> \(ToString(shot.got.GetTimes()+1))");
+          shot.got.SetTimes(shot.got.GetTimes() + 1);
         }
         matches = true;
         break;
@@ -333,11 +333,11 @@ public class AudioManager extends IScriptable {
   }
 
   private func Finished(hint: ref<TrackedHint>) -> Bool {
-    return hint.played == hint.got.times;
+    return hint.played == hint.got.GetTimes();
   }
 
   private func Outdated(hint: ref<Hint>, now: Float) -> Bool {
-    return hint.until <= now;
+    return hint.GetUntil() <= now;
   }
 
   private func Done(hint: ref<TrackedHint>, now: Float) -> Bool {

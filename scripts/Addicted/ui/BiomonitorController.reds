@@ -14,7 +14,7 @@ private let biomonitorWidget: wref<inkWidget>;
 @wrapMethod(NameplateVisualsLogicController)
 protected cb func OnInitialize() -> Bool {
     wrappedMethod();
-    let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget as inkCompoundWidget;
+    let root = this.GetRootCompoundWidget().GetParentWidget().GetParentWidget().GetParentWidget() as inkCompoundWidget;
     let container = new inkCanvas();
     container.SetName(n"Addicted_Biomon_Canvas");
     container.SetAnchor(inkEAnchor.Fill);
@@ -76,16 +76,16 @@ public class InteractionHubEvent extends Event {
 public class SkipTimeEvent extends Event {}
 
 public class CrossThresholdCallback extends DelayCallback {
-  private let controller: wref<BiomonitorController>;
-  private let event: ref<CrossThresholdEvent>;
+  public let controller: wref<BiomonitorController>;
+  public let event: ref<CrossThresholdEvent>;
   public func Call() -> Void {
     E(s"attempt at warning again");
-    this.controller.OnCrossThresholdEvent(this.event);
+    this.controller.QueueCrossThresholdEvent(this.event);
   }
 }
 
 public class ClosingBeepCallback extends DelayCallback {
-    private let controller: wref<BiomonitorController>;
+    public let controller: wref<BiomonitorController>;
     public func Call() -> Void {
         E(s"beep on close");
         this.controller.Beep();
@@ -172,7 +172,7 @@ public class BiomonitorController extends inkGameController {
 
         this.state = BiomonitorState.Idle;
         this.root = this.GetRootWidget() as inkCompoundWidget;
-        this.root.parentWidget.SetVisible(false);
+        this.root.GetParentWidget().SetVisible(false);
         this.waiting = false;
         
         this.booting = this.root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
@@ -455,6 +455,10 @@ public class BiomonitorController extends inkGameController {
         if IsDefined(quests) {
             if this.romanceID != 0u { quests.UnregisterListener(n"mq055_apt_interactions_off", this.romanceID); }
         }
+    }
+
+    public func QueueCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Void {
+        this.OnCrossThresholdEvent(evt);
     }
 
     protected cb func OnCrossThresholdEvent(evt: ref<CrossThresholdEvent>) -> Bool {
@@ -938,7 +942,7 @@ public class BiomonitorController extends inkGameController {
     }
 
     protected cb func OnAnimationStarted(anim: ref<inkAnimProxy>) -> Bool {
-        this.root.parentWidget.SetVisible(true);
+        this.root.GetParentWidget().SetVisible(true);
         anim.UnregisterFromAllCallbacks(inkanimEventType.OnStart);
     }
 
@@ -954,7 +958,7 @@ public class BiomonitorController extends inkGameController {
         this.RequestHideInteractionHub();
         this.Unschedule();
         GameObject.StopSound(this.GetPlayerControlledObject(), n"q001_sandra_biomon_part03");
-        this.root.parentWidget.SetVisible(false);
+        this.root.GetParentWidget().SetVisible(false);
         this.root.SetOpacity(1.0);
         this.root.SetScale(new Vector2(1.0, 1.0));
         this.animation.Stop(true);
