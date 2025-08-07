@@ -47,7 +47,7 @@ public class ImmersiveBartendersSubSystem extends ScriptableSystem {
     }
 }
 
-private final static func GetAlcoholRecordFromImmersiveBartenderFactValue(value: Int32) -> TweakDBID {
+private func GetAlcoholRecordFromImmersiveBartenderFactValue(value: Int32) -> TweakDBID {
     E(s"Immersive Bartenders: fact \(ToString(value))");
     switch value {
         // whiskey

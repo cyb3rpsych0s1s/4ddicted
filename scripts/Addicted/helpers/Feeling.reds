@@ -25,43 +25,35 @@ public class Feeling {
     return Mood.Pestered;
   }
 
-  public static func Disheartened() -> array<String> {
-   return [
-      "as_if_I_didnt_know_already",
-      "come_on_biomon_cant_you_give_me_a_break",
-      "damn_cant_you_just_leave_me_alone",
-      "fuck",
-      "yeah_I_know"
-   ];
-  }
-  public static func Offhanded() -> array<String> {
-   return [
-     "yeah_yeah_yeah_alright",
-     "yeah_yeah_yeah_who_cares",
-     "you_tell_me_biomon",
-     "nah_everything_is_all_good",
-     "nah_Im_cool",
-     "noo"
-   ];
-  }
-  public static func Pestered() -> array<String> {
-   return [
-     "dont_you_see_Im_in_trouble",
-     "fuck_this_biomon_just_not_right_now",
-     "get_this_damn_UI_out_of_my_face",
-     "so_frustrating",
-     "shit"
-   ];
-  }
-  public static func Surprised() -> array<String> {
-   return [
-     "biomon",
-     "come_on_again",
-     "damn_thats_fucked_up",
-     "oh_shit",
-     "what"
-   ];
-  }
+  public static func Disheartened() -> array<String> = [
+    "as_if_I_didnt_know_already",
+    "come_on_biomon_cant_you_give_me_a_break",
+    "damn_cant_you_just_leave_me_alone",
+    "fuck",
+    "yeah_I_know"
+  ];
+  public static func Offhanded() -> array<String> = [
+    "yeah_yeah_yeah_alright",
+    "yeah_yeah_yeah_who_cares",
+    "you_tell_me_biomon",
+    "nah_everything_is_all_good",
+    "nah_Im_cool",
+    "noo"
+  ];
+  public static func Pestered() -> array<String> = [
+    "dont_you_see_Im_in_trouble",
+    "fuck_this_biomon_just_not_right_now",
+    "get_this_damn_UI_out_of_my_face",
+    "so_frustrating",
+    "shit"
+  ];
+  public static func Surprised() -> array<String> = [
+    "biomon",
+    "come_on_again",
+    "damn_thats_fucked_up",
+    "oh_shit",
+    "what"
+  ];
 
   public static func Reaction(mood: Mood, gender: gamedataGender, language: CName) -> CName {
     if Equals(mood, Mood.Any) { return n""; }

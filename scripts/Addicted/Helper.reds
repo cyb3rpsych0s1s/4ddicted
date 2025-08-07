@@ -4,15 +4,8 @@ import Addicted.*
 import Addicted.Utils.{E,EI}
 import Addicted.Helpers.*
 
-public func IsLanguageSupported(locale: CName) -> Bool {
-  return Equals(locale, n"en-us")
-  || Equals(locale, n"fr-fr")
-  || Equals(locale, n"es-es")
-  || Equals(locale, n"zh-cn")
-  || Equals(locale, n"pt-br")
-  || Equals(locale, n"it-it")
-  || Equals(locale, n"kr-kr");
-}
+public func IsLanguageSupported(locale: CName) -> Bool = Equals(locale, n"en-us")
+|| Equals(locale, n"fr-fr") || Equals(locale, n"es-es") || Equals(locale, n"zh-cn") || Equals(locale, n"pt-br") || Equals(locale, n"it-it") || Equals(locale, n"kr-kr");
 
 public class Helper {
   public static func Potency(id: ItemID, subsequentUse: Bool, modifier: Float) -> Int32 {
@@ -138,11 +131,11 @@ public class Helper {
       if Generic.IsInjector(id) {
         hint = new AchingHint();
       }
-      hint.threshold = threshold;
+      hint.SetThreshold(threshold);
       let randtime = hint.RandTime();
-      hint.until = now + randtime;
-      hint.times = hint.InitialTimes();
-      E(s"packing appropriate hint: until \(ToString(hint.until)) (randtime \(ToString(randtime))), \(ToString(hint.times)) time(s), threshold \(ToString(hint.threshold)) (\(TDBID.ToStringDEBUG(id)))");
+      hint.SetUntil(now + randtime);
+      hint.SetTimes(hint.InitialTimes());
+      E(s"packing appropriate hint: until \(ToString(hint.GetUntil())) (randtime \(ToString(randtime))), \(ToString(hint.GetTimes())) time(s), threshold \(ToString(hint.GetThreshold())) (\(TDBID.ToStringDEBUG(id)))");
       return hint;
     }
     return null;

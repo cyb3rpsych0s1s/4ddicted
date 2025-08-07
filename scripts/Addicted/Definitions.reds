@@ -37,6 +37,18 @@ public abstract class Hint {
     let delay = RandRangeF(least, most);
     return delay;
   }
+  public func GetThreshold() -> Threshold = this.threshold;
+  public func SetThreshold(value: Threshold) -> Void {
+    this.threshold = value;
+  }
+  public func GetUntil() -> Float = this.until;
+  public func SetUntil(value: Float) -> Void {
+    this.until = value;
+  }
+  public func GetTimes() -> Int32 = this.times;
+  public func SetTimes(value: Int32) -> Void {
+    this.times = value;
+  }
 }
 
 // hint for inhalers
@@ -168,7 +180,7 @@ public class Consumptions {
     }
     return out;
   }
-  private func LastDose(consumable: Consumable) -> Float {
+  public func LastDose(consumable: Consumable) -> Float {
     let consumptions = this.Consumptions(consumable);
     let last: Float = -1.0;
     let current: Float;
@@ -180,7 +192,7 @@ public class Consumptions {
     }
     return last;
   }
-  private func LastDose(addiction: Addiction) -> Float {
+  public func LastDose(addiction: Addiction) -> Float {
     let consumables = Helper.Consumables(addiction);
     let last: Float = -1.0;
     let current: Float;
@@ -334,7 +346,7 @@ public class Consumption {
   }
 }
 
-enum Onomatopea {
+public enum Onomatopea {
   Cough = 0,
   Headache = 1,
   Breather = 2,
@@ -342,13 +354,13 @@ enum Onomatopea {
   Vomit = 4,
 }
 
-enum Category {
+public enum Category {
   Mild = 0,
   Hard = 1,
 }
 
 /// addiction thresholds
-enum Threshold {
+public enum Threshold {
   Clean = 0,
   Barely = 10,
   Mildly = 20,
@@ -356,7 +368,7 @@ enum Threshold {
   Severely = 60,
 }
 
-enum Consumable {
+public enum Consumable {
   Invalid = -1,
   Alcohol = 1,
   MaxDOC = 2, // FirstAidWhiff
@@ -371,7 +383,7 @@ enum Consumable {
   Tobacco = 11
 }
 
-public static func Consumables() -> array<Consumable> {
+public func Consumables() -> array<Consumable> {
   return [
     Consumable.Alcohol,
     Consumable.MaxDOC,
@@ -387,13 +399,13 @@ public static func Consumables() -> array<Consumable> {
   ];
 }
 
-enum Kind {
+public enum Kind {
   Inhaler = 0,
   Injector = 1,
   Pill = 2,
 }
 
-enum Addiction {
+public enum Addiction {
   Invalid = -1,
   Healers = 0,
   Anabolics = 1,
@@ -403,7 +415,7 @@ enum Addiction {
   Tobacco = 5,
 }
 
-public static func Addictions() -> array<Addiction> {
+public func Addictions() -> array<Addiction> {
   return [
     Addiction.Healers,
     Addiction.Anabolics,
@@ -414,12 +426,12 @@ public static func Addictions() -> array<Addiction> {
   ];
 }
 
-enum PlaySoundPolicy {
+public enum PlaySoundPolicy {
   All = 0,
   AmbientOnly = 1,
 }
 
-enum Mood {
+public enum Mood {
   Any = 0,
   Disheartened = 1,
   Offhanded = 2,
