@@ -198,7 +198,7 @@ public func AddAllAlcohols() -> Void {
   AddAlcoholVariant(game, "TopQuality", 10);
 }
 
-public final static func AddAlcoholVariant(game: GameInstance, prefix: String, count: Int32) -> Void {
+public func AddAlcoholVariant(game: GameInstance, prefix: String, count: Int32) -> Void {
   if Equals(count, -1) {
     AddToInventory(game, "Items." + prefix + "Alcohol", ToString(5));
   } else {
@@ -210,7 +210,7 @@ public final static func AddAlcoholVariant(game: GameInstance, prefix: String, c
   }
 }
 
-public static exec func AddToInventory(inst: GameInstance, itemString: String, opt quantityString: String) -> Void {
+public exec func AddToInventory(inst: GameInstance, itemString: String, opt quantityString: String) -> Void {
   let equipmentUIBBRequest: ref<EquipmentUIBBRequest>;
   let itemID: ItemID;
   let quantity: Int32 = StringToInt(quantityString);
