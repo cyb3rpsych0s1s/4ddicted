@@ -4,12 +4,8 @@ import Addicted.Utils.*
 
 private func CreateVFX(name: CName, asset: ResRef) -> ref<entEffectDesc> {
     let custom = new entEffectDesc();
-    let reference = Reflection.GetTypeOf(custom);
-    let clazz = reference.GetInnerType().AsClass();
-    let effectName = clazz.GetProperty(n"effectName");
-    let effect = clazz.GetProperty(n"effect");
-    effectName.SetValue(ToVariant(custom), ToVariant(name));
-    effect.SetValue(ToVariant(custom), ToVariant(asset));
+    custom.effectName = name;
+    custom.effect *= asset;
     return custom;
 }
 
@@ -31,26 +27,16 @@ public func RegisterVFXs(player: ref<PlayerPuppet>) {
     let vfxs = CreateVFXs();
     let size = ArraySize(vfxs);
     let spawner = player.FindComponentByName(n"fx_player") as entEffectSpawnerComponent;
-    let effects: array<ref<entEffectDesc>> = FromVariant(Reflection
-    .GetTypeOf(spawner)
-    .GetInnerType()
-    .AsClass()
-    .GetProperty(n"effectDescs")
-    .GetValue(spawner));
+    let effects = spawner.effectDescs;
     let vfx: ref<entEffectDesc>;
     let i: Int32 = 0;
     while i < size {
         if IsDefined(vfxs[i]) {
+            E(s"RegisterVFXs \(NameToString(vfxs[i].effectName))");
             vfx = vfxs[i];
-            E(s"RegisterVFXs \(NameToString(FromVariant(Reflection.GetTypeOf(vfx).GetInnerType().AsClass().GetProperty(n"effectName").GetValue(vfx))))");
             ArrayPush(effects, vfx);
         }
         i += 1;
     }
-    Reflection
-    .GetTypeOf(spawner)
-    .GetInnerType()
-    .AsClass()
-    .GetProperty(n"effectDescs")
-    .SetValue(spawner, effects);
+    spawner.effectDescs = effects;
 }
