@@ -68,6 +68,7 @@ jobs:
           - zh-cn
           - pt-br
           - it-it
+          - kr-kr
     permissions:
       contents: write
     steps:
