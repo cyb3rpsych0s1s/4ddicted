@@ -11,6 +11,7 @@ scripts/*
 /archives/**/install_log.xml
 /archives/**/fileTreeState.json
 /archives/**/custom_refs.txt
+/archives/**/custom_tweaks.txt
 /archives/**/GraphEditorStates/
 /archives/**/packed
 /archives/*.archive
