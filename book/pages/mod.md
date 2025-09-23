@@ -1,5 +1,10 @@
 # Mod mechanics
 
+```admonish info
+This documentation is largely outdated.
+Hold on for the update.
+```
+
 ```admonish warning title="Spoiler alert!"
 The following description details **every feature** of this mod, which will ruin any surprise intended to be discovered and enjoyed by the player.
 
@@ -119,6 +124,7 @@ Whenever V becomes notably or severely alcoholic (s)he can be subject to Jitters
 🆕 >= beta-0.13.0
 
 Whenever V becomes notably or severely addict to tobacco (s)he can be subject:
+
 - Short breath (notably addict): delays + reduces Stamina regeneration, and consumes Stamina while sprinting.
 - Breathless (severely addict): delays + reduces Stamina regeneration, and consumes Stamina both while sprinting and dodging.
 
