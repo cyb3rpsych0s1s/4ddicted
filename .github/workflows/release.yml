@@ -16,7 +16,7 @@ env:
 
 jobs:
   bundle-mod:
-    runs-on: windows-2022
+    runs-on: windows-2025
     permissions:
       contents: write
     steps:
@@ -58,7 +58,7 @@ jobs:
           path: mod-windows/Addicted-mod-windows-${{ github.ref_name }}.zip
           if-no-files-found: error
   bundle-translations:
-    runs-on: windows-2022
+    runs-on: windows-2025
     strategy:
       matrix:
         locale:
@@ -96,7 +96,7 @@ jobs:
           if-no-files-found: error
   release:
     if: ${{ startsWith(github.event.ref, 'refs/tags') }}
-    runs-on: windows-2022
+    runs-on: windows-2025
     needs: [bundle-mod, bundle-translations]
     steps:
       - name: Download mod and translations
