@@ -9,8 +9,8 @@ on:
       - "beta*"
       - "alpha*"
 env:
-  WOLVENKIT_VERSION: '8.17.1-nightly.2025-09-16'
-  WOLVENKIT_REPO: 'WolvenKit-nightly-releases'
+  WOLVENKIT_VERSION: '8.16.1'
+  WOLVENKIT_REPO: 'WolvenKit'
   DOTNET_VERSION: '8.0.x'
   IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
 
