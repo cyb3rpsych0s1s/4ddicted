@@ -9,8 +9,8 @@ on:
       - "beta*"
       - "alpha*"
 env:
-  WOLVENKIT_CORE_VERSION: '8.16.1'
-  WOLVENKIT_CLI_VERSION: '8.16.1'
+  WOLVENKIT_VERSION: '8.17.1-nightly.2025-09-22'
+  WOLVENKIT_REPO: 'WolvenKit-nightly-releases'
   DOTNET_VERSION: '8.0.x'
   IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
 
@@ -34,11 +34,11 @@ jobs:
           dotnet-version: '${{ env.DOTNET_VERSION }}'
       - name: Setup WolvenKit CLI
         run: |
-          C:\msys64\usr\bin\wget.exe https://github.com/WolvenKit/WolvenKit/releases/download/"${{ env.WOLVENKIT_CORE_VERSION }}"/"${{ env.WOLVENKIT_ARTIFACT }}"
+          C:\msys64\usr\bin\wget.exe https://github.com/WolvenKit/"${{ env.WOLVENKIT_REPO }}"/releases/download/"${{ env.WOLVENKIT_VERSION }}"/"${{ env.WOLVENKIT_ARTIFACT }}"
           7z x "${{ env.WOLVENKIT_ARTIFACT }}"
           dotnet tool install -g wolvenkit.cli
         env:
-          WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_CLI_VERSION }}.zip
+          WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_VERSION }}.zip
       - name: Bundle files
         run: just ci 'mod-windows'
         env:
