@@ -148,7 +148,7 @@ To all people who helped along the way:
   </tr>
   <tr>
     <td align="center">
-      <a href="https://github.com/rmk" style="text-decoration: none;">
+      <a href="https://next.nexusmods.com/profile/rmk1234/mods" style="text-decoration: none;">
         <div align="center">
           <img src="https://avatars.nexusmods.com/84555803/100?s=40" width="40px" alt="rmk" style="border-radius:50%;" />
           <br />
