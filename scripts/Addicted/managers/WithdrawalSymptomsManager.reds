@@ -77,8 +77,16 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
   protected func Invalidate(consumable: Consumable, withdrawing: Bool, applied: array<ref<StatusEffect>>, applicables: array<TweakDBID>) -> Void {
     let sizeApplicable = ArraySize(applicables);
     if sizeApplicable == 0 || sizeApplicable > 2 { return; }
+    let immune: Bool;
 
-    if !withdrawing {
+    for effect in applied {
+      if Equals(effect.GetRecord().GetID(), t"DarkFutureStatusEffect.AddictionTreatmentInhaler") {
+        immune = true;
+        break;
+      }
+    }
+
+    if !withdrawing || immune {
       let id: TweakDBID;
       let i = 0;
       while i < sizeApplicable {
@@ -88,7 +96,7 @@ public abstract class WithdrawalSymptomsManager extends IScriptable {
         } 
         i += 1;
       }
-    } else {
+    } else if withdrawing && !immune {
       let threshold = this.owner.Threshold(consumable);
       let unique: Bool = sizeApplicable == 1;
       let severe: Bool = Equals(threshold, Threshold.Severely);

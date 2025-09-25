@@ -190,4 +190,3 @@ public class NeuroBlockerTweaks extends ScriptableTweak {
     return prefix + "." + prepend + suffix;
   }
 }
-    

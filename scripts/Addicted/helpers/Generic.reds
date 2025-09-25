@@ -16,6 +16,7 @@ public class Generic {
     if Generic.IsBlackLace(id)        { return Consumable.BlackLace; }
     if Generic.IsOxyBooster(id)       { return Consumable.OxyBooster; }
     if Generic.IsNeuroBlocker(id)     { return Consumable.NeuroBlocker; }
+    if Generic.IsAddiquit(id)         { return Consumable.Addiquit; }
     if Generic.IsTobacco(id)
     || Generic.IsLighter(id)          { return Consumable.Tobacco; }
     return Consumable.Invalid;
@@ -39,6 +40,8 @@ public class Generic {
         return Addiction.Alcohol;
       case Consumable.Tobacco:
         return Addiction.Tobacco;
+      case Consumable.Addiquit:
+        return Addiction.Substitute;
       default:
         break;
     }
@@ -62,7 +65,7 @@ public class Generic {
 
   public static func IsLiquid(id: TweakDBID) -> Bool            = Generic.IsAlcohol(id);
   public static func IsPill(id: TweakDBID) -> Bool              = Generic.IsCapacityBooster(id) || Generic.IsStaminaBooster(id) || Generic.IsMemoryBooster(id);
-  public static func IsInhaler(id: TweakDBID) -> Bool           = Generic.IsMaxDOC(id) || Generic.IsBlackLace(id) || Generic.IsOxyBooster(id);
+  public static func IsInhaler(id: TweakDBID) -> Bool           = Generic.IsMaxDOC(id) || Generic.IsBlackLace(id) || Generic.IsOxyBooster(id) || Generic.IsAddiquit(id);
   public static func IsInjector(id: TweakDBID) -> Bool          = Generic.IsBounceBack(id) || Generic.IsNeuroBlocker(id);
   public static func IsKit(id: TweakDBID) -> Bool               = Generic.IsHealthBooster(id);
   public static func IsBooster(id: TweakDBID) -> Bool           = Generic.SuffixContains(id, "Booster");
@@ -82,6 +85,8 @@ public class Generic {
   public static func IsMemoryBooster(id: TweakDBID) -> Bool     = Generic.SuffixContains(id, "MemoryBooster");
   public static func IsOxyBooster(id: TweakDBID) -> Bool        = Generic.SuffixContains(id, "OxyBooster");
   public static func IsNeuroBlocker(id: TweakDBID) -> Bool      = Generic.SuffixContains(id, "RipperDocMedBuff") || Generic.SuffixContains(id, "ripperdoc_med");
+  public static func IsAddiquit(id: TweakDBID) -> Bool          = Equals(id, "DarkFutureItem.AddictionTreatmentDrug");
+  
   public static func IsContraindicated(id: TweakDBID) -> Bool   = Generic.SuffixContains(id, "contraindication");
 
   public static func Contains(id: TweakDBID, word: String) -> Bool       = StrContains(TDBID.ToStringDEBUG(id), word);

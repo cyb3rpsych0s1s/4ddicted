@@ -1,0 +1,7 @@
+UIData.AddiquitCaution:
+  $type: GameplayLogicPackageUIData_Record
+  localizedDescription: LocKey#Mod-Addicted-Consumable-Addiquit-Caution
+
+Package.AddiquitCaution:
+  $type: GameplayLogicPackage_Record
+  UIData: UIData.AddiquitCaution

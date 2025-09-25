@@ -96,6 +96,7 @@ public class Brazilian extends LocalizationPackage {
         this.Text("Mod-Addicted-Consumable-Tobacco-Caution",             "");
         this.Text("Mod-Addicted-Consumable-BlackLace-Caution",           "");
         this.Text("Mod-Addicted-Consumable-NeuroBlocker-Caution",        "");
+        this.Text("Mod-Addicted-Consumable-Addiquit-Caution",            "");
         // Drug Pump
         this.Text("Gameplay-Cyberware-DisplayName-DrugPump",            "");
         this.Text("Gameplay-Cyberware-LocalizedDescription-DrugPump",   "");
