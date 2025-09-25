@@ -1,10 +1,5 @@
 # Mod mechanics
 
-```admonish info
-This documentation is largely outdated.
-Hold on for the update.
-```
-
 ```admonish warning title="Spoiler alert!"
 The following description details **every feature** of this mod, which will ruin any surprise intended to be discovered and enjoyed by the player.
 
@@ -45,7 +40,17 @@ V is considered seriously addict whenever (s)he reaches `notable` or `severe` th
 
 Of course (s)he can perfectly withdraw from consuming the addictive substance and, if long enough, his/her threshold will decrease back.
 
+🆕 >= v1.0.0
+
+- Consumables addictive potency now increases on subsequent consumption(s) the same day. (thanks [Phoenicia][Phoenicia])
+  > which means, the more you consume daily the faster it increases.
+- Consumables addictive resilience now increases when severing consumption for multiple subsequent days. (thanks [Phoenicia][Phoenicia])
+  > which means, the longer you prevent from consuming the faster it weans off.
+- Compatible with [Survival System][Survival System]: being overly stressed prevents addiction from weaning off when sleeping.
+
 ### Addictive consumables
+
+#### Symptoms
 
 The player will get hints from V whenever (s)he gets seriously addict:
 
@@ -96,6 +101,10 @@ Craving for a stimulant will also be shown in radial wheel with custom icon.
 
 - RAM Jolt can also cause Photosensitivity when severely withdrawn, which make impairing blinding effects (e.g. flash grenades) last longer.
 
+🆕 >= v1.0.0
+
+- Stamina Booster can also cause Lesions, which make force-opening any door or hard-landing cause damages.
+
 ##### Black Lace
 
 Black Lace has always been an iconic drug in Cyberpunk lore, hence why it gets its own system.
@@ -113,11 +122,13 @@ Craving for Black Lace will also be shown in radial wheel with custom icon.
 
 ##### Alcohols
 
+Alcohols are considered hard drug.
+
 🆕 >= beta-0.13.0
 
 Whenever V becomes notably or severely alcoholic (s)he can be subject to Jitters, greatly impairing his/her ability at aiming with ranged weapons.
 
-> This is not yet compatible with `Idle Anywhere`, because there's currently no way to track when player chooses "Drink alcohol" interation.
+> Compatible with [Idle Anywhere][Idle Anywhere] and [Immersive Bartenders][Immersive Bartenders].
 
 ##### Cigars and cigarettes
 
@@ -128,13 +139,13 @@ Whenever V becomes notably or severely addict to tobacco (s)he can be subject:
 - Short breath (notably addict): delays + reduces Stamina regeneration, and consumes Stamina while sprinting.
 - Breathless (severely addict): delays + reduces Stamina regeneration, and consumes Stamina both while sprinting and dodging.
 
-> This is compatible with `Idle Anywhere`.
+> Compatible with [Idle Anywhere][Idle Anywhere].
 
 ---
 
 🆕 >= beta-0.9.0
 
-Additional mechanisms now exists to account for players using `Wannabe Edgerunner` mod together.
+Additional mechanisms now exists to account for players using [Wannabe Edgerunner][Wannabe Edgerunner] mod together.
 
 ###### Insanity
 
@@ -148,6 +159,10 @@ In short: the more you're addicted to Neuroblockers, the shorter they last.
 
 The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.
 
+🆕 >= v1.0.0
+
+- Neuroblockers usage is contraindicated with neuro-stimuli intensive cyberwares like ExDisk and BioConductor, as it tends to accelerate the addiction process.
+
 ---
 
 ### Cyberware
@@ -160,6 +175,8 @@ This item makes V's addictions decrease drastically more whenever getting a prop
 
 > e.g. whenever equipped with Detoxifier and properly resting at house, V sees his/her addiction decrease twice as fast (cumulable with Metabolic Editor).
 
+⚠️ >= CDPR patches `2.0+` apparently removed Detoxifier so gameplay mechanics might be obsolete, unless used with [SynthDose][SynthDose]?
+
 This benefit is kept hidden from the player to discover.
 
 #### Metabolic Editor
@@ -169,6 +186,8 @@ This item makes V's addictions decrease drastically more whenever getting a prop
 > e.g. whenever equipped with Metabolic Editor and properly resting at house, V sees his/her addiction decrease thrice as fast (cumulable with Detoxifier).
 
 This benefit is kept hidden from the player to discover.
+
+⚠️ >= CDPR patches `2.0+` apparently removed Metabolic Editor so gameplay mechanics might be obsolete, unless used with [Pre 2.0 Legendary Cyberware Collection][Pre 2.0 Legendary Cyberware Collection]?
 
 #### Biomonitor
 
@@ -180,6 +199,16 @@ The UI is also dismissable, and automatically hides whenever interacting with an
 
 ![screenshot biomonitor loading](./pictures/ingame-biomonitor-loading.png)
 ![screenshot biomonitor diagnosis](./pictures/ingame-biomonitor-diagnosis.png)
+
+#### Drug Pump
+
+🆕 >= v1.0.0
+
+A secret piece of cyberware called Drug Pump is available to find in-game.
+
+This street-modified blood pump accelerates its possessor's healing while spiking their bloodstream with Black Lace. The injection has a tier-based percentage chance to consume the item.
+
+(thanks [Demon9ne][Demon9ne])
 
 ### Voiced reactions
 
@@ -194,3 +223,21 @@ Examples:
 - whenever biomonitor is dismissed during combat.
 
 Some of these voiced reactions are unique.
+
+> Requires [Audioware][Audioware].
+
+### Caution notices
+
+🆕 >= v1.0.0
+
+Consumable tooltips in backpack now display caution notices from their manufacturer regarding their responsible usage.
+
+[Audioware]: https://www.nexusmods.com/cyberpunk2077/mods/12001
+[Idle Anywhere]: https://www.nexusmods.com/cyberpunk2077/mods/8038
+[Immersive Bartenders]: https://www.nexusmods.com/cyberpunk2077/mods/10372
+[Pre 2.0 Legendary Cyberware Collection]: https://www.nexusmods.com/cyberpunk2077/mods/21914
+[Survival System]: https://www.nexusmods.com/cyberpunk2077/mods/7510
+[SynthDose]: https://www.nexusmods.com/cyberpunk2077/mods/14094
+[Wannabe Edgerunner]: https://www.nexusmods.com/cyberpunk2077/mods/5646
+[Demon9ne]: https://next.nexusmods.com/profile/Demon9ne/mods
+[Phoenicia]: https://next.nexusmods.com/profile/Phoenicia4/mods
