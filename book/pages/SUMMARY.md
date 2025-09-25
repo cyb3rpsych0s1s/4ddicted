@@ -5,7 +5,6 @@ Welcome to Addicted notebook !
 ## Contribute / Learn
 
 - [Install](./install.md)
-- [Manifest](./manifest.md)
 - [CLI](./cli.md)
 - [Wiki](./wiki.md)
   - [Cheatsheet](./cheatsheet/summary.md)
