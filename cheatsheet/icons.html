@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>custom icons - Addicted</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././theme/css/mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Addicted</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/cyb3rpsych0s1s/4ddicted" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="icons"><a class="header" href="#icons">Icons</a></h1>
+<p>Here's a workflow for custom status effects icons which works !</p>
+<ul>
+<li>WolvenKit 8.8.1</li>
+<li>Illustrator 2023</li>
+<li>Photoshop 2023</li>
+<li>InkAtlas Utils 0.6.0</li>
+</ul>
+<h2 id="design-in-illustrator-optional"><a class="header" href="#design-in-illustrator-optional">design in Illustrator (optional)</a></h2>
+<p>A good way to design in illustrator is to split each icon in a separate artboard, named after the final icon.</p>
+<blockquote>
+<p>Each artboard can contain one or more layers for a single icon design.</p>
+</blockquote>
+<ul>
+<li>create new document
+<ul>
+<li>640x512 pixels</li>
+<li>72 DPI</li>
+</ul>
+</li>
+<li>create a black background for the whole icons (640x512 pixels) on a "Background" layer</li>
+<li>name each of the layers and their corresponding artboard after its final icon
+e.g. <em>notably_first_aid_whiff</em></li>
+<li>create a black background rectangle for each icon (64x64 pixels) to use as placeholder</li>
+</ul>
+<p><img src="pictures/ai-document-structure.png" alt=".ai document structure" /></p>
+<p>Once happy with your icons:</p>
+<ul>
+<li>
+<p><em>File</em> &gt; <em>Export</em> &gt; <em>Export for Screens</em></p>
+<p>export them e.g. to <em>raw\addicted\gameplay\gui\widgets\healthbar</em></p>
+<p><img src="pictures/ps-export-for-screens-settings.png" alt=".ai Export for Screens settings" /></p>
+</li>
+</ul>
+<h2 id="import-into-photoshop"><a class="header" href="#import-into-photoshop">import into Photoshop</a></h2>
+<p>If you chose to design on Illustrator:</p>
+<ul>
+<li>
+<p>create a new document:</p>
+<ul>
+<li>640x512 pixels</li>
+<li>72 DPI</li>
+</ul>
+</li>
+<li>
+<p>create a black background layer "Background" and lock it</p>
+</li>
+<li>
+<p>import and position each of the previously generated PNG icons to your document</p>
+</li>
+<li>
+<p>create as many black backgrounds layers as there are icons, named after the icons</p>
+<blockquote>
+<p>these are placeholders so that Inkatlas Utils plugin generate Part Mapping of 64x64 pixels, inside of the size of the inner icon's graphics</p>
+</blockquote>
+</li>
+<li>
+<p>group all your icons layers together, and below all the placeholders together</p>
+</li>
+</ul>
+<p><img src="pictures/ps-document-structure.png" alt=".ps document structure" /></p>
+<h2 id="export-from-photoshop"><a class="header" href="#export-from-photoshop">export from Photoshop</a></h2>
+<p>⚠️ if you use a Cloud document</p>
+<ul>
+<li>File &gt; Save as Copy &gt; On your computer</li>
+<li>then do the following steps <strong>from your local copy</strong>, because sometimes cloud sync will leave your document in a wrong state after playing batch actions with the plugin</li>
+</ul>
+<p>Then proceed:</p>
+<ul>
+<li>open Inkatlas Utils from <em>Plugins</em> panel</li>
+<li><em>Export to TGA</em>, e.g.
+<ul>
+<li><code>100</code>: <em>raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted.xbm</em></li>
+<li><code>50</code> (for 1080p): <em>raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted_1080p.xbm</em></li>
+</ul>
+</li>
+<li><em>Generate InkAtlas</em>, e.g.
+<ul>
+<li>InkAtlas filename: <em>atlas_addicted</em></li>
+<li>XBM Depot Path: <em>addicted\gameplay\gui\widgets\healthbar\atlas_addicted.xbm</em></li>
+<li>XBM Depot Path (1080p): <em>addicted\gameplay\gui\widgets\healthbar\atlas_addicted_1080p.xbm</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="import-in-wolvenkit"><a class="header" href="#import-in-wolvenkit">import in WolvenKit</a></h2>
+<ul>
+<li>launch WolvenKit
+<ul>
+<li>
+<p><em>Tools</em> &gt; <em>Import Tool</em></p>
+<ul>
+<li>
+<p>import both .tga as follow</p>
+<p>credits to IslandDancer on Discord</p>
+<p><img src="./pictures/wk-import-xbm-solution.png" alt="WolvenKit .xbm import settings" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p>right click on <em>raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas.json</em> then <em>Convert from JSON</em></p>
+</li>
+<li>
+<p>double-check your <em>.inkatlas</em> to make sure everything looks as expected</p>
+<p><img src="pictures/wk-inkatlas-part-mapping.png" alt=".inkatlas Part Mapping" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
+<ul>
+<li>in <em>Part mapping</em>, the placeholder only fits my icon, it's definitely smaller than 64x64px: then re-export from Photoshop with InkAtlas Utils plugin, making sure your 64x64 placeholders are not hidden/locked.</li>
+<li>in <em>Part mapping</em>, there's 2 placeholders named after each of my icons: then open your <em>inkatlas</em> in WolvenKit and remove the duplicates in <em>parts</em> : only keep your 64x64 placeholders, these are the ones that matter for dimension purpose.</li>
+</ul>
+<h2 id="consume-in-your-mod"><a class="header" href="#consume-in-your-mod">consume in your mod</a></h2>
+<ul>
+<li>open your IDE
+<ul>
+<li>
+<p>edit your YAML Tweak, e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">UIIcon.NotablyWeakenedFirstAidWhiff:
+ $type: UIIcon_Record
+ atlasPartName: notably_first_aid_whiff
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+</code></pre>
+</div>
+</li>
+<li>
+<p>use in your tweaks, e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
+ $base: BaseStatusEffect.FirstAidWhiffV0
+ uiData:
+   $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+   iconPath: NotablyWeakenedFirstAidWhiff
+</code></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<p>Enjoy sweet and sharp icons !</p>
+<p><img src="pictures/ingame-custom-icons.png" alt="final in-game custom icon" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../cheatsheet/sounds.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../patterns/summary.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../cheatsheet/sounds.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../patterns/summary.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

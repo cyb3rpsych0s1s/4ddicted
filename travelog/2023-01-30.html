@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>2023-01-30 - Addicted</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././theme/css/mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Addicted</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/cyb3rpsych0s1s/4ddicted" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="2023-01-30"><a class="header" href="#2023-01-30">2023-01-30</a></h1>
+<h2 id="blackboard-internals"><a class="header" href="#blackboard-internals">Blackboard internals</a></h2>
+<p>Trying to demystify about <code>IBlackboard</code> so-called <code>DelayedListener</code>, and here's what people taught me:</p>
+<h3 id="credits-to-psiberx"><a class="header" href="#credits-to-psiberx">credits to psiberx</a></h3>
+<p>you register a listener (delayed or not)
+the listener is fired when:</p>
+<ul>
+<li>value has changed with <code>Set</code>*()</li>
+<li>value is set and unchanged but <code>force</code> parameter is true</li>
+<li><code>Signal</code>*() called explicitly</li>
+</ul>
+<p>delayed listener is just called later, in the other part of the cycle.</p>
+<h3 id="mixing-listeners-events-and-callbacks"><a class="header" href="#mixing-listeners-events-and-callbacks">Mixing listeners, events and callbacks</a></h3>
+<p>But internal mechanics are different from <code>IBlackboard</code>, as stated by psiberx.</p>
+<h3 id="as-a-courtesy-of-technic235"><a class="header" href="#as-a-courtesy-of-technic235">as a courtesy of Technic235</a></h3>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">@wrapMethod(ArcadeMachine)
+protected func StartGlitching(glitchState:EGlitchState, opt intensity:Float) -&gt; Void {
+  if Equals(this.m_controllerTypeName, n"ArcadeMachineController") {
+    this.EVMSetupArcadeStaticGlitchListener();
+  };
+}
+
+@addMethod(InteractiveDevice)
+protected func EVMSetupArcadeStaticGlitchListener() -&gt; Void {
+  let devicePS = this.GetDevicePS();
+  if devicePS.evmArcadeStaticEventID == 0u {
+    let evt = new EVMArcadeStaticGlitchEvent();
+    let delay: GameTime = GameTime.MakeGameTime(0, 0, 0, RandRange(120, 301)); // days, hours, opt minutes, opt seconds
+    devicePS.evmArcadeStaticEventID = GameInstance.GetTimeSystem(devicePS.GetGameInstance()).RegisterDelayedListener(this, evt, delay, -1);
+  };
+}
+
+public class EVMArcadeStaticGlitchEvent extends Event {
+  // intentionally empty
+}
+
+@addMethod(ArcadeMachine)
+protected cb func OnEVMArcadeStaticGlitchEvent(evt:ref&lt;EVMArcadeStaticGlitchEvent&gt;) {
+  let delaySystem = GameInstance.GetDelaySystem(this.GetGame());
+  let callback = new EVMDelayArcadeStaticGlitchCallback();
+  callback.machine = this;
+  delaySystem.DelayCallback(callback, RandRangeF(0, 10), true); // randomize start times
+}
+
+class EVMDelayArcadeStaticGlitchCallback extends DelayCallback {
+  let machine: ref&lt;ArcadeMachine&gt;;
+  protected func Call() -&gt; Void {
+    this.machine.EVMStartArcadeStaticGlitch();
+  }
+}
+
+@addMethod(ArcadeMachine)
+protected func EVMStartArcadeStaticGlitch() {
+  if !this.evmSparkActive {
+    GameObjectEffectHelper.ActivateEffectAction(this, gamedataFxActionType.Start, n"hack_fx");
+    let delaySystem = GameInstance.GetDelaySystem(this.GetGame());
+    let callback = new EVMArcadeStaticGlitchCompletedCallback();
+    callback.machine = this;
+    delaySystem.DelayCallback(callback, 13, true);
+    this.evmSparkActive = true;
+  };
+}
+
+class EVMArcadeStaticGlitchCompletedCallback extends DelayCallback {
+  let machine: ref&lt;ArcadeMachine&gt;;
+  protected func Call() -&gt; Void {
+    this.machine.evmSparkActive = false;
+  }
+}
+</code></pre>
+</div>
+<h2 id="research-on-ui"><a class="header" href="#research-on-ui">Research on UI</a></h2>
+<p>Next step is to give a better look-and-feel to current addiction-related notifications.
+So far, I've used SimpleScreenMessage which works just fine
+but is used mostly for Relic malfunction / Network breach notification.
+<img src="pictures/UI-relic-malfunction.jpg" alt="Relic malfunction in-game notification" /></p>
+<p>A way better look-and-feel / lore-friendly UI would probably be this one:
+<img src="./pictures/UI-biomonitor-notifications.png" alt="Biomonitor in-game notification" /></p>
+<p>So let's browse WolvenKit Asset browser and find out where it's at:</p>
+<p>a couple interesting ones found while searching:</p>
+<ul>
+<li>activity_log.inkwidget
+<img src="./pictures/inkwidget-activity-log.png" alt="activity logs UI" /></li>
+<li>generic_fullscreen_message_notification.inkwidget
+<img src="./pictures/inkwidget-generic-fullscreen-message-notification.png" alt="generic fullscreen message notification" /></li>
+</ul>
+<p>finally found out:</p>
+<ul>
+<li>q001_mission0_connect_to_girl.inkwidget
+<img src="./pictures/inkwidget-q001-mission0-connect-to-girl.png" alt="first mission when connect to girl" /></li>
+<li>q001_wakeup_biomoncheck.inkwidget
+<img src="./pictures/inkwidget-q001-wakeup_biomoncheck.png" alt="wakeup biomonitor check" /></li>
+</ul>
+<p>Then, where is it used in the code ?</p>
+<p>Well haha, trickier.</p>
+<ul>
+<li>no relevant reference to <code>q001</code></li>
+<li>points at <code>DeviceBase</code></li>
+<li>open many rabbit holes</li>
+</ul>
+<p>So maybe <code>inkWidgetLibraryResource</code> from WKit ?</p>
+<p>Hey, results seem much better !</p>
+<ul>
+<li><code>gameuiTooltipsManager</code></li>
+<li><code>ATooltipData</code></li>
+<li><code>InteractionsHubGameController</code></li>
+</ul>
+<p>Also, <code>DJ_Kovrik</code> to the rescue:</p>
+<p><img src="pictures/ArchiveXL-spawn-and-attach-controller.png" alt="recommendations for widgets" /></p>
+<p>Which also brought me to:</p>
+<p><img src="./pictures/WK-inkwidget-inkanim.png" alt="WolvenKit inkwidget and its inkanim" /></p>
+<p>My guess so far is that the closest <code>inkGameController</code> to what I need is the <a href="https://jac3km4.github.io/cyberdoc/#34400">inkHUDGameController</a>,
+except that I'll need only one <code>inkAnimProxy</code>, the one returned from calling <a href="https://jac3km4.github.io/cyberdoc/#18366">PlayLibraryAnimation</a>.</p>
+<p>But turns out it wasn't the full solution, see the <a href="2023-01-31.html">follow-up</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../travelog/2023-01-29.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../travelog/2023-01-31.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../travelog/2023-01-29.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../travelog/2023-01-31.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

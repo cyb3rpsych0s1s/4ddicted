@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Install - Addicted</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./theme/css/mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Addicted</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/cyb3rpsych0s1s/4ddicted" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="install"><a class="header" href="#install">Install</a></h1>
+<p>Here are the steps required to get yourself started with this mod.</p>
+<h2 id="for-players"><a class="header" href="#for-players">For players</a></h2>
+<p>Mandatory steps, in order:</p>
+<ol>
+<li>
+<p>🎮 Cyberpunk</p>
+<blockquote>
+<p>this doc assumes you installed it on Steam
+but you can easily modify it for whichever game launcher</p>
+</blockquote>
+</li>
+<li>
+<p>⚙️ CET</p>
+<blockquote>
+<p>scripting engine, based on .lua</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/yamashi/CyberEngineTweaks/releases/latest">latest CET release</a></li>
+<li>unzip at the root of your game folder</li>
+<li>configure in-game
+<ol>
+<li>Launch the game and bind the CET menu key (e.g. <code>Home</code>)</li>
+<li>Quit the game to configure the other mods</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>You can also watch these steps on video in YouTube, thanks to <code>PerfectlyNormalBeast</code>.</p>
+<p><a href="https://www.youtube.com/watch?v=klxa3hPTCHk"><img src="https://img.youtube.com/vi/klxa3hPTCHk/0.jpg" alt="Installing CET, Redscript, Mod" /></a></p>
+<p>Then, in any order:</p>
+<ol>
+<li>
+<p>🧧 REDscript</p>
+<blockquote>
+<p>additional supported programming language: <code>.reds</code></p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/jac3km4/redscript/releases/latest">latest REDscript release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔴 RED4ext</p>
+<blockquote>
+<p>relied upon by many mods, allow for extending scripting system</p>
+</blockquote>
+<ol>
+<li>make sure that <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe">Visual C++ Redistributable 2022</a> is installed</li>
+<li>download <a href="https://github.com/WopsS/RED4ext/releases/latest">latest RED4ext release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 TweakXL</p>
+<blockquote>
+<p>useful to create custom tweaks (modify TweakDB, REDengine 4 proprietary database)</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-tweak-xl/releases/latest">latest TweakXL release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 ArchiveXL</p>
+<blockquote>
+<p>useful to package archive (load custom resources without touching original game files)</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-archive-xl/releases/latest">latest ArchiveXL release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 Codeware</p>
+<blockquote>
+<p>redscript dependency</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-codeware/releases/latest">latest Codeware release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 Audioware</p>
+<blockquote>
+<p>used to manage custom souds and subtitles</p>
+</blockquote>
+<p><strong>Only</strong> required if you use this mod's <a href="https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files">Optional files (audio files and subtitles)</a>.
+Kindly note that Audioware itself requires both RED4ext and Codeware (see above).</p>
+<ol>
+<li>download <a href="https://github.com/cyb3rpsych0s1s/audioware/releases/latest">latest Audioware release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+</ol>
+<div id="admonition-addicted" class="admonition admonish-tip" role="note" aria-labelledby="admonition-addicted-title">
+<div class="admonition-title">
+<div id="admonition-addicted-title">
+<p>Addicted</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-addicted"></a>
+</div>
+<div>
+<p>And finally this mod itself:</p>
+<ol>
+<li>download latest Addicted release on <a href="https://github.com/cyb3rpsych0s1s/4ddicted/releases/latest">Github</a> or <a href="https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files">Nexus</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</div>
+</div>
+<h2 id="only-for-developers"><a class="header" href="#only-for-developers">Only for developers</a></h2>
+<p>If you would like to contribute to this repo,
+I would strongly recommend:</p>
+<ol>
+<li>
+<p>🔺 Redscript IDE VSCode plugin</p>
+<blockquote>
+<p>provides autocompletion in Visual Studio Code</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/jac3km4/redscript-ide-vscode/releases/latest">latest Redscript IDE VSCode plugin release</a></li>
+<li>install manually in VSCode</li>
+</ol>
+</li>
+<li>
+<p>🔺 RED Hot Tools</p>
+<blockquote>
+<p>allows for archive, scripts and tweaks hot-reloading in-game</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-red-hot-tools/releases/latest">latest RED Hot Tools release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 clipTester or SoundClipTester</p>
+<blockquote>
+<p>useful to listen to all sounds in-game via CET console</p>
+</blockquote>
+<ol>
+<li>download <a href="https://www.nexusmods.com/cyberpunk2077/mods/1977?tab=files">from Nexus</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="cli.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="cli.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

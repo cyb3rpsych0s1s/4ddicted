@@ -1,0 +1,57 @@
+name: Quality
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'scripts/Addicted/**'
+  pull_request:
+    paths:
+      - '.github/**'
+      - 'scripts/Addicted/**'
+env:
+  DOTNET_VERSION: '8.0.x'
+  REDSCRIPT_VERSION: '1.0.0-preview.22'
+  REDSCRIPT_SRC: scripts
+  CODEWARE_VERSION: '1.18.0'
+  TWEAKXL_VERSION: '1.11.0'
+
+jobs:
+  redscript:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download Codeware
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: psiberx/cp2077-codeware
+          tag: v${{ env.CODEWARE_VERSION }}
+          fileName: Codeware-${{ env.CODEWARE_VERSION }}.zip
+          zipBall: false
+          tarBall: false
+          extract: true
+          out-file-path: ${{ env.REDSCRIPT_SRC }}/Codeware
+      - name: Download TweakXL
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: psiberx/cp2077-tweak-xl
+          tag: v${{ env.TWEAKXL_VERSION }}
+          fileName: TweakXL-${{ env.TWEAKXL_VERSION }}.zip
+          zipBall: false
+          tarBall: false
+          extract: true
+          out-file-path: ${{ env.REDSCRIPT_SRC }}/TweakXL
+      - name: Inspect downloaded files
+        run: |
+          Get-ChildItem -Path ${{ env.REDSCRIPT_SRC }} -Force | Format-Table -AutoSize
+          Get-ChildItem -Path ${{ env.REDSCRIPT_SRC }}/Codeware -Force | Format-Table -AutoSize
+          Get-ChildItem -Path ${{ env.REDSCRIPT_SRC }}/TweakXL -Force | Format-Table -AutoSize
+      - name: Lint code
+        uses: jac3km4/redscript-action@v0.1.4
+        with:
+          source: ${{ env.REDSCRIPT_SRC }}
+          lint: true
+          check-format: false
+          version: ${{ env.REDSCRIPT_VERSION }}

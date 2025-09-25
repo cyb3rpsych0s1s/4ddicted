@@ -1,0 +1,112 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+      - "rc*"
+      - "beta*"
+      - "alpha*"
+env:
+  WOLVENKIT_VERSION: '8.17.1-nightly.2025-09-22'
+  WOLVENKIT_REPO: 'WolvenKit-nightly-releases'
+  DOTNET_VERSION: '8.0.x'
+  IS_DRAFT: ${{ startsWith(github.ref_name, 'beta') || startsWith(github.ref_name, 'alpha') }}
+
+jobs:
+  bundle-mod:
+    runs-on: windows-2025
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Just
+        uses: extractions/setup-just@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '${{ env.DOTNET_VERSION }}'
+      - name: Setup WolvenKit CLI
+        run: |
+          C:\msys64\usr\bin\wget.exe https://github.com/WolvenKit/"${{ env.WOLVENKIT_REPO }}"/releases/download/"${{ env.WOLVENKIT_VERSION }}"/"${{ env.WOLVENKIT_ARTIFACT }}"
+          7z x "${{ env.WOLVENKIT_ARTIFACT }}"
+        env:
+          WOLVENKIT_ARTIFACT: WolvenKit.Console-${{ env.WOLVENKIT_VERSION }}.zip
+      - name: Bundle files
+        run: just ci 'mod-windows'
+        env:
+          WK_CLI: ${{ github.workspace }}\\WolvenKit.CLI.exe
+      - name: Zip files
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'Addicted-mod-windows-${{ github.ref_name }}.zip'
+          directory: ./mod-windows
+          path: .
+          recursive_exclusions: ${{ (env.IS_DRAFT && 'Debug.reds') || '' }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mod-windows-${{ github.ref_name }}
+          path: mod-windows/Addicted-mod-windows-${{ github.ref_name }}.zip
+          if-no-files-found: error
+  bundle-translations:
+    runs-on: windows-2025
+    strategy:
+      matrix:
+        locale:
+          - en-us
+          - fr-fr
+          - es-es
+          - zh-cn
+          - pt-br
+          - it-it
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Just
+        uses: extractions/setup-just@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Bundle files
+        run: just bundle 'translation-${{ matrix.locale }}' "${{ matrix.locale }}"
+      - name: Zip files
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}.zip'
+          directory: ./translation-${{ matrix.locale }}
+          path: .
+      - name: Upload translations
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-${{ matrix.locale }}-${{ github.ref_name }}
+          path: translation-${{ matrix.locale }}/Addicted-translation-${{ matrix.locale }}-${{ github.ref_name }}.zip
+          if-no-files-found: error
+  release:
+    if: ${{ startsWith(github.event.ref, 'refs/tags') }}
+    runs-on: windows-2025
+    needs: [bundle-mod, bundle-translations]
+    steps:
+      - name: Download mod and translations
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+      - name: Create release ${{ github.ref_name }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "release/*.zip"
+          draft: ${{ env.IS_DRAFT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifactErrorsFailBuild: true

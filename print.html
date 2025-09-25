@@ -1,0 +1,2872 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Addicted</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="./theme/css/mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Addicted</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/cyb3rpsych0s1s/4ddicted" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="install"><a class="header" href="#install">Install</a></h1>
+<p>Here are the steps required to get yourself started with this mod.</p>
+<h2 id="for-players"><a class="header" href="#for-players">For players</a></h2>
+<p>Mandatory steps, in order:</p>
+<ol>
+<li>
+<p>🎮 Cyberpunk</p>
+<blockquote>
+<p>this doc assumes you installed it on Steam
+but you can easily modify it for whichever game launcher</p>
+</blockquote>
+</li>
+<li>
+<p>⚙️ CET</p>
+<blockquote>
+<p>scripting engine, based on .lua</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/yamashi/CyberEngineTweaks/releases/latest">latest CET release</a></li>
+<li>unzip at the root of your game folder</li>
+<li>configure in-game
+<ol>
+<li>Launch the game and bind the CET menu key (e.g. <code>Home</code>)</li>
+<li>Quit the game to configure the other mods</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>You can also watch these steps on video in YouTube, thanks to <code>PerfectlyNormalBeast</code>.</p>
+<p><a href="https://www.youtube.com/watch?v=klxa3hPTCHk"><img src="https://img.youtube.com/vi/klxa3hPTCHk/0.jpg" alt="Installing CET, Redscript, Mod" /></a></p>
+<p>Then, in any order:</p>
+<ol>
+<li>
+<p>🧧 REDscript</p>
+<blockquote>
+<p>additional supported programming language: <code>.reds</code></p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/jac3km4/redscript/releases/latest">latest REDscript release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔴 RED4ext</p>
+<blockquote>
+<p>relied upon by many mods, allow for extending scripting system</p>
+</blockquote>
+<ol>
+<li>make sure that <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe">Visual C++ Redistributable 2022</a> is installed</li>
+<li>download <a href="https://github.com/WopsS/RED4ext/releases/latest">latest RED4ext release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 TweakXL</p>
+<blockquote>
+<p>useful to create custom tweaks (modify TweakDB, REDengine 4 proprietary database)</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-tweak-xl/releases/latest">latest TweakXL release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 ArchiveXL</p>
+<blockquote>
+<p>useful to package archive (load custom resources without touching original game files)</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-archive-xl/releases/latest">latest ArchiveXL release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 Codeware</p>
+<blockquote>
+<p>redscript dependency</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-codeware/releases/latest">latest Codeware release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 Audioware</p>
+<blockquote>
+<p>used to manage custom souds and subtitles</p>
+</blockquote>
+<p><strong>Only</strong> required if you use this mod's <a href="https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files">Optional files (audio files and subtitles)</a>.
+Kindly note that Audioware itself requires both RED4ext and Codeware (see above).</p>
+<ol>
+<li>download <a href="https://github.com/cyb3rpsych0s1s/audioware/releases/latest">latest Audioware release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+</ol>
+<div id="admonition-addicted" class="admonition admonish-tip" role="note" aria-labelledby="admonition-addicted-title">
+<div class="admonition-title">
+<div id="admonition-addicted-title">
+<p>Addicted</p>
+</div>
+<a class="admonition-anchor-link" href="install.html#admonition-addicted"></a>
+</div>
+<div>
+<p>And finally this mod itself:</p>
+<ol>
+<li>download latest Addicted release on <a href="https://github.com/cyb3rpsych0s1s/4ddicted/releases/latest">Github</a> or <a href="https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files">Nexus</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</div>
+</div>
+<h2 id="only-for-developers"><a class="header" href="#only-for-developers">Only for developers</a></h2>
+<p>If you would like to contribute to this repo,
+I would strongly recommend:</p>
+<ol>
+<li>
+<p>🔺 Redscript IDE VSCode plugin</p>
+<blockquote>
+<p>provides autocompletion in Visual Studio Code</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/jac3km4/redscript-ide-vscode/releases/latest">latest Redscript IDE VSCode plugin release</a></li>
+<li>install manually in VSCode</li>
+</ol>
+</li>
+<li>
+<p>🔺 RED Hot Tools</p>
+<blockquote>
+<p>allows for archive, scripts and tweaks hot-reloading in-game</p>
+</blockquote>
+<ol>
+<li>download <a href="https://github.com/psiberx/cp2077-red-hot-tools/releases/latest">latest RED Hot Tools release</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+<li>
+<p>🔺 clipTester or SoundClipTester</p>
+<blockquote>
+<p>useful to listen to all sounds in-game via CET console</p>
+</blockquote>
+<ol>
+<li>download <a href="https://www.nexusmods.com/cyberpunk2077/mods/1977?tab=files">from Nexus</a></li>
+<li>unzip at the root of your game folder</li>
+</ol>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cli"><a class="header" href="#cli">CLI</a></h1>
+<p>During development you will often have to:</p>
+<ul>
+<li>overwrite mod files in your game folder on each changes</li>
+<li>look at the content of e.g. log files</li>
+<li>and similar tedious tasks like these ...</li>
+</ul>
+<p>To make our lives easier, there's many terminal shortcuts commands at our disposal, via a <code>justfile</code>:</p>
+<ul>
+<li>
+<p>first, install <a href="https://just.systems/man/en/chapter_4.html?highlight=brew#packages">Just</a></p>
+<blockquote>
+<p><code>Just</code> is just a command runner, it makes running commands in the terminal easier, more maintainable and generally more enjoyable</p>
+</blockquote>
+</li>
+<li>
+<p>list all available shortcuts:</p>
+<pre><code class="language-sh">just
+</code></pre>
+<p><img src="./pictures/just-recipes.png" alt="just recipes" /></p>
+</li>
+<li>
+<p>generally speaking, while coding you will most likely be interested in the following commands:</p>
+<ul>
+<li>
+<p>run once on install, to create folders if missing</p>
+<pre><code class="language-sh">just setup
+</code></pre>
+</li>
+<li>
+<p>copy files to game dir <em>before launching game</em>:</p>
+<pre><code class="language-sh">just build
+</code></pre>
+</li>
+<li>
+<p>copy files to game dir <em>while game is running</em> (excluding <code>archive</code>, see below):</p>
+<pre><code class="language-sh">just rebuild
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="ℹ-coding-process"><a class="header" href="#ℹ-coding-process">ℹ️ Coding process</a></h2>
+<ol>
+<li>build:
+<ul>
+<li><code>archive</code> can only be reloaded from Wolvenkit GUI's <code>Hot Reload</code> (RED Hot Tools required) while game is running.</li>
+<li><code>tweaks</code>, <code>scripts</code> and <code>mods</code> can be just copied over to game files.</li>
+</ul>
+</li>
+<li>refresh:
+<ul>
+<li>once done, click in CET console:<code>archive</code> for WolvenKit archive, TweakXL <code>tweaks</code>, REDscript <code>scripts</code> and/or CET <code>reload all mods</code></li>
+</ul>
+</li>
+<li>remember that depending on your changes reloading a save is necessary, or the game itself sometimes.</li>
+</ol>
+<!-- markdownlint-disable MD041 -->
+<div id="admonition-note" class="admonition admonish-note" role="note" aria-labelledby="admonition-note-title">
+<div class="admonition-title">
+<div id="admonition-note-title">
+<p>Note</p>
+</div>
+<a class="admonition-anchor-link" href="cli.html#admonition-note"></a>
+</div>
+<div>
+<p>📦 mod release files can be found either in <a href="https://github.com/cyb3rpsych0s1s/4ddicted/releases/latest">Github release</a> or <a href="https://www.nexusmods.com/cyberpunk2077/mods/7480?tab=files">Nexus files</a> alike.</p>
+<p>ℹ️ more infos at <a href="https://github.com/cyb3rpsych0s1s/4ddicted">Github repo</a>.</p>
+</div>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="wiki"><a class="header" href="#wiki">wiki</a></h1>
+<p>First, a handful of reminders / tips.</p>
+<h2 id="lua-vs-reds"><a class="header" href="#lua-vs-reds">lua VS reds</a></h2>
+<p>Cyber Engine Tweaks (CET) and REDscript both offer access to the game API.</p>
+<ul>
+<li>CET uses .lua files.</li>
+<li>REDscript uses .reds files.</li>
+</ul>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:skyblue;color:skyblue;" href="https://wiki.redmodding.org/cyber-engine-tweaks"><i style="font-size:18px;--fa-primary-color:skyblue;color:skyblue;" class="fa fa-solid fa-globe"></i>&nbsp;&nbsp;Lua</a>  
+<pre><code class="language-lua">---@param self PlayerPuppet
+Observe('PlayerPuppet', 'OnGameAttached', function(self)
+  -- execute some logic when player starts game
+end)
+</code></pre>
+</div>
+<p>is the equivalent of:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">@wrapMethod(PlayerPuppet)
+protected cb func OnGameAttached() -&gt; Bool {
+    // execute some logic when player starts game
+    wrappedMethod();
+}
+</code></pre>
+</div>
+<h2 id="debug"><a class="header" href="#debug">debug</a></h2>
+<p>Since:</p>
+<ul>
+<li>any CET method can be called from in-game CET console</li>
+<li>CET can call any REDscript method</li>
+</ul>
+<p>This is how to debug own's code, e.g. :</p>
+<ul>
+<li>create a method on PlayerPuppet in .reds</li>
+<li>launch a game session</li>
+<li>open CET console</li>
+</ul>
+<h3 id="quickly-call-methods"><a class="header" href="#quickly-call-methods">quickly call methods</a></h3>
+<p>from in-game CET console, e.g.:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:skyblue;color:skyblue;" href="https://wiki.redmodding.org/cyber-engine-tweaks"><i style="font-size:18px;--fa-primary-color:skyblue;color:skyblue;" class="fa fa-solid fa-globe"></i>&nbsp;&nbsp;Lua</a>  
+<pre><code class="language-lua">GameObject.PlaySoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.StopSoundEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+GameObject.BreakReplicatedEffectLoopEvent(Game.GetPlayer(),"q101_sc_03_heart_loop" )
+</code></pre>
+</div>
+<h3 id="quickly-seed-inventory-with-items"><a class="header" href="#quickly-seed-inventory-with-items">quickly seed inventory with items</a></h3>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:skyblue;color:skyblue;" href="https://wiki.redmodding.org/cyber-engine-tweaks"><i style="font-size:18px;--fa-primary-color:skyblue;color:skyblue;" class="fa fa-solid fa-globe"></i>&nbsp;&nbsp;Lua</a>  
+<pre><code class="language-lua">Game.AddToInventory("Items.FR3SH", 1)
+Game.AddToInventory("Items.BonesMcCoy70V0", 3)
+Game.AddToInventory("Items.FirstAidWhiffV0", 10)
+Game.AddToInventory("Items.BlackLaceV0", 10)
+</code></pre>
+</div>
+<h3 id="hot-reload"><a class="header" href="#hot-reload">hot reload</a></h3>
+<p>Requires latest CET from Discord, at the moment.
+Beware of start-up only scripts in your tests: needs to load or start a new game of course.
+Red Hot Tools can also watch for changes: beware of autosave.</p>
+<h3 id="redscript"><a class="header" href="#redscript">REDscript</a></h3>
+<h4 id="default-method-return-values"><a class="header" href="#default-method-return-values">default method return values</a></h4>
+<p>credits to <code>psiberx</code> on discord.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public static func NoRetInt() -&gt; Int32 {} // returns 0
+public static func NoRetCName() -&gt; CName {} // returns n"None"
+public static func NoRetStruct() -&gt; SimpleScreenMessage {} // returns empty instance
+public static func NoRetArray() -&gt; array&lt;String&gt; {} // returns empty array
+</code></pre>
+</div>
+<h4 id="conditional-compilation"><a class="header" href="#conditional-compilation">conditional compilation</a></h4>
+<p>REDscripts functions annotated with <code>@if</code> conditional compilation macros won't be evaluated.
+Quickest way to check if it works is to trigger autocompletion on <code>this</code> inside any function.</p>
+<h2 id="native-status-effects"><a class="header" href="#native-status-effects">native status effects</a></h2>
+<p>All the status effects can be found <a href="https://cyberpunk.fandom.com/wiki/Cyberpunk_2077_Status_Effects">there</a>.</p>
+<h2 id="native-animations"><a class="header" href="#native-animations">native animations</a></h2>
+<p>Animations can be handled with <a href="https://wiki.redmodding.org/cyberpunk-2077-modding/modding/redmod/quick-guide#animation-modding">WolvenKit</a>.</p>
+<p><a href="https://wiki.redmodding.org/cyberpunk-2077-modding/developers/guides/quest/how-to-remove-an-animation-and-potentially-replace-it">Change and potentially replace animations</a>.</p>
+<h2 id="in-game-time-vs-irl"><a class="header" href="#in-game-time-vs-irl">in-game time vs IRL</a></h2>
+<p>1 min in-game is 10 real seconds.</p>
+<p>credits to <code>Lyralei</code> on discord.</p>
+<h2 id="glossary"><a class="header" href="#glossary">glossary</a></h2>
+<ul>
+<li><code>PS</code> stands for "persistent state".</li>
+<li><code>wref</code> stands for <code>weak reference</code> (cc <code>Rc</code>). it has nothing to do with (im)mutability.</li>
+<li><code>IsDefined</code> is an intrinsic. It is preferable to testing for nullability directly.
+<code>IsDefined(wref)</code> is <code>wref != null &amp;&amp; wref.refCnt &gt; 0</code>
+<code>IsDefined(ref)</code> is <code>ref != null</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cheatsheet"><a class="header" href="#cheatsheet">Cheatsheet</a></h1>
+<p>Because I always forget them 😅</p>
+<ul>
+<li><a href="cheatsheet/./primitives.html">primitives</a></li>
+<li><a href="cheatsheet/./sounds.html">sounds</a></li>
+<li><a href="cheatsheet/./icons.html">custom icons</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="primitives"><a class="header" href="#primitives">Primitives</a></h1>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let v: String = "Hello world";
+let v: CName = n"Debuff";
+let v: TweakDBID = t"BaseStatusEffect.BlackLaceV0";
+let v: ResRef = r"base\\gameplay\\gui\\common\\main_colors.inkstyle";
+let v: LocKey = l"MyMod-Setting-Desc";
+</code></pre>
+</div>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let v: String = NameToString(n"Debuff");
+let v: Bool = IsNameValid(n"Debuff");
+
+let v: TweakDBID = TDBID.None();
+let v: TweakDBID = TDBID.Create("Items.BlackLaceV0");
+let v: Bool = TDBID.IsValid(t"Items.BlackLaceV0");
+let v: Uint64 = TDBID.ToNumber(t"Items.BlackLaceV0");
+let v: String = TDBID.ToStringDEBUG(t"Items.BlackLaceV0");
+
+let v: String = ItemID.ToDebugString(someItemID);
+let v: Bool = ItemID.IsDefined(someItemID);
+let v: TweakDBID = ItemID.GetTDBID(someItemID);
+let v: ItemID = ItemID.FromTDBID(t"Items.FirstAidWhiffV0");
+
+let system: ICooldownSystem = Game.ICooldownSystem();
+let v: Int32 = system.GetCIDByItemID(someItemID);
+let v: Int32 = system.GetCIDByRecord(t"BaseStatusEffect.HealthBooster");
+</code></pre>
+</div>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let delay: DelayID = GameInstance.GetDelaySystem(player.GetGame()).DelayCallback();
+let defined: Bool = NotEquals(delay, GetInvalidDelayID());
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="sounds"><a class="header" href="#sounds">Sounds</a></h1>
+<p>Sounds can be played like:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let sound: CName = n"ono_v_effort_short";
+GameObject.PlaySoundEvent(this.player, sound);
+GameObject.StopSoundEvent(this.player, sound);
+</code></pre>
+</div>
+<p>Even further controlled with:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let sound: CName = n"ono_v_effort_short";
+let event: ref&lt;PlaySoundEvent&gt; = new PlaySoundEvent();
+event.soundEvent = sound;
+GameObject.PlaySoundEvent(this.player, sound);
+// has ESoundStatusEffects
+// also has GetSoundName() / SetSoundName()
+event.SetStatusEffect(ESoundStatusEffects.DEAFENED);
+// later on
+GameObject.StopSoundEvent(this.player, event.soundEvent);
+</code></pre>
+</div>
+<p>Another way:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let sound: CName = n"dry_fire";
+let event: ref&lt;AudioEvent&gt; = new AudioEvent();
+event.eventName = sound;
+this.player.QueueEvent(event);
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="icons"><a class="header" href="#icons">Icons</a></h1>
+<p>Here's a workflow for custom status effects icons which works !</p>
+<ul>
+<li>WolvenKit 8.8.1</li>
+<li>Illustrator 2023</li>
+<li>Photoshop 2023</li>
+<li>InkAtlas Utils 0.6.0</li>
+</ul>
+<h2 id="design-in-illustrator-optional"><a class="header" href="#design-in-illustrator-optional">design in Illustrator (optional)</a></h2>
+<p>A good way to design in illustrator is to split each icon in a separate artboard, named after the final icon.</p>
+<blockquote>
+<p>Each artboard can contain one or more layers for a single icon design.</p>
+</blockquote>
+<ul>
+<li>create new document
+<ul>
+<li>640x512 pixels</li>
+<li>72 DPI</li>
+</ul>
+</li>
+<li>create a black background for the whole icons (640x512 pixels) on a "Background" layer</li>
+<li>name each of the layers and their corresponding artboard after its final icon
+e.g. <em>notably_first_aid_whiff</em></li>
+<li>create a black background rectangle for each icon (64x64 pixels) to use as placeholder</li>
+</ul>
+<p><img src="cheatsheet/pictures/ai-document-structure.png" alt=".ai document structure" /></p>
+<p>Once happy with your icons:</p>
+<ul>
+<li>
+<p><em>File</em> &gt; <em>Export</em> &gt; <em>Export for Screens</em></p>
+<p>export them e.g. to <em>raw\addicted\gameplay\gui\widgets\healthbar</em></p>
+<p><img src="cheatsheet/pictures/ps-export-for-screens-settings.png" alt=".ai Export for Screens settings" /></p>
+</li>
+</ul>
+<h2 id="import-into-photoshop"><a class="header" href="#import-into-photoshop">import into Photoshop</a></h2>
+<p>If you chose to design on Illustrator:</p>
+<ul>
+<li>
+<p>create a new document:</p>
+<ul>
+<li>640x512 pixels</li>
+<li>72 DPI</li>
+</ul>
+</li>
+<li>
+<p>create a black background layer "Background" and lock it</p>
+</li>
+<li>
+<p>import and position each of the previously generated PNG icons to your document</p>
+</li>
+<li>
+<p>create as many black backgrounds layers as there are icons, named after the icons</p>
+<blockquote>
+<p>these are placeholders so that Inkatlas Utils plugin generate Part Mapping of 64x64 pixels, inside of the size of the inner icon's graphics</p>
+</blockquote>
+</li>
+<li>
+<p>group all your icons layers together, and below all the placeholders together</p>
+</li>
+</ul>
+<p><img src="cheatsheet/pictures/ps-document-structure.png" alt=".ps document structure" /></p>
+<h2 id="export-from-photoshop"><a class="header" href="#export-from-photoshop">export from Photoshop</a></h2>
+<p>⚠️ if you use a Cloud document</p>
+<ul>
+<li>File &gt; Save as Copy &gt; On your computer</li>
+<li>then do the following steps <strong>from your local copy</strong>, because sometimes cloud sync will leave your document in a wrong state after playing batch actions with the plugin</li>
+</ul>
+<p>Then proceed:</p>
+<ul>
+<li>open Inkatlas Utils from <em>Plugins</em> panel</li>
+<li><em>Export to TGA</em>, e.g.
+<ul>
+<li><code>100</code>: <em>raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted.xbm</em></li>
+<li><code>50</code> (for 1080p): <em>raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted_1080p.xbm</em></li>
+</ul>
+</li>
+<li><em>Generate InkAtlas</em>, e.g.
+<ul>
+<li>InkAtlas filename: <em>atlas_addicted</em></li>
+<li>XBM Depot Path: <em>addicted\gameplay\gui\widgets\healthbar\atlas_addicted.xbm</em></li>
+<li>XBM Depot Path (1080p): <em>addicted\gameplay\gui\widgets\healthbar\atlas_addicted_1080p.xbm</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="import-in-wolvenkit"><a class="header" href="#import-in-wolvenkit">import in WolvenKit</a></h2>
+<ul>
+<li>launch WolvenKit
+<ul>
+<li>
+<p><em>Tools</em> &gt; <em>Import Tool</em></p>
+<ul>
+<li>
+<p>import both .tga as follow</p>
+<p>credits to IslandDancer on Discord</p>
+<p><img src="cheatsheet/./pictures/wk-import-xbm-solution.png" alt="WolvenKit .xbm import settings" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p>right click on <em>raw\addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas.json</em> then <em>Convert from JSON</em></p>
+</li>
+<li>
+<p>double-check your <em>.inkatlas</em> to make sure everything looks as expected</p>
+<p><img src="cheatsheet/pictures/wk-inkatlas-part-mapping.png" alt=".inkatlas Part Mapping" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
+<ul>
+<li>in <em>Part mapping</em>, the placeholder only fits my icon, it's definitely smaller than 64x64px: then re-export from Photoshop with InkAtlas Utils plugin, making sure your 64x64 placeholders are not hidden/locked.</li>
+<li>in <em>Part mapping</em>, there's 2 placeholders named after each of my icons: then open your <em>inkatlas</em> in WolvenKit and remove the duplicates in <em>parts</em> : only keep your 64x64 placeholders, these are the ones that matter for dimension purpose.</li>
+</ul>
+<h2 id="consume-in-your-mod"><a class="header" href="#consume-in-your-mod">consume in your mod</a></h2>
+<ul>
+<li>open your IDE
+<ul>
+<li>
+<p>edit your YAML Tweak, e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">UIIcon.NotablyWeakenedFirstAidWhiff:
+ $type: UIIcon_Record
+ atlasPartName: notably_first_aid_whiff
+ atlasResourcePath: addicted\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+</code></pre>
+</div>
+</li>
+<li>
+<p>use in your tweaks, e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
+ $base: BaseStatusEffect.FirstAidWhiffV0
+ uiData:
+   $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+   iconPath: NotablyWeakenedFirstAidWhiff
+</code></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<p>Enjoy sweet and sharp icons !</p>
+<p><img src="cheatsheet/pictures/ingame-custom-icons.png" alt="final in-game custom icon" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="patterns"><a class="header" href="#patterns">Patterns</a></h1>
+<p>The core game system already contains mechanics that can be leveraged to implement features.</p>
+<ul>
+<li><a href="patterns/./systems.html">Systems</a></li>
+<li><a href="patterns/./callbacks.html">Callbacks</a></li>
+<li><a href="patterns/./events.html">Events</a></li>
+<li><a href="patterns/./blackboards.html">Blackboards</a></li>
+<li><a href="patterns/./listeners.html">Listeners</a></li>
+<li><a href="patterns/./tasks.html">Tasks</a></li>
+<li><a href="patterns/./effectors.html">Effectors</a></li>
+<li><a href="patterns/./scriptables.html">Scriptables</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="system"><a class="header" href="#system">System</a></h1>
+<p>useful to coordinate whole gameplay.</p>
+<h2 id="persistence"><a class="header" href="#persistence">Persistence</a></h2>
+<p>Persistence allow to persist values on game saves.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">enum Case {
+  On,
+  Off,
+}
+
+public class State {
+  // do not forget to also set persistence on inner fields
+  public persistent let name: CName;
+  public persistent let id: TweakDBID;
+  public persistent let other: Float;
+  // otherwise it won't get persisted
+  public let temporary: Bool;
+}
+
+public class System extends ScriptableSystem {
+  private persistent let count: Int32; // any primitive
+  private persistent let case: Case; // including enums
+  private persistent let state: ref&lt;State&gt;; // including nested objects
+  private persistent let formerStates: array&lt;ref&lt;State&gt;&gt;; // including arrays
+  // but
+  // no inkHashMap (or similar)
+  // no String
+  // no Variant
+  // no ResRef
+}
+</code></pre>
+</div>
+<h2 id="requests"><a class="header" href="#requests">Requests</a></h2>
+<p>Requests are systems' asynchronous mechanism.
+It's more often than not used to convey an action.</p>
+<p>⚠️ be careful that there can only be up to ~128 system requests <strong>game-wide</strong>,
+so prefer <a href="patterns/./callbacks.html">DelayCallback</a> whenever possible.</p>
+<blockquote>
+<p>credits to psiberx and jekky on discord for finding out about this limitation in memory.</p>
+</blockquote>
+<h3 id="delayed-requests"><a class="header" href="#delayed-requests">Delayed requests</a></h3>
+<p>Requests can also be delayed asynchronously.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class DoSomethingRequest extends ScriptableSystemRequest {
+  public let parameter: Float;
+}
+
+public class System extends ScriptableSystem {
+  private func DoSomething() -&gt; Void {
+    let request: ref&lt;DoSomethingRequest&gt;;
+    request.parameter = 1.;
+    let delay = 3.; // in seconds, real time
+    GameInstance
+      .GetDelaySystem(this.GetGameInstance())
+      .DelayScriptableSystemRequest(this.GetClassName(), request, delay, true);
+      // will automatically call OnDoSomethingRequest on System 3 seconds after
+  }
+
+  // function signature matters !
+  protected final func OnDoSomethingRequest(request: ref&lt;DoSomethingRequest&gt;) -&gt; Void {
+    // do something ..
+  }
+}
+</code></pre>
+</div>
+<h3 id="regular-requests"><a class="header" href="#regular-requests">Regular requests</a></h3>
+<p>Requests can be queued directly on a system.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class DoSomethingRequest extends ScriptableSystemRequest {
+  public let parameter: Float;
+}
+
+public class System extends ScriptableSystem {
+  private func DoSomething() -&gt; Void {
+    let request: ref&lt;DoSomethingRequest&gt;;
+    request.parameter = 1.;
+    this.QueueRequest(request);
+    // will automatically call OnDoSomethingRequest on this system
+  }
+
+  // function signature matters !
+  protected final func OnDoSomethingRequest(request: ref&lt;DoSomethingRequest&gt;) -&gt; Void {
+    // do something ..
+  }
+}
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="callbacks"><a class="header" href="#callbacks">Callbacks</a></h1>
+<p>Callbacks are another asynchronous mechanism.</p>
+<p>🆕 2024/01/28: as a side note callbacks scheduled with <code>DelaySystem</code> are only called once, unless manually rescheduled (inside callback's <code>Call</code> method for example). <code>DelayID</code> is an 8-bytes identifier, <code>GetInvalidDelayID()</code> being its smallest value. A different identifier is returned on every call to <code>DelayCallback()</code>.</p>
+<blockquote>
+<p>credits to <code>DJ_Kovrik</code></p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class EdgerunningSystem extends ScriptableSystem {
+  private func PlaySFXDelayed(name: CName, delay: Float) -&gt; Void {
+    let callback: ref&lt;PlaySFXCallback&gt; = new PlaySFXCallback();
+    callback.sfxName = name;
+    callback.player = GetPlayer(this.GetGameInstance());
+
+    GameInstance
+      .GetDelaySystem(this.GetGameInstance())
+      .DelayCallback(callback, delay);
+  }
+}
+
+// given the class extends DelayCallback
+public class PlaySFXCallback extends DelayCallback {
+  public let player: wref&lt;PlayerPuppet&gt;;
+  public let sfxName: CName;
+  // its method Call will automatically get called
+  public func Call() -&gt; Void {
+    GameObject.PlaySoundEvent(this.player, this.sfxName);
+    LogChannel(n"DEBUG", s"Run \(this.sfxName) sfx");
+  }
+}
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="events"><a class="header" href="#events">Events</a></h1>
+<p>Events are another asynchronous mechanism.
+It's more often than not used to notify other parts of the code.</p>
+<h2 id="tickable-events"><a class="header" href="#tickable-events">Tickable events</a></h2>
+<p>Tickable events are events whose progression can be tracked.
+Only work on <code>Entity</code>, so usually <code>PlayerPuppet</code>.
+The benefit of <code>TickableEvent</code> is that you get its state and progress available.</p>
+<blockquote>
+<p>During my own experiments, I wasn't able to call it on a custom class which extends <code>Entity</code>.</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">// define your event
+public class ProgressionEvent extends TickableEvent {}
+
+public class System extends ScriptableSystem {
+  private let player: wref&lt;PlayerPuppet&gt;;
+
+  private final func OnPlayerAttach(request: ref&lt;PlayerAttachRequest&gt;) -&gt; Void {
+    let player: ref&lt;PlayerPuppet&gt; = GetPlayer(this.GetGameInstance());
+    if IsDefined(player) {
+      LogChannel(n"DEBUG", s"initialize system on player attach");
+      this.player = player;
+      let evt: ref&lt;ProgressionEvent&gt; = new ProgressionEvent();
+      // tick repeatedly for 3 seconds
+      GameInstance.GetDelaySystem(this.player.GetGame()).TickOnEvent(this.player, evt, 3.);
+
+    } else { LogError(s"no player found!"); }
+  }
+}
+
+// this method will get called repeatedly on each tick
+// for the duration of the event or until canceled.
+// signature of the function matters !
+@addMethod(PlayerPuppet)
+protected cb func OnProgressionEvent(evt: ref&lt;ProgressionEvent&gt;) -&gt; Bool {
+  // do something ..
+}
+</code></pre>
+</div>
+<h2 id="delayed-events"><a class="header" href="#delayed-events">Delayed events</a></h2>
+<p>Regular events can be delayed asynchronously too.</p>
+<blockquote>
+<p>credits to <code>Lyralei</code> on Discord.</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">@addField(PlayerPuppet)
+public let m_EventDelayID: ref&lt;DelayID&gt;; // Id the game creates for us. This is necessary for eventually cancelling your event if you ever have to.
+
+public class YourEventClassName extends Event 
+{
+// Can be empty, but if you need it to save any data to use later in your "handling" function, make sure to add the necessary variables here.
+  public let player: ref&lt;PlayerPuppet&gt;;
+}
+
+// Setup Event. Has to be in the class that is the owner.
+@addMethod(PlayerPuppet)
+public final func SetupEvent(delay: Float) -&gt; Void {
+  let evt: ref&lt;YourEventClassName &gt; = new YourEventClassName();
+
+  // Example on how to set your variable data 
+  evt.player = this;
+  this.m_EventDelayID = GameInstance.GetDelaySystem(this.GetGame()).DelayEvent(this, evt, delay, false);
+}
+
+// As soon as V is entered the world, we want to start the event.
+@wrapMethod(PlayerPuppet)
+protected cb func OnGameAttached() -&gt; Bool {
+  wrappedMethod();
+  if !this.IsReplacer() {
+    this.SetupEvent(5.00); // 5.00 == 5 real life seconds. 1 min in-game is 10 real seconds.
+  }
+}
+
+// Has to be added to the main class that is the owner. Format of the function is important! This is how we call our handling function:
+@addMethod(PlayerPuppet)
+protected cb func OnHandlingEvent(evt: ref&lt;YourEventClassName &gt;) -&gt; Void {
+  LogChannel(n"DEBUG", "Running Event now!");
+}
+</code></pre>
+</div>
+<h2 id="regular-events"><a class="header" href="#regular-events">Regular events</a></h2>
+<blockquote>
+<p>credits to <code>Lyralei</code> on Discord.</p>
+</blockquote>
+<p>Here <code>QueueEvent</code> generally means <em>it's gonna be played as soon as possible</em>.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class YourEventClassName extends Event 
+{
+// Can be empty, but if you need it to save any data to use later in your "handling" function, make sure to add the necessary variables here.
+  public let player: ref&lt;PlayerPuppet&gt;;
+}
+
+// Setup Event. Has to be in the class that is the owner.
+@addMethod(PlayerPuppet)
+public final func DoEvent() -&gt; Void {
+  let evt: ref&lt;YourEventClassName &gt; = new YourEventClassName();
+  this.QueueEvent(evt);
+}
+
+// As soon as V is entered the world, we want to start the event.
+@wrapMethod(PlayerPuppet)
+protected cb func OnGameAttached() -&gt; Bool {
+  wrappedMethod();
+  if !this.IsReplacer() {
+    this.DoEvent();
+  }
+}
+</code></pre>
+</div>
+<h3 id="event-inherited-from-red-event"><a class="header" href="#event-inherited-from-red-event">event inherited from RED Event</a></h3>
+<p>see <a href="https://jac3km4.github.io/cyberdoc/#11485">cyberdoc</a></p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public native class GameObject extends GameEntity {
+  // certain event will automatically trigger a method with this exact signature
+  //                               vvvvvvvvvvvv
+  protected cb func OnHit(evt: ref&lt;gameHitEvent&gt;) -&gt; Bool {
+    this.SetScannerDirty(true);
+    this.ProcessDamagePipeline(evt);
+  }
+}
+</code></pre>
+</div>
+<blockquote>
+<p>credits to psiberx</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="blackboards"><a class="header" href="#blackboards">Blackboards</a></h1>
+<p>Blackboards act as global variables.
+Other parts of the code can get, set or listen to blackboard definitions to be notified of changes.</p>
+<p><em>used in: effectors, components, prereq state, systems, ink game controllers, managers..</em></p>
+<blockquote>
+<p>in prereq state it seems like registering/unregistering is automatically handled by engine</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class Manager extends IScriptable {
+  private let listener: ref&lt;CallbackHandle&gt;;
+  
+  // register to the changes first
+  private final func PlayerAttachedCallback(playerPuppet: ref&lt;GameObject&gt;) -&gt; Void {
+    let board: ref&lt;IBlackboard&gt; = GameInstance
+      .GetBlackboardSystem(playerPuppet.GetGame());
+
+    this.listener = board.RegisterListenerBool(GetAllBlackboardDefs().UIGameData.Popup_IsModal, this, n"OnPopupModalChanged");
+  }
+  // don't forget to unregister when finished
+  private final func PlayerDetachedCallback(playerPuppet: ref&lt;GameObject&gt;) -&gt; Void {
+    let board: ref&lt;IBlackboard&gt; = GameInstance
+      .GetBlackboardSystem(playerPuppet.GetGame());
+
+    board.UnregisterListenerBool(GetAllBlackboardDefs().UIGameData.Popup_IsModal, this.listener);
+  }
+
+  // changes to the listened blackboard variable will trigger
+  protected cb func OnPopupModalChanged(value: Bool) -&gt; Bool {
+    // do something..
+  }
+}
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="listeners"><a class="header" href="#listeners">Listeners</a></h1>
+<p>A listener, as its name suggests, allows to listen for changes.</p>
+<p>There's different kinds of listeners, for example a <code>ScriptStatsListener</code> allows to listen for changes on stats, namely <code>BaseStats</code> in the code. The game contains numerous stats, let's look at an example.</p>
+<p><a href="https://cyberpunk.fandom.com/wiki/Detoxifier">Detoxifier</a> (a.k.a <code>ToxinCleanser</code>) grants the following stats:</p>
+<ul>
+<li><code>gamedataStatType.PoisonImmunity</code></li>
+<li><code>gamedataStatType.HasPoisonImmunity</code></li>
+</ul>
+<p>Note: <code>gamedataStatType</code> is used in TweakDB with <code>BaseStats</code>, this can be observed in <code>RPGManager</code> in the sources.</p>
+<p>Another example from the sources with <code>gamedataStatType.AutoReveal</code>:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class AutoRevealStatListener extends ScriptStatsListener {
+  public let m_owner: wref&lt;GameObject&gt;;
+  public func OnStatChanged(ownerID: StatsObjectID, statType: gamedataStatType, diff: Float, total: Float) -&gt; Void {
+    let updateRequest: ref&lt;UpdateAutoRevealStatEvent&gt;;
+    if Equals(statType, gamedataStatType.AutoReveal) &amp;&amp; IsDefined(this.m_owner as PlayerPuppet) {
+      updateRequest = new UpdateAutoRevealStatEvent();
+      updateRequest.hasAutoReveal = total &gt; 0.00;
+      this.m_owner.QueueEvent(updateRequest);
+    };
+  }
+}
+
+public class UpdateAutoRevealStatEvent extends Event {
+  public let hasAutoReveal: Bool;
+}
+
+public class PlayerPuppet extends ScriptedPuppet {
+  protected cb func OnUpdateAutoRevealStatEvent(evt: ref&lt;UpdateAutoRevealStatEvent&gt;) -&gt; Bool {
+    // do something ...
+  }
+  protected final func RegisterStatListeners(self: ref&lt;PlayerPuppet&gt;) -&gt; Void {
+    let statsSystem: ref&lt;StatsSystem&gt; = GameInstance.GetStatsSystem(this.GetGame());
+    let statPoolsSystem: ref&lt;StatPoolsSystem&gt; = GameInstance.GetStatPoolsSystem(this.GetGame());
+    let entityID: EntityID = this.GetEntityID();
+    this.m_autoRevealListener = new AutoRevealStatListener();
+    this.m_autoRevealListener.SetStatType(gamedataStatType.AutoReveal);
+    this.m_autoRevealListener.m_owner = self;
+    statsSystem.RegisterListener(Cast&lt;StatsObjectID&gt;(entityID), this.m_autoRevealListener);
+  }
+  protected final func UnregisterStatListeners(self: ref&lt;PlayerPuppet&gt;) -&gt; Void {
+    let statsSystem: ref&lt;StatsSystem&gt; = GameInstance.GetStatsSystem(this.GetGame());
+    let statPoolsSystem: ref&lt;StatPoolsSystem&gt; = GameInstance.GetStatPoolsSystem(this.GetGame());
+    let entityID: EntityID = this.GetEntityID();
+    statsSystem.UnregisterListener(Cast&lt;StatsObjectID&gt;(entityID), this.m_autoRevealListener);
+    this.m_autoRevealListener = null;
+  }
+}
+</code></pre>
+</div>
+<p>There are different kinds of listeners:</p>
+<ul>
+<li><code>ScriptStatsListener</code>     ➡️ <code>BaseStats</code></li>
+<li><code>ScriptStatPoolsListener</code> ➡️ <code>BaseStatPools</code></li>
+<li>...</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tasks"><a class="header" href="#tasks">Tasks</a></h1>
+<p>Tasks can be used in conjunction with <code>DelaySystem</code> and allows for more granular control on when it gets processed (see <a href="https://jac3km4.github.io/cyberdoc/#2360">gameScriptTaskExecutionStage</a>).</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class EnableTaskData extends ScriptTaskData {
+  public let enabled: Bool;
+}
+
+public class System extends ScriptableSystem {
+  protected final func Enable(enabled: Bool) -&gt; Void {
+    let data: ref&lt;EnableTaskData&gt; = new EnableTaskData();
+    data.enabled = enabled;
+    GameInstance.GetDelaySystem(this.GetGameInstance()).QueueTask(this, data, n"OnEnable", gameScriptTaskExecutionStage.Any);
+  }
+  // function signature matters!
+  protected final func OnEnable(data: ref&lt;ScriptTaskData&gt;) -&gt; Void {
+    let task: ref&lt;EnableTaskData&gt; = data as EnableTaskData;
+    if !IsDefined(task) {
+      return;
+    };
+    // do something ..
+  }
+}
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="effectors"><a class="header" href="#effectors">Effectors</a></h1>
+<p>Or simply put, adding custom logic at runtime to statically defined status effects.</p>
+<p>Looking at <code>BaseStatusEffect.BerserkPlayer</code> in WolvenKit,
+in its 2nd <code>packages</code> then down in its <code>effectors</code>'' first entry,
+there's a <code>BaseStatusEffect.BerserkPlayerSFXEffector</code> whose <code>effectorClassName</code> is <code>PlaySFXEffector</code>.</p>
+<p>Looking into game sources, there's indeed a <code>PlaySFXEffector</code> (which extends <code>Effector</code>/<code>IScriptable</code>),
+which allows for tweaking e.g. the effect at runtime based on conditions:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class PlaySFXEffector extends Effector {
+  // ...
+  protected func ActionOn(owner: ref&lt;GameObject&gt;) -&gt; Void {
+    this.m_owner = owner;
+    if !this.m_startOnUninitialize &amp;&amp; IsNameValid(this.activationSFXName) {
+      if !this.m_unique {
+        GameObject.PlaySound(this.m_owner, this.activationSFXName, n"PlaySFXEffector");
+      } else {
+        GameObject.PlaySoundWithParams(this.m_owner, this.activationSFXName, n"PlaySFXEffector", audioAudioEventFlags.Unique);
+      };
+    };
+  }
+}
+</code></pre>
+</div>
+<p>Here's another example with similarly designed status effect, <code>ElectrocutedSFX</code>, in WolvenKit:</p>
+<p><img src="patterns/./pictures/RED-SFX-effectors.png" alt="Electrocuted PlaySFXEffector" /></p>
+<div id="admonition-info" class="admonition admonish-info" role="note" aria-labelledby="admonition-info-title">
+<div class="admonition-title">
+<div id="admonition-info-title">
+<p>Info</p>
+</div>
+<a class="admonition-anchor-link" href="patterns/effectors.html#admonition-info"></a>
+</div>
+<div>
+<p>Some experiments can be found in the <a href="patterns/./../travelog/2023-02-10.html">travelog entry from 2023-02-10</a>.</p>
+</div>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="scriptables"><a class="header" href="#scriptables">Scriptables</a></h1>
+<p><code>IScriptable</code> is actually the parent class of most classes, including the ones used in the previous patterns.</p>
+<p>Useful to delegate code, e.g. mechanics with <a href="patterns/./blackboards.html">Blackboard</a> interactions:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public class Controller extends IScriptable {
+  private let owner: wref&lt;GameObject&gt;;
+  private let delay: DelayID;
+  private let definition: ref&lt;BlackboardDefinition&gt;;
+  private let listener: ref&lt;CallbackHandle&gt;;
+  private let sticker: BlackboardID_Int;
+
+  private final func RegisterBlackboardListeners() -&gt; Void {
+    let bb: ref&lt;IBlackboard&gt;;
+    let system: ref&lt;BlackboardSystem&gt;;
+    if this.m_owner != null {
+      system = GameInstance.GetBlackboardSystem(this.m_owner.GetGame());
+    };
+    if system != null {
+      bb = system.GetLocalInstanced(this.m_owner.GetEntityID(), this.definition);
+      if bb != null {
+        // by registering to board for updates and specifying the method name
+        this.listener = bb.RegisterListenerInt(this.sticker, this, n"OnStickerChanged");
+      };
+    };
+  }
+
+  // it will automatically call
+  private final func OnStickerChanged(value: Int32) -&gt; Void
+  {}
+
+  // of course one need to take care of unregistering too
+  public final func RegisterOwner(owner: ref&lt;GameObject&gt;) -&gt; Void {}
+  public final func UnregisterOwner() -&gt; Void {}
+}
+
+public class PlayerPuppet extends ScriptedPuppet {
+  private let controller: ref&lt;Controller&gt;;
+  private final func PlayerAttachedCallback(playerPuppet: ref&lt;GameObject&gt;) -&gt; Void {
+    // here controller can be attached (register)
+  }
+  private final func PlayerDetachedCallback(playerPuppet: ref&lt;GameObject&gt;) -&gt; Void {
+    // here controller can be detached (unregister/cleanup)
+  }
+}
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="troubleshooting-1"><a class="header" href="#troubleshooting-1">Troubleshooting</a></h1>
+<h2 id="clean-cache"><a class="header" href="#clean-cache">clean cache</a></h2>
+<p>credits to <code>dddzzzkkk</code> on Discord:</p>
+<blockquote>
+<p>basically to fix your issue i think you have to delete the files in the r6\cache\modded folder, delete r6\cache\final.redscripts, rename r6\cache\final.redscripts.bk to r6\cache\final.redscripts, redeploy your REDmods, THEN launch the game</p>
+</blockquote>
+<h2 id="press-none-to-continue"><a class="header" href="#press-none-to-continue">Press <code>[None]</code> to continue</a></h2>
+<p>credits to <code>DJ_Korvrik</code> : reinstall your Input Loader or delete Cyberpunk 2077\engine\config\platform\pc\input_loader.ini.</p>
+<h2 id="anchor-variables"><a class="header" href="#anchor-variables">"anchor" variables</a></h2>
+<p>one cannot e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public func GetIDs() -&gt; array&lt;TweakDBID&gt; { ... }
+
+// ❌ WRONG!
+public func IsID(id: TweakDBID) -&gt; Bool {
+  return ArrayContains(GetIDs(), id);
+}
+// ✅ do this instead:
+public func IsID(id: TweakDBID) -&gt; Bool {
+  let ids = GetIDs();
+  return ArrayContains(ids, id);
+}
+</code></pre>
+</div>
+<h2 id="handling-time-conversions"><a class="header" href="#handling-time-conversions">handling time conversions</a></h2>
+<p>The game already has <code>GameTime</code> (the time for V), <code>GameTimeStamp() -&gt; Float</code> (the real time), plus <code>EngineTime</code> (?) and <code>SimTime</code> (?).</p>
+<p>There's apparently some issue with the method <code>TimeSystem.RealTimeSecondsToGameTime()</code>, unless I wasn't using the right unit of time.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mod-mechanics"><a class="header" href="#mod-mechanics">Mod mechanics</a></h1>
+<div id="admonition-spoiler-alert" class="admonition admonish-warning" role="note" aria-labelledby="admonition-spoiler-alert-title">
+<div class="admonition-title">
+<div id="admonition-spoiler-alert-title">
+<p>Spoiler alert!</p>
+</div>
+<a class="admonition-anchor-link" href="mod.html#admonition-spoiler-alert"></a>
+</div>
+<div>
+<p>The following description details <strong>every feature</strong> of this mod, which will ruin any surprise intended to be discovered and enjoyed by the player.</p>
+<p>This is only for people who can't stand playing a mod without knowing each of their internal gameplay mechanics. 🫣</p>
+<p>You've been warned !</p>
+</div>
+</div>
+<div id="admonition-a-note-of-caution-too" class="admonition admonish-info" role="note" aria-labelledby="admonition-a-note-of-caution-too-title">
+<div class="admonition-title">
+<div id="admonition-a-note-of-caution-too-title">
+<p>A note of caution too</p>
+</div>
+<a class="admonition-anchor-link" href="mod.html#admonition-a-note-of-caution-too"></a>
+</div>
+<div>
+<p>Please note the gameplay below might evolve over time, as more content get released.</p>
+<p>Since it has to be manually maintained and it can happen that I forgot to do it (<em>I'm a mere human after all choom's, not some methodic borg</em>), please let me know in the <a href="https://github.com/cyb3rpsych0s1s/4ddicted/issues">Github issues</a> if ever something is outdated.</p>
+</div>
+</div>
+<h2 id="systems"><a class="header" href="#systems">Systems</a></h2>
+<p>This mod add the following gameplay systems to the game.</p>
+<h3 id="addiction"><a class="header" href="#addiction">Addiction</a></h3>
+<p>The way addiction is being kept track of is the following:</p>
+<ul>
+<li>whenever V consumes an addictive consumables (see which ones below),
+his/her addiction to this specific consumable increases (you can think of it as a jauge).</li>
+<li>whenever V rests at home for long enough, gets refreshed, his/her addictions jauges decrease.</li>
+<li>mild drugs decreases twice as fast as they increase.</li>
+<li>hard drugs increases twice as fast as they decrease.</li>
+</ul>
+<p>Addiction jauge has the following thresholds:</p>
+<ul>
+<li><code>Clean</code> (never consumed, or withdrawn from for long enough)</li>
+<li><code>Barely</code> (consumed a couple of times)</li>
+<li><code>Mildly</code> (consumed frequently, but not too much)</li>
+<li><code>Notably</code> (consumed on a regular basis, or the substance is very addictive in itself)</li>
+<li><code>Severely</code> (consumed for way too long)</li>
+</ul>
+<p>V is considered seriously addict whenever (s)he reaches <code>notable</code> or <code>severe</code> thresholds.</p>
+<p>Of course (s)he can perfectly withdraw from consuming the addictive substance and, if long enough, his/her threshold will decrease back.</p>
+<p>🆕 &gt;= v1.0.0</p>
+<ul>
+<li>
+<p>Consumables addictive potency now increases on subsequent consumption(s) the same day. (thanks <a href="https://next.nexusmods.com/profile/Phoenicia4/mods">Phoenicia</a>)</p>
+<blockquote>
+<p>which means, the more you consume daily the faster it increases.</p>
+</blockquote>
+</li>
+<li>
+<p>Consumables addictive resilience now increases when severing consumption for multiple subsequent days. (thanks <a href="https://next.nexusmods.com/profile/Phoenicia4/mods">Phoenicia</a>)</p>
+<blockquote>
+<p>which means, the longer you prevent from consuming the faster it weans off.</p>
+</blockquote>
+</li>
+<li>
+<p>Compatible with <a href="https://www.nexusmods.com/cyberpunk2077/mods/7510">Survival System</a>: being overly stressed prevents addiction from weaning off when sleeping.</p>
+</li>
+</ul>
+<h3 id="addictive-consumables"><a class="header" href="#addictive-consumables">Addictive consumables</a></h3>
+<h4 id="symptoms"><a class="header" href="#symptoms">Symptoms</a></h4>
+<p>The player will get hints from V whenever (s)he gets seriously addict:</p>
+<ul>
+<li>inhalers will make V cough, slightly after inhaling.</li>
+<li>injectors will make V feel pain, once their effect wears off.</li>
+<li>pills will have a specific effect on consumption, depending on their kind:
+<ul>
+<li>anabolics (Stamina Booster, Carry Capacity Booster) will make V grunts.</li>
+<li>neuro transmitter (RAM Jolt) will make V experience migraine.</li>
+</ul>
+</li>
+</ul>
+<p>🆕 &gt;= beta-0.13.0</p>
+<p>These hints slightly increase foes' audio stim range while playing, making V more likely to be detected.</p>
+<h4 id="families"><a class="header" href="#families">Families</a></h4>
+<p>Consumables are grouped by family, which gets their own gameplay mechanics.</p>
+<h5 id="healers"><a class="header" href="#healers">Healers</a></h5>
+<ul>
+<li>consumables: MaxDOC, BounceBack and Health Booster.</li>
+<li>healers are considered as mild drugs.</li>
+</ul>
+<p>Whenever V becomes notably addict to any healer, the benefits of the consumables decrease. If (s)he is severely addict, the benefits gets even more lessened.</p>
+<blockquote>
+<p>e.g. if <a href="https://cyberpunk.fandom.com/wiki/MaxDoc">MaxDOC</a> usually instantly restores 40% health, whenever notably addict it will only restore 30%, or 20% if severely addict. For some healers, it also lasts shorter.</p>
+</blockquote>
+<p>The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.</p>
+<p>🆕 &gt;= beta-0.13.0</p>
+<ul>
+<li>V will start consuming healers faster when reaching severe addiction threshold.</li>
+</ul>
+<p><img src="./cheatsheet/pictures/ingame-custom-icons.png" alt="screenshot status effect BounceBack icon" /></p>
+<h5 id="stimulants"><a class="header" href="#stimulants">Stimulants</a></h5>
+<ul>
+<li>consumables: RAM Jolt, Stamina Booster and Carry Capacity Booster.</li>
+<li>stimulants are considered as mild drugs.</li>
+</ul>
+<p>Whenever V becomes notably addict to a booster (each being treated separately)
+and (s)he hasn't consumed any for a certain duration, (s)he gets a debuff equals to what the consumable originally grants.</p>
+<blockquote>
+<p>e.g. if <a href="https://cyberpunk.fandom.com/wiki/RAM_Jolt">RAM Jolt</a> increases max RAM units by 2, whenever V is withdrawing (s)he is at 90% memory if notably addict, or 70% memory if severely addict until (s)he consumes some again.</p>
+</blockquote>
+<p>Craving for a stimulant will also be shown in radial wheel with custom icon.</p>
+<p>🆕 &gt;= beta-0.13.0</p>
+<ul>
+<li>RAM Jolt can also cause Photosensitivity when severely withdrawn, which make impairing blinding effects (e.g. flash grenades) last longer.</li>
+</ul>
+<p>🆕 &gt;= v1.0.0</p>
+<ul>
+<li>Stamina Booster can also cause Lesions, which make force-opening any door or hard-landing cause damages.</li>
+</ul>
+<h5 id="black-lace"><a class="header" href="#black-lace">Black Lace</a></h5>
+<p>Black Lace has always been an iconic drug in Cyberpunk lore, hence why it gets its own system.</p>
+<p>Black Lace is considered as a hard drug.</p>
+<p>Whenever V becomes notably or severely addict to Black Lace,
+and (s)he hasn't consumed any for a certain duration (s)he is susceptible to Fibromalgya, a custom status effect which decreases his/her REF</p>
+<blockquote>
+<p>e.g. when experiencing Fibromalgya, V's REF decreases to 90% if notably addict or 70% if severely addict, until (s)he consumes some again.</p>
+</blockquote>
+<p>When suffering from Fibromalgya, V will also express some pain.</p>
+<p>Craving for Black Lace will also be shown in radial wheel with custom icon.</p>
+<h5 id="alcohols"><a class="header" href="#alcohols">Alcohols</a></h5>
+<p>Alcohols are considered hard drug.</p>
+<p>🆕 &gt;= beta-0.13.0</p>
+<p>Whenever V becomes notably or severely alcoholic (s)he can be subject to Jitters, greatly impairing his/her ability at aiming with ranged weapons.</p>
+<blockquote>
+<p>Compatible with <a href="https://www.nexusmods.com/cyberpunk2077/mods/8038">Idle Anywhere</a> and <a href="https://www.nexusmods.com/cyberpunk2077/mods/10372">Immersive Bartenders</a>.</p>
+</blockquote>
+<h5 id="cigars-and-cigarettes"><a class="header" href="#cigars-and-cigarettes">Cigars and cigarettes</a></h5>
+<p>🆕 &gt;= beta-0.13.0</p>
+<p>Whenever V becomes notably or severely addict to tobacco (s)he can be subject:</p>
+<ul>
+<li>Short breath (notably addict): delays + reduces Stamina regeneration, and consumes Stamina while sprinting.</li>
+<li>Breathless (severely addict): delays + reduces Stamina regeneration, and consumes Stamina both while sprinting and dodging.</li>
+</ul>
+<blockquote>
+<p>Compatible with <a href="https://www.nexusmods.com/cyberpunk2077/mods/8038">Idle Anywhere</a>.</p>
+</blockquote>
+<hr />
+<p>🆕 &gt;= beta-0.9.0</p>
+<p>Additional mechanisms now exists to account for players using <a href="https://www.nexusmods.com/cyberpunk2077/mods/5646">Wannabe Edgerunner</a> mod together.</p>
+<h6 id="insanity"><a class="header" href="#insanity">Insanity</a></h6>
+<p>Whenever addicted to Black Lace, V can suffer an additional <code>Humanity</code> penalty, called Insanity.
+Penalty is calculated from max number of consecutive consumptions, along with addiction threshold.</p>
+<h6 id="neuroblockers"><a class="header" href="#neuroblockers">Neuroblockers</a></h6>
+<p>Neuroblockers addiction works a little bit like Healers, except that it weakens their duration.
+In short: the more you're addicted to Neuroblockers, the shorter they last.</p>
+<p>The status effects of these consumables will also have their UI in radial wheel updated accordingly, with their own custom icon.</p>
+<p>🆕 &gt;= v1.0.0</p>
+<ul>
+<li>Neuroblockers usage is contraindicated with neuro-stimuli intensive cyberwares like ExDisk and BioConductor, as it tends to accelerate the addiction process.</li>
+</ul>
+<hr />
+<h3 id="cyberware"><a class="header" href="#cyberware">Cyberware</a></h3>
+<p>Some cyberwares also have an impact on addiction in general.</p>
+<h4 id="detoxifier"><a class="header" href="#detoxifier">Detoxifier</a></h4>
+<p>This item makes V's addictions decrease drastically more whenever getting a proper rest.</p>
+<blockquote>
+<p>e.g. whenever equipped with Detoxifier and properly resting at house, V sees his/her addiction decrease twice as fast (cumulable with Metabolic Editor).</p>
+</blockquote>
+<p>⚠️ &gt;= CDPR patches <code>2.0+</code> apparently removed Detoxifier so gameplay mechanics might be obsolete, unless used with <a href="https://www.nexusmods.com/cyberpunk2077/mods/14094">SynthDose</a>?</p>
+<p>This benefit is kept hidden from the player to discover.</p>
+<h4 id="metabolic-editor"><a class="header" href="#metabolic-editor">Metabolic Editor</a></h4>
+<p>This item makes V's addictions decrease drastically more whenever getting a proper rest.</p>
+<blockquote>
+<p>e.g. whenever equipped with Metabolic Editor and properly resting at house, V sees his/her addiction decrease thrice as fast (cumulable with Detoxifier).</p>
+</blockquote>
+<p>This benefit is kept hidden from the player to discover.</p>
+<p>⚠️ &gt;= CDPR patches <code>2.0+</code> apparently removed Metabolic Editor so gameplay mechanics might be obsolete, unless used with <a href="https://www.nexusmods.com/cyberpunk2077/mods/21914">Pre 2.0 Legendary Cyberware Collection</a>?</p>
+<h4 id="biomonitor"><a class="header" href="#biomonitor">Biomonitor</a></h4>
+<p>This item will warn V whenever crossing a serious thresholds.</p>
+<blockquote>
+<p>e.g. a little animation will play on-screen with the Biomonitor warning V about his/her current condition.</p>
+</blockquote>
+<p>The UI is also dismissable, and automatically hides whenever interacting with another interaction UI in the game.</p>
+<p><img src="./pictures/ingame-biomonitor-loading.png" alt="screenshot biomonitor loading" />
+<img src="./pictures/ingame-biomonitor-diagnosis.png" alt="screenshot biomonitor diagnosis" /></p>
+<h4 id="drug-pump"><a class="header" href="#drug-pump">Drug Pump</a></h4>
+<p>🆕 &gt;= v1.0.0</p>
+<p>A secret piece of cyberware called Drug Pump is available to find in-game.</p>
+<p>This street-modified blood pump accelerates its possessor's healing while spiking their bloodstream with Black Lace. The injection has a tier-based percentage chance to consume the item.</p>
+<p>(thanks <a href="https://next.nexusmods.com/profile/Demon9ne/mods">Demon9ne</a>)</p>
+<h3 id="voiced-reactions"><a class="header" href="#voiced-reactions">Voiced reactions</a></h3>
+<p>🆕 &gt;= beta-0.8.0</p>
+<p>Now V will sometimes have voiced reactions, for English language only (it will have no effect for people playing  in another language yet).</p>
+<p>Examples:</p>
+<ul>
+<li>whenever biomonitor boots many times.</li>
+<li>whenever biomonitor reports serious condition multiple times.</li>
+<li>whenever biomonitor is dismissed during combat.</li>
+</ul>
+<p>Some of these voiced reactions are unique.</p>
+<blockquote>
+<p>Requires <a href="https://www.nexusmods.com/cyberpunk2077/mods/12001">Audioware</a>.</p>
+</blockquote>
+<h3 id="caution-notices"><a class="header" href="#caution-notices">Caution notices</a></h3>
+<p>🆕 &gt;= v1.0.0</p>
+<p>Consumable tooltips in backpack now display caution notices from their manufacturer regarding their responsible usage.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="travelog"><a class="header" href="#travelog">Travelog</a></h1>
+<p>A little travel blog in modding land.</p>
+<ul>
+<li><a href="travelog/./2023-01-21.html">2023-01-21</a>: cyberware research / lore research for general gameplay mechanics</li>
+<li><a href="travelog/./2023-01-22.html">2023-01-22</a>: VFX research / tweak loading order</li>
+<li><a href="travelog/./2023-01-24.html">2023-01-24</a>: status effects icons research</li>
+<li><a href="travelog/./2023-01-25.html">2023-01-25</a>: status effects icons research follow-up</li>
+<li><a href="travelog/./2023-01-27.html">2023-01-27</a>: bitwise experimentations</li>
+<li><a href="travelog/./2023-01-29.html">2023-01-29</a>: Redscript syntax clarifications</li>
+<li><a href="travelog/./2023-01-30.html">2023-01-30</a>: UI research / various</li>
+<li><a href="travelog/./2023-01-31.html">2023-01-31</a>: UI research follow-up</li>
+<li><a href="travelog/./2023-02-03.html">2023-02-03</a>: tweaking ink widget &amp; anim research</li>
+<li><a href="travelog/./2023-02-04.html">2023-02-04</a>: ink controller and ink mask</li>
+<li><a href="travelog/./2023-02-06.html">2023-02-06</a>: lore research for black lace gameplay mechanics</li>
+<li><a href="travelog/./2023-02-07.html">2023-02-07</a>: radial wheel research</li>
+<li><a href="travelog/./2023-02-10.html">2023-02-10</a>: interactions and sounds</li>
+<li><a href="travelog/./2023-03-17.html">2023-03-17</a>: AI powered dialogs research</li>
+<li><a href="travelog/./2023-03-31.html">2023-03-31</a>: custom sounds</li>
+<li><a href="travelog/./2023-04-07.html">2023-04-07</a>: how to translate this mod ?</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="20230121"><a class="header" href="#20230121">2023/01/21</a></h1>
+<h2 id="cyberware-research"><a class="header" href="#cyberware-research">cyberware research</a></h2>
+<ul>
+<li>
+<p><code>PlaySFXEffector</code> -&gt; heart beat (deactivation: heart beat rev) : but bound to status effect or manually playable ?</p>
+</li>
+<li>
+<p>make the onomotopea happens less often if too frequent ?</p>
+</li>
+<li>
+<p>what about dexotifier ? -&gt; immune to withdrawal symptoms ! boost resilience ? (2?)</p>
+<blockquote>
+<p>main trait of this item is immunity
+<code>Items.ToxinCleanser</code></p>
+</blockquote>
+</li>
+<li>
+<p>what about metabolic editor ? -&gt; boost resilience ! (4?) immune ? regenerate health on symptoms ?</p>
+<blockquote>
+<p>main trait of this is regeneration
+<code>Items.ReverseMetabolicEnhancer</code></p>
+</blockquote>
+</li>
+<li>
+<p>healers weakened potency:</p>
+<ul>
+<li>if one can <code>@wrapMethod</code> over <code>class StatPoolEffector</code>'s  then maybe the penalty for healers can be applied directly there.
+another long-told alternative would be a custom status effect but SFX should still be handled separately by <code>AudioManager</code>.</li>
+</ul>
+</li>
+<li>
+<p>inventing custom VFX:
+there's an <code>ApplyShaderOnObjectEffector</code> !</p>
+</li>
+<li>
+<p>playing VFX without SFX:</p>
+<ul>
+<li>looking at <em>splinter_buff_fx.effect</em> in Wolvenkit's Asset browser, it appears that it contains an <code>itemTrackItemSound</code> in <code>events</code> with <code>eventName</code> set to <code>vfx_fullscreen_splinter_buff</code>. finding a way to disable/remove it would probably allows for playing VFX without associated SFX.</li>
+<li>looking at older code, there's also:</li>
+</ul>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">GameObjectEffectHelper.StartEffectEvent(this, n"status_drunk_level_3");
+GameObject.SetAudioParameter(this, n"vfx_fullscreen_drunk_level", 3.00);
+</code></pre>
+</div>
+<p>and for <code>splinter_debuff</code> there's <code>vfx_fullscreen_splinter_buff</code>.</p>
+</li>
+</ul>
+<h2 id="bibliography"><a class="header" href="#bibliography">bibliography</a></h2>
+<h3 id="cyberpunk-2077-wiki"><a class="header" href="#cyberpunk-2077-wiki">Cyberpunk 2077 wiki</a></h3>
+<p>The Immune System has <strong>2 slots</strong> that can be used to implant a cyberware for V.</p>
+<h3 id="health-direct"><a class="header" href="#health-direct">Health Direct</a></h3>
+<p>Addiction withdrawal symptoms | <a href="https://www.healthdirect.gov.au">healthdirect</a></p>
+<p>a residential detox unit or in a hospital; at home. <strong>Detoxing</strong> or <strong>withdrawing</strong> without support can lead to relapse. It can also be dangerous to your health.</p>
+<h3 id="drug-withdrawal"><a class="header" href="#drug-withdrawal">Drug withdrawal</a></h3>
+<p>Drug withdrawal, drug withdrawal syndrome, or substance withdrawal syndrome,<code>[1]</code> is the group of symptoms that occur upon the abrupt discontinuation or decrease in the intake of pharmaceutical or recreational drugs.</p>
+<p>In order for the symptoms of withdrawal to occur, one must have first developed a form of drug dependence. This may occur as physical dependence, psychological dependence or both. Drug dependence develops from consuming one or more substances over a period of time.</p>
+<p>Dependence arises in a dose-dependent manner and produces withdrawal symptoms that vary with the type of drug that is consumed. For example, prolonged use of an antidepressant medication is likely to cause a rather different reaction when discontinued compared to discontinuation of an opioid, such as heroin. <strong>Withdrawal symptoms from opiates include anxiety, sweating, vomiting, and diarrhea. Alcohol withdrawal symptoms include irritability, fatigue, shaking, sweating, and nausea. Withdrawal from nicotine can cause irritability, fatigue, insomnia, headache, and difficulty concentrating. Many prescription and legal nonprescription substances can also cause withdrawal symptoms when individuals stop consuming them, even if they were taken as directed by a physician.</strong></p>
+<p><strong>The route of administration, whether intravenous, intramuscular, oral or otherwise, can also play a role in determining the severity of withdrawal symptoms.</strong> There are different stages of withdrawal as well; <strong>generally, a person will start to feel bad (crash or come down), progress to feeling worse, hit a plateau, and then the symptoms begin to dissipate. However, withdrawal from certain drugs (barbiturates, benzodiazepines, alcohol, glucocorticoids) can be fatal.</strong> While it is seldom fatal to the user, withdrawal from opiates (and some other drugs) can cause miscarriage, due to fetal withdrawal. The term "cold turkey" is used to describe the sudden cessation of use of a substance and the ensuing physiologic manifestations.</p>
+<h3 id="wikipedia"><a class="header" href="#wikipedia">Wikipedia</a></h3>
+<p>What are 3 important functions of the liver?</p>
+<p>The liver is an essential organ of the body that performs over 500 vital functions. <strong>These include removing waste products and foreign substances from the bloodstream</strong>, regulating blood sugar levels, and creating essential nutrients.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="20230122"><a class="header" href="#20230122">2023/01/22</a></h1>
+<h2 id="vfx-research"><a class="header" href="#vfx-research">VFX research</a></h2>
+<p>So how to take existing VFX in the game, tweak them, and use them !</p>
+<p>The experiment made today is to take e.g. <code>splinter_buff</code> existing effect (the one played when inhaling a MaxDOC, a.k.a <code>FirstAidWhiff</code>), remove the inhaling SFX and see if it's possible.</p>
+<p>And it does:</p>
+<ul>
+<li>WolvenKit Asset browser : e.g. <em>base\characters\entities\player\player_wa_fpp.ent</em></li>
+<li><code>components</code> :
+<ul>
+<li><code>fx_status_effect</code> : e.g. dizzy, drunk, stunned, etc</li>
+<li><code>fx_player</code> : e.g. swimming, johnny sickness, eyes closing, locomotion, etc + <strong>splinter_buff</strong> !</li>
+</ul>
+</li>
+</ul>
+<p><img src="travelog/pictures/RED-splinter_buff.png" alt="WolvenKit splinter_buff effect" /></p>
+<p>then:</p>
+<ul>
+<li>WolvenKit :
+<ul>
+<li>open <em>splinter_buff.effect</em> in project
+<ul>
+<li>rename it e.g. <em>splinter_addicted.effect</em></li>
+<li>move it e.g. <em>fx\camera\splinter_addicted\splinter_addicted.effect</em></li>
+</ul>
+</li>
+<li>open <em>base\characters\entities\player\player_wa_fpp.ent</em> in project
+<ul>
+<li>
+<p>add a new entry under components.fx_player.effectDescs</p>
+</li>
+<li>
+<p>fill the previously created file info and effectName desired in RED
+you can then call it with e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">GameObjectEffectHelper.StartEffectEvent(this, n"splinter_addicted");
+</code></pre>
+</div>
+<p>even create e.g. a YAML tweak</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">BaseStatusEffect.SplinterAddicted:
+  $base: BaseStatusEffect.FirstAidWhiffV0
+  packages: []
+  VFX:
+    - $type: StatusEffectFX_Record
+      name: splinter_addicted
+      shouldReapply: true
+</code></pre>
+</div>
+<p>then call it with e.g.</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">GameInstance
+  .GetStatusEffectSystem(this.GetGame())
+  .ApplyStatusEffect(this.GetEntityID(), t"BaseStatusEffect.SplinterAddicted", this.GetRecordID(), this.GetEntityID());
+</code></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="tweaks-loading-order"><a class="header" href="#tweaks-loading-order">tweaks loading order</a></h2>
+<blockquote>
+<p>psiberx — 09/11/2022 3:08 PM
+yeah, the only things that can be already present are cet early mods and other yaml mods
+the load order for all tools:</p>
+<ul>
+<li>base tweakdb (original or redmodded)</li>
+<li>cet mods using onTweak (afaik rarely used)</li>
+<li>yaml tweaks (alphabetical order)</li>
+<li>redscript tweaks</li>
+<li>cet mods using onInit (most existing mods)</li>
+</ul>
+</blockquote>
+<p>also the best method is to not touch e.g. <em>base\characters\entities\player\player_wa_fpp.ent</em> at all since other mod(s) could override it, but instead use keanu's trick which can be found in "Immersive Glasses":</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:skyblue;color:skyblue;" href="https://wiki.redmodding.org/cyber-engine-tweaks"><i style="font-size:18px;--fa-primary-color:skyblue;color:skyblue;" class="fa fa-solid fa-globe"></i>&nbsp;&nbsp;Lua</a>  
+<pre><code class="language-lua">local effects = GetPlayer():FindComponentByName("fx_player").effectDescs
+CName.new(effectName);
+local custom = entEffectDesc.new();
+custom.effectName = "splinter_addicted";
+custom.effect = "base\\fx\\camera\\splinter_buff\\splinter_addicted_fx.effect";
+GetPlayer():FindComponentByName("fx_player").effectDescs = effects
+</code></pre>
+</div>
+<p>and indeed it works to have a <code>BaseStatusEffect.SplinterAddicted</code> defined in YAML tweaks (e.g. <em>tweaks/Addicted/healer.yml</em>) whose <code>splinter_addicted</code> effect is defined in CET (e.g. <em>mods/Addicted/init.lua</em>).</p>
+<p>Thanks to :</p>
+<ul>
+<li>psiberx</li>
+<li>Hróbjartur Fóðarsson</li>
+<li>Sürr</li>
+<li>Simarilius</li>
+</ul>
+<p>on <a href="https://discord.gg/redmodding">Discord server channel</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="20230124"><a class="header" href="#20230124">2023/01/24</a></h1>
+<h2 id="status-effects-icons-research"><a class="header" href="#status-effects-icons-research">Status effects icons research</a></h2>
+<p>So after having literally flatlined my install once again, here we are:</p>
+<p>gathering notes first ...</p>
+<p>I was recommended the <a href="https://wiki.redmodding.org/cyberpunk-2077-modding/modding-guides/items/adding-new-items">WolvenKit guid on Adding new items</a>.</p>
+<p>Probably need to be extra careful on <a href="https://wiki.redmodding.org/cyberpunk-2077-modding/modding-guides/items/adding-new-items#hooking-up-the-inkatlas">hooking up the inkatlas</a>.</p>
+<p>There's also a notable entry in <a href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks#item-icons">TweakXL item icons</a>.</p>
+<p>psiberx on discord:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">@wrapMethod(buffListItemLogicController)
+public final func SetData(icon: CName, time: Float) -&gt; Void {
+  wrappedMethod(icon, time);
+  if Equals(icon, n"first_aid_whiff") {
+    inkImageRef.SetAtlasResource(this.m_icon, r"base\\gameplay\\gui\\widgets\\healthbar\\atlas_buffinfo.inkatlas");
+    inkImageRef.SetTexturePart(this.m_icon, n"first_aid_whiff");
+  };
+}
+</code></pre>
+</div>
+<p>but it was also stated elsewhere:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">HUDWeaponIcons.Satara:
+    $type: UIIcon # UIIcon_Record ?
+    atlasPartName: 27_Rostovic_DB_2_Satara
+    atlasResourcePath: base\gameplay\gui\widgets\ammo_counter\atlas_ammo_counter.inkatlas
+</code></pre>
+</div>
+<h3 id="other-interesting-things-spotted-along-the-way"><a class="header" href="#other-interesting-things-spotted-along-the-way">Other interesting things spotted along the way</a></h3>
+<p>custom central HUD</p>
+<p><img src="travelog/pictures/RED-probing-technique.png" alt="RED probing technique" /></p>
+<h2 id="credits"><a class="header" href="#credits">Credits</a></h2>
+<ul>
+<li>Paperclip</li>
+<li>psiberx</li>
+</ul>
+<h2 id="troubleshooting-2"><a class="header" href="#troubleshooting-2">Troubleshooting</a></h2>
+<h3 id="size"><a class="header" href="#size">Size</a></h3>
+<ul>
+<li>original size:  640x512</li>
+<li>1080p:          320x256</li>
+<li>720p:           216x152</li>
+</ul>
+<p>note:</p>
+<ul>
+<li>width   1080p -&gt; 720p: <code>320 / 80 * 54 = 216</code>  (not the same ratio)</li>
+<li>height  1080p -&gt; 720p: <code>256 / 64 * 38 = 152</code>  (not the same ratio)</li>
+</ul>
+<p>based on width:</p>
+<ul>
+<li>216/8       = 27</li>
+<li>640/8       = 80</li>
+<li>27/80       = 0.3375</li>
+<li>640*0.3375  = 216</li>
+<li>or 640/100*33.75</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="20230125"><a class="header" href="#20230125">2023/01/25</a></h1>
+<h2 id="status-effects-icons-research-follow-up"><a class="header" href="#status-effects-icons-research-follow-up">Status effects icons research follow-up</a></h2>
+<h3 id="tooling-update"><a class="header" href="#tooling-update">Tooling update</a></h3>
+<p>So it turns out I had to fork and modify <a href="https://github.com/deadlymustard/inkatlas-utils">InkAtlas Utils</a>.</p>
+<p>The JSON format for the <em>.inkatlas</em> file, a.k.a <code>WKitJsonVersion</code> has changed (now in <code>0.0.3</code>).
+Also, as a side note:</p>
+<ul>
+<li>
+<p>the TGA gets flipped while it doesn't seem to be the case in WolvenKit anymore.</p>
+<blockquote>
+<p>just manually flip it vertically in Photoshop</p>
+</blockquote>
+</li>
+<li>
+<p>the <code>atlasPartName</code> normalizing function doesn't replace the <code>-</code> with <code>_</code> as assumed.</p>
+<blockquote>
+<p>just manually search and replace the atlasPartName in IDE</p>
+</blockquote>
+</li>
+<li>
+<p>the <code>ArchiveFileName</code> isn't set in the <code>Header</code>.</p>
+<blockquote>
+<p>just copy/paste absolute location of the <em>.inkatlas</em> file ?</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="more-troubleshooting"><a class="header" href="#more-troubleshooting">More troubleshooting</a></h3>
+<p>Given a repo like this:
+<img src="travelog/./pictures/WK-repo-structure.png" alt="WolvenKit repo structure" /></p>
+<p>Also, in TweakXL here's how to correctly define it:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml">UIIcon.NotablyWeakenedFirstAidWhiff:
+  $type: UIIcon_Record
+  atlasPartName: notably_first_aid_whiff
+  atlasResourcePath: base\gameplay\gui\widgets\healthbar\atlas_addicted.inkatlas
+
+BaseStatusEffect.NotablyWeakenedFirstAidWhiffV0:
+  $base: BaseStatusEffect.FirstAidWhiffV0
+  uiData:
+    $base: BaseStatusEffect.FirstAidWhiffV0_inline4
+    iconPath: NotablyWeakenedFirstAidWhiff
+</code></pre>
+</div>
+<p>Thanks to psiberx once again, I completely missed this.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-01-27"><a class="header" href="#2023-01-27">2023-01-27</a></h1>
+<h2 id="bitwise-experimentations"><a class="header" href="#bitwise-experimentations">Bitwise experimentations</a></h2>
+<p>Since I'll have to keep track of consumables withdrawal symptoms, I'd rather check if I can use some bitwise operation.
+Point is, there's 9 different consumables in core game + 23 additional provided by mod <code>WE3D - Drugs of Night City</code>.
+Which is actually ideal for storing booleans as bits in <code>Int32</code>.</p>
+<p>Here's a <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=6bc82273ff43eb54f43c6176048d118e">sample made quickly on Rust playground</a>, by restricting the usage of bitwise operators to <a href="https://wiki.redmodding.org/redscript/language/native-types#operators">those provided by REDscript</a>.</p>
+<p>Applied to REDscript, it should roughly translate to this:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">// use enum's variants value as the position in bits inside blackboard's Int32
+enum Consumable {
+  Invalid = -1,
+  Alcohol = 0,
+  MaxDOC = 1, // FirstAidWhiff
+  BounceBack = 2, // BonesMcCoy
+  HealthBooster = 3,
+  MemoryBooster = 4,
+  OxyBooster = 5,
+  StaminaBooster = 6,
+  BlackLace = 7,
+  // so on and so forth ...
+}
+
+@addField(PlayerStateMachineDef)
+public let IsWithdrawing: BlackboardID_Int; // this bad boy will contains all consumables withdrawal symptom bool, one for each bit
+
+@addMethod(PlayerPuppet)
+public func IsWithdrawing(consumable: Consumable) -&gt; Bool {
+  if Equals(EnumInt(consumable), EnumInt(Consumable.Invalid)) { return false; }
+  let blackboard: ref&lt;IBlackboard&gt; = this.GetPlayerStateMachineBlackboard();
+  let symptoms = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.IsWithdrawing);
+  // get value for nth bit, where n is the consumable value (see enum above) 
+  return (symptoms &gt;&gt; EnumInt(consumable)) &amp; 1;
+}
+public class AddictedSystem extends ScriptableSystem {
+  private let player: wref&lt;PlayerPuppet&gt;;
+  // ...
+  public func SetSymptom(consumable: Consumable, withdrawing: bool) -&gt; Void {
+   if Equals(EnumInt(consumable), EnumInt(Consumable.Invalid)) { return; }
+   let blackboard: ref&lt;IBlackboard&gt; = this.player.GetPlayerStateMachineBlackboard();
+   let before = blackboard.GetInt(GetAllBlackboardDefs().PlayerStateMachine.IsWithdrawing);
+   let after = before;
+   if withdrawing {
+     // set bit to 1
+     after |= 1 &lt;&lt; flag;
+   } else {
+     // set bit to 0
+     after &amp;= ~(1 &lt;&lt; flag);
+   }
+   if NotEquals(before, after) {
+      blackboard.SetInt(GetAllBlackboardDefs().PlayerStateMachine.IsWithdrawing, after);
+   }
+  }
+}
+</code></pre>
+</div>
+<p>But... wait ! This wouldn't compile, since maybe left shift <code>&lt;&lt;</code> and right shift <code>&gt;&gt;</code> might not be supported in <a href="https://wiki.redmodding.org/redscript/language/native-types#operators">REDscript operators</a>.
+Well, so we're gonna have to do the calculation manually: for example <code>a &gt;&gt; b</code> is equivalent to dividing <code>a</code> by <code>2 ^ b</code>.</p>
+<p>So let's also look at <a href="https://jac3km4.github.io/cyberdoc/#16758">Blackboard</a> supported types.
+oh... turns out there's a <code>BlackboardID_Uint</code> and <code>BlackboardID_Int</code> ^^</p>
+<ul>
+<li>u32, see <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=15c30ec8ddb6a5cc2dbfb926baa5da75">Rust playground</a></li>
+<li>i32, see <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=4700b61d13468b88f778f6e9c9a7fb11">Rust playground</a></li>
+<li>u64, on latest <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=c803351e12368b00712e629902ed26b5">Rust playground</a></li>
+</ul>
+<p>But why look into Rust ?
+Because Rust and REDscript share inherited similarities (REDscript is built using Rust),
+and testing in the Rust playground is a bliss, no need to even launch the game !</p>
+<p>Well, so here it is, implementing bit flags for <code>BlackboardID_Int</code>:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public func ShiftRight(num: Int32, n: Int32) -&gt; Int32 {
+  num / PowI(2, n)
+}
+public func ShiftLeft(num: Int32, n: Int32) -&gt; Int32 {
+  num * PowI(2, n)
+}
+public func PowI(num: Int32, times: Int32) -&gt; Int32 {
+  RoundMath(Cast&lt;Float&gt;(num).PowF(times))
+}
+public func Invert(num: Int32) -&gt; Int32 {
+  let i = 0;
+  while i &lt; 32 {
+    num = PowI(num, ShiftLeft(1, i));
+    i += 1;
+  }
+  return num;
+}
+</code></pre>
+</div>
+<p>So we would get something like:</p>
+<p>Get the nth flag:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">return ShiftRight(symptoms, EnumInt(consumable)) &amp; 1;
+</code></pre>
+</div>
+<p>Set the nth flag:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">let after = before; // value from the blackboard
+if withdrawing {
+  // set bit to 1
+  after |= ShiftLeft(1, flag);
+} else {
+  // set bit to 0
+  after &amp;= Invert(ShiftLeft(1, flag));
+}
+</code></pre>
+</div>
+<p>🆕 2023/03/31: Codeware now <a href="https://github.com/psiberx/cp2077-codeware/wiki/Codeware-1.1.0-M2#bitwise-operations">allows it natively</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-01-27-1"><a class="header" href="#2023-01-27-1">2023-01-27</a></h1>
+<h2 id="red-keywords-clarifications"><a class="header" href="#red-keywords-clarifications">RED keywords clarifications</a></h2>
+<p>Asked on Discord about <code>const</code>:</p>
+<h3 id="credits-to-technic235"><a class="header" href="#credits-to-technic235">credits to Technic235</a></h3>
+<ul>
+<li><code>final</code> means the function cannot be altered any more</li>
+<li><code>const</code> means function and/or argument/parameter cannot EVER be altered and will always be the same, but you can obviously set its initial - value (no <code>const</code> variables)</li>
+<li><code>persistent</code> means the values of the variables stay forever, between save games unless manually changed via code. If the variable is - declared inside a <code>class</code>, the class and variable must both be persistent for it work.</li>
+<li><code>static</code> means there will only ever be one instance of the function (no static variables)</li>
+<li><code>let</code> is always used for declaring variables regardless of other keywords used</li>
+</ul>
+<h3 id="credits-to-psiberx"><a class="header" href="#credits-to-psiberx">credits to psiberx</a></h3>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public const func GREAT(): String = "something great"
+</code></pre>
+</div>
+<h3 id="credits-to-jekky"><a class="header" href="#credits-to-jekky">credits to jekky</a></h3>
+<blockquote>
+<p>I think const means two things</p>
+<p>functions marked with const can be const-evaluated and they're basically inlined
+locals and parameters can be marked const and I think this means they're immutable</p>
+<p>redscript variables are lexically scoped so I think it's more like let and const in python</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">class ActionWeightManagerDelegate extends ScriptBehaviorDelegate
+{
+    const editable var actionsConditions : array&lt; String &gt;;
+    // ...
+</code></pre>
+</div>
+<p>you can't have <code>const</code> atm.
+you can use it but it has no effect (maybe other than storing a flag in the bytecode).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-01-30"><a class="header" href="#2023-01-30">2023-01-30</a></h1>
+<h2 id="blackboard-internals"><a class="header" href="#blackboard-internals">Blackboard internals</a></h2>
+<p>Trying to demystify about <code>IBlackboard</code> so-called <code>DelayedListener</code>, and here's what people taught me:</p>
+<h3 id="credits-to-psiberx-1"><a class="header" href="#credits-to-psiberx-1">credits to psiberx</a></h3>
+<p>you register a listener (delayed or not)
+the listener is fired when:</p>
+<ul>
+<li>value has changed with <code>Set</code>*()</li>
+<li>value is set and unchanged but <code>force</code> parameter is true</li>
+<li><code>Signal</code>*() called explicitly</li>
+</ul>
+<p>delayed listener is just called later, in the other part of the cycle.</p>
+<h3 id="mixing-listeners-events-and-callbacks"><a class="header" href="#mixing-listeners-events-and-callbacks">Mixing listeners, events and callbacks</a></h3>
+<p>But internal mechanics are different from <code>IBlackboard</code>, as stated by psiberx.</p>
+<h3 id="as-a-courtesy-of-technic235"><a class="header" href="#as-a-courtesy-of-technic235">as a courtesy of Technic235</a></h3>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">@wrapMethod(ArcadeMachine)
+protected func StartGlitching(glitchState:EGlitchState, opt intensity:Float) -&gt; Void {
+  if Equals(this.m_controllerTypeName, n"ArcadeMachineController") {
+    this.EVMSetupArcadeStaticGlitchListener();
+  };
+}
+
+@addMethod(InteractiveDevice)
+protected func EVMSetupArcadeStaticGlitchListener() -&gt; Void {
+  let devicePS = this.GetDevicePS();
+  if devicePS.evmArcadeStaticEventID == 0u {
+    let evt = new EVMArcadeStaticGlitchEvent();
+    let delay: GameTime = GameTime.MakeGameTime(0, 0, 0, RandRange(120, 301)); // days, hours, opt minutes, opt seconds
+    devicePS.evmArcadeStaticEventID = GameInstance.GetTimeSystem(devicePS.GetGameInstance()).RegisterDelayedListener(this, evt, delay, -1);
+  };
+}
+
+public class EVMArcadeStaticGlitchEvent extends Event {
+  // intentionally empty
+}
+
+@addMethod(ArcadeMachine)
+protected cb func OnEVMArcadeStaticGlitchEvent(evt:ref&lt;EVMArcadeStaticGlitchEvent&gt;) {
+  let delaySystem = GameInstance.GetDelaySystem(this.GetGame());
+  let callback = new EVMDelayArcadeStaticGlitchCallback();
+  callback.machine = this;
+  delaySystem.DelayCallback(callback, RandRangeF(0, 10), true); // randomize start times
+}
+
+class EVMDelayArcadeStaticGlitchCallback extends DelayCallback {
+  let machine: ref&lt;ArcadeMachine&gt;;
+  protected func Call() -&gt; Void {
+    this.machine.EVMStartArcadeStaticGlitch();
+  }
+}
+
+@addMethod(ArcadeMachine)
+protected func EVMStartArcadeStaticGlitch() {
+  if !this.evmSparkActive {
+    GameObjectEffectHelper.ActivateEffectAction(this, gamedataFxActionType.Start, n"hack_fx");
+    let delaySystem = GameInstance.GetDelaySystem(this.GetGame());
+    let callback = new EVMArcadeStaticGlitchCompletedCallback();
+    callback.machine = this;
+    delaySystem.DelayCallback(callback, 13, true);
+    this.evmSparkActive = true;
+  };
+}
+
+class EVMArcadeStaticGlitchCompletedCallback extends DelayCallback {
+  let machine: ref&lt;ArcadeMachine&gt;;
+  protected func Call() -&gt; Void {
+    this.machine.evmSparkActive = false;
+  }
+}
+</code></pre>
+</div>
+<h2 id="research-on-ui"><a class="header" href="#research-on-ui">Research on UI</a></h2>
+<p>Next step is to give a better look-and-feel to current addiction-related notifications.
+So far, I've used SimpleScreenMessage which works just fine
+but is used mostly for Relic malfunction / Network breach notification.
+<img src="travelog/pictures/UI-relic-malfunction.jpg" alt="Relic malfunction in-game notification" /></p>
+<p>A way better look-and-feel / lore-friendly UI would probably be this one:
+<img src="travelog/./pictures/UI-biomonitor-notifications.png" alt="Biomonitor in-game notification" /></p>
+<p>So let's browse WolvenKit Asset browser and find out where it's at:</p>
+<p>a couple interesting ones found while searching:</p>
+<ul>
+<li>activity_log.inkwidget
+<img src="travelog/./pictures/inkwidget-activity-log.png" alt="activity logs UI" /></li>
+<li>generic_fullscreen_message_notification.inkwidget
+<img src="travelog/./pictures/inkwidget-generic-fullscreen-message-notification.png" alt="generic fullscreen message notification" /></li>
+</ul>
+<p>finally found out:</p>
+<ul>
+<li>q001_mission0_connect_to_girl.inkwidget
+<img src="travelog/./pictures/inkwidget-q001-mission0-connect-to-girl.png" alt="first mission when connect to girl" /></li>
+<li>q001_wakeup_biomoncheck.inkwidget
+<img src="travelog/./pictures/inkwidget-q001-wakeup_biomoncheck.png" alt="wakeup biomonitor check" /></li>
+</ul>
+<p>Then, where is it used in the code ?</p>
+<p>Well haha, trickier.</p>
+<ul>
+<li>no relevant reference to <code>q001</code></li>
+<li>points at <code>DeviceBase</code></li>
+<li>open many rabbit holes</li>
+</ul>
+<p>So maybe <code>inkWidgetLibraryResource</code> from WKit ?</p>
+<p>Hey, results seem much better !</p>
+<ul>
+<li><code>gameuiTooltipsManager</code></li>
+<li><code>ATooltipData</code></li>
+<li><code>InteractionsHubGameController</code></li>
+</ul>
+<p>Also, <code>DJ_Kovrik</code> to the rescue:</p>
+<p><img src="travelog/pictures/ArchiveXL-spawn-and-attach-controller.png" alt="recommendations for widgets" /></p>
+<p>Which also brought me to:</p>
+<p><img src="travelog/./pictures/WK-inkwidget-inkanim.png" alt="WolvenKit inkwidget and its inkanim" /></p>
+<p>My guess so far is that the closest <code>inkGameController</code> to what I need is the <a href="https://jac3km4.github.io/cyberdoc/#34400">inkHUDGameController</a>,
+except that I'll need only one <code>inkAnimProxy</code>, the one returned from calling <a href="https://jac3km4.github.io/cyberdoc/#18366">PlayLibraryAnimation</a>.</p>
+<p>But turns out it wasn't the full solution, see the <a href="travelog/2023-01-31.html">follow-up</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-01-31"><a class="header" href="#2023-01-31">2023-01-31</a></h1>
+<h2 id="research-on-ui-follow-up"><a class="header" href="#research-on-ui-follow-up">Research on UI: follow-up</a></h2>
+<p>So after many failed <a href="travelog/2023-01-30.html">attempts</a>, here's the complete solution:</p>
+<p>First it happens that <em>q001_mission0_connect_to_girl.inkwidget</em> and its counterpart <em>q001_mission0_connect_to_girl_animations.inkanim</em> actually contains markers. These markers are named timeframes, useful to play only part(s) of the whole sequence.</p>
+<p>Of course the <em>.inkwidget</em> contains the graphic UI component, like in a web frontend. The <em>.inkanim</em> contains 2 arrays fields containing:</p>
+<ul>
+<li>in <code>definitions</code>: the effects (or interpolations) to play</li>
+<li>in <code>targets</code>: the path to a nested child in the widget tree
+<blockquote>
+<p>literally the path: <code>[0,1,0,7]</code> would be the child at index 0, his child at index 1, so on and so forth...</p>
+</blockquote>
+</li>
+</ul>
+<p>These arrays both match: the engine probably apply to <code>target</code> the <code>definition</code> of the interpolations, one after another till done.</p>
+<p>It can be verified by exporting the <em>.inkanim</em> to JSON and searching for <code>markerName</code>.
+Here's how it looks like in WolvenKit:</p>
+<p><img src="travelog/./pictures/WK-q001-connect-to-girl-inkanim.png" alt="markers" /></p>
+<p>But for this particular anim, there's only 2 markers: <code>loop01_start</code> and <code>loop01_end</code>,
+which I assume correspond to the moment where it loops while the game wait for the player to choose his/her next action.</p>
+<p><img src="travelog/./pictures/UI-biomonitor-sequence.png" alt="Biomonitor sequence" /></p>
+<p>Well, a solution is again to clone the <em>.inkwidget</em> and <em>.inkanim</em> files, and rename them to one's liking.</p>
+<p>Then, the trick is to export <em>.inkanim</em> to JSON, open it in your favorite IDE, copy entry with the <code>markerName</code>, paste it at the end of the array and edit it by adding as many marker names and start time as needed. Once done, don't forget to convert from JSON back.</p>
+<p>But both arrays <code>definitions</code> and <code>targets</code> sizes have to match: go to <code>target</code>, copy the entry at the <strong>same index</strong> as in <code>definitions</code> and paste it at the end of array using the same process as previously.</p>
+<p><img src="travelog/./pictures/WK-edit-inkanim.png" alt="Edit .inkanim markers" /></p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">// or import cp2077-codeware library instead
+// required for compilation
+@addField(inkWidget)
+native let parentWidget: wref&lt;inkWidget&gt;;
+
+// Spawn the widget on load
+@wrapMethod(NameplateVisualsLogicController)
+protected cb func OnInitialize() -&gt; Bool {
+    wrappedMethod();
+    let root = this.GetRootCompoundWidget().parentWidget.parentWidget.parentWidget;
+    // this line takes care of instantiating our inkWidget and attach it our inkGameController below
+    this.SpawnFromExternal(root, r"base\\gameplay\\gui\\quests\\q001\\biomonitor_overlay.inkwidget", n"Root:MyController");
+}
+
+// Custom controller with your logic
+public class MyController extends inkGameController {
+    protected cb func OnInitialize() {
+        // conveniently, PlayLibraryAnimation accepts an optional inkAnimOptions
+        let options: inkAnimOptions;
+        // with properties like fromMarker, toMarker, and more
+        options.toMarker = n"loading_end"; // my custom marker
+
+        let root: ref&lt;inkCompoundWidget&gt; = this.GetRootWidget() as inkCompoundWidget;
+        let panel = root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BIOMONITOR_DATA_PANEL_text") as inkText;
+        let booting = root.GetWidget(n"main_canvas/Booting_Info_Critica_Mask_Canvas/Booting_Info_Critical_Canvas/Booting_Screen/BOOTING_Text") as inkText;
+
+        panel.SetText("HELLO WORLD");
+        booting.SetText("HELLO WORLD");
+        
+        // custom .inkAnim name to target our modified version with custom markers
+        this.PlayLibraryAnimation(n"Biomonitor_Overlay_Intro_Loop_Outro", options);
+    }
+}
+</code></pre>
+</div>
+<p>and boom !</p>
+<p><img src="travelog/./pictures/WK-here-we-go.png" alt="Here we go" /></p>
+<p>Nice :)</p>
+<p>Some additional informations in <a href="travelog/./2023-02-03.html">follow-up</a>.</p>
+<h3 id="credits-1"><a class="header" href="#credits-1">credits</a></h3>
+<ul>
+<li><code>psiberx</code></li>
+<li><code>DJ_Kovrik</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-02-03"><a class="header" href="#2023-02-03">2023-02-03</a></h1>
+<h2 id="research-on-tweaking-inkwidget-and-inkanim"><a class="header" href="#research-on-tweaking-inkwidget-and-inkanim">Research on tweaking .inkwidget and .inkanim</a></h2>
+<p>super useful quote from psiberx:</p>
+<blockquote>
+<p>you're editing <code>packageData</code>, so you have two options:
+1 - move your changes to <code>package</code>, and nuke <code>packageData</code> for future convenience
+2 - use async widget spawning</p>
+</blockquote>
+<p>note: async widget spawning ➡️ inkGameController.AsyncSpawnFromExternal() (see <a href="https://jac3km4.github.io/cyberdoc/#18366">cyberdoc</a>)</p>
+<p>So all in all, what did I have to do ?</p>
+<ul>
+<li>take .inkwidget and .inkanim and understand <a href="travelog/./2023-01-31.html">how they relate</a>.</li>
+<li>take the whole animation and <a href="https://docs.google.com/spreadsheets/d/1OzIgx9kDBPvwAVIElCjWT6FRSRV2evFgyih8AILTmbI/edit?usp=sharing">determine its key positions, at least roughly</a>.</li>
+<li>clone both .inkwidget, .inkanim, rename them, and point .inkwidget to cloned .inkanim (its <code>animationLibraryResRef</code>).</li>
+<li>creating a new <code>definition</code> with custom <code>events</code>: <code>markerName</code> and <code>startDelay</code>.
+also creating its counterpart in <code>targets</code> (<code>path = [0]</code>).</li>
+<li>handle animations played automatically, or container using multiple text widget for the same sentence:
+<ul>
+<li>removing <code>inkHorizontalPanel</code>s in .inkwidget, nested deep down under <code>Critical_Screen_Text_Canvas/inkVerticalPanelWidget7/inkHorizontalPanelWidget2</code>.</li>
+<li>swap them with mere <code>inkText</code> (since on the summary values displayed like <code>78 / 45</code> use one <code>inkText</code> for each part: <code>78</code> / <code>/</code> / <code>48</code>).</li>
+<li>fix the animations pointing at deleted <code>inkHorizontalPanel</code>s children and point to the new <code>inkText</code> instead.</li>
+<li>also as a side note the original widgets sometimes have their <code>logicController</code> field set, to play animation on them automatically, which is not what you want when you are going to set the text dynamically.</li>
+</ul>
+</li>
+<li>fix a couple of inconsistencies, because every once in a while some siblings widgets would have the same <code>CName</code>. makes you wonder why the <code>inkText</code> at the correct path is either <code>null</code> or nothing gets updated on screen (e.g. <code>Blood_HPanel</code>).</li>
+<li>play biomonitor sounds.</li>
+</ul>
+<p>Honestly if I had a (couple of ?) week(s ?) to allocate to this, I'd probably rewrite the widget and its animations from scratch.
+I'd reuse all the assets from the original .inkwidget, simplify its widgets tree, then split the .inkanim into reusable chunks of animation.
+I'd probably store all the key positions of all the main frame and design the whole thing to be able to get played chained, separately or be able to jump from non-consecutive segments.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-02-04"><a class="header" href="#2023-02-04">2023-02-04</a></h1>
+<h2 id="learning-about-the-different-kind-of-ink-game-controllers"><a class="header" href="#learning-about-the-different-kind-of-ink-game-controllers">Learning about the different kind of ink game controllers</a></h2>
+<p>credits from psiberx:</p>
+<blockquote>
+<p>inkGameController has a ref to library</p>
+<p>inkLogicController has a ref to game controller (kind of)</p>
+<p>what controller can spawn is defined by the library:</p>
+<ul>
+<li>library items defined in the library itself</li>
+<li>library items from external libs that are listed in the special section</li>
+</ul>
+</blockquote>
+<p>and later on added:</p>
+<blockquote>
+<p>inkGameController connects widget library item to ink layer / window, it provides access to game instance, library animations, sounds (can be attached to a library item)</p>
+<p>inkLogicController is a lightweight controller that doesn't &gt; have access to game or resources functions (can be attached &gt; to any widget)</p>
+<p>those are fundamental, others derive from them</p>
+</blockquote>
+<p>What I discovered way later is that for example texts in biomonitor's chemicals report (the one which displays for Sandra Dorset: hydroxyzine, tramadol, bupropion, etc) are animated with an <a href="https://jac3km4.github.io/cyberdoc/#34517">inkLogicController</a> which manages an <a href="https://jac3km4.github.io/cyberdoc/#104202">inkAnimTextValueProgress</a> (a.k.a <a href="https://nativedb.red4ext.com/inkanimTextValueProgressInterpolator">inkanimTextValueProgressInterpolator</a> in the natives) to animate the text's value over time.</p>
+<h2 id="informations-about-inkmask"><a class="header" href="#informations-about-inkmask">Informations about inkMask</a></h2>
+<p>Some inks <strong>cannot</strong> be created and run in scripts, as for example <code>inkMask</code>.
+So there's no point in e.g. rebuilding Sandra's Rescue .inkwidget from scratch in code since it uses a lot of them.</p>
+<p>One can reuse the .inkwidget as-is, and just redefine the animations.</p>
+<p>Or rebuild the .inkwidget partially in code, by still leveraging <code>inkMask</code> from the source, <em>to some extend</em> as stated by psiberx (which I have no idea up to which extend).</p>
+<p>🆕 2023/03/31: Codeware might now <a href="https://github.com/psiberx/cp2077-codeware/wiki/Codeware-1.1.0-M2#resources">allow it</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-02-06"><a class="header" href="#2023-02-06">2023-02-06</a></h1>
+<h2 id="research-for-blacklace-gameplay-mechanics"><a class="header" href="#research-for-blacklace-gameplay-mechanics">Research for BlackLace gameplay mechanics</a></h2>
+<h3 id="blacklace"><a class="header" href="#blacklace">BlackLace</a></h3>
+<h4 id="cyberpunk-red"><a class="header" href="#cyberpunk-red">Cyberpunk RED</a></h4>
+<p>Cost per Dose: 50eb (Costly)</p>
+<p>Primary Effect</p>
+<p>• Lasts 24 Hours.
+• User takes 2d6 Humanity Loss upon taking a dose, which is returned if the user isn't affected by Black Lace's Secondary Effect.
+• For the duration of the Primary Effect, the user ignores the effects of the Seriously Wounded Wound State.</p>
+<p>Black Lace's Secondary Effect.</p>
+<p>• Humanity Loss from Primary Effect isn't returned.
+• If the user wasn't already addicted to Black Lace, they are now. While addicted, unless the user is currently experiencing the Primary Effect of Black Lace, their REF is lowered by 2 points.</p>
+<h5 id="drugs-core-rules"><a class="header" href="#drugs-core-rules">Drugs core rules</a></h5>
+<p>When you are dosed with one of these drugs, you are automatically affected by the drug's <code>Primary Effect</code>. When the <code>Primary Effect</code> of the drug wears off at the end of its duration, you roll <code>WILL + Resist Torture/ Drugs + 1d10</code> against the <code>DV</code> of the drug's <code>Secondary Effect</code>, which are permanent and habit forming until you receive therapy for addiction. Taking multiple doses of a drug extends the primary effect of a drug by its full duration.</p>
+<h4 id="cyberpunk-fandom"><a class="header" href="#cyberpunk-fandom">Cyberpunk Fandom</a></h4>
+<p>Using Black Lace will increase Armor by 10 for 30 seconds.</p>
+<p>Black Lace is a drug that <strong>increases adrenaline and endorphins levels up to the point that one is almost incapable of feeling pain</strong>. The trip is so intense <strong>that it verges on cyberpsychosis</strong>. Corporations handed it out to their forces during the Corporate Wars. Cyberpsychos are heavy consumers of the drug. Vaporizing the drug instead of swallowing it lessens the aftereffects, without compromising the trip.</p>
+<p>Alias: s-keef
+Rarity: <strong>Rare</strong></p>
+<h4 id="internet-browsing"><a class="header" href="#internet-browsing">Internet browsing</a></h4>
+<h5 id="adrenaline"><a class="header" href="#adrenaline">Adrenaline</a></h5>
+<p>Adrenaline, also known as epinephrine, is a hormone and medication which is involved in regulating visceral functions (e.g., respiration). It appears as a white microcrystalline granule. Adrenaline is normally produced by the adrenal glands and by a small number of neurons in the medulla oblongata.</p>
+<p>It plays an essential role <strong>in the fight-or-flight response</strong> by increasing blood flow to muscles, heart output by acting on the SA node, pupil dilation response, and blood sugar level. It does this by binding to alpha and beta receptors. It is found in many animals, including humans, and some single-celled organisms. It has also been isolated from the plant Scoparia dulcis found in Northern Vietnam.</p>
+<h5 id="endorphins"><a class="header" href="#endorphins">Endorphins</a></h5>
+<p>Endorphins (contracted from endogenous morphine) are chemical signals in the brain <strong>that block the perception of pain</strong> and increase feelings of wellbeing. They are produced and stored in an area of the brain known as the pituitary gland.</p>
+<p>Endorphins are released when your body feels pain or stress. Your body releases endorphins to help you survive. When you feel pain, nerves in your body send pain signals to your brain. Your brain releases endorphins to block the nerve cells that receive the pain signals.</p>
+<p><strong>This essentially turns off your pain</strong>. It helps you to continue functioning, even in painful or stressful situations. Because you naturally seek to avoid pain, you’re more likely to do something if it makes you feel good.</p>
+<h6 id="lack-of-endorphin"><a class="header" href="#lack-of-endorphin">Lack of endorphin</a></h6>
+<p>People with a lack of endorphins may show signs of depression. This is because of a lack of dopamine. Other effects of endorphin deficiency can include: Fibromyalgia: a condition that causes chronic pain throughout your body.</p>
+<h6 id="fibromyalgia"><a class="header" href="#fibromyalgia">Fibromyalgia</a></h6>
+<p>Fibromyalgia is a disorder characterized by <strong>widespread musculoskeletal pain</strong> accompanied by fatigue, sleep, memory and mood issues. Researchers believe that fibromyalgia <strong>amplifies painful sensations</strong> by affecting the way your brain and spinal cord process painful and nonpainful signals.</p>
+<h2 id="research--handle-potential-ui-inconsistencies"><a class="header" href="#research--handle-potential-ui-inconsistencies">Research : handle potential UI inconsistencies</a></h2>
+<p>Fact is, player can keep interacting with everything around, pause game, or even browse the various menus (inventory, character, etc).
+So how to track this ?
+It's probably related in one way or another to the game controllers (e.g. <code>TimeskipGameController</code>).
+Here's a quick and probably incomplete list:</p>
+<ul>
+<li>MainMenuGameController</li>
+<li>MiniGameControllerAdvanced / MiniGamePlayerController</li>
+<li>inkHUDGameController -&gt; ShowRequest / HideRequest</li>
+<li>attention: e.g. TimeskipGameController just extends inkGameController !</li>
+<li>NetworkInkGameController</li>
+<li>BrowserGameController</li>
+<li>ControlledDevicesInkGameController ?</li>
+<li>SceneScreenGameController ?</li>
+<li>HoldIndicatorGameController ?</li>
+<li>TutorialMainController</li>
+<li>FastTravelGameController</li>
+<li>BaseHubMenuController ?</li>
+<li>PauseMenuBackgroundGameController / PauseMenuGameController</li>
+<li>CodexPopupGameController</li>
+<li>gameuiPhotoModeMenuController</li>
+<li>BoothModeGameController</li>
+<li>TarotPreviewGameController</li>
+<li>BaseModalListPopupGameController</li>
+<li>VendorSellJunkPopup</li>
+<li>CpoHudRootGameController seems unrelated as it's talking about multi and assets cannot be found in WK
+<blockquote>
+<p>multi like 'multiplayer' ?</p>
+</blockquote>
+</li>
+</ul>
+<p>On opening some UI, the biomonitor animation should just be dismissed (e.g. whenever time passes, like when skipping time / going to sleep, if confirmed).</p>
+<p>On opening other UI, the biomonitor animation should just pause (e.g. whenever in inventory or any of the other siblings menus), and resume when back in-game.</p>
+<h2 id="research--create-a-custom-interaction-with-player"><a class="header" href="#research--create-a-custom-interaction-with-player">Research : create a custom interaction with player</a></h2>
+<p>Like the one where you have to quick take a decision (the UI with the decreasing bar and the button to take action).
+Which classes could provide this feature ?</p>
+<ul>
+<li>gameinteractionsReactionState</li>
+<li>gameinteractionsChoiceType</li>
+<li>EFocusForcedHighlightType</li>
+<li>gamedataMappinVariant</li>
+<li>EQuestVehicleDoorState.DisableAllInteractions</li>
+<li>EDrillMachineRewireState.OutsideInteractionRange</li>
+<li>EDPadSlot.InteractionWheel</li>
+<li>InteractionManager</li>
+<li>InteractionChoiceCaptionPart</li>
+<li>InteractionChoice</li>
+<li>InteractionBaseEvent</li>
+<li>InteractionComponent.SetSingleChoice</li>
+<li>InteractionActivationEvent</li>
+<li>InteractionChoiceEvent</li>
+<li>InteractionScriptedCondition (e.g. DeviceRemoteInteractionCondition)</li>
+</ul>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">this.m_DPadWheelInterationStartedBBID = this.m_UiQuickItemsBlackboard.RegisterDelayedListenerVariant(this.m_UiQuickSlotDef.WheelInteractionStarted, this, n"OnWheelInteractionStarted");
+this.m_DPadWheelInterationEndedBBID = this.m_UiQuickItemsBlackboard.RegisterDelayedListenerVariant(this.m_UiQuickSlotDef.WheelInteractionEnded, this, n"OnWheelInteractionEnded");
+</code></pre>
+</div>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">this.m_interactionBlackboardId = this.m_bbUIData.RegisterListenerVariant(GetAllBlackboardDefs().UIGameData.InteractionData, this, n"OnInteractionStateChange");
+protected cb func OnInteractionStateChange(value: Variant) -&gt; Bool {
+  let interactionData: bbUIInteractionData = FromVariant&lt;bbUIInteractionData&gt;(value);
+  this.m_interactionDeviceState = interactionData.terminalInteractionActive;
+  this.UpdateIsInteractingWithDevice();
+}
+</code></pre>
+</div>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">this.m_bbDefinition = GetAllBlackboardDefs().UIInteractions;
+this.m_dataListenerId = this.m_blackboard.RegisterDelayedListenerVariant(this.m_bbDefinition.LootData, this, n"OnUpdateData");
+// https://jac3km4.github.io/cyberdoc/#17638 =&gt; UIInteractionsDef
+// InteractionChoiceHub: BlackboardID_Variant
+// DialogChoiceHubs: BlackboardID_Variant
+// LootData: BlackboardID_Variant
+// ContactsData: BlackboardID_Variant
+// ActiveChoiceHubID: BlackboardID_Int
+// SelectedIndex: BlackboardID_Int
+// ActiveInteractions: BlackboardID_Variant
+// InteractionSkillCheckHub: BlackboardID_Variant
+// NameplateOwnerID: BlackboardID_EntityID
+// VisualizersInfo: BlackboardID_Variant
+// ShouldHideClampedMappins: BlackboardID_Bool
+// LastAttemptedChoice: BlackboardID_Variant
+// LookAtTargetVisualizerID: BlackboardID_Int
+// HasScrollableInteraction: BlackboardID_Bool
+</code></pre>
+</div>
+<p>Actually there's a lot of things to look at in <em>blackboardDefinitions.swift</em>.</p>
+<ul>
+<li>PlayerStateMachineDef
+<ul>
+<li>IsInteractingWithDevice</li>
+<li>IsInteractingViaPersonalLink</li>
+<li>IsUploadingQuickHack</li>
+<li>DisplayDeathMenu</li>
+<li>IsInWorkspot</li>
+<li>IsInLoreAnimationScene</li>
+</ul>
+</li>
+<li>UI_SystemDef
+<ul>
+<li>IsInMenu</li>
+</ul>
+</li>
+<li>UIGameDataDef
+<ul>
+<li>Popup_IsModal</li>
+<li>Popup_IsShown</li>
+<li>IsBriefingActive</li>
+</ul>
+</li>
+<li>UIInteractionsDef
+<ul>
+<li>ActiveInteractions</li>
+</ul>
+</li>
+<li>UI_ActiveVehicleDataDef
+<ul>
+<li>IsPlayerMounted</li>
+</ul>
+</li>
+<li>VehicleDef
+<ul>
+<li>IsUIActive</li>
+</ul>
+</li>
+<li>BraindanceBlackboardDef
+<ul>
+<li>IsActive</li>
+</ul>
+</li>
+<li>UI_PlayerBioMonitorDef
+<ul>
+<li>AdrenalineBar</li>
+</ul>
+</li>
+<li>FastTRavelSystemDef
+<ul>
+<li>FastTravelStarted</li>
+</ul>
+</li>
+<li>DeviceBaseBlackboardDef
+<ul>
+<li>UI_InteractivityBlocked</li>
+</ul>
+</li>
+<li>MenuEventBlackboardDef
+<ul>
+<li>MenuEventToTrigger</li>
+</ul>
+</li>
+<li>UI_ComDeviceDef
+<ul>
+<li>isDisplayingMessage</li>
+</ul>
+</li>
+<li>HUDManagerDef
+<ul>
+<li>ShowHudHintMessege</li>
+</ul>
+</li>
+<li>UI_HUDProgressBarDef
+<ul>
+<li>Active</li>
+</ul>
+</li>
+<li>UI_QuickSlotsDataDef
+<ul>
+<li>WheelInteractionStarted</li>
+<li>WheelInteractionEnded</li>
+<li>UIRadialContextRequest</li>
+<li>quickhackPanelOpen</li>
+</ul>
+</li>
+<li>PhotoModeDef
+<ul>
+<li>Active</li>
+</ul>
+</li>
+</ul>
+<p>Wow, that's a lot to investigate !
+And there's also <code>gamedataStatType</code> that I would like to look further out.</p>
+<p>Here are also a few samples from the sources:</p>
+<blockquote>
+<p>from PlayerPuppet</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">protected cb func OnDeath(evt: ref&lt;gameDeathEvent&gt;) -&gt; Bool {
+  this.ForceCloseRadialWheel();
+  StatusEffectHelper.ApplyStatusEffect(this, t"GameplayRestriction.BlockAllHubMenu");
+  super.OnDeath(evt);
+  GameInstance.GetTelemetrySystem(this.GetGame()).LogPlayerDeathEvent(evt);
+}
+</code></pre>
+</div>
+<blockquote>
+<p>from DefaultTransition</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">protected final const func IsPlayerInAnyMenu(const scriptInterface: ref&lt;StateGameScriptInterface&gt;) -&gt; Bool {
+  let blackboard: ref&lt;IBlackboard&gt; = scriptInterface.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_System);
+  let uiSystemBB: ref&lt;UI_SystemDef&gt; = GetAllBlackboardDefs().UI_System;
+  return blackboard.GetBool(uiSystemBB.IsInMenu);
+}
+protected final const func IsQuickHackPanelOpened(const scriptInterface: ref&lt;StateGameScriptInterface&gt;) -&gt; Bool {
+  let bb: ref&lt;IBlackboard&gt; = scriptInterface.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_QuickSlotsData);
+  return bb.GetBool(GetAllBlackboardDefs().UI_QuickSlotsData.quickhackPanelOpen);
+}
+
+protected final const func IsRadialWheelOpen(const scriptInterface: ref&lt;StateGameScriptInterface&gt;) -&gt; Bool {
+  let bb: ref&lt;IBlackboard&gt; = scriptInterface.GetBlackboardSystem().Get(GetAllBlackboardDefs().UI_QuickSlotsData);
+  return bb.GetBool(GetAllBlackboardDefs().UI_QuickSlotsData.UIRadialContextRequest);
+}
+</code></pre>
+</div>
+<blockquote>
+<p>MovePoliciesComponent</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public final native func IsInIdle() -&gt; Bool;
+</code></pre>
+</div>
+<blockquote>
+<p>HUDManager</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">private final func RegisterHackingMinigameCallback() -&gt; Void {
+  let blackboard: ref&lt;IBlackboard&gt; = GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().NetworkBlackboard);
+  if IsDefined(blackboard) &amp;&amp; !IsDefined(this.m_hackingMinigameCallbackID) {
+    this.m_hackingMinigameCallbackID = GameInstance.GetBlackboardSystem(this.GetGameInstance()).Get(GetAllBlackboardDefs().NetworkBlackboard).RegisterListenerString(GetAllBlackboardDefs().NetworkBlackboard.NetworkName, this, n"OnBreachingNetwork");
+  };
+}
+</code></pre>
+</div>
+<blockquote>
+<p>AttackData</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">public final static func IsPlayerInCombat(attackData: ref&lt;AttackData&gt;) -&gt; Bool {
+  let psmBB: ref&lt;IBlackboard&gt; = GameInstance.GetBlackboardSystem(GetGameInstance()).GetLocalInstanced(attackData.GetInstigator().GetEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
+  let combatState: Int32 = psmBB.GetInt(GetAllBlackboardDefs().PlayerStateMachine.Combat);
+  return combatState == EnumInt(gamePSMCombat.InCombat);
+}
+</code></pre>
+</div>
+<blockquote>
+<p>ArcadeMachineController</p>
+</blockquote>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">protected final const func IsPlayerInteractingWithDevice() -&gt; Bool {
+  let playerStateMachineBlackboard: ref&lt;IBlackboard&gt; = GameInstance.GetBlackboardSystem(this.GetGameInstance()).GetLocalInstanced(this.GetPlayerEntityID(), GetAllBlackboardDefs().PlayerStateMachine);
+  return playerStateMachineBlackboard.GetBool(GetAllBlackboardDefs().PlayerStateMachine.IsInteractingWithDevice);
+}
+</code></pre>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="2023-02-07"><a class="header" href="#2023-02-07">2023-02-07</a></h1>
+<h2 id="research-on-radial-wheel"><a class="header" href="#research-on-radial-wheel">Research on radial wheel</a></h2>
+<p>Ideally, I would like to hide the addiction-related debuffs to the player, unless V is equipped with a biomonitor.</p>
+<p>Looking at a way to conditionally display status effects entries on top-left of the RadialWheelController, browsing the sources one will probably stumble upon:</p>
+<ul>
+<li><code>UI_PlayerBioMonitorDef</code> from the blackboard definitions, which has a <code>BuffsList</code> and <code>DebuffsList</code> to cache the status effects.</li>
+<li>this cache is <code>Variant</code>, and contains <code>BuffInfo</code> entries.</li>
+<li><code>inkCooldownGameController</code> uses this cache for display
+<ul>
+<li>its method <code>RequestCooldownVisualization</code> is called from <code>SingleCooldownManager</code> in <code>ActivateCooldown</code>: all these take care of preparing the ink texts and icons to display.</li>
+</ul>
+</li>
+<li>and eventually <code>buffListGameController</code> is in charge of updating the buffs / debuffs lists.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2023-02-10"><a class="header" href="#2023-02-10">2023-02-10</a></h1>
+<h2 id="play-successive-sounds-directly-defined-with-tweakxl"><a class="header" href="#play-successive-sounds-directly-defined-with-tweakxl">Play successive sounds directly defined with TweakXL</a></h2>
+<p>Let's imagine we want a migraine status effect which would last for 15 minutes, while playing a looping SFX for the first 10 seconds, then a fade out SFX for the next 25 seconds and stop. Here's how to quickly roll it:</p>
+<p>credits to <code>RMK</code> on Discord for pointing out <code>Prereqs.DurationPrereq</code> !</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yaml"># this effector kicks in first and play first sound
+Effectors.MigraineStart:
+  $type: Effector_Record
+  effectorClassName: PlaySFXEffector
+  activationSFXName: q101_sc_03_heart_loop
+
+# 10 seconds after, this effector switch first sound being played for second one
+Effectors.MigraineDecrease:
+  $type: Effector_Record
+  effectorClassName: StopAndPlaySFXEffector
+  sfxToStop: q101_sc_03_heart_loop
+  sfxToStart: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 10
+    randRange: 0
+
+# 25 seconds after, this effector stop second sound
+Effectors.MigraineEnd:
+  $type: Effector_Record
+  effectorClassName: StopSFXEffector
+  sfxName: q004_sc_04a_heartbeat_rev
+  prereqRecord:
+    $base: Prereqs.DurationPrereq
+    duration: 25
+    randRange: 0
+
+# effect last for 15 minutes (900 seconds)
+BaseStatusEffect.Migraine:
+  $type: StatusEffect_Record
+  duration:
+    $type: StatModifierGroup_Record
+    drawBasedOnStatType: false
+    statModifiers:
+      - $type: ConstantStatModifier_Record
+        modifierType: Additive
+        statType: BaseStats.MaxDuration
+        value: 900
+    statModsLimit: -1
+    statModsLimitModifier: None
+  packages:
+    - $type: GameplayLogicPackage_Record
+      stats:
+        - $type: ConstantStatModifier_Record
+          modifierType: Multiplier
+          statType: BaseStats.Memory
+          value: 0.7
+    - $type: GameplayLogicPackage_Record
+      effectors: [Effectors.MigraineStart, Effectors.MigraineDecrease, Effectors.MigraineEnd]
+  uiData:
+    $base: UIData.WithdrawnFromMemoryBooster
+    intValues: [70]
+</code></pre>
+</div>
+<h2 id="create-interaction-for-biomonitor-dismissal"><a class="header" href="#create-interaction-for-biomonitor-dismissal">Create interaction for biomonitor dismissal</a></h2>
+<p>All credits to: <code>keanuWheeze</code> on Discord</p>
+<p>Create simple interaction:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:skyblue;color:skyblue;" href="https://wiki.redmodding.org/cyber-engine-tweaks"><i style="font-size:18px;--fa-primary-color:skyblue;color:skyblue;" class="fa fa-solid fa-globe"></i>&nbsp;&nbsp;Lua</a>  
+<pre><code class="language-lua">local function createInteraction(action, title)
+    local choiceData =  InteractionChoiceData.new()
+    choiceData.localizedName = title
+    choiceData.inputAction = action
+
+    local choiceType = ChoiceTypeWrapper.new()
+    choiceData.type = choiceType
+
+    return choiceData
+end
+
+local function createInteractionHub()
+    local choiceHubData =  InteractionChoiceHubData.new()
+    choiceHubData.id = -1001
+    choiceHubData.active = true
+    choiceHubData.flags = EVisualizerDefinitionFlags.Undefined
+    choiceHubData.title = 'Test Interaction Hub'
+
+    local choices = {}
+    table.insert(choices, createInteraction('Choice1', 'Blow up the sky'))
+    choiceHubData.choices = choices
+
+    return choiceHubData
+end
+
+local function prepareVisualizersInfo(hub)
+    local visualizersInfo = VisualizersInfo.new()
+    visualizersInfo.activeVisId = hub.id
+    visualizersInfo.visIds = { hub.id }
+    
+    return visualizersInfo
+end
+
+registerHotkey('TestInteractions', 'TestInteractions', function()
+    local interactionHub = createInteractionHub()
+    local visualizersInfo = prepareVisualizersInfo(interactionHub)
+    
+    local blackboardDefs = Game.GetAllBlackboardDefs()
+    local interactionBB = Game.GetBlackboardSystem():Get(blackboardDefs.UIInteractions)
+
+    interactionBB:SetVariant(blackboardDefs.UIInteractions.InteractionChoiceHub, ToVariant(interactionHub), true)
+    interactionBB:SetVariant(blackboardDefs.UIInteractions.VisualizersInfo, ToVariant(visualizersInfo), true)
+end)
+</code></pre>
+</div>
+<p>Create proper dialog interaction:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:skyblue;color:skyblue;" href="https://wiki.redmodding.org/cyber-engine-tweaks"><i style="font-size:18px;--fa-primary-color:skyblue;color:skyblue;" class="fa fa-solid fa-globe"></i>&nbsp;&nbsp;Lua</a>  
+<pre><code class="language-lua">local interactionUI = require("interactionUI")
+
+registerForEvent("onInit", function()
+    interactionUI.init()
+end)
+
+registerForEvent("onUpdate", function()
+    interactionUI.update()
+end)
+
+registerHotkey("customDialog", "Show Dialog", function()
+    -- Setup choices
+    local choice1 = interactionUI.createChoice("Choice 1", TweakDBInterface.GetChoiceCaptionIconPartRecord("ChoiceCaptionParts.ShowerIcon"), gameinteractionsChoiceType.QuestImportant) -- Icon and choiceType are optional
+    local choice2 = interactionUI.createChoice("Choice 2", TweakDBInterface.GetChoiceCaptionIconPartRecord("ChoiceCaptionParts.SitIcon"), gameinteractionsChoiceType.AlreadyRead)
+    local choice3 = interactionUI.createChoice("Choice 3", TweakDBInterface.GetChoiceCaptionIconPartRecord("ChoiceCaptionParts.WaitIcon"), gameinteractionsChoiceType.Selected)
+    -- Setup, set and show hub
+    local hub = interactionUI.createHub("Hub Name", {choice1, choice2, choice3}) -- Create hub and give it the list of choices
+    interactionUI.setupHub(hub) -- Set the hub
+    interactionUI.showHub() -- Show the previously set hub
+
+    -- Setup callbacks
+    interactionUI.callbacks[1] = function()
+        print("Choice 1 used")
+    end
+    interactionUI.callbacks[2] = function()
+        print("Choice 2 used")
+    end
+    interactionUI.callbacks[3] = function()
+        print("Choice 3 used")
+        interactionUI.hideHub() -- Hide the dialog
+    end
+end)
+</code></pre>
+</div>
+<p><img src="travelog/./pictures/UI-hub-interaction.png" alt="sample interaction dialog" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ai-powered-dialogs-research"><a class="header" href="#ai-powered-dialogs-research">AI powered dialogs research</a></h1>
+<ul>
+<li>
+<p>very important to have extra word at the beginning (ideally numbers, as it helps order the audio tracks)</p>
+</li>
+<li>
+<p>turn xVASynth sample rate to 44100 (check ffmpeg first)</p>
+</li>
+<li>
+<p>in 2.3.0, male V sounds metallic out of the box, that's just like that: applying a gate helps somewhat but is not perfect.</p>
+</li>
+<li>
+<p>recording one's voice and importing in xVASynth can help with the phonetic for a better pronunciation.</p>
+</li>
+</ul>
+<blockquote>
+<p>it might be worth having a look at ElevenLabs (TBC: train models ?).</p>
+<p>it might be worth trying other vocoders too.</p>
+</blockquote>
+<p>credits: thanks to bespokecomp on Github for helping out</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="customsounds"><a class="header" href="#customsounds">customSounds</a></h1>
+<p>Custom sounds can be added to the game with REDmod.</p>
+<ul>
+<li>
+<p>unrelated to <strong>Pack as REDmod</strong> or <strong>Pack</strong>, both works</p>
+<blockquote>
+<p>.archive and customSounds are distinct</p>
+</blockquote>
+</li>
+<li>
+<p>if mod was both <strong>Pack</strong>ed and <strong>Packed as REDmod</strong>,
+files under <code>archive/pc/mod</code> (ArchiveXL) takes precedence over files in <code>mods</code> (REDmod).
+<img src="travelog/pictures/wk-duplicate-archives.png" alt="duplicate .archive files" /></p>
+</li>
+<li>
+<p>must be copied over into:</p>
+<ul>
+<li><code>{install}/mods/{my-mod}/customSounds</code> (all your .wav)</li>
+<li><code>{install}/mods/{my-mod}/info.json</code></li>
+</ul>
+</li>
+<li>
+<p>requires run <code>deploy</code> on REDmod cli whenever changed
+REDmod cli can be found in game's files <code>{install}/tools/redmod/bin/redMod.exe</code>
+(see <code>deploy</code> command in justfile)</p>
+</li>
+<li>
+<p>requires game settings: <code>-modded</code>
+<img src="travelog/pictures/steam-settings.png" alt="Steam game settings" /></p>
+</li>
+</ul>
+<h3 id="encoding"><a class="header" href="#encoding">encoding</a></h3>
+<p>.wav works in 44100Hz 16bits mono (pcm_s16le in ffmpeg).</p>
+<p>🆕 actually I made a further experiment using ww2ogg and ffprobe to extract the infos from vanilla audio files.
+vanilla .wav suggests <code>48000Hz</code> 16bits mono.</p>
+<details><summary>analyze with ffprobe</summary>
+<pre><code class="language-sh">$ just analyze C:\\Development\\modding-cyberpunk\\4ddicted\\archive\\source\\archive\\base\\localization\\common\\vo\\civ_mid_m_85_mex_30_mt_vista_del_rey_f_1ed3f72f92559000.wem
+
+ffprobe -i 'C:\Development\modding-cyberpunk\4ddicted\archive\source\archive\base\localization\common\vo\civ_mid_m_85_mex_30_mt_vista_del_rey_f_1ed3f72f92559000.wem' -show_format
+
+ffprobe version 6.0-essentials_build-www.gyan.dev Copyright (c) 2007-2023 the FFmpeg developers
+  built with gcc 12.2.0 (Rev10, Built by MSYS2 project)
+  configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-libass --enable-libfreetype --enable-libfribidi --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libmfx --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+  libavutil      58.  2.100 / 58.  2.100
+  libavcodec     60.  3.100 / 60.  3.100
+  libavformat    60.  3.100 / 60.  3.100
+  libavdevice    60.  1.100 / 60.  1.100
+  libavfilter     9.  3.100 /  9.  3.100
+  libswscale      7.  1.100 /  7.  1.100
+  libswresample   4. 10.100 /  4. 10.100
+  libpostproc    57.  1.100 / 57.  1.100
+
+[wav @ 0000023cb642ebc0] Estimating duration from bitrate, this may be inaccurate
+[wav @ 0000023cb642ebc0] Could not find codec parameters for stream 0 (Audio: none ([255][255][0][0] / 0xFFFF), 48000 Hz, 
+1 channels, 103 kb/s): unknown codec
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+Input #0, wav, from 'C:\Development\modding-cyberpunk\4ddicted\archive\source\archive\base\localization\common\vo\civ_mid_m_85_mex_30_mt_vista_del_rey_f_1ed3f72f92559000.wem':
+  Duration: 00:00:05.94, bitrate: 103 kb/s
+  Stream #0:0: Audio: none ([255][255][0][0] / 0xFFFF), 48000 Hz, 1 channels, 103 kb/s
+Unsupported codec with id 0 for input stream 0
+[FORMAT]
+filename=C:\Development\modding-cyberpunk\4ddicted\archive\source\archive\base\localization\common\vo\civ_mid_m_85_mex_30_mt_vista_del_rey_f_1ed3f72f92559000.wem
+nb_streams=1
+nb_programs=0
+format_name=wav
+format_long_name=WAV / WAVE (Waveform Audio)
+start_time=N/A
+duration=5.937938
+size=76925
+bit_rate=103638
+probe_score=99
+[/FORMAT]
+</code></pre>
+</details>
+<h3 id="packaging"><a class="header" href="#packaging">packaging</a></h3>
+<p>it's perfectly fine to <strong>Pack</strong> normally in WolvenKit,
+while still using REDmod for custom sounds on the side.</p>
+<p>The following warnings on <strong>Pack</strong> .archive can safely be ignored. REDmod will still load the custom sounds if found in the game files, as previously mentioned.</p>
+<p><img src="travelog/pictures/wk-warnings-redmod.png" alt="WK warning to custom sounds" /></p>
+<h3 id="translations"><a class="header" href="#translations">translations</a></h3>
+<p>files in <code>customSounds</code> can perfectly be nested in subdirectories,
+allowing (separate mods included) to prepare voices for translations,
+under e.g. <code>en-us/</code>.</p>
+<h3 id="localization"><a class="header" href="#localization">localization</a></h3>
+<p><a href="https://github.com/psiberx/cp2077-codeware">Codeware</a> also provides
+<a href="https://github.com/psiberx/cp2077-codeware/wiki/#localization">LocalizationSystem</a>
+to easily handle translations of any kind: voice, subtitle, etc.</p>
+<blockquote>
+<p>credits to people at Discord, especially @Manually Enhanced Fuzzo, @IslandDancer</p>
+<p>credits to @bespokecomp on Github</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="provide-a-translation-for-this-mod"><a class="header" href="#provide-a-translation-for-this-mod">Provide a translation for this mod</a></h1>
+<p>So how to translate this mod ?</p>
+<p>🆕 2024/01/03: translations for this mod are now provided along audio files in <a href="https://www.nexusmods.com/cyberpunk2077/mods/12001">Audioware</a>, so the process described below is quite outdated: please contact me directly if you want to make a translation for Addicted.</p>
+<p>Before we start I assume that you:</p>
+<ul>
+<li>have an account on <a href="https://github.com/">Github</a></li>
+<li>know how to use both <a href="https://git-scm.com/">Git</a> and Github</li>
+<li><a href="https://docs.github.com/fr/get-started/quickstart/fork-a-repo">forked</a> this repo</li>
+<li>created a new <a href="https://www.atlassian.com/git/tutorials/using-branches#:~:text=In%20Git%2C%20branches%20are%20a,branch%20to%20encapsulate%20your%20changes.">branch</a>
+e.g. for French <code>translate/fr-fr</code></li>
+<li>made your <a href="https://www.atlassian.com/git/tutorials/saving-changes/git-commit">changes</a> over there</li>
+<li>opened a <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">pull request</a> once finished (or a <a href="https://github.blog/2019-02-14-introducing-draft-pull-requests/">draft pull request</a> if it's not but you would like to review it together first).</li>
+</ul>
+<h2 id="onscreens"><a class="header" href="#onscreens">Onscreens</a></h2>
+<p>⚙️ <em>ArchiveXL</em></p>
+<p>The first file to translate is <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/raw/addicted/localization/en-us.json.json">archive/source/raw/addicted/localization/en-us.json.json</a>.</p>
+<blockquote>
+<p>contains all the native texts displayed in UI.</p>
+</blockquote>
+<ol>
+<li>duplicate it alongside and name it by your locale (available locales <a href="https://github.com/psiberx/cp2077-codeware/wiki/Localization-System">can be found there</a>).
+<ul>
+<li>e.g. for French, rename it into: <code>fr-fr.json.json</code>.</li>
+<li>filename contains <code>.json</code> twice when exported from WolvenKit, leave it this way.</li>
+</ul>
+</li>
+<li>translate every <code>femaleVariant</code> into your own language:
+<ul>
+<li>if your language has gender-based variants, do not omit to translate <code>maleVariant</code> too.</li>
+<li>when the sentence is not gender-based, simply specify <code>femaleVariant</code> and let <code>maleVariant</code> empty (<code>femaleVariant</code> is the default fallback when <code>maleVariant</code> is left unspecified).</li>
+</ul>
+</li>
+</ol>
+<p>Then, update <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/resources/Addicted.archive.xl">archive/source/resources/Addicted.archive.xl</a> to add the file you previously created.</p>
+<p>e.g. for French:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yml">localization:
+  onscreens:
+    en-us: addicted\localization\en-us.json
+    fr-fr: addicted\localization\fr-fr.json # add this line
+</code></pre>
+</div>
+<h2 id="subtitles"><a class="header" href="#subtitles">Subtitles</a></h2>
+<p>⚙️ <em>Codeware</em></p>
+<p>The second file to translate is located under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/scripts/Addicted/i18n/English.reds">scripts/Addicted/i18n/English.reds</a>.</p>
+<blockquote>
+<p>contains all the subtitles for voiced dialog lines.</p>
+</blockquote>
+<p>⚠️ you only need to translate the rightmost part of <code>this.Subtitle(...)</code>, leaving the leftmost untouched.</p>
+<p>Also rename the class by your own language.</p>
+<p>e.g. for French:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">module Addicted.Localization
+import Codeware.Localization.*
+
+public class French extends ModLocalizationPackage {
+
+  protected func DefineSubtitles() -&gt; Void {
+   // snake case suffixes must match entries in info.json (custom sounds)
+   this.Subtitle("Addicted-Voice-Subtitle-biomon", "Biomon...");
+   this.Subtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already", "Comme si j'étais pas au courant...");
+   // so on and so forth ...
+  }
+}
+</code></pre>
+</div>
+<h2 id="vanilla-voices"><a class="header" href="#vanilla-voices">Vanilla voices</a></h2>
+<p>⚒️ WolvenKit
+⚙️ <em>REDmod</em></p>
+<p>In the next steps we're gonna re-export some vanilla voices used.</p>
+<blockquote>
+<p>this mod also reuse vanilla voiced dialog lines.</p>
+</blockquote>
+<ol>
+<li>open WolvenKit</li>
+<li>locate each <code>.wem</code> file found under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/vanilla/en-us">archive/source/customSounds/vanilla/en-us</a> by its name (minus <code>.Wav</code>) in WolvenKit's <strong>Assets browser</strong></li>
+<li>export them all with WolvenKit's <strong>Export</strong> tool (<em>do not forget</em> to set export settings to <code>Wav</code> for each file) under subfolder in <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/vanilla">archive/source/customSounds/vanilla</a>, named after your own language.
+<ul>
+<li>e.g. for French in <code>archive/source/customSounds/vanilla/fr-fr</code></li>
+</ul>
+</li>
+</ol>
+<h2 id="ai-generated-custom-voices"><a class="header" href="#ai-generated-custom-voices">AI-generated custom voices</a></h2>
+<p>⚒️ WolvenKit + ElevenLabs
+⚙️ <em>REDmod</em></p>
+<p>In the next steps we're gonna train <a href="https://beta.elevenlabs.io/">ElevenLabs</a> with a specific set of vanilla voices, then generate dialog for each of the subtitles previously translated.</p>
+<p>💡 I'm aware that you might not be willing to get an account on ElevenLabs so you can also zip me all the files below once exported and let me do it on your behalf.</p>
+<p>The custom dialog lines to translate are located under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/en-us">archive/source/customSounds/en-us</a>.</p>
+<blockquote>
+<p>contains all the voiced custom dialog lines.</p>
+</blockquote>
+<p>There's one folder for each of the "mood" that V might be into:</p>
+<ul>
+<li>
+<p><code>disheartened</code>: these samples are used when biomonitor already reported serious addiction symptoms to V multiple times while V is severely addict.</p>
+<blockquote>
+<p>V can end up disheartened when biomonitor reports his/her condition repeatedly and (s)he has clearly crossed the line.</p>
+</blockquote>
+</li>
+<li>
+<p><code>offhanded</code>: these samples are used when biomonitor already reported serious addiction symptoms to V multiple times while V is only notably addict.</p>
+<blockquote>
+<p>V can sometimes acts offhanded when biomonitor reports his/her condition but (s)he doesn't really give a damn.</p>
+</blockquote>
+</li>
+<li>
+<p><code>pestered</code>: these samples are used when biomonitor is dismissed by V while in combat.</p>
+<blockquote>
+<p>V can obviously be pestered when biomonitor unexpectedly pops up during combat.</p>
+</blockquote>
+</li>
+<li>
+<p><code>surprised</code>: these samples are used when biomonitor reports addiction symptoms to V only for a couple of times.</p>
+<blockquote>
+<p>V can be surprised when biomonitor starts showing up from time to time.</p>
+</blockquote>
+</li>
+</ul>
+<p>⚠️ for example, when generating sample for <code>archive/source/customSounds/en-us/surprised/fem_v_coa_03.wav</code> under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/en-us/surprised">archive/source/customSounds/en-us/surprised</a>, you should regenerate in ElevenLabs until you get the sentence pronounced as if V was surprised. Not doing so defeats the purpose of adding custom voicing.</p>
+<ol>
+<li>
+<p>make sure to have an account on <a href="https://beta.elevenlabs.io/">ElevenLabs</a></p>
+</li>
+<li>
+<p>locate and export each of these <code>.wem</code> as previously:
+ℹ️ using same exact samples set increases chances of having more "homogeneous sounding" across different languages</p>
+ <details><summary>click to see which ones</summary>
+<ol>
+<li><code>v_scene_aaron_mccarlson_default_f_1b6ed94ce5559000</code></li>
+<li><code>v_scene_aaron_mccarlson_default_f_1b77e03246559000</code></li>
+<li><code>v_scene_benedict_mcadams_default_f_1b1b1ce0be2c5000</code></li>
+<li><code>v_scene_claire_default_f_1b0c1373382b6000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1ad786e65246b000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1b30dc13f92ef000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1936caecd649d000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1936cf055549d000</code></li>
+<li><code>v_scene_dan_default_f_1b1bed3cac29f000</code></li>
+<li><code>v_scene_delamain_default_f_1b3f1d1f6b386000</code></li>
+<li><code>v_scene_delamain_default_f_182ac718234ea000</code></li>
+<li><code>v_scene_dex_default_f_1b2f30a75929f000</code></li>
+<li><code>v_scene_dex_default_f_182ad40c364ea000</code></li>
+<li><code>v_scene_jackie_default_f_1b2f97e30c2c5004</code></li>
+<li><code>v_scene_jackie_default_f_1b2f687cef2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fa81c242c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fa2734c2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fae69a12c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fb2c5892c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fb6a25c2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fb479f32c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fc8db0d2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b302c10c12c5000</code></li>
+<li><code>v_scene_wakako_okada_default_f_1b68a843092b6000</code></li>
+<li><code>v_scenes_f_1a7c32d2e947a000</code></li>
+</ol>
+ </details>
+</li>
+<li>
+<p>feed them to ElevenLabs under <code>VoiceLab</code> click on <code>+ Add voice</code>
+⚠️ a premium membership is required (5$/month)</p>
+<ul>
+<li>save your cloned voice, for example <code>Female V</code></li>
+</ul>
+</li>
+<li>
+<p>create a folder</p>
+</li>
+<li>
+<p>go to <code>Speech synthesis</code></p>
+<ul>
+<li>select the voice previously created</li>
+<li>set <code>Voice settings</code> to:
+<ul>
+<li><code>Stability</code>: 35%</li>
+<li><code>Clarity + Similarity Enhancement</code>: 90%</li>
+</ul>
+</li>
+<li>repeat this process for each of the subtitle:
+<ul>
+<li>generate</li>
+<li>compare it with original english version</li>
+<li>if it sounds good and similar in tone, save it
+e.g. if in the original audio V sounds disheartened, in your own language (s)he should sounds similar too, otherwise it will break player's immersion.</li>
+<li>do not forget to place it under the same folder structure,</li>
+<li>otherwise repeat the generation process.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>repeat same process for both male and female V</p>
+</li>
+<li>
+<p>update <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/resources/info.json">archive/source/resources/info.json</a> to add one entry for each of the original one for English modified as per your locale.
+e.g. for French</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;" href="https://www.json.org"><i style="font-size:18px;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;JSON</a>  
+<pre><code class="language-json">  "customSounds": [
+    // e.g. this points to vanilla sound file
+    {
+      "name": "addicted.fr-fr.fem_v_ono_hhuh",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/fr-fr/v_q113_f_1956c7fde04e1000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    // e.g. while this points to custom AI-generated file
+    {
+      "name": "addicted.fr-fr.fem_v_damn_thats_fucked_up",
+      "type": "mod_sfx_2d",
+      "file": "fr-fr/surprised/fem_v_dtfu.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    // more definitions ...
+  ]
+</code></pre>
+</div></li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

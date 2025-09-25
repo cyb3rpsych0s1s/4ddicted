@@ -1,0 +1,424 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>2023-04-07 - Addicted</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././theme/css/mdbook-admonish.css">
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Addicted</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/cyb3rpsych0s1s/4ddicted" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="provide-a-translation-for-this-mod"><a class="header" href="#provide-a-translation-for-this-mod">Provide a translation for this mod</a></h1>
+<p>So how to translate this mod ?</p>
+<p>🆕 2024/01/03: translations for this mod are now provided along audio files in <a href="https://www.nexusmods.com/cyberpunk2077/mods/12001">Audioware</a>, so the process described below is quite outdated: please contact me directly if you want to make a translation for Addicted.</p>
+<p>Before we start I assume that you:</p>
+<ul>
+<li>have an account on <a href="https://github.com/">Github</a></li>
+<li>know how to use both <a href="https://git-scm.com/">Git</a> and Github</li>
+<li><a href="https://docs.github.com/fr/get-started/quickstart/fork-a-repo">forked</a> this repo</li>
+<li>created a new <a href="https://www.atlassian.com/git/tutorials/using-branches#:~:text=In%20Git%2C%20branches%20are%20a,branch%20to%20encapsulate%20your%20changes.">branch</a>
+e.g. for French <code>translate/fr-fr</code></li>
+<li>made your <a href="https://www.atlassian.com/git/tutorials/saving-changes/git-commit">changes</a> over there</li>
+<li>opened a <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">pull request</a> once finished (or a <a href="https://github.blog/2019-02-14-introducing-draft-pull-requests/">draft pull request</a> if it's not but you would like to review it together first).</li>
+</ul>
+<h2 id="onscreens"><a class="header" href="#onscreens">Onscreens</a></h2>
+<p>⚙️ <em>ArchiveXL</em></p>
+<p>The first file to translate is <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/raw/addicted/localization/en-us.json.json">archive/source/raw/addicted/localization/en-us.json.json</a>.</p>
+<blockquote>
+<p>contains all the native texts displayed in UI.</p>
+</blockquote>
+<ol>
+<li>duplicate it alongside and name it by your locale (available locales <a href="https://github.com/psiberx/cp2077-codeware/wiki/Localization-System">can be found there</a>).
+<ul>
+<li>e.g. for French, rename it into: <code>fr-fr.json.json</code>.</li>
+<li>filename contains <code>.json</code> twice when exported from WolvenKit, leave it this way.</li>
+</ul>
+</li>
+<li>translate every <code>femaleVariant</code> into your own language:
+<ul>
+<li>if your language has gender-based variants, do not omit to translate <code>maleVariant</code> too.</li>
+<li>when the sentence is not gender-based, simply specify <code>femaleVariant</code> and let <code>maleVariant</code> empty (<code>femaleVariant</code> is the default fallback when <code>maleVariant</code> is left unspecified).</li>
+</ul>
+</li>
+</ol>
+<p>Then, update <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/resources/Addicted.archive.xl">archive/source/resources/Addicted.archive.xl</a> to add the file you previously created.</p>
+<p>e.g. for French:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://github.com/psiberx/cp2077-tweak-xl/wiki/YAML-Tweaks"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;YAML</a>  
+<pre><code class="language-yml">localization:
+  onscreens:
+    en-us: addicted\localization\en-us.json
+    fr-fr: addicted\localization\fr-fr.json # add this line
+</code></pre>
+</div>
+<h2 id="subtitles"><a class="header" href="#subtitles">Subtitles</a></h2>
+<p>⚙️ <em>Codeware</em></p>
+<p>The second file to translate is located under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/scripts/Addicted/i18n/English.reds">scripts/Addicted/i18n/English.reds</a>.</p>
+<blockquote>
+<p>contains all the subtitles for voiced dialog lines.</p>
+</blockquote>
+<p>⚠️ you only need to translate the rightmost part of <code>this.Subtitle(...)</code>, leaving the leftmost untouched.</p>
+<p>Also rename the class by your own language.</p>
+<p>e.g. for French:</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;--fa-primary-color:tomato;color:tomato;" href="https://wiki.redmodding.org/redscript"><i style="font-size:18px;--fa-primary-color:tomato;color:tomato;" class="fa fa-solid fa-r"></i>&nbsp;&nbsp;Redscript</a>  
+<pre><code class="language-swift">module Addicted.Localization
+import Codeware.Localization.*
+
+public class French extends ModLocalizationPackage {
+
+  protected func DefineSubtitles() -&gt; Void {
+   // snake case suffixes must match entries in info.json (custom sounds)
+   this.Subtitle("Addicted-Voice-Subtitle-biomon", "Biomon...");
+   this.Subtitle("Addicted-Voice-Subtitle-as_if_I_didnt_know_already", "Comme si j'étais pas au courant...");
+   // so on and so forth ...
+  }
+}
+</code></pre>
+</div>
+<h2 id="vanilla-voices"><a class="header" href="#vanilla-voices">Vanilla voices</a></h2>
+<p>⚒️ WolvenKit
+⚙️ <em>REDmod</em></p>
+<p>In the next steps we're gonna re-export some vanilla voices used.</p>
+<blockquote>
+<p>this mod also reuse vanilla voiced dialog lines.</p>
+</blockquote>
+<ol>
+<li>open WolvenKit</li>
+<li>locate each <code>.wem</code> file found under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/vanilla/en-us">archive/source/customSounds/vanilla/en-us</a> by its name (minus <code>.Wav</code>) in WolvenKit's <strong>Assets browser</strong></li>
+<li>export them all with WolvenKit's <strong>Export</strong> tool (<em>do not forget</em> to set export settings to <code>Wav</code> for each file) under subfolder in <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/vanilla">archive/source/customSounds/vanilla</a>, named after your own language.
+<ul>
+<li>e.g. for French in <code>archive/source/customSounds/vanilla/fr-fr</code></li>
+</ul>
+</li>
+</ol>
+<h2 id="ai-generated-custom-voices"><a class="header" href="#ai-generated-custom-voices">AI-generated custom voices</a></h2>
+<p>⚒️ WolvenKit + ElevenLabs
+⚙️ <em>REDmod</em></p>
+<p>In the next steps we're gonna train <a href="https://beta.elevenlabs.io/">ElevenLabs</a> with a specific set of vanilla voices, then generate dialog for each of the subtitles previously translated.</p>
+<p>💡 I'm aware that you might not be willing to get an account on ElevenLabs so you can also zip me all the files below once exported and let me do it on your behalf.</p>
+<p>The custom dialog lines to translate are located under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/en-us">archive/source/customSounds/en-us</a>.</p>
+<blockquote>
+<p>contains all the voiced custom dialog lines.</p>
+</blockquote>
+<p>There's one folder for each of the "mood" that V might be into:</p>
+<ul>
+<li>
+<p><code>disheartened</code>: these samples are used when biomonitor already reported serious addiction symptoms to V multiple times while V is severely addict.</p>
+<blockquote>
+<p>V can end up disheartened when biomonitor reports his/her condition repeatedly and (s)he has clearly crossed the line.</p>
+</blockquote>
+</li>
+<li>
+<p><code>offhanded</code>: these samples are used when biomonitor already reported serious addiction symptoms to V multiple times while V is only notably addict.</p>
+<blockquote>
+<p>V can sometimes acts offhanded when biomonitor reports his/her condition but (s)he doesn't really give a damn.</p>
+</blockquote>
+</li>
+<li>
+<p><code>pestered</code>: these samples are used when biomonitor is dismissed by V while in combat.</p>
+<blockquote>
+<p>V can obviously be pestered when biomonitor unexpectedly pops up during combat.</p>
+</blockquote>
+</li>
+<li>
+<p><code>surprised</code>: these samples are used when biomonitor reports addiction symptoms to V only for a couple of times.</p>
+<blockquote>
+<p>V can be surprised when biomonitor starts showing up from time to time.</p>
+</blockquote>
+</li>
+</ul>
+<p>⚠️ for example, when generating sample for <code>archive/source/customSounds/en-us/surprised/fem_v_coa_03.wav</code> under <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/customSounds/en-us/surprised">archive/source/customSounds/en-us/surprised</a>, you should regenerate in ElevenLabs until you get the sentence pronounced as if V was surprised. Not doing so defeats the purpose of adding custom voicing.</p>
+<ol>
+<li>
+<p>make sure to have an account on <a href="https://beta.elevenlabs.io/">ElevenLabs</a></p>
+</li>
+<li>
+<p>locate and export each of these <code>.wem</code> as previously:
+ℹ️ using same exact samples set increases chances of having more "homogeneous sounding" across different languages</p>
+ <details><summary>click to see which ones</summary>
+<ol>
+<li><code>v_scene_aaron_mccarlson_default_f_1b6ed94ce5559000</code></li>
+<li><code>v_scene_aaron_mccarlson_default_f_1b77e03246559000</code></li>
+<li><code>v_scene_benedict_mcadams_default_f_1b1b1ce0be2c5000</code></li>
+<li><code>v_scene_claire_default_f_1b0c1373382b6000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1ad786e65246b000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1b30dc13f92ef000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1936caecd649d000</code></li>
+<li><code>v_scene_dakota_smith_defaut_f_1936cf055549d000</code></li>
+<li><code>v_scene_dan_default_f_1b1bed3cac29f000</code></li>
+<li><code>v_scene_delamain_default_f_1b3f1d1f6b386000</code></li>
+<li><code>v_scene_delamain_default_f_182ac718234ea000</code></li>
+<li><code>v_scene_dex_default_f_1b2f30a75929f000</code></li>
+<li><code>v_scene_dex_default_f_182ad40c364ea000</code></li>
+<li><code>v_scene_jackie_default_f_1b2f97e30c2c5004</code></li>
+<li><code>v_scene_jackie_default_f_1b2f687cef2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fa81c242c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fa2734c2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fae69a12c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fb2c5892c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fb6a25c2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fb479f32c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b2fc8db0d2c5000</code></li>
+<li><code>v_scene_jackie_default_f_1b302c10c12c5000</code></li>
+<li><code>v_scene_wakako_okada_default_f_1b68a843092b6000</code></li>
+<li><code>v_scenes_f_1a7c32d2e947a000</code></li>
+</ol>
+ </details>
+</li>
+<li>
+<p>feed them to ElevenLabs under <code>VoiceLab</code> click on <code>+ Add voice</code>
+⚠️ a premium membership is required (5$/month)</p>
+<ul>
+<li>save your cloned voice, for example <code>Female V</code></li>
+</ul>
+</li>
+<li>
+<p>create a folder</p>
+</li>
+<li>
+<p>go to <code>Speech synthesis</code></p>
+<ul>
+<li>select the voice previously created</li>
+<li>set <code>Voice settings</code> to:
+<ul>
+<li><code>Stability</code>: 35%</li>
+<li><code>Clarity + Similarity Enhancement</code>: 90%</li>
+</ul>
+</li>
+<li>repeat this process for each of the subtitle:
+<ul>
+<li>generate</li>
+<li>compare it with original english version</li>
+<li>if it sounds good and similar in tone, save it
+e.g. if in the original audio V sounds disheartened, in your own language (s)he should sounds similar too, otherwise it will break player's immersion.</li>
+<li>do not forget to place it under the same folder structure,</li>
+<li>otherwise repeat the generation process.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>repeat same process for both male and female V</p>
+</li>
+<li>
+<p>update <a href="https://github.com/cyb3rpsych0s1s/4ddicted/blob/beta-0.9.4/archive/source/resources/info.json">archive/source/resources/info.json</a> to add one entry for each of the original one for English modified as per your locale.
+e.g. for French</p>
+<div class='codeblocks'>
+<a style="font-size:12px;text-decoration:none;" href="https://www.json.org"><i style="font-size:18px;" class="fa fa-solid fa-file"></i>&nbsp;&nbsp;JSON</a>  
+<pre><code class="language-json">  "customSounds": [
+    // e.g. this points to vanilla sound file
+    {
+      "name": "addicted.fr-fr.fem_v_ono_hhuh",
+      "type": "mod_sfx_2d",
+      "file": "vanilla/fr-fr/v_q113_f_1956c7fde04e1000.Wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    // e.g. while this points to custom AI-generated file
+    {
+      "name": "addicted.fr-fr.fem_v_damn_thats_fucked_up",
+      "type": "mod_sfx_2d",
+      "file": "fr-fr/surprised/fem_v_dtfu.wav",
+      "gain": 1.0,
+      "pitch": 0.0
+    },
+    // more definitions ...
+  ]
+</code></pre>
+</div></li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../travelog/2023-03-31.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../travelog/2023-03-31.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
