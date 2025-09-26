@@ -85,7 +85,7 @@ public class Generic {
   public static func IsMemoryBooster(id: TweakDBID) -> Bool     = Generic.SuffixContains(id, "MemoryBooster");
   public static func IsOxyBooster(id: TweakDBID) -> Bool        = Generic.SuffixContains(id, "OxyBooster");
   public static func IsNeuroBlocker(id: TweakDBID) -> Bool      = Generic.SuffixContains(id, "RipperDocMedBuff") || Generic.SuffixContains(id, "ripperdoc_med");
-  public static func IsAddiquit(id: TweakDBID) -> Bool          = Equals(id, "DarkFutureItem.AddictionTreatmentDrug");
+  public static func IsAddiquit(id: TweakDBID) -> Bool          = Equals(id, t"DarkFutureItem.AddictionTreatmentDrug");
   
   public static func IsContraindicated(id: TweakDBID) -> Bool   = Generic.SuffixContains(id, "contraindication");
 
