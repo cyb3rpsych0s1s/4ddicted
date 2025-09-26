@@ -2,8 +2,6 @@ module Addicted.Crossover
 
 public class AddiquitTweaks extends ScriptableTweak {
   protected cb func OnApply() -> Void {
-    let item      = "DarkFutureItem.AddictionTreatmentDrug";
-
     let depot = GameInstance.GetResourceDepot();
     let darkfuture = depot.ArchiveExists("Dark Future.archive");
 
