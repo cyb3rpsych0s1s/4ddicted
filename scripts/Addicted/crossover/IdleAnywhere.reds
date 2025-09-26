@@ -48,6 +48,7 @@ public class IdleAnywhereSubSystem extends ScriptableSystem {
     }
 }
 
+@if(!ModuleExists("DarkFuture.System"))
 private func GetAlcoholRecordFromIdleAnywhereFactValue(value: Int32) -> TweakDBID {
     E(s"Idle Anywhere: fact \(ToString(value))");
 	switch value {
